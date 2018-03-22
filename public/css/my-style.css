@@ -1,0 +1,738 @@
+h1 , h2 , h3 , h4 , h5 ,h6 , a{
+	color: #353535;
+}
+.margin-top-50{
+	margin-top:40px;
+}
+.dl-horizontal dt{
+	text-align: left !important;
+	line-height: 30px !important;
+}
+
+.line-left{
+	border-left: 1px solid rgba(0,0,0,0.2);
+    padding-left: 5px;
+}
+.margin-bottom{
+	margin-bottom: 30px;
+}
+.no-padding-left{
+	padding-left: 0px !important;
+}
+.no-padding-right{
+	padding-right: 0px !important;
+}
+.account_container_btn{
+	padding: 10px 0px;
+}
+.account_container_btn > a{
+	font-size: 20px;
+	text-decoration: none;
+	padding-bottom: 10px;
+	margin-right: 10px;
+	border-bottom: 4px solid transparent;
+}
+/*.account_container_btn > a:first-child{
+	margin-right: 10px;
+}*/
+
+.account_container_btn > a.active , .account_container_btn > a:hover{
+	color: #1ABC9C !important;
+	border-bottom-color: #1ABC9C !important;
+}
+.grey-bg{
+	background-color: #efefef;
+	width: 100%;
+    padding: 10px 0px;
+}
+.grey-bg span{
+	line-height: 40px !important;
+}
+.text-underline{
+	text-decoration: underline;
+}
+
+.active-text{
+	color: #1ABC9C !important;
+}
+nav > ul{
+	list-style-type: none;
+	padding: 0px !important;
+}
+.text-danger {
+    color: #a94442 !important;
+}
+
+.btn-vertical-center{
+	position: relative;
+	top:17px;
+}
+.btn-same-size{
+	padding: 5px 18px !important;
+}
+.my-table td > span{
+	line-height: 35px;
+}
+.app-footer nav{
+	margin: 10px 0px;
+}
+.app-footer nav > ul{
+	padding: 0px !important;
+	list-style-type: none;
+}
+.app-footer nav > ul > li.strong{
+	font-weight: bold;
+	padding-bottom: 2px;
+	color: #929191;
+}
+.app-footer nav > ul > li > a{
+	color: white;
+}
+.app-footer nav > ul > li:hover > a{
+	text-decoration: underline;
+	color: white !important;
+}
+.footer-bg{
+	background-color: #332c29;
+}
+.retailer-container{
+	width: 70%;
+	margin: 40px auto;
+}
+.retailer-container > div > div{
+	border:2px solid rgba(0,0,0,0.2);
+	margin: 2px 0px;
+	height: 150px;
+	cursor: pointer;
+	background-color: white;
+}
+.retailer-container > div > div:hover , .retailer-container > div > div.active{
+	border-color: #65d074;
+	border-width: 2px;
+}
+.retailer-container .title-img > img{
+	width: 80px;
+	margin: 15px 0px 5px 0px;
+}
+.retailer-container .store-number > span{
+	font-weight: bold;
+	color: rgba(0,0,0,0.7);
+	font-size: 50px;
+	position: relative;
+	top: 35px;
+}
+.retailer-container .title-desc > span{
+	font-weight: bold;
+	color: rgba(0,0,0,0.7);
+	font-size: 20px;
+	line-height: 20px;
+}
+.margin-top-bottom{
+	margin-top: 30px !important;
+	margin-bottom: 50px !important;
+}
+.form-container{
+	width: 40%;
+	margin: 30px auto;
+}
+.agree_terms > p{
+	font-size: 16px;
+}
+.agree_terms > p > a{
+	color: #65d074;
+}
+.billed_container{
+	width: 100%;
+}
+.billed_container > div{
+	cursor: pointer;
+	float: left;
+	padding: 10px;
+	width: 50%;
+	border: 2px solid rgba(0,0,0,0.2);
+	height: 150px;
+}
+.billed_container > div.active{
+	border-color: #1ABC9C;
+}
+.billed_container > div h4{
+	padding-bottom: 10px;
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+
+.customer-table{
+	width: 100%;
+	margin-bottom: 10px;
+}
+.customer-table thead , .customer-table tfoot{
+	border-top:1px solid rgba(0,0,0,0.2);
+	border-bottom:1px solid rgba(0,0,0,0.2);
+}
+.customer-table thead  th , .customer-table tfoot th{
+	padding: 20px 5px !important;
+}
+.customer-table thead  th > a:hover{
+	color : #1ABC9C;
+}
+.customer-table tr.customer-row:not(:last-child){
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.customer-table tr.customer-row{
+	cursor: pointer;
+}
+.customer-table tr.customer-row > td{
+	padding: 15px 5px !important;
+}
+.customer-table tr.customer-row:hover{
+	background-color: white;
+}
+.customer-table tr.customer-row > td small{
+	color: rgba(0,0,0,0.5);
+}
+.customer-table-showing:first-child{
+	padding: 10px 0px;
+}
+
+.customer-table-showing small{
+	color:rgba(0,0,0,0.5);
+	position: relative;
+	top: 15px;
+}
+.customer-table tr.customer-info{
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.customer-table tr{
+	border-left : 2px solid transparent;
+}
+.customer-table tr.customer-info , .customer-table tr.active{
+	background-color: white;
+	border-left : 2px solid green;
+}
+.customer-table tr.customer-info > td >  div.row {
+	width: 95% !important;
+	margin: 20px 0px 20px 5%;
+}
+.customer-table tr.customer-info > td >  div legend{
+	font-size: 15px;
+	padding: 10px 0px;
+	font-weight: bold;
+}
+.customer-table dd{
+	padding-top: 7px;
+}
+.customer-table tr.customer-info > td .btn-edit-container > a,
+.customer-table tr.customer-info > td > div > div.last > a{
+ 	position: relative;
+    top: 42px;
+    padding: 10px 70px;
+    display: block;
+    width: 100%;
+    color: black;
+    font-weight: bold;
+    border:1px solid transparent;
+ }
+ .customer-table tr.customer-info > td .btn-edit-container > a:hover,
+.customer-table tr.customer-info > td > div > div.last > a:hover{
+    background-color: #1ABC9C;
+    color: white;
+    border:1px solid rgba(0,0,0,0.2);
+}
+
+.btn-edit-container{
+	position: absolute;
+	top: -178px;
+}
+.dropzone-container{
+	margin: 70px;
+}
+
+section.sec_border_bottom:not(:last-child){
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+	padding-bottom: 20px;
+}
+.image-preview{
+	border-radius: 5px;
+	width: 150px;
+	height: 150px;
+	border:1px solid rgba(0,0,0,0.1);
+	background-image : url('../img/person-placeholder.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top center;
+}
+.notifyjs-corner{
+	z-index: 10002 !important;
+}
+.table-odd{
+	background-color: #fbfbfb;
+}
+.table-header-dark > thead > tr{
+	background-color: #50bc9c;
+    color: white;
+}
+.input_loader {    
+    background-color: #ffffff;
+    background-image: url("http://loadinggif.com/images/image-selection/3.gif");
+    background-size: 25px 25px;
+    background-position:right center;
+    background-repeat: no-repeat;
+}
+.register_details_ul{
+	padding: 0px 15px !important;
+}
+.register_details_ul > li:last-child {
+	list-style-type: none;
+}
+
+a.link-style{
+	color: #19B5FE !important;
+}
+
+.customer-row .with-img {
+	overflow: hidden;
+}
+.customer-row .with-img > span{
+	float: left;
+	width: 70%;
+	padding: 10px 0px 0px 0px;
+}
+.customer-row .with-img > img{
+	float: left;
+	width: 30%;
+}
+
+.customer-table .product-variant > td{
+	padding: 15px 5px !important;
+}
+
+.customer-table .product-variant > td > a{
+	padding-left: 40px;
+}
+.dragdropimg{
+	border:1px solid rgba(0,0,0,0.1);
+	padding: 10px;
+}
+.product-type-btn{
+	border:1px solid rgba(0,0,0,0.1);
+	display: block;
+	text-align: center;
+	padding: 20px;
+	text-decoration: none;
+}
+.product-type-btn img{
+	display: block;
+	margin:2px auto;
+	width: 80px;
+}
+.product-type-btn span{
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.product-type-btn.active{
+	border-color: #50bc9c;
+}
+.product-type-btn.active span{
+	color: #50bc9c;
+}
+
+.product_container{
+	width: 100%;
+	background: white;
+	overflow: hidden;
+}
+.product_container > div{
+	cursor: pointer;
+	float: left;
+	padding: 10px;
+	width: 50%;
+	border: 2px solid rgba(0,0,0,0.2);
+	height: 150px;
+}
+.product_container > div.active{
+	border-color: #1ABC9C;
+}
+.product_container > div h3{
+	padding-bottom: 10px;
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+.help-block-inline{
+    margin-top: 6px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    color: #737373;
+}
+.product-count-li{
+	position: fixed;
+	right: 10px;
+}
+.product-count-li > ul{
+	padding: 0px !important;
+}
+.product-count-li > ul > li{
+	padding: 10px;
+	background-color: white;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.product-count-li > ul > li:first-child{
+	background-color: #efefef;
+}
+tr.uncounted > td:first-child > i{
+	visibility: hidden;
+}
+tr.counted > td:first-child > i{
+	visibility: visible;
+}
+tr.counted{
+	background-color: white;
+}
+tr.counted > td , tr.counted > td > small{
+	color: #48b553 !important;
+}
+.counted_btn.active{
+	font-weight: bold;
+	text-decoration: none;
+}
+.tab-parent{
+	padding: 5px 0px;
+}
+.tab-parent .tab-link{
+	margin: 5px 0px 30px 0px;
+}
+.tab-parent .tab-link a{
+	font-weight: bold;
+	padding: 10px 3px;
+	margin: 0px 10px;
+	text-decoration: none;
+}
+.tab-parent .tab-link a:first-child{
+	margin-left: 0px;
+}
+.tab-parent .tab-link{
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+	padding-bottom: 10px;
+}
+.tab-parent .tab-link a.active{
+	color:#1ABC9C;
+	border-bottom: 2px solid #1ABC9C;
+}
+.tab-parent .tab-container > div:not(.active){
+	display: none;
+}
+.border-left{
+	border-left: 1px solid #EAEAEA;
+}
+.border-right{
+	border-left: 1px solid #EAEAEA;
+}
+.inventory-count-table thead > tr:first-child , .inventory-count-table tfoot > tr:first-child{
+	background-color: #efefef;
+}
+.inventory-count-table thead > tr:last-child > td{
+	padding: 10px;
+	color : #8a8888;
+}
+.inventory-count-table tbody > tr > td > span , .inventory-count-table thead > tr > td > span{
+	line-height: 40px !important;
+}
+.scheduler-nav > ul{
+	list-style-type: none;
+	padding: 0px;
+}
+.scheduler-nav  li.bglabel{
+	background-color: #f0f0f0;
+	padding: 5px;
+	font-size: 10px;
+	font-weight: bold;
+	overflow: hidden;
+}
+.scheduler-nav li.lilocation{
+	padding: 20px 5px;
+}
+
+.scheduler-nav li.listaffposition > div{
+	margin: 0px !important;
+}
+.scheduler-nav li.listaffposition{
+	padding: 2px 5px;
+}
+.scheduler-nav li.listaffposition  input[type="checkbox"]{
+	margin-right: 10px;
+}
+.scheduler-nav li.listaffposition  span{
+	font-size: 11px;
+	font-weight: bold;
+}
+.scheduler-table{
+	width: calc(100% - 2px);
+	margin: auto;
+}
+.scheduler-table .table-header , .scheduler-table .table-header2{
+	background-color: #f0f0f0;
+}
+.scheduler-table .table-header > td{
+	padding: 5px;
+}
+.scheduler-table .table-header > td > *:not(:last-child){
+	margin-right: 15px;
+}
+.scheduler-table .table-header #scheduler-name{
+	font-weight: bold;
+}
+.border-left{
+	border-left:1px solid rgba(0,0,0,0.1);
+}
+.border-top{
+	border-top:1px solid rgba(0,0,0,0.1);
+}
+.border-right{
+	border-right:1px solid rgba(0,0,0,0.1);
+}
+.border-bottom{
+	border-bottom:1px solid rgba(0,0,0,0.1);
+}
+.scheduler-table .table-header2 > td{
+	padding: 5px;
+	width: calc(100% / 8);
+	font-size: 10px;
+	font-weight: bold;
+}
+.scheduler-table tbody > tr > td{
+	overflow: hidden;
+	padding: 5px;
+}
+.scheduler-table tbody > tr > td > div{
+	float: left;
+}
+.scheduler-table tbody > tr > td > div:first-child{
+	width: 40px;
+	margin:5px auto;
+	text-align: center;
+}
+.scheduler-table tbody > tr > td > div:last-child{ 
+	width: calc(100% - 40px);
+	line-height: 12px;
+	padding-top: 7px;
+}
+.scheduler-table tbody > tr > td > div:last-child > span{
+	font-weight: bold;
+	font-size: 12px;
+	display: block;
+}
+.scheduler-table tbody > tr > td > div > a{
+	display: block;
+	font-size: 11px;
+	font-weight: bold;
+	color:white;
+	border-radius: 5px;
+	padding: 0px 5px;
+	z-index: 1;
+}
+.scheduler-table tbody > tr > td > div > a:not(:last-child){
+	margin-bottom: 2px;
+}
+.scheduler-table tbody > tr > td > div > a:hover{
+	color:white;
+}
+.scheduler-table tbody > tr > td > div > a > span{
+	background-color: rgba(0,0,0,0.3);
+	padding: 5px;
+	margin: 5px;
+}
+.td_open_shift > td{
+	height: 40px;
+}
+.td_open_shift > td > span{
+	font-weight: bold;
+}
+
+.scheduler-table tbody > tr > td:hover:not(:first-child){
+	cursor: pointer;
+	background-color: #d5eaff;
+}
+.shift-list-a{
+	text-align:left;
+	color:white !important;
+}
+.shift-list-a > span{
+	padding: 5px;
+    background-color: rgba(255,255,255,0.1);
+    margin-left: 10px;
+    line-height: 30px;
+    font-size: 9px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+#assign_shift_modal .modal-body{
+	max-height: 500px;
+	overflow: auto;
+}
+.shift_container  > .unpublished{
+	float: right;
+	width: 100%;
+	height: 34px;
+	border-radius: 5px;
+	margin-top: -35px;
+	background-image: url(../img/striped.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+	border: 1px solid #cccccc;
+}
+
+
+
+#dashboard_timetracker_div {
+	max-height: 500px;
+	overflow: auto;
+}
+#dashboard_timetracker_div table{
+	margin-bottom: 0px;
+}
+#dashboard_timetracker_table tbody > tr > td{
+	overflow: hidden;
+}
+#dashboard_timetracker_table tbody > tr > td > div{
+	float: left;
+}
+#dashboard_timetracker_table tbody > tr > td > div:first-child{
+	width: 30px;
+}
+#dashboard_timetracker_table tbody > tr > td > div:last-child{
+	width: calc(100% - 30px);
+	padding: 3px;
+}
+#dashboard_timetracker_table tbody > tr > td > div:last-child > span{
+	font-weight: bold;
+	font-size: 11px;
+}
+#dashboard_timetracker_table tbody > tr > td > a{
+	display: block;
+	padding: 7px;
+	text-decoration: none;
+	font-weight: bold;
+	color:white;
+	font-size: 11px;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+#dashboard_timetracker_table tbody > tr > td > a > span{
+	padding: 3px 5px;
+	margin-left: 10px;
+	background-color: rgba(0,0,0,0.3);
+	color:white;
+	font-size: 9px;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+
+
+
+#attendance_side_menu > div{
+	margin-bottom: 15px;
+}
+#attendance_side_menu section:not(:last-child){
+	margin: 2px;
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+#attendance_side_menu section.s_header , #attendance_side_menu section.ac-btn-group{
+	overflow: hidden;
+}
+#attendance_side_menu section.s_header > * {
+	float: left;
+}
+#attendance_side_menu section.s_header > span{
+	width: 85%;
+	font-weight: bold;
+	padding: 10px;
+	color: rgba(0,0,0,0.5);
+}
+#attendance_side_menu section.s_header > button{
+	width: 15%;
+	display: block;
+	height: 38px;
+	border-color: transparent;
+	background-color: transparent;
+	border-left-color: rgba(0,0,0,0.2);
+	border-width: 0.01em;
+}
+#attendance_side_menu section.ac-btn-group > button{
+	float: left;
+	width: 50% !important;
+	border:1px solid transparent;
+	background: transparent;
+	font-weight: bold;
+	padding: 8px;
+	font-size: 11px;
+	color: rgba(0,0,0,0.5);
+}
+#attendance_side_menu section > select{
+	border:none;
+}
+#attendance_side_menu section.ac-btn-group > button:last-child{
+	border-left-color: rgba(0,0,0,0.2);
+}
+#attendance_side_menu #div_timesheets > *{
+	padding: 5px;
+}
+#attendance_side_menu #div_timesheets > label{
+	font-size: 17px;
+	padding: 10px;
+	padding-bottom: 0px;
+}
+#attendance_side_menu #div_timesheets nav{
+	max-height:700px;
+	overflow: auto;
+}
+#attendance_side_menu #div_timesheets nav > ul{
+	padding: 0px;
+	list-style-type: none;
+	margin-bottom: 0px;
+}
+#attendance_side_menu #div_timesheets nav > ul > li{
+	display: block;
+	overflow: hidden;
+	padding: 5px;
+	cursor: pointer;
+}
+#attendance_side_menu #div_timesheets nav > ul > li > img , 
+#attendance_side_menu #div_timesheets nav > ul > li > span.staff_name{
+	float: left;
+}
+#attendance_side_menu #div_timesheets nav > ul > li > span.badge{
+	position:absolute;
+	right: 5px;
+	top: 11px;
+	background-color: transparent;
+	color:black;
+}
+#attendance_side_menu #div_timesheets nav > ul > li > img{
+	width: 20px;
+}
+#attendance_side_menu #div_timesheets nav > ul > li > span.staff_name{
+	width: calc(100% - 20px);
+	font-weight: bold;
+	padding: 5px 10px;
+}
+#attendance_side_menu #div_timesheets nav > ul > li.missing-out{
+	background-color: #fdefef;
+	color: #ff4826;
+}
+
+.timesheet_summary > ul{
+	list-style-type: none;
+	padding: 0px;
+}
+.timesheet_summary > ul > li{
+	display: inline-block;
+	padding-right: 5px;
+}
+.timesheet_summary > ul > li > span.staff_name{
+	font-weight: bold;
+}
+#timesheet_table > thead , #timesheet_table > tfoot{
+	background-color: #F1f1f1;
+	font-size: 11px;
+}
+#timesheet_table > tbody{
+	font-size: 12px;
+}
