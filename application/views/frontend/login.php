@@ -66,20 +66,13 @@
                         <p class="help-block">Get even more control over what your employees can see and do in <?php echo $application_name; ?>.</p>
                     </div>
                     <div class="col-xs-12 col-lg-7 no-margin-bottom">
-                        <?php if($cookie_outlet) : ?>
-                        <div class="row">
-                            <div class="container-fluid">
-                                <h2 class="text-center">Sign in</h2>
-                                <span><h4 class="pull-left" style="margin: 0px !important;font-weight: bolder;color:#3a3a3a;"><?php echo $cookie_outlet['store_name']; ?></h4> <a href="<?php echo site_url("login/?store=change"); ?>" class="pull-right">Not your store?</a></span>
-                            </div>
-                        </div>
-                        <?php else : ?>
+
                             <div class="row">
                                 <div class="container-fluid">
                                     <h2 class="text-center">Sign in</h2>
                                 </div>
                             </div>
-                        <?php endif; ?>
+  
                         <?php if($this->session->flashdata("status")) : ?>
                         <div class="alert alert-danger" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -88,7 +81,7 @@
                         <?php $this->session->sess_destroy(); ?>
                         <?php endif; ?>
 
-                        <?php if($cookie_outlet) : ?>
+  
                             <form action="<?php echo site_url("login/do_login"); ?>" method="POST">
                                 <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
 
@@ -101,18 +94,7 @@
                                 <input type="submit" class="btn btn-primary btn-block" value="Login">
    
                             </form>
-                        <?php else : ?>
-                            <form action="<?php echo site_url("login/set_store_name"); ?>" method="POST">
-                                <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
 
-                                <div class="form-group">
-                                    <input type="text" name="store_name" class="form-control" placeholder="Store Name">
-                                </div>
-                                <input type="submit" class="btn btn-primary btn-block" value="Next">
-
-                            </form>
-
-                        <?php endif; ?>
                        
                         <div class="pull-right">
                             <a href="#">Having trouble signing in?</a>

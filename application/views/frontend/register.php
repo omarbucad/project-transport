@@ -71,10 +71,8 @@
                 <div class="text-left form-container">
                     <form action="<?php echo site_url("welcome/register"); ?>" method="POST">
                         <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
-                        <input type="hidden" name="retail_type" id="_retail_type">
-                        <input type="hidden" name="store_quantity" id="_store_quantity">
                         <div class="form-group">
-                            <label for="_store_name">Store Name</label>
+                            <label for="_store_name">Company Name</label>
                             <input type="text" name="store_name" id="_store_name" class="form-control" value="<?php echo set_value('store_name'); ?>">
                         </div>
                         <div class="form-group no-margin-bottom">
@@ -82,40 +80,60 @@
                                 <div class="col-xs-6 no-margin-bottom">
                                     <div class="form-group">
                                         <label>First name</label>
-                                        <input type="text" name="first_name" class="form-control" value="<?php echo set_value('first_name'); ?>">
+                                        <input type="text" name="first_name" class="form-control" value="<?php echo set_value('first_name'); ?>" required="true">
                                     </div>
                                 </div>
                                 <div class="col-xs-6 no-margin-bottom">
                                     <div class="form-group">
                                         <label>Last name</label>
-                                        <input type="text" name="last_name" class="form-control" value="<?php echo set_value('last_name'); ?>">
+                                        <input type="text" name="last_name" class="form-control" value="<?php echo set_value('last_name'); ?>" required="true">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="_email_address">Email address</label>
-                            <input type="email" name="email_address" id="_email_address" class="form-control" value="<?php echo set_value('email_address'); ?>">
+                            <input type="email" name="email_address" id="_email_address" class="form-control" value="<?php echo set_value('email_address'); ?>" required="true">
                         </div>
                         <div class="form-group">
                             <label for="_username">Username</label>
-                            <input type="text" name="username" id="_username" class="form-control" value="<?php echo set_value('username'); ?>">
+                            <input type="text" name="username" id="_username" class="form-control" value="<?php echo set_value('username'); ?>" required="true">
                         </div>
                         <div class="form-group">
                             <label for="_password">Password</label>
-                            <input type="password" name="password" id="_password" class="form-control" >
+                            <input type="password" name="password" id="_password" class="form-control"  required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control" id="_confirm_password" required="true" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="_phone">Phone</label>
-                            <input type="text" name="phone" id="_phone" class="form-control" value="<?php echo set_value('phone'); ?>">
+                            <input type="text" name="phone" id="_phone" class="form-control" value="<?php echo set_value('phone'); ?>" required="true">
+                        </div>
+                        <div class="form-group no-margin-bottom">
+                            <div class="row">
+                                <div class="col-xs-6 no-margin-bottom">
+                                    <div class="form-group">
+                                        <label for="_city">City</label>
+                                        <input type="text" name="city" id="_city" class="form-control" value="<?php echo set_value('city'); ?>" required="true">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 no-margin-bottom">
+                                    <div class="form-group">
+                                        <label for="_postcode">Zip Code</label>
+                                        <input type="text" name="postcode" id="_postcode" class="form-control" value="<?php echo set_value('postcode'); ?>" required="true">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="_city">City</label>
-                            <input type="text" name="city" id="_city" class="form-control" value="<?php echo set_value('city'); ?>">
+                            <label for="_state">State</label>
+                            <input type="text" name="state" id="_state" class="form-control" value="<?php echo set_value('state'); ?>" required="true">
                         </div>
                         <div class="form-group">
                             <label for="_country">Country</label>
-                            <select class="form-control" name="country" id="_country">
+                            <select class="form-control" name="country" id="_country" required="true">
                                 <?php foreach($countries_list as $code =>  $country) : ?>
                                     <option value="<?php echo $code; ?>" <?php echo ($code == $this->input->post("country")) ? "selected" : "" ; ?>><?php echo $country?></option>
                                 <?php endforeach; ?>
