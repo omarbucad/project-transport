@@ -26,10 +26,6 @@
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
                                 <li><a href="<?php echo site_url("app/setup/general"); ?>">General</a></li>
-                                <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
-                                <li><a href="<?php echo site_url("app/setup/outlets-and-registers"); ?>">Outlets And Registers</a></li>
-                                <li><a href="<?php echo site_url("app/setup/sales-taxes"); ?>">Sales Taxes</a></li>
-                                <li><a href="<?php echo site_url("app/setup/users"); ?>">Users</a></li>
                             </ul>
                         </div>
                     </div>
