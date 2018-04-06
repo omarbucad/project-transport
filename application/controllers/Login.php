@@ -10,7 +10,7 @@ class Login extends MY_Controller {
     }
 	public function index(){
 		
-		$this->load->view('frontend/login');
+		$this->load->view('frontend/login' , $this->data);
 	}
 	public function forgot_password(){
 		echo "FORGOT PASSWORD";
