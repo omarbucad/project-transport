@@ -48,15 +48,15 @@
                 </ul>
             </li>
             <li class="dropdown profile">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">#<span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo $session_data->display_name; ?> <span class="caret"></span></a>
                 <ul class="dropdown-menu animated fadeInDown">
                     <li class="profile-img">
-                        <img src="#" alt="#" class="profile-img">
+                        <img src="<?php echo site_url("thumbs/images/user/".$session_data->image_path.'/300/300/'.$session_data->image_name); ?>" alt="<?php echo $session_data->image_name; ?>" class="profile-img">
                     </li>
                     <li>
                         <div class="profile-info">
-                            <h4 class="username">1</h4>
-                            <p>1</p>
+                            <h4 class="username"><?php echo $session_data->display_name; ?></h4>
+                            <p><?php echo $session_data->email_address; ?></p>
                             <div class="btn-group margin-bottom-2x" role="group">
                                 <a href="<?php echo site_url("app/profile"); ?>" class="btn btn-default"><i class="fa fa-user"></i> Profile</a>
                                 <a href="<?php echo site_url("login/logout"); ?>" class="btn btn-default"><i class="fa fa-sign-out"></i> Logout</a>

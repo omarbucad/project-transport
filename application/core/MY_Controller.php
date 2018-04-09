@@ -19,7 +19,7 @@ class MY_Controller extends CI_Controller {
        
         if($this->uri->segment(1) == "app" AND $this->uri->segment(2) != "login"){
             if(!$this->session->userdata("user")){
-               // redirect("/app/login" , "refresh");
+                redirect("/login" , "refresh");
             }else if($this->session->userdata("user")){
                 $this->data['session_data'] = $this->session->userdata("user");
             }

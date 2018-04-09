@@ -36,16 +36,16 @@ class Welcome extends MY_Controller {
 			$this->data['countries_list'] = $this->countries_list();
 		}else{
 
-			if($data = $this->register->signup()){
+			if($user_id = $this->register->signup()){
 				
 				$this->session->set_flashdata('status' , 'success');
 				$this->session->set_flashdata('message' , 'Welcome to '.$this->data['application_name']);
 
-				$user_data = $this->register->signin($data['user_id']);
+				$user_data = $this->register->signin($user_id);
 
 				$this->session->set_userdata("user" , $user_data);
 
-				redirect('/app/welcome', 'refresh');
+				redirect('/app/dashboard', 'refresh');
 			}else{
 				$this->session->set_flashdata('status' , 'error');
 				redirect('/welcome/register', 'refresh');

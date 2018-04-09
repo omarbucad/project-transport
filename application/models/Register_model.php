@@ -7,20 +7,23 @@ class Register_model extends CI_Model {
 
     	/* ADDRESS */
 
-        $this->db->insert("address" , [
+        $this->db->insert("store_address" , [
         	"country" => $this->input->post("country") , 
-        	"city" => $this->input->post("city") , 
-        	"postcode" => $this->input->post("postcode")
-        ]);
-        $physical_address_id = $this->db->insert_id();
-
-        $this->db->insert("address" , [
-        	"country" => $this->input->post("country") , 
-        	"city" => $this->input->post("city") , 
+            "city" => $this->input->post("city") , 
         	"state" => $this->input->post("state") , 
         	"postcode" => $this->input->post("postcode")
         ]);
-        $postal_address_id = $this->db->insert_id();
+        $address_id = $this->db->insert_id();
+
+         /* STORE CONTACT INFORMATION */
+
+        $this->db->insert("store_contact" , [
+            "first_name"    => $this->input->post("first_name"),
+            "last_name"     => $this->input->post("last_name"),
+            "email"         => $this->input->post("email"),
+            "phone"         => $this->input->post("phone") 
+        ]);
+        $contact_id = $this->db->insert_id();
 
         /*  USER INFORMATION  */
         $this->db->insert("user" ,[
@@ -29,34 +32,18 @@ class Register_model extends CI_Model {
             "password"      		=> md5($this->input->post("password")),
             "email_address" 		=> $this->input->post("email_address"),
             "role"          		=> "ADMIN" ,
-            "phone_number"			=> $this->input->post("phone"),
-            "physical_address_id" 	=> $physical_address_id,
+            "image_path"            => "public/image/",
+            "image_name"            => "person-placeholder.jpg",
             "created"       		=> time()
         ]);
         $user_id = $this->db->insert_id();
 
-        
-
-        /* STORE CONTACT INFORMATION */
-
-        $this->db->insert("store_contact" , [
-            "first_name"    => $this->input->post("first_name") ,
-            "last_name"     => $this->input->post("last_name") ,
-            "email"         => $this->input->post("email_address") ,
-            "mobile"         => $this->input->post("phone")
-        ]);
-
-        $contact_id = $this->db->insert_id();
 
         /* STORE INFORMATION */
-        $store_subdomain = str_replace(" ", "", $this->input->post("store_name"));
-        $store_subdomain = strtolower($store_subdomain);
 
         $this->db->insert("store" , [
             "store_name"            => $this->input->post("store_name") ,
-            "user_id"               => $user_id ,
-            "physical_address"      => $physical_address_id ,
-            "postal_address"        => $postal_address_id ,
+            "address_id"            => $address_id ,
             "contact_id"            => $contact_id ,
             "created"               => time()
         ]);
@@ -86,9 +73,7 @@ class Register_model extends CI_Model {
         if ($this->db->trans_status() === FALSE){
             return false;
         }else{
-            return [
-                "user_id"       => $user_id
-            ];
+            return $user_id;
         }
     }
 
@@ -98,7 +83,8 @@ class Register_model extends CI_Model {
         $this->db->select("a1.country");
         $this->db->join("user_plan up" , "up.store_id = u.store_id");
         $this->db->join("store s" , "s.store_id = u.store_id");
-        $this->db->join("address a1" , "a1.address_id = s.physical_address");
+        $this->db->join("store_address a1" , "a1.store_address_id = s.address_id");
+
         if(is_array($user)){
             $this->db->where("u.username" , $user['username']);
             $this->db->where("u.password" , md5($user['password']));
