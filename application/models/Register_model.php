@@ -31,7 +31,7 @@ class Register_model extends CI_Model {
             "username"      		=> $this->input->post("username"),
             "password"      		=> md5($this->input->post("password")),
             "email_address" 		=> $this->input->post("email_address"),
-            "role"          		=> "ADMIN" ,
+            "role"          		=> "SUPER ADMIN" ,
             "image_path"            => "public/image/",
             "image_name"            => "person-placeholder.jpg",
             "created"       		=> time()
