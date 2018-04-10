@@ -67,6 +67,8 @@ class Register_model extends CI_Model {
             "store_id" => $store_id
         ]);
 
+        //SETUP THE DEFAULT CHECKLIST IN THIS COMPANY
+        $this->setup_checklist($store_id);
 
         $this->db->trans_complete();
 
@@ -109,5 +111,124 @@ class Register_model extends CI_Model {
             "user_agent"    => $_SERVER['HTTP_USER_AGENT'] ,
             "login_time"    => time()
         ]);
+    }
+
+    private function setup_checklist($store_id){
+        $this->truck_checklist($store_id);
+        $this->trailer_checklist($store_id);
+    }
+
+    private function truck_checklist($store_id){
+
+        $this->db->insert("checklist" , [
+            "store_id"          => $store_id ,
+            "checklist_name"    => "VEHICLE CHECKLIST" ,
+            "description"       => "Default Checklist" ,
+            "status"            => 1 ,
+            "created"           => time()
+        ]);
+
+        $checklist_id = $this->db->insert_id();
+
+        $items = array(
+            'Lamps/indicators/stop lamps',
+            'Reflectors/markers/warning devices',
+            'Battery Cover (security/condition)',
+            'Mirrors (clean/condition/security)',
+            'Brakes (Pressure/operation/leaks)',
+            'Driving control (Steering/wear/operation)',
+            'Tyres (Inflation/Any Damage/Wear)',
+            'Wheels/Nuts (Condition/Security)',
+            'Guards/Wings/Spray Suppression',
+            'Body/Load (Security/Protection)',
+            'Number Plates (Condition/Security/Bulbs)',
+            'Horn/Wipers/Washers/Windscreen',
+            'Engine Oil/Water (Fuel/level/leaks)',
+            'Fuel Cap On and Secure',
+            'Exhaust (condition/smoke/emission)',
+            'Tachograph/Speedometer Working',
+            'Speed Limiter Sticker Present',
+            'Trailer Coupling and Condition',
+            'Trailer Connection Wear/Leaks',
+            'Trailer Landing Legs Working',
+            'Spare Digital Roll',
+            'Height Indicator Set at Vehicle Height',
+            'Licence Disk Visible and In Date',
+            'Reversing Alarm Working',
+            'No Smoking Sticker in Cab',
+            'HIABS/Tipper Rams All Working',
+            'All Fors Cameras and Stickers Working',
+            'Brakes(warning devices and instruments)'
+        );
+
+
+        $batch = array();
+
+        foreach($items as $k => $v){
+            $batch[] = array(
+                "checklist_id"  => $checklist_id ,
+                "item_name"     => $v ,
+                "item_position" => $k
+            );
+        }
+
+
+        $this->db->insert_batch("checklist_items" , $batch);
+
+    }
+
+    private function trailer_checklist($store_id){
+        $this->db->insert("checklist" , [
+            "store_id"          => $store_id ,
+            "checklist_name"    => "TRAILER CHECKLIST" ,
+            "description"       => "Default Checklist" ,
+            "status"            => 1 ,
+            "created"           => time()
+        ]);
+
+        $checklist_id = $this->db->insert_id();
+
+        $items = array(
+            'Tyres & Wheel Nuts',
+            'Pin/Coupling Condition',
+            'Spray Suppression',
+            'Anti-Under Run Bars',
+            'Condition of Curtains*',
+            'Condition of Curtain Straps*',
+            'Load Straps*',
+            'Mot Plate & Disc',
+            'Landing Legs',
+            'Roof Pole*',
+            'Doors, Hinges & Locks',
+            'Lights & Reflectors',
+            'Air Leaks',
+            'Brakes',
+            'Air/Electrical Couplings',
+            'Body Condition',
+            'Load & Security',
+            'Tir Cord*',
+            'Slats/Boards All Present*',
+            'Internal/External Bulkhead',
+            'Rear Marker Boards',
+            'Mud Wings & Stays',
+            'Spray Suspension',
+            'Number Plate Holder',
+            'Fire Extinguishers (ADR)*',
+            'Fridge Unit Operation*',
+        );
+
+
+        $batch = array();
+
+        foreach($items as $k => $v){
+            $batch[] = array(
+                "checklist_id"  => $checklist_id ,
+                "item_name"     => $v ,
+                "item_position" => $k
+            );
+        }
+
+
+        $this->db->insert_batch("checklist_items" , $batch);
     }
 }
