@@ -1,10 +1,10 @@
 <div class="container margin-bottom">
     <div class="side-body padding-top">
     	<ol class="breadcrumb">
-    		<li><a href="<?php echo site_url('app/vehicle/trailer'); ?>">Truck List</a></li>
-    		<li class="active">New Truck</li>
+    		<li><a href="<?php echo site_url('app/vehicle/trailer'); ?>">Trailer List</a></li>
+    		<li class="active">Add Trailer</li>
     	</ol>	
-    	<h3>New Truck</h3>
+    	<h3>New Trailer</h3>
     	<form class="form-horizontal" action="<?php echo site_url("app/vehicle/trailer/add"); ?>" method="POST" enctype="multipart/form-data">
     		<input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
     		<!-- STORE SETTINGS -->

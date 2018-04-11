@@ -5,7 +5,7 @@
     		<li class="active">New Truck</li>
     	</ol>	
     	<h3>New Truck</h3>
-    	<form class="form-horizontal" action="<?php echo site_url("app/products/add"); ?>" method="POST" enctype="multipart/form-data">
+    	<form class="form-horizontal" action="<?php echo site_url("app/vehicle/truck/add"); ?>" method="POST" enctype="multipart/form-data">
     		<input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
     		<!-- STORE SETTINGS -->
     		<div class="card margin-bottom">
@@ -38,7 +38,7 @@
 
 
 	    	<div class="text-right margin-bottom">
-	    		<a href="<?php echo site_url('app/products');?>"  class="btn btn-default">Cancel</a>
+	    		<a href="<?php echo site_url('app/vehicle/truck');?>"  class="btn btn-default">Cancel</a>
 	    		<input type="submit" name="submit" value="Save" class="btn btn-success">
 	    	</div>
     	</form>

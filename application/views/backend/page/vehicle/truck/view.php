@@ -15,6 +15,15 @@
         }
     });
 
+    $(document).on("click" , ".btn-delete" , function(){
+
+        var c = confirm("Are you sure?");
+
+        if(c == true){
+            window.location.href = $(this).data("href");
+        }
+    });
+
 </script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
@@ -36,14 +45,12 @@
         <div class="card margin-bottom">
             <div class="container">
                 <div class="card-body no-padding-left no-padding-right">
-                    <form action="#" method="POST">
-                        <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
-                        <input type="hidden" name="_advance_search_value" id="_advance_search_value" value="false">
+                    <form action="<?php echo site_url('app/vehicle/truck')?>" method="GET">
                         <div class="row">
                             <div class="col-xs-12 col-lg-6 no-margin-bottom">
                                 <div class="form-group">
                                     <label for="s_name">Registration number</label>
-                                    <input type="text" name="registration_number" class="form-control" id="s_name" placeholder="Registration number" value="<?php echo $this->input->get("registration_number"); ?>">
+                                    <input type="text" name="registration_number" class="form-control" id="s_name" placeholder="Registration Number" value="<?php echo $this->input->get("registration_number"); ?>">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
@@ -51,8 +58,8 @@
                                     <label for="s_product_type">Status</label>
                                     <select class="form-control" name="status" id="s_product_type">
                                         <option value="">- Select Status -</option>
-                                        <option value="active" <?php echo ($this->input->get("status") == "active") ? "selected" : "" ; ?> >Active</option>
-                                        <option value="inactive" <?php echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option>
+                                        <option value="1" <?php echo ($this->input->get("status") == "Active") ? "selected" : "" ; ?> >Active</option>
+                                        <option value="0" <?php echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option>
                                         
                                     </select>
                                 </div>
@@ -69,7 +76,7 @@
             <table class="customer-table">
                 <thead>
                     <tr>
-                        <th width="30%">Name</th>
+                        <th width="30%">Registration Number</th>
                         <th width="20%">Description</th>
                         <th width="20%">Status</th>
                         <th width="30%"></th>
@@ -85,8 +92,8 @@
                             <td><span><?php echo $row->status; ?></span></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
-                                    <a href="<?php echo site_url("app/product/tags/edit/$row->vehicle_id"); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a href="<?php echo site_url("app/product/tags/delete/$row->vehicle_id"); ?>" class="btn btn-link" title="Remove Vehicle"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    <a href="<?php echo site_url("app/vehicle/truck/edit/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/truck/delete/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-delete" title="Remove Vehicle"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>
