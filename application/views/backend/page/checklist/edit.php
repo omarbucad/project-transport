@@ -67,7 +67,7 @@
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea name="description" id="description" class="textarea" value="<?php echo $result->checklist_name; ?>"></textarea>
+                        <textarea name="description" id="description" class="textarea" value="<?php echo $result->description; ?>"><?php echo $result->description?></textarea>
                     </div>
                 </div>
 
