@@ -82,18 +82,18 @@
                     <div class="form-group">
                         <input type="hidden" name="items[id][]" value="<?php echo ($value['id'] == '') ? 0 : $value['id'];?>">
                         <div class="row">
-                            <div class="col-lg-8">
+                            <div class="col-lg-8 no-margin-bottom">
                                 <label>Item Name</label>
                                 <input type="text" name="items[name][]" class="form-control item-name" required="true" value="<?php echo $value['item_name'];?>">
                             </div>
-                            <div class="col-lg-2"> 
+                            <div class="col-lg-2 no-margin-bottom"> 
                                 <label>Item Type</label>
                                 <select name="items[item_type][]" class="form-control">
                                     <option <?php echo ($value['item_type'] == "TEXTBOX") ? "selected" : ""; ?> value="TEXTBOX">TEXTBOX</option>
                                     <option <?php echo ($value['item_type'] == "CHECKBOX") ? "selected" : ""; ?> value="CHECKBOX">CHECKBOX</option>
                                 </select>
                             </div>
-                            <div class="col-lg-2"> 
+                            <div class="col-lg-2 no-margin-bottom"> 
                                 <label>Item Position</label>
                                 <div class="input-group">
                                     <input type="text" name="items[position][]" class="form-control item-position" required="true" value="<?php echo $value['item_position'];?>">
