@@ -49,6 +49,7 @@
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
                                 <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
+                                <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
                                 <li><a href="<?php echo site_url("app/setup/checklist"); ?>">Checklist</a></li>
                                 <li><a href="<?php echo site_url("app/setup/settings"); ?>">Settings</a></li>
                             </ul>

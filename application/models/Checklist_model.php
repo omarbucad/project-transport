@@ -91,7 +91,7 @@ class Checklist_model extends CI_Model {
         $id = $this->hash->decrypt($checklist_id);
         $this->db->where("checklist_id", $id);
         $this->db->where("deleted IS NULL");
-        $result = $this->db->get("checklist_items")->result_array();
+        $result = $this->db->order_by("item_position", "ASC")->get("checklist_items")->result_array();
 
         return $result;
     }

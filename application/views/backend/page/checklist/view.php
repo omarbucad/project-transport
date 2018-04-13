@@ -38,6 +38,29 @@
            }
     });
 
+    $(document).on("click" , ".view-list" , function(){
+           var url = $(this).data("href");
+           var checklist_id = $(this).data("id");
+           var name = $(this).data("name");
+           $.ajax({
+            url : url ,
+            method : "GET" ,
+            success : function(response){
+                var json = jQuery.parseJSON(response);
+                var modal = $("#checklistModal").modal("show");
+                
+                modal.find(".checklist-list").html(" ");
+                modal.find(".modal-title").html(name);
+                $.each(json.data , function(k , v){
+                    var list = $("<li>");
+                    list.append(v.item_name);
+                    modal.find(".checklist-list").append(list);
+                });
+
+            }
+        });
+    });
+
 </script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
@@ -99,7 +122,7 @@
                      <?php foreach($result as $row) : ?>
                         <tr class="customer-row" style="cursor: default;">
                             <td>
-                                <span><strong><a href="<?php echo site_url("app/setup/checklist"); ?>" class="link-style"><?php echo $row->checklist_name; ?></a></strong></span>
+                                <span><strong><a href="javascript:void(0);" class="link-style view-list" data-name="<?php echo $row->checklist_name; ?>" data-id="<?php echo $row->checklist_id; ?>" data-href="<?php echo site_url('app/setup/checklist/view/').$this->hash->encrypt($row->checklist_id);?>"><?php echo $row->checklist_name; ?></a></strong></span>
                             </td>
                             <td><span><?php echo $row->description; ?></span></td>
                             <td><span><?php echo $row->status; ?></span></td>
@@ -117,7 +140,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Add Modal -->
 <div class="modal fade" id="addchecklist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -140,6 +163,28 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <a href="javascript:void(0);" class="btn btn-primary add-checklist">Confirm</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Modal -->
+<div class="modal fade" id="checklistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <ol class="checklist-list">
+                  
+              </ol>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
