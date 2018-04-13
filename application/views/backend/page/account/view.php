@@ -35,13 +35,15 @@
         					<span>View a breakdown of your current plan. To find out what more you could get, <a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="text-underline">check out our other plans.</a></span>
         				</div>
         				<div class="col-xs-12 col-lg-6">
-        					<h4 style="margin-top: 0px;">Single Outlet</h4>
+        					<h4 style="margin-top: 0px;">Basic Plan</h4>
         					<nav>
         						<ul>
-        							<li><span>1 Register</span></li>
-        							<li><span>1 User</span></li>
-        							<li><span>10 Products</span></li>
-        							<li><span>1000 Customer</span></li>
+        							<li><span>1 Driver</span></li>
+                                    <li><span> Vehicle</span></li>
+                                    <li><span>1 Trailer</span></li>
+                                    <li><span>50 Reports / Month</span></li>
+                                    <li><span>Reports Viewable 1 Week Before Month Ends</span></li>
+                                    <li><span>No Export</span></li>
         						</ul>
         					</nav>
         				</div>
