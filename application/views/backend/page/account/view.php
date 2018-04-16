@@ -49,8 +49,10 @@
         				</div>
         			</div>
         		</div>
-        		<div class="col-xs-12 col-lg-6">
-                          
+        		<div class="col-xs-12">
+                    <div class="trial-time">
+                        <span>Trial Expiration: <?php echo $result->trial_left; ?></span>
+                    </div>
                 </div>
                 <div class="col-xs-12">
                     <a href="#" class="text-danger">Delete Account</a>

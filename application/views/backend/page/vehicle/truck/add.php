@@ -16,10 +16,22 @@
 	    		</div>
 	    		<div class="card-body">
 	    			<dl class="dl-horizontal text-left">
-	    				<dt>Registraion Name</dt>
+	    				<dt>Registration Name</dt>
 	    				<dd>
 	    					<div class="form-group">
 	    						<input type="text" name="registration_number" value="<?php echo set_value("registration_number"); ?>" class="form-control">
+	    					</div>
+	    				</dd>
+	    				<dt>Tyre Pressure</dt>
+	    				<dd>
+	    					<div class="form-group">
+	    						<input type="text" name="tyre_pressure" value="<?php echo set_value("tyre_pressure"); ?>" class="form-control">
+	    					</div>
+	    				</dd>
+	    				<dt>Thread Depth</dt>
+	    				<dd>
+	    					<div class="form-group">
+	    						<input type="text" name="thread_depth" value="<?php echo set_value("thread_depth"); ?>" class="form-control">
 	    					</div>
 	    				</dd>
 
