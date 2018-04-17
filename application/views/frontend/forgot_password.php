@@ -69,12 +69,12 @@
 
                             <div class="row">
                                 <div class="container-fluid">
-                                    <h2 class="text-center">Sign in</h2>
+                                    <h2 class="text-center">Forgotten Password</h2>
                                 </div>
                             </div>
   
-                        <?php if($this->session->flashdata("status")) : ?>
-                        <div class="alert alert-danger" role="alert">
+                        <?php if($this->session->flashdata("message") != "") : ?>
+                        <div class="alert alert-<?php echo ($this->session->flashdata('status')=='success') ? 'success' : 'danger'; ?>" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <p><?php echo $this->session->flashdata("message"); ?></p>
                         </div>
@@ -82,26 +82,23 @@
                         <?php endif; ?>
 
   
-                            <form action="<?php echo site_url("login/do_login"); ?>" method="POST">
+                            <form action="<?php echo site_url("login/forgot_password"); ?>" method="POST">
                                 <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
 
                                 <div class="form-group">
-                                    <input type="text" name="username" class="form-control" placeholder="username">
+                                    <input type="text" name="email" class="form-control" placeholder="Email Address">
                                 </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" class="form-control" placeholder="password">
-                                </div>
-                                <input type="submit" class="btn btn-primary btn-block" value="Login">
+                                <input type="submit" class="btn btn-primary btn-block" value="Send Change Password Email">
    
                             </form>
 
                        
                         <div class="pull-right">
-                            <a href="<?php echo site_url("login/forgot_password"); ?>">Having trouble signing in?</a>
+                            <a href="#">Having trouble signing in?</a>
                         </div>
                     </div>
                     <div class="login-footer">
-                            <span class="text-right"><a href="<?php echo site_url("login/forgot_password"); ?>" class="color-white">Forgotten Password?</a></span>
+                            <span class="text-right"><a href="<?php echo site_url("login/forgot_password"); ?>" class="color-white">Forgot password?</a></span>
                     </div>
                 </div>
             </div>

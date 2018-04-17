@@ -72,7 +72,6 @@ class Checklist_model extends CI_Model {
             $batch[] = array(
                 "checklist_id"  => $checklist_id ,
                 "item_name"     => $name ,
-                "item_type"     => $items['item_type'][$k],
                 "item_position" => $items['position'][$k]
             );
         }
@@ -118,7 +117,6 @@ class Checklist_model extends CI_Model {
             $batch[] = array(
                 "id"            => $id,
                 "item_name"     => $items['name'][$k],
-                "item_type"     => $items['item_type'][$k],
                 "item_position" => $items['position'][$k]
             );
         }
@@ -129,7 +127,6 @@ class Checklist_model extends CI_Model {
                 $this->db->insert('checklist_items',[
                     "checklist_id"  => $checklistid,
                     "item_name"     => $value['item_name'],
-                    "item_type"     => $value['item_type'],
                     "item_position" => $value['item_position']
                 ]);
             }
@@ -137,7 +134,6 @@ class Checklist_model extends CI_Model {
                 $this->db->where("id", $value['id']);
                 $this->db->update('checklist_items',[
                     "item_name"     => $value['item_name'],
-                    "item_type"     => $value['item_type'],
                     "item_position" => $value['item_position']
                 ]);
             }

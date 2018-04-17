@@ -52,6 +52,13 @@ class Profile_model extends CI_Model {
             "display_name"  => $post["display_name"]
         ]);
 
+        if($post["password"] != ""){
+            $this->db->where("user_id",$user_id);
+            $this->db->update("user", [
+                "password"  => md5($post["password"])
+            ]);
+        }
+
         $this->db->where("contact_id", $post["contact_id"]);
         $this->db->update("store_contact", [
             "first_name"    => $post["first_name"],
