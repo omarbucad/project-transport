@@ -48,10 +48,11 @@ class Checklist_model extends CI_Model {
 
         $this->db->insert("checklist" , [
             "checklist_name"   => $this->input->post("checklist_name"),
-            "status"                        => 1,
-            "store_id"                      => $store_id ,
-            "description"                   => $this->input->post("description"),
-            "created"                       => time()
+            "status"           => 1,
+            "store_id"         => $store_id ,
+            "description"      => $this->input->post("description"),
+            "vehicle_type"     => $this->input->post("vehicle_type"),
+            "created"          => time()
         ]);
 
         return $this->db->insert_id();
@@ -105,6 +106,7 @@ class Checklist_model extends CI_Model {
         $checklist_info = $this->db->update("checklist", [
             "checklist_name" => $this->input->post("checklist_name"),
             "description"    => $this->input->post("description"),
+            "vehicle_type"     => $this->input->post("vehicle_type"),
             "status"         => $this->input->post("status")
         ]);
 
@@ -199,5 +201,17 @@ class Checklist_model extends CI_Model {
         }else{
            return true;
         }      
+    }
+
+    public function get_checklist_dropdown(){
+        $store_id = $this->data['session_data']->store_id;
+
+
+        $this->db->where("deleted IS NULL");
+        $this->db->where("status !=", 0);
+
+        $result = $this->db->where("store_id" , $store_id)->order_by("created" , "ASC")->get("checklist")->result();
+
+        return $result;
     }
 }

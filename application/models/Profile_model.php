@@ -121,7 +121,7 @@ class Profile_model extends CI_Model {
         $today = date("M d Y 00:00:00");
         $expiry = convert_timezone($result->plan_expiration, true);
         $timeleft = strtotime($expiry) - strtotime($today);
-        $left = "<h4 class='help-block text-danger'>". round((($timeleft/24)/60)/60) . " day(s) left</h4>";
+        $left = round((($timeleft/24)/60)/60);
         $result->trial_left = $left;
 
         return $result;

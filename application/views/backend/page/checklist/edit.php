@@ -59,6 +59,14 @@
                         <input type="text" name="checklist_name" class="form-control" value="<?php echo $result->checklist_name; ?>" required="true">
                     </div>
                     <div class="form-group">
+                        <label for="vehicle_type">Vehicle Type</label>
+                        <select name="vehicle_type" id="vehicle_type" class="form-control" required="true" value="<?php echo $result->vehicle_type;?>">
+                          <option value="TRUCK">TRUCK</option>
+                          <option value="TRAILER">TRAILER</option>
+                          <option value="BOTH">BOTH</option>
+                        </select>
+                      </div>
+                    <div class="form-group">
                         <label>Status</label>
                         <select name="status" class="form-control">
                             <option <?php echo ($result->status == "1") ? "selected" : ""; ?> value="1">Active</option>

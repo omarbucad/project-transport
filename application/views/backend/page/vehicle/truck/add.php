@@ -22,12 +22,14 @@
 	    						<input type="text" name="registration_number" value="<?php echo set_value("registration_number"); ?>" class="form-control">
 	    					</div>
 	    				</dd>
+
 	    				<dt>Tyre Pressure</dt>
 	    				<dd>
 	    					<div class="form-group">
 	    						<input type="text" name="tyre_pressure" value="<?php echo set_value("tyre_pressure"); ?>" class="form-control">
 	    					</div>
 	    				</dd>
+	    				
 	    				<dt>Thread Depth</dt>
 	    				<dd>
 	    					<div class="form-group">
