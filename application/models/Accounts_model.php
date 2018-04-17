@@ -48,7 +48,7 @@ class Accounts_model extends CI_Model {
             "display_name" => $this->input->post("display_name") ,
             "role"         => $role ,
             "store_id"     => $store_id,
-            "image_path"   => "public/image/",
+            "image_path"   => "public/img/",
             "image_name"   => "person-placeholder.jpg",
             "status"       => 1,
             "created"      => time()
