@@ -21,12 +21,28 @@
                                 <input type="text" name="vehicle_registration_number" class="form-control" value="<?php echo $result->vehicle_registration_number;?>">
                             </div>
                         </dd>
+
+                        <dt>Tyre Pressure</dt>
+                        <dd>
+                            <div class="form-group">
+                                <input type="text" name="tyre_pressure" value="<?php echo $result->tyre_pressure; ?>" class="form-control">
+                            </div>
+                        </dd>
+                        
+                        <dt>Thread Depth</dt>
+                        <dd>
+                            <div class="form-group">
+                                <input type="text" name="thread_depth" value="<?php echo $result->thread_depth; ?>" class="form-control">
+                            </div>
+                        </dd>
+
                         <dt>Description</dt>
                         <dd>
                             <div class="form-group">
                                 <textarea name="description" class="textarea"><?php echo $result->description;?></textarea>
                             </div>
                         </dd>
+
                         <dt>Status</dt>
                         <dd>
                             <div class="form-group">

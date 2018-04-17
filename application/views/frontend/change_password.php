@@ -69,12 +69,18 @@
 
                             <div class="row">
                                 <div class="container-fluid">
-                                    <h2 class="text-center">Sign in</h2>
+                                    <h2 class="text-center">Change Password</h2>
                                 </div>
                             </div>
+                        <?php if(validation_errors()) : ?>
+                            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close" id="closed_alert"><span aria-hidden="true">×</span></button>
+                                <?php echo validation_errors(); ?>
+                            </div>
+                        <?php endif; ?>
   
-                        <?php if($this->session->flashdata("status")) : ?>
-                        <div class="alert alert-danger" role="alert">
+                        <?php if($this->session->flashdata("message") != "") : ?>
+                        <div class="alert alert-<?php echo ($this->session->flashdata('status')=='success') ? 'success' : 'danger'; ?>" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <p><?php echo $this->session->flashdata("message"); ?></p>
                         </div>
@@ -82,26 +88,28 @@
                         <?php endif; ?>
 
   
-                            <form action="<?php echo site_url("login/do_login"); ?>" method="POST">
+                            <form action="<?php echo site_url("login/change_password/").$code; ?>" method="POST">
                                 <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
-
                                 <div class="form-group">
-                                    <input type="text" name="username" class="form-control" placeholder="username">
+                                    <input type="email" name="email" class="form-control" id="email" value="<?php echo $customer_email; ?>" readonly="true">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" class="form-control" placeholder="password">
+                                    <input type="password" name="password" class="form-control" id="enter_password" placeholder="New Password" required="true">
                                 </div>
-                                <input type="submit" class="btn btn-primary btn-block" value="Login">
+                                <div class="form-group">
+                                    <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Confirm Password" required="true">
+                                </div>
+                                <input type="submit" class="btn btn-primary btn-block" value="Submit">
    
                             </form>
 
                        
                         <div class="pull-right">
-                            <a href="<?php echo site_url("login/forgot_password"); ?>">Having trouble signing in?</a>
+                            <a href="<?php echo site_url('login'); ?>">Click Here to Login</a>
                         </div>
                     </div>
                     <div class="login-footer">
-                            <span class="text-right"><a href="<?php echo site_url("login/forgot_password"); ?>" class="color-white">Forgotten Password?</a></span>
+                            <span class="text-right"><a href="<?php echo site_url("login/forgot-password"); ?>" class="color-white">Forgot password?</a></span>
                     </div>
                 </div>
             </div>

@@ -129,6 +129,11 @@ class Setup extends MY_Controller {
 		$this->form_validation->set_rules('physical[state]'		, 'State'	, 'trim|required');
 		$this->form_validation->set_rules('physical[country]'	, 'Country'	, 'trim|required');
 
+		if($this->input->post("password") != ""){
+			$this->form_validation->set_rules('password'		    , 'Password'		  , 'trim|required|min_length[5]');
+			$this->form_validation->set_rules('confirm_password'    , 'Confirm Password'  , 'trim|required|matches[password]');
+		}	
+
 		if ($this->form_validation->run() == FALSE){ 
 			$this->data['page_name'] = "Profile";
 			$this->data['result']    =  $this->profile->get_profile();

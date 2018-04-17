@@ -47,6 +47,8 @@ class Vehicle_model extends CI_Model {
 
         $this->db->insert("vehicle" , [
             "vehicle_registration_number"   => $this->input->post("registration_number"),
+            "tyre_pressure"                 => $this->input->post("tyre_pressure"),
+            "thread_depth"                  => $this->input->post("thread_depth"),
             "status"                        => 1 ,
             "store_id"                      => $store_id ,
             "description"                   => $this->input->post("description"),
@@ -63,6 +65,8 @@ class Vehicle_model extends CI_Model {
         $this->db->where("vehicle_id", $id);
         $this->db->update("vehicle" , [
             "vehicle_registration_number"   => $this->input->post("vehicle_registration_number"),
+            "tyre_pressure"                 => $this->input->post("tyre_pressure"),
+            "thread_depth"                  => $this->input->post("thread_depth"),
             "status"                        => $this->input->post("status"),
             "description"                   => $this->input->post("description")
         ]);

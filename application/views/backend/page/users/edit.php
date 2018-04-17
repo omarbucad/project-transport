@@ -33,7 +33,7 @@
         </div>
         
         <div class="container ">
-            <form action="<?php echo site_url("app/accounts/add");?>" method="post" enctype="multipart/form-data" id="form_users">
+            <form action="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($result->user_id);?>" method="post" enctype="multipart/form-data" id="form_users">
                 <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
                 <section class="sec_border_bottom">
                     <h3>Profile</h3>
@@ -44,22 +44,22 @@
                         <div class="col-xs-12 col-lg-4">
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" name="username" id="username" value="<?php echo set_value("username"); ?>"  class="form-control" placeholder="Username">
+                                <input type="text" name="username" id="username" value="<?php echo $result->username; ?>"  class="form-control" placeholder="Username" readonly="true">
                             </div>
                             <div class="form-group">
                                 <label for="display_name">Display Name</label>
-                                <input type="text" name="display_name" id="display_name" value="<?php echo set_value("display_name"); ?>"  class="form-control" placeholder="Display Name">
+                                <input type="text" name="display_name" id="display_name" value="<?php echo $result->display_name; ?>"  class="form-control" placeholder="Display Name">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email"  value="<?php echo set_value("email"); ?>"  class="form-control" placeholder="name@email.com">
+                                <input type="email" name="email" id="email"  value="<?php echo $result->email_address; ?>"  class="form-control" placeholder="name@email.com" readonly="true">
                             </div>
                         </div>
                         <div class="col-xs-12 col-lg-4">
                             <div class="form-group">
                                 <label for="">Profile Image</label>
                                 <div class="image-preview">
-                                    
+                                    <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
                                 </div>
                                 <input type="file" name="file" id="profile_image" class="btn btn-default">
                             </div>
@@ -92,11 +92,11 @@
                             <p>List of checklist that can be used</p>
                         </div>
                         <div class="col-xs-12 col-lg-4">
-                            <h4 style="margin-top: 0px;">Select Checklist(s) to be Used:</h4>
                             <div class="form-group">
                                 <?php foreach($checklist_list as $key => $value) :?>
                                     <div style="margin-bottom:10px;">
-                                        <input type="checkbox" name="checklist[]" value="<?php echo $value->checklist_id; ?>"> <label><?php echo $value->checklist_name; ?></label>
+                                        <input type="checkbox" name="checklist[]" value="<?php echo $value->checklist_id; ?>" <?php echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>> <label><?php echo $value->checklist_name?></label>
+                                            
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -111,7 +111,7 @@
                             <p>Have a secure password to make sure your account stay safe.</p>
                         </div>
                         <div class="col-xs-12 col-lg-8">
-                            <h4 style="margin-top: 0px;">SIGN IN SECURELY</h4>
+                            <h4 style="margin-top: 0px;">CHANGE PASSWORD</h4>
                             <span>When you need to sign in to <?php echo $application_name; ?>, you will be asked to provide your pasword.</span>
                             <br>
                             <br>

@@ -42,14 +42,8 @@
                                 <label>Item Name</label>
                                 <input type="text" name="item[name][]" class="form-control item-name" required="true">
                             </div>
-                            <div class="col-lg-2"> 
-                                <label>Item Type</label>
-                                <select name="item[item_type][]" class="form-control">
-                                    <option value="TEXTBOX">TEXTBOX</option>
-                                    <option value="CHECKBOX">CHECKBOX</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2"> 
+                            
+                            <div class="col-lg-4"> 
                                 <label>Item Position</label>
                                 <div class="input-group">
                                     <input type="text" name="item[position][]" class="form-control item-position" required="true">

@@ -59,6 +59,14 @@
                         <input type="text" name="checklist_name" class="form-control" value="<?php echo $result->checklist_name; ?>" required="true">
                     </div>
                     <div class="form-group">
+                        <label for="vehicle_type">Vehicle Type</label>
+                        <select name="vehicle_type" id="vehicle_type" class="form-control" required="true" value="<?php echo $result->vehicle_type;?>">
+                          <option value="TRUCK">TRUCK</option>
+                          <option value="TRAILER">TRAILER</option>
+                          <option value="BOTH">BOTH</option>
+                        </select>
+                      </div>
+                    <div class="form-group">
                         <label>Status</label>
                         <select name="status" class="form-control">
                             <option <?php echo ($result->status == "1") ? "selected" : ""; ?> value="1">Active</option>
@@ -86,14 +94,7 @@
                                 <label>Item Name</label>
                                 <input type="text" name="items[name][]" class="form-control item-name" required="true" value="<?php echo $value['item_name'];?>">
                             </div>
-                            <div class="col-lg-2 no-margin-bottom"> 
-                                <label>Item Type</label>
-                                <select name="items[item_type][]" class="form-control">
-                                    <option <?php echo ($value['item_type'] == "TEXTBOX") ? "selected" : ""; ?> value="TEXTBOX">TEXTBOX</option>
-                                    <option <?php echo ($value['item_type'] == "CHECKBOX") ? "selected" : ""; ?> value="CHECKBOX">CHECKBOX</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 no-margin-bottom"> 
+                            <div class="col-lg-4 no-margin-bottom"> 
                                 <label>Item Position</label>
                                 <div class="input-group">
                                     <input type="text" name="items[position][]" class="form-control item-position" required="true" value="<?php echo $value['item_position'];?>">

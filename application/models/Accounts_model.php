@@ -20,9 +20,25 @@ class Accounts_model extends CI_Model {
         return $result;
     }
 
+    public function get_account_info($user_id){
+        $this->db->where("user_id", $user_id);
+        $result = $this->db->get("user")->row();
+
+        $this->db->select("id,checklist_id");
+        $this->db->where("user_id", $user_id);
+        $user_checklist = $this->db->get("user_checklist")->result();
+        $result->user_checklist = [];
+        if($user_checklist != ""){
+            foreach($user_checklist as $key => $value){
+                $result->user_checklist[$value->checklist_id] = $value->checklist_id;
+            }
+        }
+        return $result;
+    }
+
     public function add_users(){
         $store_id = $this->data['session_data']->store_id;
-
+        $role = $this->input->post("role");
         $this->db->trans_start();
 
         $this->db->insert("user" , [
@@ -30,7 +46,7 @@ class Accounts_model extends CI_Model {
             "username"     => $this->input->post("username") ,
             "password"     => $this->input->post("password"),
             "display_name" => $this->input->post("display_name") ,
-            "role"         => $this->input->post("role") ,
+            "role"         => $role ,
             "store_id"     => $store_id,
             "image_path"   => "public/img/",
             "image_name"   => "person-placeholder.jpg",
@@ -40,6 +56,16 @@ class Accounts_model extends CI_Model {
 
         $last_id = $this->db->insert_id();
 
+        if($role != "ADMIN"){
+            foreach($this->input->post("checklist") as $key => $value){
+                $this->db->insert("user_checklist",[
+                    "user_id"      => $last_id,
+                    "checklist_id" => $value
+                ]);
+            }
+        }
+       
+
         $this->do_upload($last_id);
 
         $this->db->trans_complete();
@@ -48,6 +74,62 @@ class Accounts_model extends CI_Model {
             return false;
         }else{
             return $last_id;
+        }
+    }
+
+    public function edit_user($user_id){
+        $role = $this->input->post("role");
+        $this->db->trans_start();
+
+        $this->db->where("user_id", $user_id);
+        $this->db->update("user" , [
+            "email_address"=> $this->input->post("email") ,
+            "username"     => $this->input->post("username") ,
+            "display_name" => $this->input->post("display_name") ,
+            "role"         => $role ,
+            "status"       => 1
+        ]);
+
+        if($this->input->post("password") != ""){
+            $this->db->where("user_id", $user_id);
+            $this->db->update("user" , [
+                "password"=> $this->input->post("password")
+            ]);
+        }
+
+
+        if($role != "ADMIN"){
+            $this->db->where("user_id", $user_id);
+            $deleted = $this->db->delete("user_checklist");
+
+            if($deleted){
+                foreach($this->input->post("checklist") as $key => $value){
+                    $this->db->where("id",$value);
+                    $query = $this->db->get("user_checklist");
+
+                    if($query->num_rows() > 0){
+                        $this->db->where("id",$value);
+                        $this->db->update("user_checklist",[
+                            "checklist_id" => $value
+                        ]);
+                    }else{
+                        $this->db->insert("user_checklist",[
+                            "user_id"      => $user_id,
+                            "checklist_id" => $value
+                        ]);
+                    }
+                }
+            }
+        }
+       
+        $this->do_upload($user_id);
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return $user_id;
         }
     }
 

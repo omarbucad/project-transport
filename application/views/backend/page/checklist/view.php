@@ -114,8 +114,9 @@
                     <tr>
                         <th width="30%">Checklist Name</th>
                         <th width="20%">Description</th>
+                        <th width="20%">Vehicle Type</th>
                         <th width="20%">Status</th>
-                        <th width="30%"></th>
+                        <th width="10%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -125,6 +126,7 @@
                                 <span><strong><a href="javascript:void(0);" class="link-style view-list" data-name="<?php echo $row->checklist_name; ?>" data-id="<?php echo $row->checklist_id; ?>" data-href="<?php echo site_url('app/setup/checklist/view/').$this->hash->encrypt($row->checklist_id);?>"><?php echo $row->checklist_name; ?></a></strong></span>
                             </td>
                             <td><span><?php echo $row->description; ?></span></td>
+                            <td><span><?php echo $row->vehicle_type; ?></span></td>
                             <td><span><?php echo $row->status; ?></span></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
@@ -153,6 +155,14 @@
           <div class="form-group">
             <label for="checklist_name">Checklist Name</label>
             <input type="text" name="checklist_name" id="checklist_name" class="form-control" required="true" value="<?php echo set_value('checklist_name');?>">
+          </div>
+          <div class="form-group">
+            <label for="vehicle_type">Vehicle Type</label>
+            <select name="vehicle_type" id="vehicle_type" class="form-control" required="true" value="<?php echo set_value('vehicle_type');?>">
+              <option value="TRUCK">TRUCK</option>
+              <option value="TRAILER">TRAILER</option>
+              <option value="BOTH">BOTH</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="description">Description</label>

@@ -182,6 +182,35 @@
 	    			</div>
 	    		</div>
 	    	</div>
+
+	    	<!-- ADDRESS -->
+	    	<div class="card margin-bottom">
+	    		<div class="card-header">
+	    			<div class="card-title">
+	    				<div class="title">Change Password</div>
+	    			</div>
+	    		</div>
+	    		<div class="card-body">
+	  
+	    			<div class="row no-margin-bottom">
+	    				<div class="col-xs-12">
+	    					<dl class="dl-horizontal text-left">
+	    						<dt>Password</dt>
+	    						<dd>
+	    							<input type="password" name="password" class="form-control" id="enter_password">
+	    						</dd>
+	    					</dl>
+
+	    					<dl class="dl-horizontal text-left">
+	    						<dt>Confirm Password</dt>
+	    						<dd>
+	    							<input type="password" name="confirm_password" class="form-control" id="confirm_password">
+	    						</dd>
+	    					</dl>
+	    				</div>
+	    			</div>
+	    		</div>
+	    	</div>
 	    	<?php endforeach; ?>
 
 	    	<div class="text-right margin-bottom">

@@ -52,6 +52,13 @@ class Profile_model extends CI_Model {
             "display_name"  => $post["display_name"]
         ]);
 
+        if($post["password"] != ""){
+            $this->db->where("user_id",$user_id);
+            $this->db->update("user", [
+                "password"  => md5($post["password"])
+            ]);
+        }
+
         $this->db->where("contact_id", $post["contact_id"]);
         $this->db->update("store_contact", [
             "first_name"    => $post["first_name"],
@@ -117,6 +124,12 @@ class Profile_model extends CI_Model {
     public function get_userplan($user_id){
         $this->db->where("who_updated",$user_id);
         $result = $this->db->get("user_plan")->row();
+
+        $today = date("M d Y 00:00:00");
+        $expiry = convert_timezone($result->plan_expiration, true);
+        $timeleft = strtotime($expiry) - strtotime($today);
+        $left = round((($timeleft/24)/60)/60);
+        $result->trial_left = $left;
 
         return $result;
     }
