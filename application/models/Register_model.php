@@ -124,6 +124,7 @@ class Register_model extends CI_Model {
             "store_id"          => $store_id ,
             "checklist_name"    => "VEHICLE CHECKLIST" ,
             "description"       => "Default Checklist" ,
+            "vehicle_type"      => "BOTH",
             "status"            => 1 ,
             "created"           => time()
         ]);
@@ -182,6 +183,7 @@ class Register_model extends CI_Model {
             "store_id"          => $store_id ,
             "checklist_name"    => "TRAILER CHECKLIST" ,
             "description"       => "Default Checklist" ,
+            "vehicle_type"      => "BOTH",
             "status"            => 1 ,
             "created"           => time()
         ]);
