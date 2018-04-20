@@ -206,6 +206,44 @@ if ( ! function_exists('convert_timezone'))
     }   
 }
 
+if ( ! function_exists('report_type'))
+{
+    function report_type($type , $raw = false)
+    {
+        if($raw){
+            switch ($type) {
+                case 0:
+                    return 'No Defect';
+                break;
+                case 1:
+                    return 'Open';
+                break;
+                case 2:
+                    return 'Under Maintenance';
+                break;
+                case 3:
+                    return 'Fixed';
+                break;
+            }
+        }else{
+            switch ($type) {
+                case 0:
+                    return '<span class="label label-primary">No Defect</span>';
+                break;
+                case 1:
+                    return '<span class="label label-danger">Open</span>';
+                break;
+                case 2:
+                    return '<span class="label label-warning">Under Maintenance</span>';
+                break;
+                case 3:
+                    return '<span class="label label-success">Fixed</span>';
+                break;
+            }
+        }
+    }   
+}
+
 if(!function_exists("fromNow")){
 
     function fromNow($time) {

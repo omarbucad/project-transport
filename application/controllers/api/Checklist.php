@@ -22,7 +22,7 @@ class Checklist extends CI_Controller {
 		$store_id = $this->post->store_id;
 		$user_id = $this->post->user_id;
 
-		$this->db->select("c.checklist_id , c.checklist_name");
+		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type");
 		$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
 		$result = $this->db->where("c.store_id" , $store_id)->where("uc.user_id" , $user_id)->where("c.status" , 1)->where("c.deleted IS NULL")->get("checklist c")->result();
 
@@ -73,10 +73,12 @@ class Checklist extends CI_Controller {
 				"checklist_id"					=> $data->checklist_type ,
 				"start_mileage"					=> $data->start_mileage ,
 				"end_mileage"					=> $data->end_mileage ,
-				"report_notes"					=> $data->note ,
+				"report_notes"					=> (isset($data->note)) ? $data->note : "" ,
 				"created"						=> time()
 			]);
 			$report_id = $this->db->insert_id();
+
+			$signature_path = $this->save_signature($report_id);
 
 			//Create status
 			$this->db->insert("report_status" , [
@@ -84,7 +86,10 @@ class Checklist extends CI_Controller {
 				"status"			=> ($this->isDefect()) ? 1 : 0 ,
 				"notes"				=> "Initial" ,
 				"user_id"			=> $data->user->user_id ,
-				"created"			=> time()
+				"created"			=> time(),
+				"longitude"			=> $data->longitude,
+				"latitude"			=> $data->latitude,
+				"signature"			=> $signature_path
 			]);
 			$status_id = $this->db->insert_id();
 
@@ -95,7 +100,7 @@ class Checklist extends CI_Controller {
 					"report_id"				=> $report_id ,
 					"checklist_item_id"		=> $item->checklist_id ,
 					"checklist_value"		=> $item->note ,
-					"checklist_ischeck"		=> $item->checkbox
+					"checklist_ischeck"		=> $item->checkbox,
 				);
 
 				$this->db->insert("report_checklist" , $item_batch);
@@ -108,12 +113,11 @@ class Checklist extends CI_Controller {
 
 			$report_number = date("dmY").'-'.sprintf('%05d', $report_id);
 
-			$signature_path = $this->save_signature($report_number);
+			
 
 			$this->db->where("report_id" , $report_id)->update("report" , [
 				"report_number"		=> $report_number,
-				"status_id"			=> $status_id ,
-				"signature"			=> $signature_path
+				"status_id"			=> $status_id 
 			]);
 
 			$this->db->trans_complete();
@@ -214,6 +218,7 @@ class Checklist extends CI_Controller {
 
 	        if (!file_exists($folder)) {
 	            mkdir($folder, 0777, true);
+	            mkdir($folder.'/thumbnail', 0777, true);
 	            create_index_html($folder);
 	        }
 
