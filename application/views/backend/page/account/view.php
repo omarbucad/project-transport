@@ -93,7 +93,7 @@
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
-                                    <button type="button" class="btn btn-success">Select Plan</button>
+                                    <button type="button" class="btn btn-success">Selected Plan</button>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary">Plan Selected</button>
+                                    <button type="button" class="btn btn-primary">Select Plan</button>
                                 </div>
                             </div>
                         </div>

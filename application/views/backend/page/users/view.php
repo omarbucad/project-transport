@@ -85,9 +85,14 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td ><span ><?php echo $row->role; ?></span></td>
-                                <td ><span ><?php echo $row->status; ?></span></td>
-                                <td class="text-right"><span><a class="btn btn-success btn-xs" href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($row->user_id); ?>">Edit</a></span></td>
+                                <td><span ><?php echo $row->role; ?></span></td>
+                                <td><span ><?php echo $row->status; ?></span></td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                    <a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link btn-delete" title="Delete User"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                </div>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>

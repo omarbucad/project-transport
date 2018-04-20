@@ -133,6 +133,24 @@ class Accounts_model extends CI_Model {
         }
     }
 
+    public function delete_user($user_id){
+
+        $this->db->trans_start();
+
+        $this->db->where("user_id", $user_id);
+        $this->db->update("user", [
+            "deleted" => time()
+        ]);
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     private function do_upload($user_id){
         $year = date("Y");
         $month = date("m");

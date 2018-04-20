@@ -94,62 +94,56 @@ if( ! function_exists('convert_customer_status')){
     }
 }
 
-if( ! function_exists('convert_order_status')){
-    
-    function convert_order_status($status , $raw = false) {
+if ( ! function_exists('report_type'))
+{
+    function report_status($type , $raw = false)
+    {
         /*
-            0 - cancelled Order
-            1 - Placed an order
-            2 - Admin Confirm
-            3 - On Delivery
-            4 - Delivered
+            0 - NO DEFECT
+            1 - OPEN
+            2 - ON MAINTENANCE
+            3 - FIXED
+
         */
-
-
-         if($raw){
-            switch ($status) {
-                case 0:
-                    return "Cancelled";
-                    break;
-                case 1:
-                    return "Processing";
+        if($raw){
+            switch ($type) {
+                case 3:
+                    return 'Fixed';
                     break;
                 case 2:
-                    return "Confirmed Order";
-                    break;
-                case 3:
-                    return "On Delivery";
-                    break;
-                case 4:
-                    return "Delivered";
-                    break;
-                default:
-                    return "Cancelled";
-                    break;
-            }
-         }else{
-            switch ($status) {
-                case 0:
-                    return "<span class='label label-danger'>Cancelled</span>";
+                    return 'On Maintenance';
                     break;
                 case 1:
-                    return "<span class='label label-info'>Processing</span>";
-                    break;
-                case 2:
-                    return "<span class='label label-primary'>Confirmed Ordered</span>";
-                    break;
-                case 3:
-                    return "<span class='label label-warning'>On Delivery</span>";
-                    break;
-                case 4:
-                    return "<span class='label label-success'>Delivered</span>";
+                    return 'Open';
+                    break;                    
+                case 0:
+                    return 'No Defect';
                     break;
                 default:
-                    return "<span class='label label-danger'>Cancelled</span>";
+                    # code...
                     break;
             }
-         }
-    }
+        }else{
+            switch ($type) {
+                
+                case 3:
+                    return '<span class="label label-success">Fixed</span>';
+                    break;
+                case 2:
+                    return '<span class="label label-warning">On Maintenance</span>';
+                    break;
+                case 1:
+                    return '<span class="label label-info">Open</span>';
+                    break;
+                case 0:
+                    return '<span class="label label-success">No Defect</span>';
+                    break; 
+                default:
+                    # code...
+                    break;
+            }
+        }
+    }   
 }
 
 if( ! function_exists('date_of_birth')){

@@ -101,7 +101,8 @@ class Checklist extends CI_Controller {
 
 			$this->db->where("report_id" , $report_id)->update("report" , [
 				"report_number"		=> $report_number,
-				"status_id"			=> $status_id
+				"status_id"			=> $status_id,
+				"signature"			=> $signature_path
 			]);
 
 			$this->db->trans_complete();

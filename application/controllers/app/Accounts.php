@@ -91,8 +91,26 @@ class Accounts extends MY_Controller {
 				$this->session->set_flashdata('status' , 'error');
 				$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/accounts/edit" , 'refresh');
+				redirect("app/accounts/edit/".$user_id , 'refresh');
 			}
+		}
+	}
+
+	public function delete($user_id){
+		$id = $this->hash->decrypt($report_id);
+			
+		if($delete_checklist = $this->reports->delete_report($id)){
+
+			$this->session->set_flashdata('status' , 'success');	
+			$this->session->set_flashdata('message' , 'Successfully Deleted User');
+
+			redirect("app/accounts/" , 'refresh');
+
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'Something went wrong.');
+
+			redirect("app/accounts/".$user_id , 'refresh');
 		}
 	}
 }

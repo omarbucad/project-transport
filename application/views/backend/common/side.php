@@ -31,7 +31,7 @@
                     </div>
                 </li>
                 <li class="<?php echo ($this->uri->segment(2) == 'reports') ? "active" : "" ;?>">
-                    <a href="<?php echo site_url('app/reports'); ?>">
+                    <a href="<?php echo site_url('app/report'); ?>">
                         <span class="icon fa fa-book"></span><span class="title">Reports</span>
                     </a>
                 </li>
