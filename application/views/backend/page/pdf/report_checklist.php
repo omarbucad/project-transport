@@ -11,29 +11,29 @@
 	<table width="100%" style="margin-bottom: 10px; text-align: left;">
 		<tr>
 			<th style="width: 100px;">Report #</th>
-			<td><?php echo $result->report_number; ?></td>
+			<td><?php echo $report_number; ?></td>
 			<th style="width: 100px;">Report By</th>
-			<td><?php echo $result->display_name; ?></td>
+			<td><?php echo $display_name; ?></td>
 		</tr>								
 		<tr>
 			<th style="width: 100px;">Start Mileage</th>
-			<td><?php echo $result->start_mileage; ?></td>
+			<td><?php echo $start_mileage; ?></td>
 			<th style="width: 100px;">End Mileage</th>
-			<td><?php echo $result->end_mileage; ?></td>
+			<td><?php echo $end_mileage; ?></td>
 		</tr>
 		<tr>
 			<th style="width: 100px;">Vehicle Registration No.</th>
-			<td><?php echo $result->vehicle_registration_number; ?></td>
+			<td><?php echo $vehicle_registration_number; ?></td>
 			<th style="width: 100px;">Trailer No.</th>
-			<td><?php echo $result->trailer_number; ?></td>
+			<td><?php echo $trailer_number; ?></td>
 		</tr>
 		<tr>
 			<th style="width: 100px;">Created</th>
-			<td><?php echo $result->created; ?></td>
+			<td><?php echo $created; ?></td>
 		</tr>
 		<tr>
 			<th style="width: 100px;">Report Notes</th>
-			<td><?php echo $result->report_notes; ?></td>
+			<td><?php echo $report_notes; ?></td>
 		</tr>
 	</table>
 
@@ -47,7 +47,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach($result->report_statuses as $key => $value) : ?>
+			<?php foreach($report_statuses as $key => $value) : ?>
 				<tr>
 					<td style="text-align: center;width: 100px;"><?php echo $value->status; ?></td>
 					<td style="padding-left: 5px;"><?php echo $value->display_name; ?></td>
@@ -68,7 +68,7 @@
 		</thead>
 		<tbody>
 
-			<?php foreach($result->report_checklist as $index => $value): ?>
+			<?php foreach($report_checklist as $index => $value): ?>
 			<tr>
 				<td style="padding-left: 5px;"> <?php echo $value->item_name; ?></td>
 

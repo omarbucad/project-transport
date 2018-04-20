@@ -33,9 +33,9 @@ class Pdf {
 
 	public function create_report_checklist($data = array()){
 		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(10, 10, 10, 10));
-		try{
 
-			$filename = "reporty_".$data->report_number.'_'.time().'.pdf';
+		try{
+			$filename = "report_".$data->report_number.'_'.time().'.pdf';
 			$path = FCPATH.$this->folder.'/'.$filename;
 
 			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/report_checklist" , $data , TRUE));

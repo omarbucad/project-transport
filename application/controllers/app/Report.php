@@ -6,8 +6,6 @@ class Report extends MY_Controller {
 	public function __construct() {
        parent::__construct();
        $this->load->model('report_model', 'reports');
-       $this->load->library('Pdf','pdf');
-
     }
 	public function index(){
 		$this->data['page_name'] = "Report";
@@ -73,13 +71,13 @@ class Report extends MY_Controller {
 		$report = $this->reports->get_report_by_id($report_id);
 
 		if($pdf = $this->pdf->create_report_checklist($report)){
-			$id = $this->db->hash->decrypt($report_id);
+			$id = $this->hash->decrypt($report_id);
 
 			$this->db->where("report_id" , $id)->update("report" , [
 				"report_pdf" => $pdf['file']
 			]);
 			
-			download_send_headers($pdf['attachment']);
+			//download_send_headers($pdf['attachment']);
 		}
 	}
 
