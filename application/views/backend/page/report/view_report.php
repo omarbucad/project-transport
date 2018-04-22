@@ -1,35 +1,48 @@
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY; ?>"></script>
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('[data-toggle="tooltip"]').tooltip(); 
-		$('#_map').toggle();
 
-		setTimeout(function(){
-            var latlng = {lat: parseFloat('<?php echo $result->center_marker[0]["latitude"];?>'), lng: parseFloat('<?php echo $result->center_marker[0]["longitude"];?>')};
+        var locations = jQuery.parseJSON('<?php echo $result->locations;?>');
+
+
+        $.getScript("https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY; ?>")
+          .done(function( script, textStatus ) {
+
 
             var map = new google.maps.Map(document.getElementById('_map'), {
-              zoom: 14,
-              center: latlng
+              zoom: 10,
+              center: new google.maps.LatLng(locations[0][1], locations[0][2]),
+              mapTypeId: google.maps.MapTypeId.ROADMAP
             });
 
+            var infowindow = new google.maps.InfoWindow();
 
-            var markers = [
-            <?php foreach($result->status_markers as $key => $value) : ?>
-                {   position: new google.maps.LatLng(parseFloat('<?php echo $value["latitude"]; ?>'), parseFloat('<?php echo $value["longitude"]; ?>'))
-                },
-            <?php endforeach; ?>
 
-            ];
+            var marker, i;
 
-            markers.forEach(function(marker) {
-              var marker = new google.maps.Marker({
-                position: marker.position,
-                map: map
+            for (i = 0; i < locations.length; i++) {  
+              marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map,
+                label : locations[i][0]
               });
-            });
+
+              google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                  infowindow.setContent(locations[i][0]);
+                  infowindow.open(map, marker);
+                }
+              })(marker, i));
+
+            }
+        }).fail(function( jqxhr, settings, exception ) {
            
-        },500);
+        });
+
+        
+        
+
 	});
 
 	$(document).on("click" , ".btn-delete" , function(){
@@ -41,9 +54,6 @@
         }
     });  
 
-	$(document).on("click", ".view-map", function(){
-        $('#_map').toggle();
-    });
 </script>
 <style type="text/css">
 	dd {
@@ -62,7 +72,7 @@
 	    color: white;
 	}
 </style>
-<div class="container-fluid margin-bottom">
+<div class="container margin-bottom">
     <div class="side-body padding-top">
     	<ol class="breadcrumb">
     		<li><a href="<?php echo site_url('app/report/'); ?>">Report</a></li>
@@ -74,7 +84,7 @@
                 <div class="col-xs-12 col-lg-8 no-margin-bottom">                
                 </div> 
             	<div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                    <a href="<?php echo site_url('app/report/create_pdf/').$this->hash->encrypt($result->report_id);?>" class="btn btn-success btn-print" target="_blank">Print Report</a>
+                    <a href="<?php echo site_url('app/report/pdf/').$this->hash->encrypt($result->report_id);?>" class="btn btn-success btn-print" target="_blank">Print Report</a>
 					<a href="<?php echo site_url('app/report/');?>" class="btn btn-primary"  style="margin-right:25px;">Back to Reports List</a>
                 </div>
                                
@@ -88,7 +98,7 @@
     			</div>
     		</div>
     		<div class="card-body">
-    			<div class="no-margin-bottom">
+    			<div class="row">
     				<div class="col-lg-6 no-margin-bottom">
 
     					<table class="table">
@@ -101,15 +111,16 @@
     						<td><?php echo $result->created;?></td>
     					</tr>
     					<tr>
-    						<td><strong>Vehicle Registration Number</strong></td>
+    						<td><strong>Vehicle</strong></td>
     						<td><?php echo $result->vehicle_registration_number;?></td>
     					</tr>
+    					<?php if($result->trailer_number) : ?>
+                        <tr>
+                            <td><strong>Trailer Number</strong></td>
+                            <td><?php echo $result->trailer_number; ?></td>
+                        </tr>
+                        <?php endif; ?>
     					
-    					<tr>
-    						<td><strong>Trailer Number</strong></td>
-
-    						<td><?php echo (isset($result->trailer_number)) ? $result->trailer_number : 'NA'; ?></td>
-	    				</tr>
     					<tr>
     						<td><strong>Start Mileage</strong></td>
     						<td><?php echo $result->start_mileage;?></td>
@@ -123,36 +134,39 @@
     						<td><?php echo $result->report_notes;?></td>
     					</tr>
 	    				</table>
-	    				<table class="table" style="margin-top: 9px;">
-	    					<tr><td><strong>Map Location</strong> <span class="pull-right"><a href="javascript:void(0);" class="view-map"><small>View Map</small> <i class="fa fa-angle-double-down"></i></a></span></td></tr>
-	    					<tr>
-	    						<td>
-			    					<div id="_map" style="width:100%;height:300px;">
-			    					</div>
-	    						</td>
-	    					</tr>
-	    				</table>
-	    				
+
     				</div>
     				<div class="col-lg-6 no-margin-bottom">
     					<table class="table">
     						<tr>
-    							<td><strong>Status</strong></td>
     							<td><strong>Updated By</strong></td>
     							<td><strong>Notes</strong></td>
-    							<td><strong>Updated</strong></td>
+                                <td><strong>Updated</strong></td>
+    							<td><strong></strong></td>
     						</tr>
     						<?php foreach($result->report_statuses as $key => $row) :?>
 	    					<tr>
-	    						<td><?php echo $row->status; ?></td>
-	    						<td><?php echo $row->display_name; ?></td>
+	    						<td>
+                                    <?php echo $row->display_name; ?>
+                                </td>
 	    						<td><?php echo $row->notes; ?></td>
-	    						<td><?php echo $row->created; ?></td>	    						
+	    						<td>
+                                    <?php echo $row->status; ?><br>
+                                    <small class="help-block"><?php echo $row->created; ?></small>
+                                </td>	  
+                                <td>
+                                     <img src="<?php echo $row->signature; ?>" height="40px;">
+                                </td>  						
 	    					</tr>
 	    					<?php endforeach; ?>
 	    				</table>
     				</div>
     			</div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <div id="_map" style="width:100%;height:300px;"></div>
+                    </div>
+                </div>
     		</div>
     	</div>
 
@@ -171,7 +185,7 @@
     							<td><strong>Item</strong></td>
     							<td></td>
     							<td><strong>Remarks</strong></td>
-    							<td><strong>Image(s)</strong></td>
+    							<td><strong></strong></td>
     						</tr>
     						<?php foreach($result->report_checklist as $key => $row) :?>
 	    					<tr>

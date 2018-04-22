@@ -14,6 +14,7 @@ class Report extends CI_Controller {
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
         }
+        $this->load->model('report_model', 'reports');
         
 		$this->post = json_decode(file_get_contents("php://input"));
 	}
@@ -32,8 +33,10 @@ class Report extends CI_Controller {
 		$this->db->join("user u2" , "rs.user_id = u2.user_id");
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 
-		if($mechanic){
+		if($mechanic == "defect"){
 			$this->db->where_in("rs.status" , [1 , 2])->where("u.store_id" , $store_id);
+		}else if($mechanic == "all"){
+			$this->db->where("u.store_id" , $store_id)->where("rs.user_id" , $report_by)->group_by("r.report_id");
 		}else{
 			$this->db->where("r.report_by" , $report_by);
 		}
@@ -42,13 +45,14 @@ class Report extends CI_Controller {
 
 
 		foreach($result as $key => $row){
-			$result[$key]->signature = $this->config->site_url("public/upload/signature/".$row->signature);
+			
 			$result[$key]->created   = convert_timezone($row->created , true );
 			$result[$key]->status_raw = report_type($row->status , true);
 			$result[$key]->status = report_type($row->status);
+
 			$result[$key]->pdf = [
-				"path"	=> "http://192.168.1.116/project-transport/public/upload/pdf.pdf" ,
-				"name"	=> "pdf.pdf"
+				"path"	=> $this->config->site_url("api/report/pdf/".$this->hash->encrypt($row->report_id)).'/true',
+				"name"	=> $row->report_number.".pdf"
 			];
 			
 
@@ -69,18 +73,31 @@ class Report extends CI_Controller {
 
 			$this->db->select("rs.status , rs.notes  , u.display_name , rs.created , rs.longitude , rs.latitude , rs.signature");
 			$this->db->join("user u" , "u.user_id = rs.user_id");
-			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
+			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "ASC")->get("report_status rs")->result();
 
 			foreach($status as $k => $r){
 				$status[$k]->status = report_type($r->status );
 				$status[$k]->created   = convert_timezone($r->created , true );
 				$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
 			}
-
+			$result[$key]->signature = $status[0]->signature;
 			$result[$key]->status_list = $status;
 		}
 
 		echo json_encode($result);
+	}
+
+	public function pdf($report_id){
+
+		$report_id = $this->hash->decrypt($report_id);
+		$report = $this->reports->get_report_by_id($report_id);
+
+		$pdf = $this->pdf->create_report_checklist($report , "F");
+
+		$pdf['file'] = $this->config->site_url($pdf['file']);
+
+		echo json_encode($pdf);
+	
 	}
 
 	public function fix_report(){
@@ -122,6 +139,12 @@ class Report extends CI_Controller {
 		}
 	}
 
+	public function delete_pdf(){
+		if($this->post){
+			echo json_encode(["status" => true]);
+			unlink($this->post->file);
+		}
+	}
 	private function save_signature($report_number){
 		$image = $this->post->signature;
 

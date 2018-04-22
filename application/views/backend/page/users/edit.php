@@ -76,9 +76,9 @@
                             <div class="form-group">
                                 <label for="role">Role</label>
                                 <select class="form-control" name="role" id="user_role">
-                                    <option value="DRIVER">Driver</option>
-                                    <option value="ADMIN">Admin</option>
-                                    <option value="MECHANIC">Mechanic</option>
+                                    <option value="DRIVER" <?php echo ($result->role == "DRIVER") ? "selected" : "" ;?>>Driver</option>
+                                    <option value="ADMIN" <?php echo ($result->role == "ADMIN") ? "selected" : "" ;?>>Admin</option>
+                                    <option value="MECHANIC" <?php echo ($result->role == "MECHANIC") ? "selected" : "" ;?>>Mechanic</option>
                                 </select>
                             </div>
                             
@@ -92,14 +92,17 @@
                             <p>List of checklist that can be used</p>
                         </div>
                         <div class="col-xs-12 col-lg-4">
-                            <div class="form-group">
+
                                 <?php foreach($checklist_list as $key => $value) :?>
-                                    <div style="margin-bottom:10px;">
-                                        <input type="checkbox" name="checklist[]" value="<?php echo $value->checklist_id; ?>" <?php echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>> <label><?php echo $value->checklist_name?></label>
-                                            
+
+                                    <div class="checkbox3 checkbox-check  checkbox-light">
+                                          <input type="checkbox" name="checklist[]" id="checkbox-<?php echo $value->checklist_id; ?>" value="<?php echo $value->checklist_id; ?>" <?php echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>>
+                                          <label for="checkbox-<?php echo $value->checklist_id; ?>">
+                                            <?php echo $value->checklist_name?>
+                                          </label>
                                     </div>
                                 <?php endforeach; ?>
-                            </div>
+    
                             
                         </div>
                     </div>

@@ -27,16 +27,7 @@
     $(document).on("click" , ".checklist-modal" , function(){
        var modal = $("#addchecklist").modal("show");
     });
-    $(document).on("click" , ".add-checklist" , function(){
-           var form = $('#checklist-form');
-           var name = $('#checklist_name').val();
-           if(name == ""){
-            alert("Checklist Name is required");
-           }else{
-            form.submit();
-            form.reset();
-           }
-    });
+
 
     $(document).on("click" , ".view-list" , function(){
            var url = $(this).data("href");
@@ -61,6 +52,42 @@
         });
     });
 
+    $(document).on("click" , ".add-checklist" , function(){
+      $(this).closest(".modal").find("form").submit();
+    });
+
+    $(document).on("change" , '#checklist_for' , function(){
+      if($(this).val() == "DRIVER"){
+        $("#reminder_group").addClass("hide");
+      }else{
+        $("#reminder_group").removeClass("hide");
+      }
+
+      update_accounts_list();
+    });
+
+    $(document).ready(function(){
+       update_accounts_list();
+    });
+
+    function update_accounts_list(){
+      var cf = $('#checklist_for').val();
+
+      var fs = $('#fs').find(".checkbox3");
+
+          fs.each(function(k , v){
+
+              if($(v).data("type") == cf){
+                $(v).removeClass("hide");
+                $(v).find("input").prop("checked" , true);
+              }else{
+                $(v).addClass("hide");
+                $(v).find("input").prop("checked" , false);
+              }
+          });
+
+
+    }
 </script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
@@ -154,20 +181,47 @@
         <form action="<?php echo site_url('app/setup/checklist/add');?>" method="POST" id="checklist-form">
           <div class="form-group">
             <label for="checklist_name">Checklist Name</label>
-            <input type="text" name="checklist_name" id="checklist_name" class="form-control" required="true" value="<?php echo set_value('checklist_name');?>">
+            <input type="text" name="checklist_name" id="checklist_name" class="form-control" required="">
           </div>
           <div class="form-group">
             <label for="vehicle_type">Vehicle Type</label>
-            <select name="vehicle_type" id="vehicle_type" class="form-control" required="true" value="<?php echo set_value('vehicle_type');?>">
-              <option value="TRUCK">TRUCK</option>
-              <option value="TRAILER">TRAILER</option>
-              <option value="BOTH">BOTH</option>
+            <select name="vehicle_type" id="vehicle_type" class="form-control">
+              <option value="TRUCK">Truck</option>
+              <option value="TRAILER">Trailer</option>
+              <option value="BOTH">Both Truck & Trailer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="checklist_for">Checklist For</label>
+            <select name="checklist_for" id="checklist_for" class="form-control">
+              <option value="DRIVER">Driver</option>
+              <option value="MECHANIC">Mechanic</option>
+            </select>
+          </div>
+          <div class="form-group hide" id="reminder_group">
+            <label for="reminder">Reminder</label>
+            <select name="reminder" id="reminder" class="form-control">
+              <option value="1 MONTH">1 Month</option>
+              <option value="2 MONTHS">2 Months</option>
+              <option value="3 MONTHS">3 Months</option>
+              <option value="6 MONTHS">6 Months</option>
             </select>
           </div>
           <div class="form-group">
             <label for="description">Description</label>
             <textarea name="description" id="description" class="textarea"></textarea>
           </div>
+          <fieldset id="fs">
+            <legend>Accounts</legend>
+            <?php foreach($accounts_list as $key => $row) : ?>
+              <div class="checkbox3 checkbox-check checkbox-light" data-type="<?php echo $row->role; ?>">
+                <input type="checkbox" id="checkbox-fa-light-<?php echo $key; ?>" name="account[]" value="<?php echo $row->user_id; ?>" checked="">
+                <label for="checkbox-fa-light-<?php echo $key; ?>">
+                  <?php echo $row->display_name; ?>
+                </label>
+              </div>
+            <?php endforeach; ?>
+          </fieldset>
         </form>
       </div>
       <div class="modal-footer">

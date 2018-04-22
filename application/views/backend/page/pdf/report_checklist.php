@@ -1,84 +1,103 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.invoice-box{
+			max-width:100%;
+			margin-top:5px;
+		}
+		td{
+			padding:2px;
+		}
+		.tr_header{
+			background-color:#e0e0e0;
+			padding:5px;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
 
-<style type="text/css">
+	<div class="invoice-box">
+		<table style="width:100%;">
 
-	#tyre_table td{
-		text-align: center; 
-		vertical-align: middle;
-	}
-
-</style>
-<div class="row">
-	<table width="100%" style="margin-bottom: 10px; text-align: left;">
-		<tr>
-			<th style="width: 100px;">Report #</th>
-			<td><?php echo $report_number; ?></td>
-			<th style="width: 100px;">Report By</th>
-			<td><?php echo $display_name; ?></td>
-		</tr>								
-		<tr>
-			<th style="width: 100px;">Start Mileage</th>
-			<td><?php echo $start_mileage; ?></td>
-			<th style="width: 100px;">End Mileage</th>
-			<td><?php echo $end_mileage; ?></td>
-		</tr>
-		<tr>
-			<th style="width: 100px;">Vehicle Registration No.</th>
-			<td><?php echo $vehicle_registration_number; ?></td>
-			<th style="width: 100px;">Trailer No.</th>
-			<td><?php echo $trailer_number; ?></td>
-		</tr>
-		<tr>
-			<th style="width: 100px;">Created</th>
-			<td><?php echo $created; ?></td>
-		</tr>
-		<tr>
-			<th style="width: 100px;">Report Notes</th>
-			<td><?php echo $report_notes; ?></td>
-		</tr>
-	</table>
-
-	<table width="100%" class="table table-bordered" border="1" style="border-collapse: collapse;">
-		<thead>
 			<tr>
-				<th style="text-align: center;">Status</th>
-				<th style="text-align: center;">Updated By</th>
-				<th style="text-align: center;">Notes</th>
-				<th style="text-align: center;">Created</th>
+				<td style="width:20%"></td>
+				<td style="width:30%"></td>
+				<td style="width:20%"></td>
+				<td style="width:30%"></td>
 			</tr>
-		</thead>
-		<tbody>
-			<?php foreach($report_statuses as $key => $value) : ?>
+
+			<tr>
+				<th>Report #</th>
+				<td><?php echo $report_number; ?></td>
+				<th>Created</th>
+				<td><?php echo $created; ?></td>
+			</tr>								
+			<tr>
+				<th>Start Mileage</th>
+				<td><?php echo $start_mileage; ?></td>
+				<th>End Mileage</th>
+				<td><?php echo $end_mileage; ?></td>
+			</tr>
+			<tr>
+				<th >Registration No.</th>
+				<td><?php echo $vehicle_registration_number; ?></td>
+				<?php if($trailer_number) : ?>
+					<th>Trailer No.</th>
+					<td><?php echo $trailer_number; ?></td>	
+				<?php endif;?>
+				
+			</tr>
+			<tr>
+				<th >Report By</th>
+				<td><?php echo $display_name; ?></td>
+			</tr>
+			<tr>
+				<th>Report Notes</th>
+				<td><?php echo $report_notes; ?></td>
+			</tr>
+
+			<tr >
+				<td colspan="3" class="tr_header"><?php echo $checklist_name; ?></td>
+				<td class="tr_header">Remarks</td>
+			</tr>
+
+			<?php foreach($report_checklist as $key => $checklist) : ?>
+
 				<tr>
-					<td style="text-align: center;width: 100px;"><?php echo $value->status; ?></td>
-					<td style="padding-left: 5px;"><?php echo $value->display_name; ?></td>
-					<td style="padding-left: 5px;"><?php echo $value->notes; ?></td>
-					<td style="text-align: center; width: 135px;"><?php echo $value->created; ?></td>
+					<td colspan="2">
+						<?php echo ($key+1).'. '.$checklist->item_name; ?>
+					</td>
+					<td>
+						<?php if($checklist->checklist_ischeck) : ?>
+							<img src="<?php echo base_url("public/img/x.png"); ?>">
+						<?php else : ?>
+							<img src="<?php echo base_url("public/img/c.png"); ?>">
+						<?php endif; ?>
+					</td>
+					<td><?php echo $checklist->checklist_value; ?></td>
 				</tr>
+
 			<?php endforeach; ?>
-		</tbody>
-	</table>
-
-	<table width="100%" class="table table-bordered" border="1" style="border-collapse: collapse;">
-		<thead >
+			
 			<tr>
-				<th>Item</th>
-				<th style="width: 70px">Serviceable</th>
-				<th>Remarks</th>
+				<td colspan="4"  style="padding:20px;"></td>
+			</tr><tr>
+				<td colspan="4" class="tr_header" style="padding:10px;"></td>
 			</tr>
-		</thead>
-		<tbody>
-
-			<?php foreach($report_checklist as $index => $value): ?>
 			<tr>
-				<td style="padding-left: 5px;"> <?php echo $value->item_name; ?></td>
-
-				<?php if($value->checklist_ischeck == 1) : ?>
-					<td style="text-align: center;"><?php echo "✖"; ?></td>							
-				<?php else: ?>
-					<td style="text-align: center;"><?php echo "✔"; ?></td>
-				<?php endif; ?>
+				<td colspan="4" style="padding:5px;">
+					<img src="<?php echo $report_statuses[0]->signature;?>" style="height:50px;"><br>
+					<?php echo $report_statuses[0]->display_name;?><br>
+					<span>__________________________</span><br>
+					<span>Signature over printed name</span>
+				</td>
 			</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
-</div>
+		</table>
+
+	</div>
+
+</body>
+</html>

@@ -69,8 +69,7 @@ class Report_model extends CI_Model {
         return $result;
     }
 
-    public function get_report_by_id($report_id){
-        $id = $this->hash->decrypt($report_id);
+    public function get_report_by_id($id){
 
         $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name');
 
@@ -78,52 +77,38 @@ class Report_model extends CI_Model {
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
 
-        $this->db->where("r.report_id" , $id);
-        $result = $this->db->order_by("r.created" , "DESC")->get("report r")->row();
+        $result = $this->db->where("r.report_id" , $id)->order_by("r.created" , "DESC")->get("report r")->row();
 
-        // Get All Status 
-        $this->db->select("rs.* , u.display_name");
-        $this->db->join("user u", "u.user_id = rs.user_id");
-        $this->db->where("rs.report_id", $id);
-        $result->report_statuses = $this->db->get("report_status rs")->result();
-        $marks = array();
-        $center = array();
-        foreach ($result->report_statuses as $key => $row) {
-            if($row->id == $result->status_id){
-                $center[] = array(
-                    "longitude" => $row->longitude,
-                    "latitude"  => $row->latitude
-                );
-                $marks[] = array(
-                    "longitude" => $row->longitude,
-                    "latitude"  => $row->latitude
-                );
-                
-               $result->report_statuses[$key]->status = report_status($row->status);
-               $result->report_statuses[$key]->created = convert_timezone($row->created,true);
-            }else{
-                $marks[] = array(
-                    "longitude" => $row->longitude,
-                    "latitude"  => $row->latitude
-                );
+        if($result){
 
-               $result->report_statuses[$key]->status = report_status($row->status);
-               $result->report_statuses[$key]->created = convert_timezone($row->created,true);
+            // Get All Status 
+            $this->db->select("rs.* , u.display_name");
+            $this->db->join("user u", "u.user_id = rs.user_id");
+            $result->report_statuses = $this->db->where("rs.report_id", $id)->order_by("rs.created" , "ASC")->get("report_status rs")->result();
+
+            $marks = array();
+
+            foreach ($result->report_statuses as $key => $row) {
+                $marks[] = [
+                    $row->display_name,
+                    $row->latitude,
+                    $row->longitude
+                ];
+                $result->report_statuses[$key]->status = report_status($row->status);
+                $result->report_statuses[$key]->signature = $this->config->site_url("public/upload/signature/".$row->signature);
+                $result->report_statuses[$key]->created = convert_timezone($row->created,true);
             }
-            
+
+            $result->locations = json_encode($marks);
+
+            //Get All Report Checklist
+            $this->db->select("rc.* , ci.item_name");
+            $this->db->join("checklist_items ci", "ci.id = rc.checklist_item_id");
+            $result->report_checklist = $this->db->where("report_id", $id)->get("report_checklist rc")->result();
+
+            $result->status = report_status($result->status);
+            $result->created = convert_timezone($result->created,true);
         }
-
-        $result->status_markers = $marks;
-        $result->center_marker = $center;
-
-        //Get All Report Checklist
-        $this->db->select("rc.* , ci.item_name");
-        $this->db->where("report_id", $id);
-        $this->db->join("checklist_items ci", "ci.id = rc.checklist_item_id");
-        $result->report_checklist = $this->db->get("report_checklist rc")->result();
-
-        $result->status = report_status($result->status);
-        $result->created = convert_timezone($result->created,true);
 
         return $result;
     }

@@ -24,7 +24,7 @@ class Checklist extends CI_Controller {
 
 		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type");
 		$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
-		$result = $this->db->where("c.store_id" , $store_id)->where("uc.user_id" , $user_id)->where("c.status" , 1)->where("c.deleted IS NULL")->get("checklist c")->result();
+		$result = $this->db->where("c.store_id" , $store_id)->where("uc.user_id" , $user_id)->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
 
 		echo json_encode(["status" => 1 , "data" => $result]);
 	}
@@ -54,6 +54,7 @@ class Checklist extends CI_Controller {
 
 		foreach($result as $key => $row){
 			$result[$key]->color = "light";
+			$result[$key]->image = ($row->image_name) ? $this->config->site_url("thumbs/images/checklist/".$row->image_path."/250/250/".$row->image_name) : "";
 		}
 
 		echo json_encode(["status" => true , "data" => $result]);
@@ -62,10 +63,21 @@ class Checklist extends CI_Controller {
 	public function save_checklist(){
 		if($this->post){
 			$data = $this->post;
-
+			$remind_in = NULL;
 			$this->db->trans_start();
 
 			//Create report
+			if($data->user->role == "MECHANIC"){
+				$checklist_data = $this->db->select("reminder_every")->where("checklist_id" , $data->checklist_type)->get("checklist")->row();
+				$remind_in = remind_in($checklist_data->reminder_every);
+
+				//then update all the report of the vehicle into remind done
+
+				$this->db->where("report_by" , $data->user->user_id)->where("vehicle_registration_number" , $data->vehicle_registration_number)->update("report" , [
+					"remind_done" => true
+				]);
+			}
+
 			$this->db->insert("report" , [
 				"report_by"						=> $data->user->user_id ,
 				"vehicle_registration_number"	=> (isset($data->vehicle_registration_number)) ? $data->vehicle_registration_number : "" ,
@@ -74,8 +86,11 @@ class Checklist extends CI_Controller {
 				"start_mileage"					=> $data->start_mileage ,
 				"end_mileage"					=> $data->end_mileage ,
 				"report_notes"					=> (isset($data->note)) ? $data->note : "" ,
-				"created"						=> time()
+				"created"						=> time(),
+				"remind_in"						=> $remind_in,
+				"remind_done"					=> false
 			]);
+
 			$report_id = $this->db->insert_id();
 
 			$signature_path = $this->save_signature($report_id);

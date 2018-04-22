@@ -31,6 +31,7 @@ class Register_model extends CI_Model {
             "username"      		=> $this->input->post("username"),
             "password"      		=> md5($this->input->post("password")),
             "email_address" 		=> $this->input->post("email_address"),
+            "status"                => 1,
             "role"          		=> "SUPER ADMIN" ,
             "image_path"            => "public/image/",
             "image_name"            => "person-placeholder.jpg",
@@ -122,9 +123,9 @@ class Register_model extends CI_Model {
 
         $this->db->insert("checklist" , [
             "store_id"          => $store_id ,
-            "checklist_name"    => "VEHICLE CHECKLIST" ,
+            "checklist_name"    => "Vehicle Checklist" ,
             "description"       => "Default Checklist" ,
-            "vehicle_type"      => "BOTH",
+            "vehicle_type"      => "TRUCK",
             "status"            => 1 ,
             "created"           => time()
         ]);
@@ -181,9 +182,9 @@ class Register_model extends CI_Model {
     private function trailer_checklist($store_id){
         $this->db->insert("checklist" , [
             "store_id"          => $store_id ,
-            "checklist_name"    => "TRAILER CHECKLIST" ,
+            "checklist_name"    => "Trailer Checklist" ,
             "description"       => "Default Checklist" ,
-            "vehicle_type"      => "BOTH",
+            "vehicle_type"      => "TRAILER",
             "status"            => 1 ,
             "created"           => time()
         ]);

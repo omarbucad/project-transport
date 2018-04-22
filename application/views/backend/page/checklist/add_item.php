@@ -1,19 +1,30 @@
 <script type="text/javascript">
     $(document).on("click" , ".btn-add-more" , function(){
-        var clone = $(this).parent().prev().clone();
-        clone.find("input").val("");
-        $(this).parent().before(clone);
-        $(this).parent().prev().find("input").trigger("click");
+
+        var clone = $(".item-clone").last().clone().find("input:text").val("").end();
+
+        $(".item-clone").last().after(clone);
+
+        $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+
+        $('.item-clone').each(function(k , v){
+            $(v).find('.panel-heading > span').html(k+1);
+        });
+       
     });
 
     $(document).on("click" , ".btn-remove-item" , function(){
-        var count = $(this).closest(".card-body").find(".form-group").length;
+        var count = $('.item-clone').length;
 
         if(count != 1){
-            $(this).closest(".form-group").remove();
+            $(this).closest(".item-clone").remove();
         }else{
-            $(this).closest(".form-group").find("input").val("");
+            $(this).closest(".item-clone").find("input:text").val("");
         }
+
+        $('.item-clone').each(function(k , v){
+            $(v).find('.panel-heading > span').html(k+1);
+        });
     });
 </script>
 
@@ -23,40 +34,63 @@
             <li><a href="<?php echo site_url('app/setup/checklist'); ?>">Checklist</a></li>
             <li class="active">Add Checklist Item</li>
         </ol>   
-        <form class="form-horizontal" action="<?php echo site_url("app/setup/checklist/item/").$this->hash->encrypt($result->checklist_id); ?>" method="POST" enctype="multipart/form-data">
+        <form class="form-horizontal" action="<?php echo site_url("app/setup/checklist/add") ?>" method="POST" enctype="multipart/form-data">
+
             <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
-            <input type="hidden" name="checklist_id" value="<?php echo $result->checklist_id; ?>">
+            <input type="hidden" name="checklist_name" value="<?php echo $post['checklist_name']; ?>">
+            <input type="hidden" name="vehicle_type" value="<?php echo $post['vehicle_type']; ?>">
+            <input type="hidden" name="checklist_for" value="<?php echo $post['checklist_for']; ?>">
+            <input type="hidden" name="reminder" value="<?php echo ($post['reminder']) ? $post['reminder'] : ""; ?>">
+            <input type="hidden" name="description" value="<?php echo $post['description']; ?>">
+
+            <?php foreach($post['account'] as $row) : ?>
+                <input type="hidden" name="account[]" value="<?php echo $row; ?>">
+            <?php endforeach; ?>
+
             <!-- STORE SETTINGS -->
             <div class="card margin-bottom">
                 <div class="card-header">
                     <div class="card-title">
-                        <div class="title"><?php echo $result->checklist_name; ?> <span class="btn-sm" style="top:-3px;position: relative;"> <?php echo $result->status; ?></span></div>
-                        <span><?php echo $result->description; ?></span>
+                        <div class="title"><?php echo $post['checklist_name']; ?></div>
+                        <span><?php echo $post['description']; ?></span>
                     </div>
 
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-lg-8">
+
+                    <div class="panel panel-primary item-clone">
+                      <div class="panel-heading">Item <span>1</span></div>
+                      <div class="panel-body">
+                        <div style="padding:5px 15px;">
+                            <div class="form-group">
                                 <label>Item Name</label>
                                 <input type="text" name="item[name][]" class="form-control item-name" required="true">
                             </div>
-                            
-                            <div class="col-lg-4"> 
-                                <label>Item Position</label>
-                                <div class="input-group">
-                                    <input type="text" name="item[position][]" class="form-control item-position" required="true">
-                                    <span class="input-group-btn">
-                                    <button class="btn btn-default btn-remove-item" type="button" style="margin:0px;">x</button>
-                                    </span>
-                                </div>
-                                    
+                            <div class="form-group">
+                                <label>Position</label>
+                                <input type="text" name="item[position][]" class="form-control item-name" required="true">
                             </div>
-                        </div>                        
+                           
+                            <div class="form-group">
+                                <label>Help Note</label>
+                                <textarea class="form-control item-help-text" name="item[help][]"></textarea>
+                            </div>
+
+                        </div> 
+                        <div class="row">
+                            <div class="col-lg-6 no-margin-bottom">
+                                <input type="file" name="file[]" class="item-file">
+                                <p class="help-block">Image Only</p>
+                            </div>
+                            <div class="col-lg-6 text-right no-margin-bottom">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-remove-item">Remove Item</a>
+                            </div>
+                        </div>
+                      </div>
                     </div>
+
                     
-                    <div class="row text-right">
+                    <div class="text-right">
                         <a href="javascript:void(0);" class="btn btn-primary btn-sm btn-add-more">Add More</a>
                     </div>    
                 </div>

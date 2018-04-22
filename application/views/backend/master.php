@@ -19,6 +19,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/bootstrap-switch.min.css?version='.$version) ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/select2.min.css?version='.$version) ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/bootstrap-tagsinput.css?version='.$version) ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/checkbox3.min.css?version='.$version) ?>">
 
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/multi-select.css?version='.$version) ?>">
 

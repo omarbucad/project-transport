@@ -94,6 +94,26 @@ if( ! function_exists('convert_customer_status')){
     }
 }
 
+if( ! function_exists('remind_in')){
+    
+    function remind_in($type) {
+        switch ($type) {
+            case '1 MONTH':
+                return strtotime("+1 Month");
+                break;
+            case '2 MONTHS':
+                return strtotime("+2 Months");
+                break;
+            case '3 MONTHS':
+                return strtotime("+3 Months");
+                break;
+            case '6 MONTHS':
+                return strtotime("+6 Months");
+                break;
+        }
+    }
+}
+
 if ( ! function_exists('report_type'))
 {
     function report_status($type , $raw = false)
@@ -133,10 +153,10 @@ if ( ! function_exists('report_type'))
                     return '<span class="label label-warning">On Maintenance</span>';
                     break;
                 case 1:
-                    return '<span class="label label-info">Open</span>';
+                    return '<span class="label label-danger">Open</span>';
                     break;
                 case 0:
-                    return '<span class="label label-success">No Defect</span>';
+                    return '<span class="label label-primary">No Defect</span>';
                     break; 
                 default:
                     # code...

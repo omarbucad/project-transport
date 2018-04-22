@@ -78,10 +78,11 @@ class Accounts extends MY_Controller {
 			$this->data['main_page'] = "backend/page/users/edit";
 			$this->data['result']    = $this->accounts->get_account_info($id);
 			$this->data['checklist_list'] = $this->checklist->get_checklist_dropdown();
-	
+
 			$this->load->view('backend/master' , $this->data);
 
 		}else{
+
 			if($last_id = $this->accounts->edit_user($id)){
 				$this->session->set_flashdata('status' , 'success');	
 				$this->session->set_flashdata('message' , 'Successfully Added a User');	

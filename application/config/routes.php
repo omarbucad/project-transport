@@ -64,7 +64,7 @@ $route['app/vehicle/trailer/delete/(:any)'] = 'app/vehicle/delete_trailer/$1';
 
 $route['app/setup/checklist/add'] = 'app/setup/checklist';
 $route['app/setup/checklist/view/(:any)'] = 'app/setup/view_checklist/$1';
-$route['app/setup/checklist/item/(:any)'] = 'app/setup/add_checklist_item/$1';
+$route['app/setup/checklist/add'] = 'app/setup/add_checklist';
 $route['app/setup/checklist/edit/(:any)'] = 'app/setup/edit_checklist/$1';
 $route['app/setup/checklist/delete/(:any)'] = 'app/setup/delete_checklist/$1';
 $route['app/setup/checklist/item/delete/(:any)'] = 'app/setup/delete_checklist_item/$1';

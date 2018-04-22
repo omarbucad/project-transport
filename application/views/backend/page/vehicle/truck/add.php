@@ -16,7 +16,7 @@
 	    		</div>
 	    		<div class="card-body">
 	    			<dl class="dl-horizontal text-left">
-	    				<dt>Registration Name</dt>
+	    				<dt>Registration Number</dt>
 	    				<dd>
 	    					<div class="form-group">
 	    						<input type="text" name="registration_number" value="<?php echo set_value("registration_number"); ?>" class="form-control">

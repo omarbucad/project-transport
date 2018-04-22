@@ -22,13 +22,24 @@ class Report extends MY_Controller {
 	}
 
 	public function view($report_id){
-			
+
+			$report_id = $this->hash->decrypt($report_id);
+
 			$this->data['page_name'] = "Report";
 			$this->data['result']    =  $this->reports->get_report_by_id($report_id);
 			$this->data['main_page'] = "backend/page/report/view_report";
 
 			$this->load->view('backend/master' , $this->data);
 		
+	}
+
+	public function pdf($report_id){
+
+		$report_id = $this->hash->decrypt($report_id);
+		$report = $this->reports->get_report_by_id($report_id);
+
+		$this->pdf->create_report_checklist($report , "I");
+	
 	}
 
 	public function report_status($report_id){
@@ -64,20 +75,6 @@ class Report extends MY_Controller {
 
 				redirect("app/report/" , 'refresh');
 			}
-		}
-	}
-
-	public function create_pdf($report_id){
-		$report = $this->reports->get_report_by_id($report_id);
-
-		if($pdf = $this->pdf->create_report_checklist($report)){
-			$id = $this->hash->decrypt($report_id);
-
-			$this->db->where("report_id" , $id)->update("report" , [
-				"report_pdf" => $pdf['file']
-			]);
-			
-			//download_send_headers($pdf['attachment']);
 		}
 	}
 

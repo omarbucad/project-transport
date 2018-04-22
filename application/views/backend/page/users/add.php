@@ -92,11 +92,14 @@
                             <p>List of checklist that can be used</p>
                         </div>
                         <div class="col-xs-12 col-lg-4">
-                            <h4 style="margin-top: 0px;">Select Checklist(s) to be Used:</h4>
                             <div class="form-group">
                                 <?php foreach($checklist_list as $key => $value) :?>
-                                    <div style="margin-bottom:10px;">
-                                        <input type="checkbox" name="checklist[]" value="<?php echo $value->checklist_id; ?>"> <label><?php echo $value->checklist_name; ?></label>
+
+                                    <div class="checkbox3 checkbox-check  checkbox-light">
+                                          <input type="checkbox" name="checklist[]" id="checkbox-<?php echo $value->checklist_id; ?>" value="<?php echo $value->checklist_id; ?>">
+                                          <label for="checkbox-<?php echo $value->checklist_id; ?>">
+                                            <?php echo $value->checklist_name?>
+                                          </label>
                                     </div>
                                 <?php endforeach; ?>
                             </div>

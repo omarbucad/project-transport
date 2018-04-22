@@ -12,27 +12,47 @@ class Setup extends MY_Controller {
     }
     // CHECKLIST SECTION
 	public function checklist(){
-		$this->form_validation->set_rules('checklist_name'		, 'Checklist Name'	, 'trim|required');
+		$this->data['page_name'] 		= "Checklist";
+		$this->data['result']    		=  $this->checklist->get_checklist_list();
+		$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
+		$this->data['main_page'] 		= "backend/page/checklist/view";
 
-		if ($this->form_validation->run() == FALSE){ 
-			$this->data['page_name'] = "Checklist";
-			$this->data['result']    =  $this->checklist->get_checklist_list();
-			$this->data['main_page'] = "backend/page/checklist/view";
-			$this->load->view('backend/master' , $this->data);
-		}else{
+		$this->load->view('backend/master' , $this->data);
+	}
 
-			if($checklist_id = $this->checklist->add_checklist_name()){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Added a new Checklist');	
+	public function add_checklist(){
 
-				redirect("app/setup/checklist/item/".$this->hash->encrypt($checklist_id) , 'refresh');
+		if($this->input->post()){
+
+			$this->form_validation->set_rules('checklist_name'	, 'Checklist Name'	, 'trim|required');
+			$this->form_validation->set_rules('item[name][0]'	, 'Item'	, 'trim|required');
+
+			if ($this->form_validation->run() == FALSE){ 
+				$this->data['page_name'] = "Checklist Item";
+				$this->data['main_page'] = "backend/page/checklist/add_item";
+				$this->data['post']		 = $this->input->post();
+				$this->load->view('backend/master' , $this->data);
 			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/setup/checklist/" , 'refresh');
+				if($checklist_id = $this->checklist->add_checklist_item()){
+					$this->session->set_flashdata('status' , 'success');	
+					$this->session->set_flashdata('message' , 'Successfully Added Checklist Items');	
+
+					redirect("app/setup/checklist/?checklist_id=".$this->hash->encrypt($checklist_id), 'refresh');
+
+				}else{
+					$this->session->set_flashdata('status' , 'error');
+					$this->session->set_flashdata('message' , 'Something went wrong');
+
+					redirect("app/setup/checklist/add", 'refresh');
+				}
 			}
+
+			
+		}else{
+			redirect("app/setup/checklist/" , 'refresh');
 		}
+		
 	}
 
 	public function add_checklist_item($checklist_id){

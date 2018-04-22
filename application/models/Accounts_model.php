@@ -81,13 +81,11 @@ class Accounts_model extends CI_Model {
         $role = $this->input->post("role");
         $this->db->trans_start();
 
-        $this->db->where("user_id", $user_id);
-        $this->db->update("user" , [
+        $this->db->where("user_id", $user_id)->update("user" , [
             "email_address"=> $this->input->post("email") ,
             "username"     => $this->input->post("username") ,
             "display_name" => $this->input->post("display_name") ,
-            "role"         => $role ,
-            "status"       => 1
+            "role"         => $role 
         ]);
 
         if($this->input->post("password") != ""){
@@ -99,27 +97,20 @@ class Accounts_model extends CI_Model {
 
 
         if($role != "ADMIN"){
-            $this->db->where("user_id", $user_id);
-            $deleted = $this->db->delete("user_checklist");
+  
+            $this->db->where("user_id", $user_id)->delete("user_checklist");
+            $checklist = $this->input->post("checklist");
+            $user_checklist = array();
 
-            if($deleted){
-                foreach($this->input->post("checklist") as $key => $value){
-                    $this->db->where("id",$value);
-                    $query = $this->db->get("user_checklist");
-
-                    if($query->num_rows() > 0){
-                        $this->db->where("id",$value);
-                        $this->db->update("user_checklist",[
-                            "checklist_id" => $value
-                        ]);
-                    }else{
-                        $this->db->insert("user_checklist",[
-                            "user_id"      => $user_id,
-                            "checklist_id" => $value
-                        ]);
-                    }
-                }
+            foreach ($checklist as $key => $value) {
+                $user_checklist[] = array(
+                    "user_id"       => $user_id ,
+                    "checklist_id"  => $value
+                );
             }
+
+            $this->db->insert_batch("user_checklist" , $user_checklist);
+  
         }
        
         $this->do_upload($user_id);
