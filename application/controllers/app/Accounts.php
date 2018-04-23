@@ -10,6 +10,7 @@ class Accounts extends MY_Controller {
 
     }
 	public function index(){
+		$this->data['role'] = $this->session->userdata('user')->role;
 
 		$this->data['page_name'] = "Transport Accounts";
 		$this->data['main_page'] = "backend/page/users/view";

@@ -26,6 +26,7 @@
                             <ul class="nav navbar-nav">
                                 <li><a href="<?php echo site_url("app/vehicle/truck"); ?>">Vehicle</a></li>
                                 <li><a href="<?php echo site_url("app/vehicle/trailer"); ?>">Trailer</a></li>
+                                <li><a href="<?php echo site_url("app/vehicle/type"); ?>">Vehicle Type</a></li>
                             </ul>
                         </div>
                     </div>
@@ -48,10 +49,11 @@
                     <div id="dropdown-element-setup" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
-                                <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
+                                <?php if($this->session->userdata('user')->role == 'SUPER_ADMIN') : ?>
+                                    <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
+                                <?php endif;?>
                                 <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
                                 <li><a href="<?php echo site_url("app/setup/checklist"); ?>">Checklist</a></li>
-                                <li><a href="<?php echo site_url("app/setup/settings"); ?>">Settings</a></li>
                             </ul>
                         </div>
                     </div>

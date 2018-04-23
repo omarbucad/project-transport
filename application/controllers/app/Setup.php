@@ -136,7 +136,9 @@ class Setup extends MY_Controller {
 
 	// PROFILE SECTION
 	public function profile(){
-
+		if($this->session->userdata('user')->role != 'SUPER_ADMIN'){
+			redirect('app/dashboard');
+		}
 		$user_id = $this->data['session_data']->user_id;
 
 		$this->form_validation->set_rules('display_name'	, 'Display Name'	, 'trim|required');
