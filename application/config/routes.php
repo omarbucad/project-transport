@@ -70,5 +70,6 @@ $route['app/setup/checklist/add'] = 'app/setup/add_checklist';
 $route['app/setup/checklist/edit/(:any)'] = 'app/setup/edit_checklist/$1';
 $route['app/setup/checklist/delete/(:any)'] = 'app/setup/delete_checklist/$1';
 $route['app/setup/checklist/item/delete/(:any)'] = 'app/setup/delete_checklist_item/$1';
+$route['app/setup/checklist/item/delete_image/(:any)'] = 'app/setup/delete_item_image/$1';
 
 $route['app/setup/profile/update'] = 'app/setup/profile/';
