@@ -43,6 +43,7 @@
 
       update_accounts_list();
     });
+    
 
 
     function update_accounts_list(){
@@ -64,6 +65,7 @@
     
     $(document).on("click" , ".delete-image" , function(){
         var c = confirm("Are you sure");
+        var btn = $(this);
         var url = $(this).data('href') + $(this).data('id');
         if(c == true){
             $.ajax({
@@ -71,8 +73,14 @@
                 method : "GET" ,
                 success : function(response){
                     var json = jQuery.parseJSON(response);
+                    
+                    
                     if(json.status){
+                        console.log(btn);
+                        btn.closest("div.col-lg-6").find("div.div-image").addClass("hidden");
+                        btn.closest("div.col-lg-6").find("div.div-upload").removeClass("hidden");
                         $.notify("Successfully deleted image" , { className:  "success" , position : "top center"});
+
                     }
                 }
             });
