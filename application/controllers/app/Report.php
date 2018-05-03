@@ -92,9 +92,7 @@ class Report extends MY_Controller {
 				"Start Mileage"		 			 => $row->start_mileage,
 				"End Mileage"	 				 => $row->end_mileage,
 				"Report Notes"					 => $row->report_notes,
- 				"Status" 				  		 => $row->raw_status, 				
-				"Longitude"						 => $row->longitude,
-				"Latitude"						 => $row->latitude,
+ 				"Status" 				  		 => $row->raw_status, 
 				"Created"						 => $row->created
 			);
 		}

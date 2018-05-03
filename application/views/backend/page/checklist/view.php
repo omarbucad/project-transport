@@ -184,8 +184,8 @@
             <input type="text" name="checklist_name" id="checklist_name" class="form-control" required="">
           </div>
           <div class="form-group">
-            <label for="vehicle_type">Vehicle Type</label>
-            <select name="vehicle_type" id="vehicle_type" class="form-control">
+            <label for="vehicle">Vehicle</label>
+            <select name="vehicle" id="vehicle_type" class="form-control">
               <option value="TRUCK">Truck</option>
               <option value="TRAILER">Trailer</option>
               <option value="BOTH">Both Truck & Trailer</option>

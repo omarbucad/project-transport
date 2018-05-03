@@ -30,6 +30,7 @@ class Setup extends MY_Controller {
 			if ($this->form_validation->run() == FALSE){ 
 				$this->data['page_name'] = "Checklist Item";
 				$this->data['main_page'] = "backend/page/checklist/add_item";
+				$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
 				$this->data['post']		 = $this->input->post();
 				$this->load->view('backend/master' , $this->data);
 			}else{
@@ -80,10 +81,12 @@ class Setup extends MY_Controller {
 	}
 
 	public function edit_checklist($checklist_id){
-		if (empty($this->input->post("items"))){ 
+		if (empty($this->input->post())){ 
 			$this->data['page_name'] = "Checklist Information";
 			$this->data['main_page'] = "backend/page/checklist/edit";
 			$this->data['result'] = $this->checklist->get_checklist($checklist_id);
+			$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
+			$this->data['user_checklist'] = $this->checklist->get_userchecklist($checklist_id);
 			$this->data['checklist_items'] = $this->checklist->get_checklist_items($checklist_id);
 
 			$this->load->view('backend/master' , $this->data);
@@ -92,7 +95,7 @@ class Setup extends MY_Controller {
 			if($result = $this->checklist->edit_checklist($checklist_id)){
 				$this->session->set_flashdata('status' , 'success');	
 				$this->session->set_flashdata('message' , 'Successfully Updated Checklist');	
-
+				
 				redirect("app/setup/checklist/?checklist_id=".$checklist_id, 'refresh');
 
 			}else{
@@ -124,6 +127,15 @@ class Setup extends MY_Controller {
 		}
 	}
 
+	public function delete_item_image($item_id){
+		$delete_item = $this->checklist->delete_item_image($item_id);
+		if($delete_item){
+			echo json_encode(["status" => true , "message" => "Checklist Item Image Deleted"]);
+		}else{
+			echo json_encode(["status" => false , "message" => "Something went wrong. Please try again."]);
+		}
+	}
+
 	public function view_checklist($checklist_id){
 		if($view_list = $this->checklist->get_checklist_items($checklist_id)){
 			echo json_encode(["status" => true, "data" => $view_list]);
@@ -136,7 +148,9 @@ class Setup extends MY_Controller {
 
 	// PROFILE SECTION
 	public function profile(){
-
+		if($this->session->userdata('user')->role != 'SUPER_ADMIN'){
+			redirect('app/dashboard');
+		}
 		$user_id = $this->data['session_data']->user_id;
 
 		$this->form_validation->set_rules('display_name'	, 'Display Name'	, 'trim|required');

@@ -203,7 +203,7 @@
                               </span>
                             </td>
                             <td valign="top">
-                              <span><?php echo $row->status; ?></span>
+                              <span data-toggle="tooltip" title="<?php echo $row->updated_by;?>"><?php echo $row->status; ?></span>
                               <?php if($row->status_created != "<small class='help-block'>0</small>") : ?>
                               <small class="help-block"><?php echo $row->status_created; ?></small>
                             <?php endif; ?>

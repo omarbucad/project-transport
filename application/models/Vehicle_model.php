@@ -194,4 +194,82 @@ class Vehicle_model extends CI_Model {
            return true;
         }      
     }
+
+    // VEHICLE TYPE
+
+    public function get_type_list(){
+        $store_id = $this->data['session_data']->store_id;
+
+        /*
+            TODO :: Searching logic here
+        */
+        if($this->input->get("status") != ""){
+            $this->db->where("status", $this->input->get("status"));
+        }
+
+        if($type_name = $this->input->get("type_name")){
+            $this->db->where("name", $type_name);
+        }
+
+        if($id = $this->input->get("type_id")){
+            
+            $id = $this->hash->decrypt($id);
+
+            $this->db->where("id" , $id);
+        }
+
+        $this->db->where("deleted IS NULL");
+
+        $result = $this->db->where("store_id" , $store_id)->order_by("id" , "ASC")->get("vehicle_type")->result();
+
+        foreach($result as $key => $row){
+            $result[$key]->status = convert_status($row->status);
+        }
+
+        return $result;
+    }
+
+    public function get_type_info($type_id){
+        $id = $this->hash->decrypt($type_id);
+
+        $this->db->where('id',$id);
+        $result = $this->db->get('vehicle_type')->row();
+
+        return $result;
+        
+    }
+
+    public function add_type(){
+        $store_id = $this->data['session_data']->store_id;
+
+        $this->db->insert('vehicle_type',[
+            "name" => $this->input->post('name'),
+            "store_id" => $store_id,
+            "status" => 1
+        ]);
+
+        return $this->db->insert_id();
+        
+    }
+
+    public function edit_type($type_id){
+        $id = $this->hash->decrypt($type_id);
+
+        $this->db->trans_start();
+
+        $this->db->where('id',$id);
+        $this->db->update('vehicle_type',[
+            "name" => $this->input->post('name'),
+            "status" => $this->input->post('status')
+        ]);
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }
+        
+    }
 }

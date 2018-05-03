@@ -47,11 +47,12 @@ class Report_model extends CI_Model {
         }   
         // End of Search
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
+        $this->db->join('user u2','u2.user_id = rs.user_id');
 
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
@@ -65,7 +66,7 @@ class Report_model extends CI_Model {
             $result[$key]->raw_status = report_status($row->status,true);
             $result[$key]->created = convert_timezone($row->created,true);
         }
-
+        
         return $result;
     }
 

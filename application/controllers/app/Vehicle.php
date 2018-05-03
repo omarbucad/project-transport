@@ -154,4 +154,53 @@ class Vehicle extends MY_Controller {
 
 		}
 	}
+
+	// Vehicle Type
+	public function type(){
+		$this->form_validation->set_rules('name'		, 'Vehicle Type'	, 'trim|required');
+
+		if ($this->form_validation->run() == FALSE){ 
+			$this->data['page_name'] = "Vehicle Type";
+			$this->data['result']    =  $this->vehicle->get_type_list();
+			$this->data['main_page'] = "backend/page/vehicle/vehicle_type/view";
+			$this->load->view('backend/master' , $this->data);
+		}else{
+
+			if($type_id = $this->vehicle->add_type()){
+				$this->session->set_flashdata('status' , 'success');	
+				$this->session->set_flashdata('message' , 'Successfully Added a new Vehicle Type');	
+
+				redirect("app/vehicle/type/?type_id=".$this->hash->encrypt($type_id), 'refresh');
+			}else{
+				$this->session->set_flashdata('status' , 'error');
+				$this->session->set_flashdata('message' , 'Something went wrong');	
+
+				redirect("app/vehicle/type/" , 'refresh');
+			}
+		}
+	}
+
+	public function edit_type($id){
+		$this->form_validation->set_rules('name'		, 'Vehicle Type'	, 'trim|required');
+
+		if ($this->form_validation->run() == FALSE){ 
+			$this->data['page_name'] = "Truck";
+			$this->data['result']    =  $this->vehicle->get_type_info($id);
+			$this->data['main_page'] = "backend/page/vehicle/vehicle_type/edit";
+			$this->load->view('backend/master' , $this->data);
+		}else{
+
+			if($this->vehicle->edit_type($id)){
+				$this->session->set_flashdata('status' , 'success');	
+				$this->session->set_flashdata('message' , 'Successfully Updated Vehicle Type');	
+
+				redirect("app/vehicle/type/?type_id=".$id, 'refresh');
+			}else{
+				$this->session->set_flashdata('status' , 'error');
+				$this->session->set_flashdata('message' , 'Something went wrong');	
+
+				redirect("app/vehicle/type/" , 'refresh');
+			}
+		}
+	}
 }
