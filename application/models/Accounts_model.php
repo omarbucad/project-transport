@@ -20,6 +20,19 @@ class Accounts_model extends CI_Model {
         return $result;
     }
 
+    public function get_driver(){
+        $store_id = $this->data['session_data']->store_id;
+        $this->db->where("store_id" , $store_id);
+
+        $result = $this->db->where('role',"DRIVER")->get("user")->result();
+
+        foreach($result as $k => $row){
+            $result[$k]->status = convert_status($row->status);
+        }
+        return $result;
+       
+    }
+
     public function get_account_info($user_id){
         $this->db->where("user_id", $user_id);
         $result = $this->db->get("user")->row();

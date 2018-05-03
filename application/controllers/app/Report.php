@@ -7,8 +7,8 @@ class Report extends MY_Controller {
        parent::__construct();
        $this->load->model('report_model', 'reports');
     }
-	public function index(){
-		$this->data['page_name'] = "Report";
+	public function daily(){
+		$this->data['page_name'] = "Daily Report";
 		$this->data['main_page'] = "backend/page/report/view";
 
 		if($this->input->get("export")){
@@ -16,7 +16,21 @@ class Report extends MY_Controller {
 			$this->download_csv($this->data['result']);
 		}else{
 
-			$this->data['result']    =  $this->reports->get_reports_list();
+			$this->data['result'] = $this->reports->get_reports_list();
+			$this->load->view('backend/master' , $this->data);
+		}
+	}
+
+	public function weekly(){
+		$this->data['page_name'] = "Daily Report";
+		$this->data['main_page'] = "backend/page/report/view_weekly";
+
+		if($this->input->get("export")){
+			$this->data['result'] = $this->reports->weekly_report();
+			$this->download_csv($this->data['result']);
+		}else{
+
+			$this->data['result'] = $this->reports->weekly_report();
 			$this->load->view('backend/master' , $this->data);
 		}
 	}

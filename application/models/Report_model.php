@@ -6,7 +6,6 @@ class Report_model extends CI_Model {
 
         if($report_id = $this->input->get("report_id")){
 
-            
             $report_id = $this->hash->decrypt($report_id);
 
             $this->db->where("r.report_id" , $report_id);
@@ -146,6 +145,43 @@ class Report_model extends CI_Model {
         }else{
             return true;
         }
+    }
+
+    public function weekly_report(){
+        if($report_number = $this->input->get("report_number")){
+            $this->db->where("r.report_number", $report_number);
+        }
+        if($date = $this->input->get("date")){
+
+            $start = strtotime(trim($date.' 00:00'));
+            $end  = strtotime(trim($date. '23:59 + 6 days'));
+
+            $this->db->where("rs.created >= " , $start);
+            $this->db->where("rs.created <= " , $end);
+        }   
+        // End of Search
+
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
+
+        $this->db->join('report_status rs', 'rs.id = r.status_id');
+        $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
+        $this->db->join('user u', 'u.user_id = r.report_by');
+        $this->db->join('user u2','u2.user_id = rs.user_id');
+
+        $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
+
+        foreach($result as $key => $row){
+            if($result[$key]->status == 0){
+                $result[$key]->status_created = 0;
+            }else{
+                $result[$key]->status_created = convert_timezone($row->status_created,true);
+            }
+            $result[$key]->status = report_status($row->status);
+            $result[$key]->raw_status = report_status($row->status,true);
+            $result[$key]->created = convert_timezone($row->created,true);
+        }
+        
+        return $result;
     }
 
 }

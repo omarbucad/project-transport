@@ -31,10 +31,19 @@
                         </div>
                     </div>
                 </li>
-                <li class="<?php echo ($this->uri->segment(2) == 'reports') ? "active" : "" ;?>">
-                    <a href="<?php echo site_url('app/report'); ?>">
+                <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'reports') ? "active" : "" ;?>">
+                    <a data-toggle="collapse" href="#dropdown-element-report">
                         <span class="icon fa fa-book"></span><span class="title">Reports</span>
                     </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element-report" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li><a href="<?php echo site_url("app/report/daily"); ?>">Daily</a></li>
+                                <li><a href="<?php echo site_url("app/report/weekly"); ?>">Weekly</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </li>
                 <li class="<?php echo ($this->uri->segment(2) == 'accounts') ? "active" : "" ;?>">
                     <a href="<?php echo site_url('app/accounts'); ?>">
@@ -57,6 +66,11 @@
                             </ul>
                         </div>
                     </div>
+                </li>
+                <li>
+                    <a href="https://play.google.com/store" target="_blank">
+                        <span class="icon fa fa-download"></span><span class="title">Download</span>
+                    </a>
                 </li>
             </ul>
         </div>

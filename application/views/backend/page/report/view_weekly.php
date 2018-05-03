@@ -47,7 +47,7 @@
     });
 
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();   
+        $('[data-toggle="tooltip"]').tooltip();
     });
 
     $(document).on("click" , ".update-status" , function(){
@@ -69,7 +69,7 @@
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container" >
-        	<h1>Daily Reports</h1>
+        	<h1>Weekly Reports</h1>
         </div>
         <div class="grey-bg ">
             <div class="container ">
@@ -86,7 +86,7 @@
         <div class="card margin-bottom">
             <div class="container">
                 <div class="card-body no-padding-left no-padding-right">
-                    <form action="<?php echo site_url("app/report/daily"); ?>" method="GET" id="search-filter">
+                    <form action="<?php echo site_url("app/report/weekly"); ?>" method="GET" id="search-filter">
                         <div class="row">
                             <div class="col-xs-12 col-lg-3">
                                 <input type="hidden" id="limit" name="limit" value="<?php echo $this->input->get('rowlimit');?>">
@@ -97,10 +97,26 @@
                             </div>
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
+                                    <label for="s_name">Start Date of Weekly Report</label>
+                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="<?php echo $this->input->get("date"); ?>" placeholder="Search by Date">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3">
+                                <div class="form-group">
                                     <label for="s_name">Checklist Type</label>
                                     <input type="text" name="checklist_name" value="<?php echo $this->input->get("checklist_name"); ?>" class="form-control" placeholder="Search by Checklist Type">
                                 </div>
                             </div>
+                                                       
+                           
+                            <div class="col-xs-12 col-lg-3 text-right">
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-link btn-vertical-center btn-same-size more-filter" data-value="hidden">More filter</button>
+                                <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row hide" id="view_advance_search">
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
                                     <label for="s_roles">Status</label>
@@ -111,22 +127,6 @@
                                         <option value="2" <?php echo ($this->input->get("status") == "2") ? "selected" : "" ;?>>On Maintenance</option>
                                         <option value="3" <?php echo ($this->input->get("status") == "3") ? "selected" : "" ;?>>Fixed</option>
                                     </select>
-                                </div>
-                            </div>                           
-                           
-                            <div class="col-xs-12 col-lg-3 text-right">
-                              <div class="btn-group">
-                                <button type="button" class="btn btn-link btn-vertical-center btn-same-size more-filter" data-value="hidden">More filter</button>
-                                <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
-                              </div>
-                            </div>
-                        </div>
-                        <div class="row hide" id="view_advance_search">
-
-                            <div class="col-xs-12 col-lg-3">
-                                <div class="form-group">
-                                    <label for="s_name">Date Period</label>
-                                    <input type="text" name="date" class="form-control daterange" autocomplete="off" value="<?php echo $this->input->get("date"); ?>" placeholder="Search by Date">
                                 </div>
                             </div>
 
@@ -178,6 +178,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                  <?php if(isset($result)) :?>
                      <?php foreach($result as $row) : ?>
                         <tr class="customer-row" style="cursor: default;">
                             <td valign="top">
@@ -215,6 +216,7 @@
                             </td>
                         </tr>
                     <?php endforeach; ?> 
+                  <?php endif;?>
                 </tbody>
             </table>
         </div>
