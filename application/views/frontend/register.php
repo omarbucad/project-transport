@@ -111,26 +111,6 @@
                             <label for="_phone">Phone</label>
                             <input type="text" name="phone" id="_phone" class="form-control" value="<?php echo set_value('phone'); ?>" required="true">
                         </div>
-                        <div class="form-group no-margin-bottom">
-                            <div class="row">
-                                <div class="col-xs-6 no-margin-bottom">
-                                    <div class="form-group">
-                                        <label for="_city">City</label>
-                                        <input type="text" name="city" id="_city" class="form-control" value="<?php echo set_value('city'); ?>" required="true">
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 no-margin-bottom">
-                                    <div class="form-group">
-                                        <label for="_postcode">Zip Code</label>
-                                        <input type="text" name="postcode" id="_postcode" class="form-control" value="<?php echo set_value('postcode'); ?>" required="true">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="_state">State</label>
-                            <input type="text" name="state" id="_state" class="form-control" value="<?php echo set_value('state'); ?>" required="true">
-                        </div>
                         <div class="form-group">
                             <label for="_country">Country</label>
                             <select class="form-control" name="country" id="_country" required="true">

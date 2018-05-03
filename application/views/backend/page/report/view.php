@@ -184,9 +184,11 @@
                               <span><strong><a href="<?php echo site_url('app/report/view/').$this->hash->encrypt($row->report_id);?>" class="link-style"><?php echo $row->report_number; ?></a></strong> 
                                   
                                 <small class="help-block"><strong>Report by</strong>: <?php echo $row->display_name; ?></small>
-                                <small class="help-block"><strong>Vehicle</strong>: <?php echo $row->vehicle_registration_number; ?></small>
+                                <?php if($row->vehicle_registration_number) : ?>
+                                   <small class="help-block"><strong>Vehicle</strong>: <?php echo $row->vehicle_registration_number; ?></small>
+                                <?php endif; ?>
                                 <?php if($row->trailer_number) : ?>
-                                <small class="help-block"><strong>Trailer</strong>: <?php echo $row->trailer_number; ?></small>
+                                  <small class="help-block"><strong>Trailer</strong>: <?php echo $row->trailer_number; ?></small>
                                 <?php endif; ?>
                               </span>
                                 

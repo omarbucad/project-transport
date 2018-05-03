@@ -8,10 +8,7 @@ class Register_model extends CI_Model {
     	/* ADDRESS */
 
         $this->db->insert("store_address" , [
-        	"country" => $this->input->post("country") , 
-            "city" => $this->input->post("city") , 
-        	"state" => $this->input->post("state") , 
-        	"postcode" => $this->input->post("postcode")
+        	"country" => $this->input->post("country")
         ]);
         $address_id = $this->db->insert_id();
 
@@ -33,7 +30,7 @@ class Register_model extends CI_Model {
             "email_address" 		=> $this->input->post("email_address"),
             "status"                => 1,
             "role"          		=> "SUPER ADMIN" ,
-            "image_path"            => "public/image/",
+            "image_path"            => "public/img/",
             "image_name"            => "person-placeholder.jpg",
             "created"       		=> time()
         ]);

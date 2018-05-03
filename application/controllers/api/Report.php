@@ -33,15 +33,22 @@ class Report extends CI_Controller {
 		$this->db->join("user u2" , "rs.user_id = u2.user_id");
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 
-		if($mechanic == "defect"){
-			$this->db->where_in("rs.status" , [1 , 2])->where("u.store_id" , $store_id);
-		}else if($mechanic == "all"){
-			$this->db->where("u.store_id" , $store_id)->where("rs.user_id" , $report_by)->group_by("r.report_id");
-		}else{
-			$this->db->where("r.report_by" , $report_by);
+		switch ($mechanic) {
+			case 'defect':
+				$this->db->where_in("rs.status" , [1 , 2])->where("u.store_id" , $store_id);
+				break;
+			case 'mechanic':
+				$time = strtotime("+ 1 week");
+				$this->db->where("r.remind_in > " , $time)->where("r.remind_done" , false)->where("r.report_by" , $report_by);
+			case 'all':
+				$this->db->where("u.store_id" , $store_id)->where("rs.user_id" , $report_by)->group_by("r.report_id");
+				break;
+			default:
+				$this->db->where("r.report_by" , $report_by);
+				break;
 		}
 
-		$result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
+		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 
 
 		foreach($result as $key => $row){
@@ -97,7 +104,6 @@ class Report extends CI_Controller {
 		$pdf['file'] = $this->config->site_url($pdf['file']);
 
 		echo json_encode($pdf);
-	
 	}
 
 	public function fix_report(){
@@ -145,6 +151,7 @@ class Report extends CI_Controller {
 			unlink($this->post->file);
 		}
 	}
+
 	private function save_signature($report_number){
 		$image = $this->post->signature;
 
