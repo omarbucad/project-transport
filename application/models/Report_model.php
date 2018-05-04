@@ -148,38 +148,53 @@ class Report_model extends CI_Model {
     }
 
     public function weekly_report(){
-        if($report_number = $this->input->get("report_number")){
-            $this->db->where("r.report_number", $report_number);
+        if($driver_id = $this->input->get("driver")){
+            $this->db->where("r.report_by", $driver_id);
+        }
+        if($this->input->get('checklist_type')){
+            $this->db->where('c.checklist_id' , $this->input->get('checklist_type'));
+        }
+        if($this->input->get('vehicle')){
+            $this->db->where('r.vehicle_registration_number' , $this->input->get('vehicle'));
         }
         if($date = $this->input->get("date")){
 
             $start = strtotime(trim($date.' 00:00'));
-            $end  = strtotime(trim($date. '23:59 + 6 days'));
+            $end  = strtotime(trim($date. '23:59 + 6 days'));        
 
-            $this->db->where("rs.created >= " , $start);
-            $this->db->where("rs.created <= " , $end);
-        }   
+            $this->db->where("r.created >= " , $start);
+            $this->db->where("r.created <= " , $end);
+        }else{
+            return [];
+        }
         // End of Search
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
+        $this->db->select('r.* , rs.status, rs.created as status_created,rs.signature, c.checklist_name, u.display_name, u2.display_name as updated_by');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
 
-        $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
+        $result = $this->db->order_by("r.created" , "ASC")->get("report r")->result();
 
         foreach($result as $key => $row){
             if($result[$key]->status == 0){
                 $result[$key]->status_created = 0;
             }else{
-                $result[$key]->status_created = convert_timezone($row->status_created,true);
+                $result[$key]->status_created = convert_timezone($row->status_created,false);
             }
             $result[$key]->status = report_status($row->status);
             $result[$key]->raw_status = report_status($row->status,true);
             $result[$key]->created = convert_timezone($row->created,true);
+            $result[$key]->startrange = convert_timezone($start);
+            $result[$key]->endrange = convert_timezone($end);
+            //Get All Report Checklist Item
+            $this->db->select("rc.* , ci.item_name");
+            $this->db->join("checklist_items ci", "ci.id = rc.checklist_item_id");
+            $result[$key]->report_checklist = $this->db->where("report_id", $result[$key]->report_id)->get("report_checklist rc")->result();
         }
+
         
         return $result;
     }

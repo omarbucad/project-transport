@@ -6,6 +6,9 @@ class Report extends MY_Controller {
 	public function __construct() {
        parent::__construct();
        $this->load->model('report_model', 'reports');
+       $this->load->model('accounts_model', 'accounts');
+       $this->load->model('checklist_model', 'checklist');
+       $this->load->model('vehicle_model', 'vehicle');
     }
 	public function daily(){
 		$this->data['page_name'] = "Daily Report";
@@ -22,17 +25,45 @@ class Report extends MY_Controller {
 	}
 
 	public function weekly(){
+
 		$this->data['page_name'] = "Daily Report";
 		$this->data['main_page'] = "backend/page/report/view_weekly";
 
-		if($this->input->get("export")){
-			$this->data['result'] = $this->reports->weekly_report();
-			$this->download_csv($this->data['result']);
+		$this->form_validation->set_data($this->input->get());
+
+		$this->form_validation->set_rules('date' , 'Start Date Report'	, 'trim|required');
+		$this->form_validation->set_rules('checklist_type' , 'Checklist Type'	, 'trim|required');
+		$this->form_validation->set_rules('driver' , 'Driver Name'	, 'trim|required');
+		$this->form_validation->set_rules('vehicle' , 'Vehicle Registration Number'	, 'trim|required');
+
+		if ($this->form_validation->run() == FALSE){ 
+
+			$this->data['driver_list'] = $this->accounts->get_driver();
+			$this->data['vehicle_list'] = $this->vehicle->get_vehicle_list();
+			$this->data['checklist_type'] = $this->checklist->get_checklist_list();			
+			$this->data['result'] = [];
+			$this->load->view('backend/master' , $this->data);
+
 		}else{
 
-			$this->data['result'] = $this->reports->weekly_report();
-			$this->load->view('backend/master' , $this->data);
-		}
+			$this->data['driver_list'] = $this->accounts->get_driver();
+			$this->data['vehicle_list'] = $this->vehicle->get_vehicle_list();
+			$this->data['checklist_type'] = $this->checklist->get_checklist_list();
+			$this->data['checklist_items'] = $this->checklist->get_checklist_items($this->hash->encrypt($this->input->get('checklist_type')));
+
+			$this->data['result'] =	$this->reports->weekly_report();
+			//print_r_die($this->data['result']);
+
+			if($this->input->get("export")){
+				if(empty($this->data['result'])){
+					$this->load->view('backend/master');
+				}else{			
+					$this->download_csv($this->data['result']);
+				}
+			}else{
+				$this->load->view('backend/master' , $this->data);
+			}
+		}		
 	}
 
 	public function view($report_id){

@@ -117,6 +117,7 @@
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="container">
+        	<h1 class="text-center">Welcome, <?php echo $this->data['session_data']->display_name;?>!</h1>
         	<div class="card">
 	    		<div class="card-body">
 	    			<?php if((count($drivers) == 0) && (count($trucks == 0))) : ?>

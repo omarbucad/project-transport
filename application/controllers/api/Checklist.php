@@ -143,7 +143,7 @@ class Checklist extends CI_Controller {
 
 	        }else{
 	           
-	           echo json_encode(["status" => 1 , "Successfully Submitted"]);
+	           echo json_encode(["status" => 1 , "message" => "Successfully Submitted"]);
 	        }
 		}
 	}

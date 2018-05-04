@@ -14,12 +14,8 @@
             $('#_advance_search_value').val("false");
         }
     });
-    $(document).on("change", "#selectlimit", function(){
-        $('form#search-filter').find('input[type=submit]').click();
-    });
 
     $(document).on("submit", "#search-filter", function(){
-        $('#limit').attr("value",$("#selectlimit").find(":selected").val());
         $('form#search-filter').submit();
     });
 
@@ -64,6 +60,26 @@
         }
       }
     });
+
+    $(document).on("change", ".datepicker", function(){      
+
+      var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"];
+
+      var selected = $(this).val();
+      var d = new Date(selected);
+
+      d.setDate(d.getDate() +parseInt(6));
+      var enddate = d.getDate() + ' ' + months[d.getMonth()]+ ' ' + d.getFullYear();   
+
+
+      if($('div.selectedDate').length){
+        $("div.selectedDate").html('<span>'+selected+ ' - ' +enddate+ '</span>');
+      }else{
+        $("div.daterangepicker_input").before('<div class="selectedDate text-center"><span>'+selected+'</span></div>');
+      }
+      
+    });
+
     
 </script>
 <div class="container-fluid margin-bottom">
@@ -88,69 +104,56 @@
                 <div class="card-body no-padding-left no-padding-right">
                     <form action="<?php echo site_url("app/report/weekly"); ?>" method="GET" id="search-filter">
                         <div class="row">
-                            <div class="col-xs-12 col-lg-3">
-                                <input type="hidden" id="limit" name="limit" value="<?php echo $this->input->get('rowlimit');?>">
+                            <div class="col-lg-8">
+                              <div class="col-xs-12 col-lg-6">
                                 <div class="form-group">
-                                    <label for="s_name">Report No.</label>
-                                    <input type="text" name="report_number" value="<?php echo $this->input->get("report_number"); ?>" class="form-control" placeholder="Search by Report No.">
+                                  <label for="s_name">Driver Name</label>
+                                  <select class="form-control" name="driver" value="<?php echo set_value('driver');?>">
+                                    <option value="">- Select Driver -</option>
+                                    <?php foreach($driver_list as $row) :?>
+                                      <option value="<?php echo $row->user_id; ?>" <?php echo ($this->input->get("driver") == $row->user_id) ? "selected" : "" ;?> ><?php echo $row->display_name; ?></option>
+                                    <?php endforeach; ?>     
+                                  </select>
                                 </div>
-                            </div>
-                            <div class="col-xs-12 col-lg-3">
+                              </div>
+                              
+                              <div class="col-xs-12 col-lg-6">
                                 <div class="form-group">
-                                    <label for="s_name">Start Date of Weekly Report</label>
-                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="<?php echo $this->input->get("date"); ?>" placeholder="Search by Date">
+                                  <label for="s_name">Checklist Type</label>
+                                  <select class="form-control" name="checklist_type" value="<?php echo set_value('checklist_type');?>">
+                                    <option value="">- Select Checklist Type -</option>
+                                    <?php foreach($checklist_type as $row) :?>
+                                      <option value="<?php echo $row->checklist_id; ?>" <?php echo ($this->input->get("checklist_type") == $row->checklist_id) ? "selected" : "" ;?> ><?php echo $row->checklist_name; ?></option>
+                                    <?php endforeach; ?>     
+                                  </select>
                                 </div>
-                            </div>
-                            <div class="col-xs-12 col-lg-3">
+                              </div>
+                              <div class="col-xs-12 col-lg-6">
                                 <div class="form-group">
-                                    <label for="s_name">Checklist Type</label>
-                                    <input type="text" name="checklist_name" value="<?php echo $this->input->get("checklist_name"); ?>" class="form-control" placeholder="Search by Checklist Type">
+                                  <label for="s_name">Vehicle Registration Number</label>
+                                  <select class="form-control" name="vehicle" value="<?php echo set_value('vehicle');?>">
+                                      <option value="">- Select Vehicle -</option>
+                                      <?php foreach($vehicle_list as $row) :?>
+                                        <option value="<?php echo $row->vehicle_registration_number; ?>" <?php echo ($this->input->get("vehicle") == $row->vehicle_registration_number) ? "selected" : "" ;?> ><?php echo $row->vehicle_registration_number; ?></option>
+                                      <?php endforeach; ?>     
+                                  </select>
                                 </div>
-                            </div>
-                                                       
-                           
-                            <div class="col-xs-12 col-lg-3 text-right">
-                              <div class="btn-group">
-                                <button type="button" class="btn btn-link btn-vertical-center btn-same-size more-filter" data-value="hidden">More filter</button>
-                                <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
+                              </div>
+
+                              <div class="col-xs-12 col-lg-6">
+                                <div class="form-group">
+                                    <label for="s_name">Start Date Report</label>
+                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="<?php echo $this->input->get("date"); ?>" placeholder="Select Report Start Date" required="true">
+                                </div>
                               </div>
                             </div>
-                        </div>
-                        <div class="row hide" id="view_advance_search">
-                            <div class="col-xs-12 col-lg-3">
-                                <div class="form-group">
-                                    <label for="s_roles">Status</label>
-                                    <select class="form-control" name="status" value="<?php echo set_value('status');?>">
-                                        <option value="">- Select Status -</option>
-                                        <option value="0" <?php echo ($this->input->get("status") == "0") ? "selected" : "" ;?> >No Defect</option>
-                                        <option value="1" <?php echo ($this->input->get("status") == "1") ? "selected" : "" ;?>>Open</option>
-                                        <option value="2" <?php echo ($this->input->get("status") == "2") ? "selected" : "" ;?>>On Maintenance</option>
-                                        <option value="3" <?php echo ($this->input->get("status") == "3") ? "selected" : "" ;?>>Fixed</option>
-                                    </select>
+                            <div class="col-lg-4">
+                              <div class="text-right">
+                                <div class="btn-group">
+                                  <input type="submit" name="submit" value="View Weekly Report" class="btn btn-primary btn-vertical-center btn-same-size">
                                 </div>
+                              </div>
                             </div>
-
-                            <div class="col-xs-12 col-lg-3">
-                                <div class="form-group">
-                                    <label for="s_name">Vehicle Registration No.</label>
-                                    <input type="text" name="vehicle_registration_number" value="<?php echo $this->input->get("vehicle_registration_number"); ?>" class="form-control"  placeholder="Search by Vehicle Registration No.">
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-lg-3">
-                                <div class="form-group">
-                                    <label for="s_name">Trailer No.</label>
-                                    <input type="text" name="trailer_number" value="<?php echo $this->input->get("trailer_number"); ?>" class="form-control"  placeholder="Search by Trailer No.">
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-lg-3">
-                                <div class="form-line">
-                                <label for="report_by">Report By</label>
-                                <input type="text" class="form-control" name="report_by" list="user" placeholder="Report By">
-                            </div>
-                            </div>
-                            
                         </div>
                     </form>
                 </div>
@@ -158,67 +161,100 @@
             </div>
         </div>
         <div class="container">
-            <table class="customer-table">
-                <thead>
+
+        <?php if(!empty($result)) :?>
+            <h4>DRIVER VEHICLE SAFETY CHECK REPORT SHEET</h4>
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-md-6 text-left">
+                <label>WEEK START DATE:<span style="margin-left: 20px;"><?php echo $result[0]->startrange; ?></span></label>                
+              </div>
+              <div class="col-md-6 text-left">
+                <label>WEEK FINISH DATE:<span style="margin-left: 20px;"><?php echo $result[0]->endrange; ?></span></label>
+              </div>          
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <table class="table" style="margin-bottom: 30px;">
+                  <thead>
                     <tr>
-                        <th>Report No.</th>
-                        <th>Type</th>
-                        <th>Notes</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>
-                          <span style="margin-right:10px;">Show</span>
-                          <select name="rowlimit" id="selectlimit" value="<?php echo set_value('rowlimit');?>" >
-                              <option value="0" <?php echo ($this->input->get('limit') == "all") ? "selected": ""; ?>>All</option>
-                              <option value="10" <?php echo ($this->input->get('limit') == "10") ? "selected": ""; ?>>10</option>
-                              <option value="25" <?php echo ($this->input->get('limit') == "25") ? "selected": ""; ?>>25</option>
-                              <option value="50" <?php echo ($this->input->get('limit') == "50") ? "selected": ""; ?>>50</option>
-                          </select>
-                        </th>
+                      <th>DRIVERS NAME</th>
+                      <th>VEHICLE REG</th>
+                      <th>TRAILER NUMBER</th>
+                      <th>DATE</th>
+                      <th>START MILEAGE</th>
+                      <th>FINISH MILEAGE</th>
+                      <th>DRIVERS SIGNATURE</th>
                     </tr>
-                </thead>
-                <tbody>
-                  <?php if(isset($result)) :?>
-                     <?php foreach($result as $row) : ?>
-                        <tr class="customer-row" style="cursor: default;">
-                            <td valign="top">
-                              <span><strong><a href="<?php echo site_url('app/report/view/').$this->hash->encrypt($row->report_id);?>" class="link-style"><?php echo $row->report_number; ?></a></strong> 
-                                  
-                                <small class="help-block"><strong>Report by</strong>: <?php echo $row->display_name; ?></small>
-                                <small class="help-block"><strong>Vehicle</strong>: <?php echo $row->vehicle_registration_number; ?></small>
-                                <?php if($row->trailer_number) : ?>
-                                <small class="help-block"><strong>Trailer</strong>: <?php echo $row->trailer_number; ?></small>
-                                <?php endif; ?>
-                              </span>
-                                
-                            </td>
-                            <td valign="top"><span><?php echo $row->checklist_name; ?></span></td>
-                            <td valign="top"><span>
-                              <?php if($row->report_notes != ""): ?>
-                                <span class="label label-success" data-toggle="tooltip" title="<?php echo $row->report_notes;?>">Yes</span>
-                              <?php else: ?>
-                                <span class="label label-danger">No</span>
-                              <?php endif; ?>
-                              </span>
-                            </td>
-                            <td valign="top">
-                              <span data-toggle="tooltip" title="<?php echo $row->updated_by;?>"><?php echo $row->status; ?></span>
-                              <?php if($row->status_created != "<small class='help-block'>0</small>") : ?>
-                              <small class="help-block"><?php echo $row->status_created; ?></small>
-                            <?php endif; ?>
-                            </td>
-                            <td valign="top"><span><?php echo $row->created; ?></span></td>
-                            <td valign="top">
-                                <?php if($row->status != '<span class="label label-success">No Defect</span>') : ?>
-                                  <a href="javascript:void(0);" data-id="<?php echo $row->report_number;?>" data-href="<?php echo site_url('app/report/report_status/').$row->report_id;?>" class="btn btn-link btn-update" style="padding: 3px 6px;margin:0;" title="Update Status"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                                  <a href="<?php echo site_url('app/report/pdf/').$this->hash->encrypt($row->report_id);?>" class="btn btn-link btn-print" style="padding: 3px 6px;margin:0;" title="Download PDF" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a>
-                                <?php endif; ?>
-                            </td>
+                  </thead>
+                  <tbody>
+
+                    <?php foreach($result as $row) : ?>
+                      <tr class="customer-row">
+                        <td><span><?php echo $row->display_name; ?></span></td>
+                        <td><span><?php echo $row->vehicle_registration_number; ?></span></td>
+                        <td><span><?php echo $row->trailer_number; ?></span></td>
+                        <td><span><?php echo $row->created;?></span></td>
+                        <td><span><?php echo $row->start_mileage?></span></td>
+                        <td><span><?php echo $row->end_mileage?></span></td>
+                        <td><span>
+                          <img src="<?php echo site_url("public/upload/signature/").$row->signature; ?>" class="img img-responsive thumbnail no-margin-bottom" style="height: 100px;">                          
+                        </span></td>
+                      </tr>
+                    <?php endforeach;?>
+                  </tbody>              
+                </table>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><span style="display: block;">SERVICEABLE ✔</span><span style="display: block;">DEFECT ✖</span></th>
+                            <th>DAY 1</th>
+                            <th>DAY 2</th>
+                            <th>DAY 3</th>
+                            <th>DAY 4</th>
+                            <th>DAY 5</th>
+                            <th>DAY 6</th>
+                            <th>DAY 7</th>
                         </tr>
-                    <?php endforeach; ?> 
-                  <?php endif;?>
-                </tbody>
-            </table>
+                        <tr>
+                            <th>DATE</th>
+                            <?php foreach($result as $row) : ?>
+                            <td><span><small><?php echo $row->status_created; ?></small></span></td>
+                            <?php endforeach; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach($result as $row) : ?>
+                        <?php $ctr = count($result);?>                              
+                        <?php foreach($row->report_checklist as $key => $value) : ?>
+                          <tr class="customer-row" style="cursor: default;">
+                            <td><span><?php echo $value->item_name;?></span></td>
+                            <?php for($i = 0;$i < $ctr; $i++) : ?>
+                              <td>
+                                <span class="<?php echo ($result[$i]->report_checklist[$key]->checklist_ischeck == 1) ? 'text-danger' : 'text-success'; ?>">
+                                  <?php echo ($result[$i]->report_checklist[$key]->checklist_ischeck == 1) ? '✖' : '✔'; ?>
+                                </span>
+                              </td>                 
+                            <?php endfor; ?>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php endforeach; ?>
+                    </tbody>
+                </table>
+              </div>
+            </div>
+        <?php else :?>
+          <div class="row bg-warning">
+            <div class="text-center">
+              <h2  style="margin:30px !important;color:#929292;"><strong>No Report Available</strong></h2>
+            </div>
+          </div>
+        <?php endif;?>
         </div>
     </div>
 </div>

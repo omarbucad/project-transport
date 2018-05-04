@@ -40,22 +40,13 @@ class Vehicle_model extends CI_Model {
         $this->db->where("status",1);
         return $result = $this->db->where("store_id" , $store_id)->get("vehicle")->result();
     }
-    public function get_inactivetruck(){
-        $store_id = $this->data['session_data']->store_id;
-        $this->db->where("status",0);
-        return $result = $this->db->where("store_id" , $store_id)->get("vehicle")->result();        
-    }
+    
     public function get_activetrailer(){
         $store_id = $this->data['session_data']->store_id;
         $this->db->where("status",1);
         return $result = $this->db->where("store_id" , $store_id)->get("trailer")->result();
     }
-    public function get_inactivetrailer(){
-        $store_id = $this->data['session_data']->store_id;
-        $this->db->where("status",0);
-        return $result = $this->db->where("store_id" , $store_id)->get("trailer")->result();
-    }
-
+   
     public function get_truck($vehicle_id){
         $id = $this->hash->decrypt($vehicle_id);
         $this->db->where("vehicle_id", $id);
