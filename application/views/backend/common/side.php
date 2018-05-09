@@ -26,7 +26,6 @@
                             <ul class="nav navbar-nav">
                                 <li><a href="<?php echo site_url("app/vehicle/truck"); ?>">Vehicle</a></li>
                                 <li><a href="<?php echo site_url("app/vehicle/trailer"); ?>">Trailer</a></li>
-                                <li><a href="<?php echo site_url("app/vehicle/type"); ?>">Vehicle Type</a></li>
                             </ul>
                         </div>
                     </div>
