@@ -131,7 +131,6 @@ class Vehicle_model extends CI_Model {
         if($trailer_id = $this->input->get("trailer_id")){
             
             $trailer_id = $this->hash->decrypt($trailer_id);
-            //print_r_die($trailer_id);
 
             $this->db->where("trailer_id" , $trailer_id);
         }

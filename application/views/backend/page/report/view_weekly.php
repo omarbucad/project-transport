@@ -74,8 +74,10 @@
 
       if($('div.selectedDate').length){
         $("div.selectedDate").html('<span>'+selected+ ' - ' +enddate+ '</span>');
+        $("#date-range").text(selected+ ' - ' +enddate);
       }else{
         $("div.daterangepicker_input").before('<div class="selectedDate text-center"><span>'+selected+'</span></div>');
+        $("#date-range").text(selected+ ' - ' +enddate);
       }
       
     });
@@ -94,7 +96,10 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                      <a href="<?php echo my_current_url("&export=true"); ?>" class="btn btn-primary ">Export</a>
+                    <?php if(!empty($result)) :?>
+                      <a href="<?php echo site_url('app/report/pdf_weekly/?').$_SERVER['QUERY_STRING']; ?>" target="_blank" class="btn btn-primary ">Print</a>
+                    <?php endif; ?>
+
                     </div>
                 </div>
             </div>
@@ -142,7 +147,8 @@
 
                               <div class="col-xs-12 col-lg-6">
                                 <div class="form-group">
-                                    <label for="s_name">Start Date Report</label>
+
+                                    <label for="s_name">Start Date Report ( <small class="text-right" id="date-range"></small> )</label>
                                     <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="<?php echo $this->input->get("date"); ?>" placeholder="Select Report Start Date" required="true">
                                 </div>
                               </div>
@@ -156,20 +162,21 @@
                             </div>
                         </div>
                     </form>
-                </div>
-                
+                </div>                
             </div>
         </div>
         <div class="container">
 
         <?php if(!empty($result)) :?>
-            <h4>DRIVER VEHICLE SAFETY CHECK REPORT SHEET</h4>
+            <h1><?php echo $result['header'][0]->store_name; ?></h1>
+            <h4><?php echo $result['header'][0]->address; ?>
+            <h3><?php echo $result['header'][0]->checklist_name; ?></h3>
             <div class="row" style="margin-top: 20px;">
               <div class="col-md-6 text-left">
-                <label>WEEK START DATE:<span style="margin-left: 20px;"><?php echo $result[0]->startrange; ?></span></label>                
+                <label>WEEK START DATE:<span style="margin-left: 20px;"><?php echo $result['header'][0]->startrange; ?></span></label>                
               </div>
               <div class="col-md-6 text-left">
-                <label>WEEK FINISH DATE:<span style="margin-left: 20px;"><?php echo $result[0]->endrange; ?></span></label>
+                <label>WEEK FINISH DATE:<span style="margin-left: 20px;"><?php echo $result['header'][0]->endrange; ?></span></label>
               </div>          
             </div>
 
@@ -189,7 +196,7 @@
                   </thead>
                   <tbody>
 
-                    <?php foreach($result as $row) : ?>
+                    <?php foreach($result['header'] as $row) : ?>
                       <tr class="customer-row">
                         <td><span><?php echo $row->display_name; ?></span></td>
                         <td><span><?php echo $row->vehicle_registration_number; ?></span></td>
@@ -198,7 +205,7 @@
                         <td><span><?php echo $row->start_mileage?></span></td>
                         <td><span><?php echo $row->end_mileage?></span></td>
                         <td><span>
-                          <img src="<?php echo site_url("public/upload/signature/").$row->signature; ?>" class="img img-responsive thumbnail no-margin-bottom" style="height: 100px;">                          
+                          <img src="<?php echo site_url("public/upload/signature/").$row->signature; ?>" class="img img-responsive thumbnail no-margin-bottom" style="height: 50px;">                          
                         </span></td>
                       </tr>
                     <?php endforeach;?>
@@ -223,26 +230,24 @@
                         </tr>
                         <tr>
                             <th>DATE</th>
-                            <?php foreach($result as $row) : ?>
+                            <?php foreach($result['header'] as $row) : ?>
                             <td><span><small><?php echo $row->status_created; ?></small></span></td>
                             <?php endforeach; ?>
                         </tr>
                     </thead>
-                    <tbody>
-                      <?php foreach($result as $row) : ?>
-                        <?php $ctr = count($result);?>                              
-                        <?php foreach($row->report_checklist as $key => $value) : ?>
-                          <tr class="customer-row" style="cursor: default;">
-                            <td><span><?php echo $value->item_name;?></span></td>
-                            <?php for($i = 0;$i < $ctr; $i++) : ?>
-                              <td>
-                                <span class="<?php echo ($result[$i]->report_checklist[$key]->checklist_ischeck == 1) ? 'text-danger' : 'text-success'; ?>">
-                                  <?php echo ($result[$i]->report_checklist[$key]->checklist_ischeck == 1) ? '✖' : '✔'; ?>
-                                </span>
-                              </td>                 
-                            <?php endfor; ?>
-                          </tr>
-                        <?php endforeach; ?>
+                    <tbody>                           
+                      <?php foreach($result['checklist'] as $key => $value) : ?>
+                        <tr class="customer-row" style="cursor: default;">
+                          <td><span><?php echo $value['item_name'];?></span></td>
+                          <td><span><?php if($value['day1'] == 1){ echo '✖'; } elseif($value['day1'] == ""){} else{ echo '✔'; }?></span></td>
+                          <td><span><?php if($value['day2'] == 1){ echo '✖'; } elseif($value['day2'] == ""){} else{ echo '✔'; }?></span></td>
+                          <td><span><?php if($value['day3'] == 1){ echo '✖'; } elseif($value['day3'] == ""){} else{ echo '✔'; }?></span></td>
+                          <td><span><?php if($value['day4'] == 1){ echo '✖'; } elseif($value['day4'] == ""){} else{ echo '✔'; }?></span></td>
+                          <td><span><?php if($value['day5'] == 1){ echo '✖'; } elseif($value['day5'] == ""){} else{ echo '✔'; }?></span></td>
+                          <td><span><?php if($value['day6'] == 1){ echo '✖'; } elseif($value['day6'] == ""){} else{ echo '✔'; }?></span></td>
+                          <td><span><?php if($value['day7'] == 1){ echo '✖'; } elseif($value['day7'] == ""){} else{ echo '✔'; }?></span></td>
+                          
+                        </tr>
                       <?php endforeach; ?>
                     </tbody>
                 </table>

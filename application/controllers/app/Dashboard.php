@@ -20,7 +20,9 @@ class Dashboard extends MY_Controller {
 		$this->data['active_trailers'] = $this->vehicle->get_activetrailer();
 		$this->data['trucks'] = $this->vehicle->get_vehicle_list();
 		$this->data['active_trucks'] = $this->vehicle->get_activetruck();
-		//$this->data['defects'] = $this->report->get_inactivetruck();
+		$this->data['reports_today'] = $this->report->get_today_reports();
+		$this->data['defects_under_maintenance'] = $this->report->defect_undermaintenance_reports();
+		$this->data['fixed_today'] = $this->report->fixed_today_reports();
 
 		$this->load->view('backend/master' , $this->data);
 	}

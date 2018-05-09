@@ -52,7 +52,6 @@ class Report extends MY_Controller {
 			$this->data['checklist_items'] = $this->checklist->get_checklist_items($this->hash->encrypt($this->input->get('checklist_type')));
 
 			$this->data['result'] =	$this->reports->weekly_report();
-			//print_r_die($this->data['result']);
 
 			if($this->input->get("export")){
 				if(empty($this->data['result'])){
@@ -84,6 +83,13 @@ class Report extends MY_Controller {
 		$report = $this->reports->get_report_by_id($report_id);
 
 		$this->pdf->create_report_checklist($report , "I");
+	
+	}
+
+	public function pdf_weekly(){
+
+		$report = $this->reports->weekly_report();
+		$this->pdf->create_report_weekly($report , "I");
 	
 	}
 

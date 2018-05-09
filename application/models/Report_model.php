@@ -54,7 +54,6 @@ class Report_model extends CI_Model {
         $this->db->join('user u2','u2.user_id = rs.user_id');
 
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
-
         foreach($result as $key => $row){
             if($result[$key]->status == 0){
                 $result[$key]->status_created = 0;
@@ -64,6 +63,7 @@ class Report_model extends CI_Model {
             $result[$key]->status = report_status($row->status);
             $result[$key]->raw_status = report_status($row->status,true);
             $result[$key]->created = convert_timezone($row->created,true);
+            
         }
         
         return $result;
@@ -169,34 +169,158 @@ class Report_model extends CI_Model {
         }
         // End of Search
 
-        $this->db->select('r.* , rs.status, rs.created as status_created,rs.signature, c.checklist_name, u.display_name, u2.display_name as updated_by');
+        //$store_id = $this->data['session_data']->store_id;
+
+        $this->db->select('r.* , rs.status, rs.created as status_created,rs.signature, c.checklist_name, u.display_name, u2.display_name as updated_by, s.store_name, s.address_id,sa.*');
+
+        $this->db->join('report_status rs', 'rs.id = r.status_id');
+        $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
+        $this->db->join('user u', 'u.user_id = r.report_by');
+        $this->db->join('user u2','u2.user_id = rs.user_id');
+        $this->db->join('store s', 's.store_id = u.store_id');
+        $this->db->join('store_address sa', 'sa.store_address_id = s.address_id');
+
+        $result['header'] = $this->db->order_by("r.created" , "ASC")->get("report r")->result();
+        $checklist = array();        
+
+        foreach($result['header'] as $key => $row){
+            if($result['header'][$key]->status == 0){
+                $result['header'][$key]->status_created = 0;
+            }else{
+                $result['header'][$key]->status_created = convert_timezone($row->status_created,false);
+            }
+
+            $result['header'][$key]->address = $row->street1.",";
+            $result['header'][$key]->address .= ($row->street2) ? $row->street2."," : "";
+            $result['header'][$key]->address .= ($row->suburb) ? $row->suburb."," : "";
+            $result['header'][$key]->address .= ($row->city) ? $row->city."," : "";
+            $result['header'][$key]->address .= ($row->state) ? $row->state."," : "";
+            $result['header'][$key]->address .= ($row->postcode) ? $row->postcode : "";
+
+
+            $result['header'][$key]->status = report_status($row->status);
+            $result['header'][$key]->raw_status = report_status($row->status,true);
+            $result['header'][$key]->created = convert_timezone($row->created,true);
+            $result['header'][$key]->startrange = convert_timezone($start);
+            $result['header'][$key]->endrange = convert_timezone($end);
+            //Get All Report Checklist Item
+            $this->db->select("rc.* , ci.item_name");
+            $this->db->join("checklist_items ci", "ci.id = rc.checklist_item_id");
+            $report_checklist = $this->db->where("report_id", $result['header'][$key]->report_id)->get("report_checklist rc")->result();
+
+            array_push($checklist, $report_checklist);
+        }    
+
+        $item = array();
+        foreach ($checklist as $key =>$value) {
+            $count_items = (count($checklist[$key]) - 1);   
+        }
+        $report_count = (count($checklist) - 1);
+        for($i = 0; $i <= $count_items; $i++){
+            $c = 0;
+
+            $item[] = array(
+                "item_name" => $checklist[$c][$i]->item_name,
+                "day1"      => (($c <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                "day2"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                "day3"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                "day4"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                "day5"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                "day6"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                "day7"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                
+            );
+            $c = 0;
+        }
+        $result['checklist'] = $item;
+        
+        return $result;
+    }
+
+    public function get_today_reports(){
+
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
 
-        $result = $this->db->order_by("r.created" , "ASC")->get("report r")->result();
+        $this->db->where("r.created >=", strtotime("today midnight"));
+        $this->db->where("r.created <=", strtotime("tomorrow midnight -1 second"));
+
+        $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
         foreach($result as $key => $row){
             if($result[$key]->status == 0){
                 $result[$key]->status_created = 0;
             }else{
-                $result[$key]->status_created = convert_timezone($row->status_created,false);
+                $result[$key]->status_created = convert_timezone($row->status_created,true);
             }
             $result[$key]->status = report_status($row->status);
             $result[$key]->raw_status = report_status($row->status,true);
             $result[$key]->created = convert_timezone($row->created,true);
-            $result[$key]->startrange = convert_timezone($start);
-            $result[$key]->endrange = convert_timezone($end);
-            //Get All Report Checklist Item
-            $this->db->select("rc.* , ci.item_name");
-            $this->db->join("checklist_items ci", "ci.id = rc.checklist_item_id");
-            $result[$key]->report_checklist = $this->db->where("report_id", $result[$key]->report_id)->get("report_checklist rc")->result();
         }
-
         
         return $result;
+
+    }
+
+    public function defect_undermaintenance_reports(){
+
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');     
+
+        $this->db->join('report_status rs', 'rs.id = r.status_id');
+        $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
+        $this->db->join('user u', 'u.user_id = r.report_by');
+        $this->db->join('user u2','u2.user_id = rs.user_id');
+
+        $this->db->where_in("rs.status", [1,2]);  
+        $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
+
+        foreach($result as $key => $row){
+            if($result[$key]->status == 0){
+                $result[$key]->status_created = 0;
+            }else{
+                $result[$key]->status_created = convert_timezone($row->status_created,true);
+            }
+            $result[$key]->status = report_status($row->status);
+            $result[$key]->raw_status = report_status($row->status,true);
+            $result[$key]->created = convert_timezone($row->created,true);
+        }
+        
+        return $result;
+
+    }
+    
+    public function fixed_today_reports(){
+
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');     
+
+        $this->db->join('report_status rs', 'rs.id = r.status_id');
+        $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
+        $this->db->join('user u', 'u.user_id = r.report_by');
+        $this->db->join('user u2','u2.user_id = rs.user_id');
+
+        $this->db->where("rs.created >=", strtotime("today midnight"));
+        $this->db->where("rs.created <=", strtotime("tomorrow midnight -1 second"));
+
+        $this->db->where("rs.status", 3);  
+        $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
+
+        foreach($result as $key => $row){
+            if($result[$key]->status == 0){
+                $result[$key]->status_created = 0;
+            }else{
+                $result[$key]->status_created = convert_timezone($row->status_created,true);
+            }
+            $result[$key]->status = report_status($row->status);
+            $result[$key]->raw_status = report_status($row->status,true);
+            $result[$key]->created = convert_timezone($row->created,true);
+        }
+        
+        return $result;
+
     }
 
 }
