@@ -75,7 +75,7 @@
 <div class="container margin-bottom">
     <div class="side-body padding-top">
     	<ol class="breadcrumb">
-    		<li><a href="<?php echo site_url('app/report/'); ?>">Report</a></li>
+    		<li><a href="<?php echo site_url('app/report/daily'); ?>">Report</a></li>
     		<li class="active">View Report</li>
     	</ol>	
     	<h3>Report # <?php echo $result->report_number;?></h3>
