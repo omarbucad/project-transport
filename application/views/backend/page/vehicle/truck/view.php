@@ -34,7 +34,7 @@
             <div class="container ">
                 <div class="row no-margin-bottom">
                     <div class="col-xs-12 col-lg-8 no-margin-bottom">
-                        <span>A list of all of your product tags. <a href="#" class="text-underline">need help?</a></span>
+                        
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
                         <a href="<?php echo site_url("app/vehicle/truck/add"); ?>" class="btn btn-success ">Add Vehicle</a>

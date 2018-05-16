@@ -209,7 +209,7 @@
 
 
     	<div class="text-right margin-bottom">
-    		<a href="<?php echo site_url('app/report/');?>" class="btn btn-primary">Back to Reports List</a>
+    		<a href="<?php echo site_url('app/report/daily');?>" class="btn btn-primary">Back to Reports List</a>
     	</div>
     </div>
 </div>
