@@ -51,11 +51,13 @@
         		</div>
         		<div class="col-xs-12">
                     <div class="trial-time">
-                        <?php if($result->trial_left != 0) : ?>
-                            <span>Trial Expiration: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?> day(s) left</h4></span>
-                        <?php else : ?>
-                            <span><h4 class='help-block text-danger'>Trial Already Expired</h4></span>
-                        <?php endif;?>
+                        <?php if($result->plan_type == 'TRIAL') : ?>
+                            <?php if($result->trial_left != 0) : ?>
+                                <span>Trial Expiration: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?> day(s) left</h4></span>
+                            <?php else : ?>
+                                <span><h4 class='help-block text-danger'>Trial Already Expired</h4></span>
+                            <?php endif;?>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="col-xs-12">
