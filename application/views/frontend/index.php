@@ -113,20 +113,23 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="row no-margin no-gap">
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-4 col-sm-6">
                             <div class="pricing-table dark-blue">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
-                                        <div class="pricing">$10</div>
-                                        <div class="pricing-type">per month</div>
+                                        <div class="pricing">Free</div>
+                                        <div class="pricing-type">&nbsp;</div>
                                     </div>
                                 </div>
                                 <div class="pt-body">
                                     <h4>Basic Plan</h4>
                                     <ul class="plan-detail">
-                                        <li>1 Website</li>
-                                        <li>100 GB Storage</li>
-                                        <li>Unlimited Bandwidth</li>
+                                        <li>1 Driver</li>
+                                        <li>1 Vehicle</li>
+                                        <li>1 Trailer</li>
+                                        <li>50 Reports / Month</li>
+                                        <li>Reports Viewable 1 Week Before Month Ends</li>
+                                        <li>No Export</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
@@ -134,20 +137,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-4 col-sm-6">
                             <div class="pricing-table green">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
-                                        <div class="pricing">$25</div>
+                                        <div class="pricing">$20</div>
                                         <div class="pricing-type">per month</div>
                                     </div>
                                 </div>
                                 <div class="pt-body">
                                     <h4>Standard Plan</h4>
                                     <ul class="plan-detail">
-                                        <li>5 Website</li>
-                                        <li>500 GB Storage</li>
-                                        <li>Unlimited Bandwidth</li>
+                                        <li>5 Drivers</li>
+                                        <li>10 Vehicles</li>
+                                        <li>10 Trailers</li>
+                                        <li>1000 Reports / Month</li>
+                                        <li>Data Stored for 6 Months</li>
+                                        <li>With Export and Reporting</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
@@ -155,7 +161,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-4 col-sm-6">
                             <div class="pricing-table  dark-blue">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
@@ -164,32 +170,14 @@
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4>Advanced Plan</h4>
+                                    <h4>Premium Plan</h4>
                                     <ul class="plan-detail">
-                                        <li>10 Website</li>
-                                        <li>1 TB Storage</li>
-                                        <li>Unlimited Bandwidth</li>
-                                    </ul>
-                                </div>
-                                <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="pricing-table dark-blue">
-                                <div class="pt-header">
-                                    <div class="plan-pricing">
-                                        <div class="pricing">$100</div>
-                                        <div class="pricing-type">per month</div>
-                                    </div>
-                                </div>
-                                <div class="pt-body">
-                                    <h4>Unlimited Plan</h4>
-                                    <ul class="plan-detail">
-                                        <li>Unlimited Website</li>
-                                        <li>Unlimited Storage</li>
-                                        <li>Unlimited Bandwidth</li>
+                                        <li>Unlimited Drivers</li>
+                                        <li>Unlimited Vehicles</li>
+                                        <li>Unlimited Trailers</li>
+                                        <li>Unlimited Reports</li>
+                                        <li>Data Stored Forever</li>
+                                        <li>With Free Trial</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">

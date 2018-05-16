@@ -1,3 +1,121 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+       
+        var activediv = $('div.no-gap').find('div.green');
+        var id = activediv.attr("id");
+
+        if(id == "div-basic"){
+            $('#plan-selected').text("Basic Plan");
+        }else if(id == "div-standard"){
+            $('#plan-selected').text("Standard Plan");
+        }else{
+            $('#plan-selected').text("Premium Plan");
+        }
+    });
+    $(document).on("click", "#btn-basic", function(){
+        if(!$('#div-basic').hasClass("green")){
+
+            $('#div-basic').addClass("green");
+            $('#btn-basic').addClass("btn-success");
+            $('#btn-basic').text("Selected Plan");
+            $('#plan-selected').text("Basic Plan");
+
+            $('#btn-basic').removeClass("btn-primary");
+            $('#div-basic').removeClass("dark-blue");
+
+            if($('#div-standard').hasClass("green")){
+                $('#div-standard').removeClass("green");
+                $('#btn-standard').removeClass("btn-success");
+                $('#btn-standard').text("Select Plan");
+
+                $('#div-standard').addClass("dark-blue");
+                $('#btn-standard').addClass("btn-primary");
+            }
+
+            if($('#div-premium').hasClass("green")){
+                $('#div-premium').removeClass("green");
+                $('#btn-premium').removeClass("btn-success");
+                $('#btn-premium').text("Select Plan");
+
+                $('#div-premium').addClass("dark-blue");
+                $('#btn-premium').addClass("btn-primary");
+            }
+        }
+    });
+    $(document).on("click", "#btn-standard", function(){
+        if(!$('#div-standard').hasClass("green")){
+
+            $('#div-standard').addClass("green");
+            $('#btn-standard').addClass("btn-success");
+            $('#btn-standard').text("Selected Plan");
+            $('#plan-selected').text("Standard Plan");
+            
+            $('#btn-standard').removeClass("btn-primary");
+            $('#div-standard').removeClass("dark-blue");
+
+            if($('#div-basic').hasClass("green")){
+                $('#div-basic').removeClass("green");
+                $('#btn-basic').removeClass("btn-success");
+                $('#btn-basic').text("Select Plan");
+
+                $('#div-basic').addClass("dark-blue");
+                $('#btn-basic').addClass("btn-primary");
+            }
+
+            if($('#div-premium').hasClass("green")){
+                $('#div-premium').removeClass("green");
+                $('#btn-premium').removeClass("btn-success");
+                $('#btn-premium').text("Select Plan");
+
+                $('#div-premium').addClass("dark-blue");
+                $('#btn-premium').addClass("btn-primary");
+            }
+        }
+    });
+    $(document).on("click", "#btn-premium", function(){
+        if(!$('#div-premium').hasClass("green")){
+
+            $('#div-premium').addClass("green");
+            $('#btn-premium').addClass("btn-success");
+            $('#btn-premium').text("Selected Plan");
+            $('#plan-selected').text("Premium Plan");
+            
+            $('#btn-premium').removeClass("btn-primary");
+            $('#div-premium').removeClass("dark-blue");
+
+            if($('#div-standard').hasClass("green")){
+                $('#div-standard').removeClass("green");
+                $('#btn-standard').removeClass("btn-success");
+                $('#btn-standard').text("Select Plan");
+
+                $('#div-standard').addClass("dark-blue");
+                $('#btn-standard').addClass("btn-primary");
+            }
+
+            if($('#div-basic').hasClass("green")){
+                $('#div-basic').removeClass("green");
+                $('#btn-basic').removeClass("btn-success");
+                $('#btn-basic').text("Select Plan");
+
+                $('#div-basic').addClass("dark-blue");
+                $('#btn-basic').addClass("btn-primary");
+            }
+        }
+    });
+
+    $(document).on("click","div.annually", function(){
+        if(!$("div.annually").hasClass("active")){
+            $("div.annually").addClass("active");
+            $("div.monthly").removeClass("active");
+        }
+    });
+    $(document).on("click","div.monthly", function(){
+        if(!$("div.monthly").hasClass("active")){
+            $("div.monthly").addClass("active");
+            $("div.annually").removeClass("active");
+        }
+    });
+</script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container">
@@ -76,11 +194,11 @@
                 <div class="col-md-12">
                     <div class="row no-margin no-gap">
                         <div class="col-md-4 col-sm-6">
-                            <div class="pricing-table green">
+                            <div class="pricing-table green" id="div-basic">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
                                         <div class="pricing">Free</div>
-                                        <div class="pricing-type">until trial ends</div>
+                                        <div class="pricing-type">&nbsp;</div>
                                     </div>
                                 </div>
                                 <div class="pt-body">
@@ -95,12 +213,12 @@
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
-                                    <button type="button" class="btn btn-success">Selected Plan</button>
+                                    <button type="button" class="btn btn-success" id="btn-basic">Selected Plan</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <div class="pricing-table dark-blue">
+                            <div class="pricing-table dark-blue" id="div-standard">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
                                         <div class="pricing">$20</div>
@@ -115,16 +233,16 @@
                                         <li>10 Trailers</li>
                                         <li>1000 Reports / Month</li>
                                         <li>Data Stored for 6 Months</li>
-                                        <li>With Export and Reportting</li>
+                                        <li>With Export and Reporting</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary">Select Plan</button>
+                                    <button type="button" class="btn btn-primary" id="btn-standard">Select Plan</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <div class="pricing-table dark-blue">
+                            <div class="pricing-table dark-blue" id="div-premium">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
                                         <div class="pricing">$50</div>
@@ -143,7 +261,7 @@
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary">Select Plan</button>
+                                    <button type="button" class="btn btn-primary" id="btn-premium">Select Plan</button>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +274,7 @@
                     <h3>Billing</h3>
                 </div>
                 <div class="col-xs-12 col-lg-8">
-                    <h3>You've selected the <?php echo $result->plan_type;?> plan.</h3>
+                    <h3>You've selected the <span id="plan-selected"></span>.</h3>
                     <span class="help-block">How do you want to be billed?</span>
                     <hr>
                     <div class="billed_container">
