@@ -22,6 +22,12 @@ class Accounts extends MY_Controller {
 		$this->data["links"] = $this->pagination->create_links();
 
 		$this->data['result']	 = $this->accounts->get_accounts_list();
+		$driver = count($this->accounts->get_driver());
+		$mechanic = count($this->accounts->get_mechanic());
+		$admin = count($this->accounts->get_admin());
+		$this->data['plan_type']		= $this->data['session_data']->plan_type;
+		$this->data['total_accounts']	= $driver + $mechanic + $admin;
+
 		$this->load->view('backend/master' , $this->data);
 	}
 

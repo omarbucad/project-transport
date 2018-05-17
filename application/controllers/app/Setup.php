@@ -16,6 +16,7 @@ class Setup extends MY_Controller {
 		$this->data['result']    		=  $this->checklist->get_checklist_list();
 		$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
 		$this->data['main_page'] 		= "backend/page/checklist/view";
+		$this->data['plan_type']		= $this->data['session_data']->plan_type;
 
 		$this->load->view('backend/master' , $this->data);
 	}

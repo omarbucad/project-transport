@@ -355,15 +355,18 @@ class Checklist_model extends CI_Model {
         $id = $this->hash->decrypt($checklist_id);
         $this->db->trans_start();
 
-        $this->db->where('checklist_id', $id);
-        $this->db->update("checklist" , [
-            "deleted" => time()
-        ]);
+        if($id != 1 && $id != 2){
+            $this->db->where('checklist_id', $id);
+            $this->db->update("checklist" , [
+                "deleted" => time()
+            ]);
 
-        $this->db->where("checklist_id",$id);
-        $this->db->update("checklist_items",[
-            "deleted" => time()
-        ]);
+            $this->db->where("checklist_id",$id);
+            $this->db->update("checklist_items",[
+                "deleted" => time()
+            ]);
+        }
+        
 
         $this->db->trans_complete();
 

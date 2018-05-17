@@ -157,7 +157,7 @@
         					<nav>
         						<ul>
         							<li><span>1 Driver</span></li>
-                                    <li><span> Vehicle</span></li>
+                                    <li><span>1 Vehicle</span></li>
                                     <li><span>1 Trailer</span></li>
                                     <li><span>50 Reports / Month</span></li>
                                     <li><span>Reports Viewable 1 Week Before Month Ends</span></li>
@@ -204,9 +204,8 @@
                                 <div class="pt-body">
                                     <h4>Basic Plan</h4>
                                     <ul class="plan-detail">
-                                        <li>1 Driver</li>
-                                        <li>1 Vehicle</li>
-                                        <li>1 Trailer</li>
+                                        <li>1 Account</li>
+                                        <li>1 Vehicle/Trailer</li>
                                         <li>50 Reports / Month</li>
                                         <li>Reports Viewable 1 Week Before Month Ends</li>
                                         <li>No Export</li>
@@ -228,9 +227,8 @@
                                 <div class="pt-body">
                                     <h4>Standard Plan</h4>
                                     <ul class="plan-detail">
-                                        <li>5 Drivers</li>
-                                        <li>10 Vehicles</li>
-                                        <li>10 Trailers</li>
+                                        <li>5 Accounts</li>
+                                        <li>10 Vehicles & Trailers</li>
                                         <li>1000 Reports / Month</li>
                                         <li>Data Stored for 6 Months</li>
                                         <li>With Export and Reporting</li>
@@ -252,9 +250,8 @@
                                 <div class="pt-body">
                                     <h4>Premium Plan</h4>
                                     <ul class="plan-detail">
-                                        <li>Unlimited Drivers</li>
-                                        <li>Unlimited Vehicles</li>
-                                        <li>Unlimited Trailers</li>
+                                        <li>Unlimited Accounts</li>
+                                        <li>Unlimited Vehicles & Trailers</li>
                                         <li>Unlimited Reports</li>
                                         <li>Data Stored Forever</li>
                                         <li>With Free Trial</li>

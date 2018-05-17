@@ -128,7 +128,7 @@
                         <div class="col-xs-12 col-lg-4">
                             <div class="form-group">
                                 <label for="username">Checklist Name</label>
-                                <input type="text" name="checklist_name" class="form-control" value="<?php echo $result->checklist_name; ?>" required="true">
+                                <input type="text" name="checklist_name" class="form-control" value="<?php echo $result->checklist_name; ?>" required="true"  >
                             </div>
                             <div class="form-group">
                                 <label for="description">Description</label>

@@ -101,7 +101,13 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                        <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
+                      <?php if($plan_type != 'BASIC') : ?>
+                        <?php if($plan_type == 'TRIAL' || $plan_type == 'PREMIUM') : ?>
+                          <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
+                        <?php elseif($plan_type == 'STANDARD' && (count($result) < 5)) : ?>
+                          <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
+                        <?php endif; ?>
+                      <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -156,10 +162,12 @@
                             <td><span><?php echo $row->vehicle_type; ?></span></td>
                             <td><span><?php echo $row->status; ?></span></td>
                             <td>
+                              <?php if ($row->checklist_id != 1 && $row->checklist_id != 2) :?>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <a href="<?php echo site_url("app/setup/checklist/edit/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("app/setup/checklist/delete/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link btn-delete" title="Remove Checklist"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                 </div>
+                              <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?> 

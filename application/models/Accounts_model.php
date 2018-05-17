@@ -33,6 +33,31 @@ class Accounts_model extends CI_Model {
        
     }
 
+    public function get_mechanic(){
+        $store_id = $this->data['session_data']->store_id;
+        $this->db->where("store_id" , $store_id);
+
+        $result = $this->db->where('role',"MECHANIC")->get("user")->result();
+
+        foreach($result as $k => $row){
+            $result[$k]->status = convert_status($row->status);
+        }
+        return $result;
+       
+    }
+    public function get_admin(){
+        $store_id = $this->data['session_data']->store_id;
+        $this->db->where("store_id" , $store_id);
+
+        $result = $this->db->where('role',"ADMIN")->get("user")->result();
+
+        foreach($result as $k => $row){
+            $result[$k]->status = convert_status($row->status);
+        }
+        return $result;
+       
+    }
+
     public function get_account_info($user_id){
         $this->db->where("user_id", $user_id);
         $result = $this->db->get("user")->row();
