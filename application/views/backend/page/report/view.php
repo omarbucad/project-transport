@@ -78,7 +78,9 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                      <a href="<?php echo my_current_url("&export=true"); ?>" class="btn btn-primary ">Export</a>
+                      <?php if($plan_type == "STANDARD" || $plan_type == "TRIAL" || $plan_type == "PREMIUM") : ?>
+                        <a href="<?php echo my_current_url("&export=true"); ?>" class="btn btn-primary ">Export</a>
+                      <?php endif; ?>
                     </div>
                 </div>
             </div>
