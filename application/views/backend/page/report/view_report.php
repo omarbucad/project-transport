@@ -155,7 +155,9 @@
                                     <small class="help-block"><?php echo $row->created; ?></small>
                                 </td>	  
                                 <td>
+                                    <?php if(isset($row->signature)) : ?>
                                      <img src="<?php echo $row->signature; ?>" height="40px;">
+                                    <?php endif; ?>
                                 </td>  						
 	    					</tr>
 	    					<?php endforeach; ?>

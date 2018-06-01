@@ -112,14 +112,14 @@ class Report extends MY_Controller {
 			$this->session->set_flashdata('status' , 'error');	
 			$this->session->set_flashdata('message' , 'Note is required.');
 
-			redirect("app/report/" , 'refresh');
+			redirect("app/report/daily" , 'refresh');
 		}else{
 			if($delete_checklist = $this->reports->update_report($report_id)){
 
 				$this->session->set_flashdata('status' , 'success');	
 				$this->session->set_flashdata('message' , 'Successfully Updated Status');
 
-				redirect("app/report/" , 'refresh');
+				redirect("app/report/daily" , 'refresh');
 
 			}else{
 				$this->session->set_flashdata('status' , 'error');	
