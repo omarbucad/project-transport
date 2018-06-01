@@ -23,9 +23,29 @@
 
     $(document).on("click" , ".btn-remove-item" , function(){
         var count = $('.item-clone').length;
+        var url = $(this).data("href");
+
 
         if(count != 1){
+
+            var c = confirm("Are you sure");
+            if(c == true){
+
             $(this).closest(".item-clone").remove();
+            $.ajax({
+                url : url ,
+                method : "GET" ,
+                success : function(response){
+                    var json = jQuery.parseJSON(response);
+                    
+                    if(json.status){
+                        $.notify("Successfully deleted image" , { className:  "success" , position : "top center"});
+
+                    }
+                }
+            });
+
+        }
         }else{
             $(this).closest(".item-clone").find("input:text").val("");
         }
@@ -34,6 +54,7 @@
             $(v).find('.panel-heading > span').html(k+1);
         });
     });
+
     $(document).on("change" , '#checklist_for' , function(){
       if($(this).val() == "DRIVER"){
         $("#reminder_group").addClass("hide");
@@ -76,7 +97,6 @@
                     
                     
                     if(json.status){
-                        console.log(btn);
                         btn.closest("div.col-lg-6").find("div.div-image").addClass("hidden");
                         btn.closest("div.col-lg-6").find("div.div-upload").removeClass("hidden");
                         $.notify("Successfully deleted image" , { className:  "success" , position : "top center"});
@@ -231,7 +251,7 @@
                             </div>
                         </div>
                         <div class="col-lg-6 text-right no-margin-bottom">
-                            <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-remove-item">Remove Item</a>
+                            <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-remove-item" data-href="<?php echo site_url('app/setup/checklist/item/delete/').$row['id'];?>">Remove Item</a>
                         </div>
                     </div>
                 </div>
