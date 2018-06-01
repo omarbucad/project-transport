@@ -101,7 +101,7 @@ class Report extends MY_Controller {
 
 			$this->session->set_flashdata('status' , 'error');	
 			$this->session->set_flashdata('message' , 'Something went wrong.');
-			redirect("app/report/" , 'refresh');
+			redirect("app/report/daily" , 'refresh');
 		}
 	}
 
@@ -125,7 +125,7 @@ class Report extends MY_Controller {
 				$this->session->set_flashdata('status' , 'error');	
 				$this->session->set_flashdata('message' , 'Something went wrong.');
 
-				redirect("app/report/" , 'refresh');
+				redirect("app/report/daily" , 'refresh');
 			}
 		}
 	}
