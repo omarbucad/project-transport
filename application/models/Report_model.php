@@ -212,26 +212,29 @@ class Report_model extends CI_Model {
         }    
 
         $item = array();
-        foreach ($checklist as $key =>$value) {
-            $count_items = (count($checklist[$key]) - 1);   
-        }
-        $report_count = (count($checklist) - 1);
-        for($i = 0; $i <= $count_items; $i++){
-            $c = 0;
+        if(!empty($checklist)){
+            foreach ($checklist as $key =>$value) {
+                $count_items = (count($checklist[$key]) - 1);   
+            }
+            $report_count = (count($checklist) - 1);
+            for($i = 0; $i <= $count_items; $i++){
+                $c = 0;
 
-            $item[] = array(
-                "item_name" => $checklist[$c][$i]->item_name,
-                "day1"      => (($c <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
-                "day2"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
-                "day3"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
-                "day4"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
-                "day5"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
-                "day6"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
-                "day7"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
-                
-            );
-            $c = 0;
+                $item[] = array(
+                    "item_name" => $checklist[$c][$i]->item_name,
+                    "day1"      => (($c <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                    "day2"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                    "day3"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                    "day4"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                    "day5"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                    "day6"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                    "day7"      => (($c++ <= $report_count) && isset($checklist[$c])) ? $checklist[$c][$i]->checklist_ischeck : "",
+                    
+                );
+                $c = 0;
+            }
         }
+        
         $result['checklist'] = $item;
         
         return $result;

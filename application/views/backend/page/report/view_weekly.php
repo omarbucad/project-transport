@@ -167,7 +167,7 @@
         </div>
         <div class="container">
 
-        <?php if(!empty($result)) :?>
+        <?php if(isset($result['header'][0])) :?>
             <h1><?php echo $result['header'][0]->store_name; ?></h1>
             <h4><?php echo $result['header'][0]->address; ?>
             <h3><?php echo $result['header'][0]->checklist_name; ?></h3>
