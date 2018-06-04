@@ -85,7 +85,7 @@
                 </div> 
             	<div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
                     <a href="<?php echo site_url('app/report/pdf/').$this->hash->encrypt($result->report_id);?>" class="btn btn-success btn-print" target="_blank">Print Report</a>
-					<a href="<?php echo site_url('app/report/');?>" class="btn btn-primary"  style="margin-right:25px;">Back to Reports List</a>
+					<a href="<?php echo site_url('app/report/daily');?>" class="btn btn-primary"  style="margin-right:25px;">Back to Reports List</a>
                 </div>
                                
             </div>
