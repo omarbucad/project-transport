@@ -92,7 +92,7 @@
                      <?php foreach($result as $row) : ?>
                         <tr class="customer-row" style="cursor: default;">
                             <td>
-                                <span><strong><a href="<?php echo site_url("app/report/?trailer_number=$row->trailer_number"); ?>" class="link-style"><?php echo $row->trailer_number; ?></a></strong></span>
+                                <span><strong><?php echo $row->trailer_number; ?></strong></span>
                             </td>
                             <td><span><?php echo $row->description; ?></span></td>
                             <td><span><?php echo $row->status; ?></span></td>
