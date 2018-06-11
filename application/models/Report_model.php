@@ -20,7 +20,7 @@ class Report_model extends CI_Model {
         }
 
         if($this->input->get('checklist_name')){
-            $this->db->where('u.display_name' , $this->input->get('checklist_name'));
+            $this->db->where('c.checklist_name' , $this->input->get('checklist_name'));
         }
 
         if($this->input->get('trailer_number')){
