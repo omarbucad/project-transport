@@ -1,3 +1,12 @@
+<script type="text/javascript">
+    $(document).on("click" , ".send-invoice" , function(){
+
+        var c = confirm("Are you sure to send invoice email?");
+        if(c == true){
+            window.location.href = $(this).data("href");
+        }
+    });
+</script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
 
@@ -105,7 +114,9 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <?php echo $row->plan_type; ?> - <small><?php echo $row->active; ?></small>
+                                    <?php echo $row->plan_type; ?> - 
+                                    <small><?php echo $row->active; ?></small> - 
+                                    <small class="text-danger"><strong> Day(s) Left: <?php echo "0"; ?></strong></small>
                                     <small class="help-block"><strong class="text-success">Created: </strong><?php echo $row->plan_created; ?></small>
                                     <small class="help-block"><strong class="text-danger">Expiration: </strong> <?php echo $row->plan_expiration; ?></small>
                                 </td>
@@ -113,7 +124,7 @@
                                 <td>
                                     <?php if($row->role != 'DEV ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
-                                    <a href="<?php echo site_url("admin/accounts/edit/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="Send Invoice"><i class="fa fa-file" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/create_invoice/').$row->user_id;?>" class="btn btn-link send-invoice" title="Send Invoice"><i class="fa fa-file" aria-hidden="true"></i></a>
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("admin/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="User Plan Notification"><i class="fa fa-bell" aria-hidden="true"></i></a>
                                     <?php endif; ?>
                                 </div>

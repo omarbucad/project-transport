@@ -30,4 +30,39 @@ class Invoice extends MY_Controller {
 
 		$this->load->view('backend/master' , $this->data);
 	}
+
+	private function create_invoice($user_id){
+
+		$invoice_information = $this->invoice->get_invoice_by_id($invoice_id);
+
+		if($pdf = $this->pdf->create_invoice($invoice_information)){
+
+			$this->db->where("invoice_id" , $invoice_id)->update("invoice" , [
+				"invoice_pdf" => $pdf['file']
+			]);
+
+			$this->send_email_invoice($invoice_information , $pdf['attachment']);
+		}
+	}
+
+	private function send_email_invoice($invoice_information , $pdf_file , $ajax = false){
+
+		$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
+		$this->email->to($invoice_information->email);
+
+		$this->email->subject('Gravybaby Bill Statement');
+		$this->email->message($this->load->view('backend/email/send_invoice' , $invoice_information , TRUE));
+		$this->email->attach($pdf_file);
+		$this->email->set_mailtype('html');
+
+		if($ajax){
+			if($this->email->send()){
+				echo json_encode(["status" => true , "message" => "Email has been sent"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Sending Failed"]);
+			}
+		}else{
+			$this->email->send();
+		}
+	}
 }
