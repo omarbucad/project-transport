@@ -6,14 +6,32 @@ class Accounts_model extends CI_Model {
         $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
         $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
 
-        if($count){
+        $this->db->select("u.*,up.plan_type,up.billing_type, up.plan_created,up.plan_expiration,up.updated,up.active");
+        $this->db->join("user_plan up","up.store_id = u.store_id");
 
-            return $result = $this->db->where("role","SUPER ADMIN")->get("user")->num_rows();
-        }else{
-            $this->db->select("u.*,up.plan_type,up.billing_type, up.plan_created,up.plan_expiration,up.updated,up.active");
-            $this->db->join("user_plan up","up.store_id = u.store_id");
-            $result = $this->db->where("u.role","SUPER ADMIN")->limit($limit , $skip)->order_by("display_name" , "ASC")->get("user u")->result();
+        if($plan = $this->input->get('plan')){
+            $this->db->where("up.plan_type",$plan);
         }
+
+        if($status = $this->input->get('status')){
+            $this->db->where("u.status",$status);
+        }
+
+        if($name = $this->input->get('name')){
+            $this->db->where("u.display_name",$name);
+        }
+
+        if($type = $this->input->get('type')){
+            $this->db->where("up.billing_type",$type);
+        }
+
+        if($count){
+            return $result = $this->db->where("u.role","SUPER ADMIN")->get("user u")->num_rows();
+        }
+
+        
+        $result = $this->db->where("u.role","SUPER ADMIN")->limit($limit , $skip)->order_by("u.display_name" , "ASC")->get("user u")->result();
+
         
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);

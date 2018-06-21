@@ -56,7 +56,7 @@
                             <div class="col-xs-12 col-lg-4">
                                 <div class="form-group">
                                     <label for="s_name">Name</label>
-                                    <input type="text" name="name" class="form-control" value="<?php echo $this->input->get("name")?>" id="s_name" placeholder="Search by username or name">
+                                    <input type="text" name="name" class="form-control" value="<?php echo $this->input->get("name")?>" id="s_name" placeholder="Search by name">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-4">
@@ -111,7 +111,7 @@
                     <tr>
                         <th width="35%">Name</th>                        
                         <th width="15%">Role</th>
-                        <th width="15%">Status</th>
+                        <th width="15%">Account Status</th>
                         <th width="15%">Plan</th>
                         <th width="20%">Action</th>
                     </tr>
