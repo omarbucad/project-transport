@@ -126,7 +126,7 @@
                                             <img src="<?php echo site_url("thumbs/images/user/$row->image_path/80/80/$row->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
                                         </div>
                                         <div class="col-xs-6 col-lg-10 no-margin-bottom">
-                                            <a href="<?php echo site_url("admin/users/view_user_info/$row->user_id");?>"><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</a><br>
+                                            <span><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</span><br>
                                             <small class="help-block"><?php echo $row->email_address; ?></small>
                                         </div>
                                     </div>

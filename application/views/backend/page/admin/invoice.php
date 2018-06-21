@@ -108,7 +108,7 @@
                                             <img src="<?php echo site_url("thumbs/images/user/$row->image_path/80/80/$row->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
                                         </div>
                                         <div class="col-xs-6 col-lg-10 no-margin-bottom">
-                                            <a href="<?php echo site_url("app/users/view_user_info/$row->user_id");?>"><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</a><br>
+                                            <span><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</span><br>
                                             <small class="help-block"><?php echo $row->email_address; ?></small>
                                         </div>
                                     </div>
@@ -124,7 +124,7 @@
                                 <td>
                                     <?php if($row->role != 'DEV ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/create_invoice/').$row->user_id;?>" class="btn btn-link send-invoice" title="Send Invoice"><i class="fa fa-file" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/create_invoice/').$row->user_id;?>" class="btn btn-link send-invoice" title="Resend Invoice"><i class="fa fa-file" aria-hidden="true"></i></a>
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("admin/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="User Plan Notification"><i class="fa fa-bell" aria-hidden="true"></i></a>
                                     <?php endif; ?>
                                 </div>
