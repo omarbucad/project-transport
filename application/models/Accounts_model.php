@@ -2,6 +2,29 @@
 
 class Accounts_model extends CI_Model {
 
+    public function get_admin_accounts($count = false){
+        $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
+        $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
+
+        if($count){
+
+            return $result = $this->db->where("role","SUPER ADMIN")->get("user")->num_rows();
+        }else{
+            $this->db->select("u.*,up.plan_type,up.billing_type, up.plan_created,up.plan_expiration,up.updated,up.active");
+            $this->db->join("user_plan up","up.store_id = u.store_id");
+            $result = $this->db->where("u.role","SUPER ADMIN")->limit($limit , $skip)->order_by("display_name" , "ASC")->get("user u")->result();
+        }
+        
+        foreach($result as $k => $row){
+            $result[$k]->status = convert_status($row->status);
+            $result[$k]->active = convert_status($row->active);
+            $result[$k]->plan_created = convert_timezone($row->plan_created,true);
+            $result[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
+        }
+
+        return $result;
+    }
+
     public function get_accounts_list($count = false){
         $store_id = $this->data['session_data']->store_id;
         $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;

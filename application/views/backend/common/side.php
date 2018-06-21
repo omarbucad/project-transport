@@ -11,11 +11,30 @@
                 </button>
             </div>
             <ul class="nav navbar-nav">
-                <li class="<?php echo ($this->uri->segment(2) == 'dashboard' OR $this->uri->segment(2) == '') ? "active" : "" ;?>">
+                <li class="<?php echo ($this->uri->segment(2) == 'dashboard' OR $this->uri->segment(2) == '') ? "active" : "" ;?>">     
+                    <?php if($session_data->role != "DEV ADMIN") :?>
                     <a href="<?php echo site_url('app/dashboard'); ?>">
                         <span class="icon fa fa-home"></span><span class="title">Home</span>
                     </a>
+                    <?php else: ?>
+                    <a href="<?php echo site_url('admin/dashboard'); ?>">
+                        <span class="icon fa fa-home"></span><span class="title">Home</span>
+                    </a>
+                    <?php endif; ?>
                 </li>
+                <?php if($session_data->role == "DEV ADMIN") : ?>
+                <li class="<?php echo ($this->uri->segment(2) == 'accounts') ? "active" : "" ;?>">
+                    <a href="<?php echo site_url('admin/accounts'); ?>">
+                        <span class="icon fa fa-users"></span><span class="title">Accounts</span>
+                    </a>
+                </li>
+                <li class="<?php echo ($this->uri->segment(2) == 'invoice') ? "active" : "" ;?>">
+                    <a href="<?php echo site_url('admin/invoice'); ?>">
+                        <span class="icon fa fa-clipboard"></span><span class="title">Invoice</span>
+                    </a>
+                </li>
+                <?php endif; ?>
+                <?php if($session_data->role != "DEV ADMIN") : ?>
                 <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
                     <a data-toggle="collapse" href="#dropdown-element-vechile">
                         <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
@@ -59,8 +78,9 @@
                             <ul class="nav navbar-nav">
                                 <?php if($this->session->userdata('user')->role == 'SUPER_ADMIN') : ?>
                                     <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
+                                    <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
                                 <?php endif;?>
-                                <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
+                                
                                 <li><a href="<?php echo site_url("app/setup/checklist"); ?>">Checklist</a></li>
                             </ul>
                         </div>
@@ -71,6 +91,7 @@
                         <span class="icon fa fa-download"></span><span class="title">Download</span>
                     </a>
                 </li>
+                <?php endif; ?>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
