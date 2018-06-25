@@ -6,8 +6,11 @@ class Accounts_model extends CI_Model {
         $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
         $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
 
-        $this->db->select("u.*,up.plan_type,up.billing_type, up.plan_created,up.plan_expiration,up.updated,up.active");
+        $this->db->select("u.*, up.plan_type, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name");
         $this->db->join("user_plan up","up.store_id = u.store_id");
+        $this->db->join("user u2", "u2.user_id = up.who_updated");
+
+        $this->db->where("up.active",1);
 
         if($plan = $this->input->get('plan')){
             $this->db->where("up.plan_type",$plan);
@@ -18,7 +21,8 @@ class Accounts_model extends CI_Model {
         }
 
         if($name = $this->input->get('name')){
-            $this->db->where("u.display_name",$name);
+            $this->db->like("u.display_name",$name);
+            $this->db->or_like("u.username",$name);
         }
 
         if($type = $this->input->get('type')){
@@ -26,16 +30,15 @@ class Accounts_model extends CI_Model {
         }
 
         if($count){
-            return $result = $this->db->where("u.role","SUPER ADMIN")->get("user u")->num_rows();
+            return $result = $this->db->get("user u")->num_rows();
         }
-
         
         $result = $this->db->where("u.role","SUPER ADMIN")->limit($limit , $skip)->order_by("u.display_name" , "ASC")->get("user u")->result();
 
         
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);
-            $result[$k]->active = convert_status($row->active);
+            $result[$k]->created = convert_timezone($row->created,true);
             $result[$k]->plan_created = convert_timezone($row->plan_created,true);
             $result[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
         }
@@ -248,6 +251,57 @@ class Accounts_model extends CI_Model {
                 "image_path" => $year."/".$month ,
                 "image_name" => $image_name
             ]);
+        }
+    }
+
+
+    public function update_user_plan($user_id){
+        $this->db->where("active",1);
+        $plan_data = $this->db->select("user_plan_id,store_id")->get("user_plan")->row();
+
+        $who_updated = $this->session->userdata("user")->user_id;
+
+        $post = $this->input->post();
+        if($post["plan"] == "TRIAL"){
+            $expiration = strtotime("+1 month");
+            $billing = "NA";
+        }else{
+
+            $billing = $post["billing_type"];
+            $expiration = ($post["billing_type"] == "MONTHLY") ? strtotime("+1 month") : strtotime("+1 year");
+        }
+
+        if($plan_data){
+            $this->db->where("user_plan_id",$plan_data->user_plan_id);
+            $updated = $this->db->update("user_plan",array("active" => 0));
+            if($updated){
+                $plan_created = $this->db->insert("user_plan",[
+                    "store_id" => $plan_data->store_id,
+                    "plan_type" => $post["plan"],
+                    "billing_type" => $billing,
+                    "plan_created" => time(),
+                    "plan_expiration"   => $expiration,
+                    "ip_address" => $this->input->ip_address(),
+                    "active" => 1,
+                    "updated" => time(),
+                    "who_updated" => $who_updated
+                ]);
+
+                $invoice_id = $this->db->insert_id();
+                $invoice_no = date("dmY").'-'.sprintf('%05d', $invoice_id);
+                $this->db->where("invoice_id",$invoice_id);
+                $this->db->update("invoice", array("invoice_no" => $invoice_no));
+
+                if($plan_created){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }else{
+            return false;
         }
     }
 

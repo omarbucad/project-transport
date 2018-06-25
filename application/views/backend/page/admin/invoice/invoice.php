@@ -92,16 +92,22 @@
             <table class="table my-table">
                 <thead>
                     <tr>
-                        <th width="30%">Name</th>       
-                        <th width="25%">Plan</th>
-                        <th width="20%">Billing Type</th>
-                        <th width="25%">Action</th>
+                        <th width="15%">Invoice #</th> 
+                        <th width="30%">Name</th>      
+                        <th>Plan</th>
+                        <th>Billing Type</th>
+                        <th>Amount</th>
+                        <th>Created</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if($result) : ?>
                         <?php foreach($result as $key => $row) : ?>
                             <tr>
+                                <td>
+                                    <?php echo $row->status; ?>
+                                </td>
                                 <td>
                                     <div class="row">
                                         <div class="col-xs-6 col-lg-2 no-margin-bottom">
@@ -112,22 +118,25 @@
                                             <small class="help-block"><?php echo $row->email_address; ?></small>
                                         </div>
                                     </div>
-                                </td>
+                                </td>                                
                                 <td>
                                     <?php echo $row->plan_type; ?> - 
                                     <small><?php echo $row->active; ?></small> - 
                                     <small class="text-danger"><strong> Day(s) Left: <?php echo "0"; ?></strong></small>
                                     <small class="help-block"><strong class="text-success">Created: </strong><?php echo $row->plan_created; ?></small>
                                     <small class="help-block"><strong class="text-danger">Expiration: </strong> <?php echo $row->plan_expiration; ?></small>
+                                    <small class="help-block"><strong>Updated By: </strong> <?php echo $row->updated_name; ?></small>
                                 </td>
-                                <td><span ><?php echo $row->billing_type; ?></span></td>
+                                <td><span><?php echo $row->billing_type; ?></span></td>
+                                <td><span></span></td>
+                                <td><span><?php echo $row->created; ?></span></td>
                                 <td>
                                     <?php if($row->role != 'DEV ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/create_invoice/').$row->user_id;?>" class="btn btn-link send-invoice" title="Resend Invoice"><i class="fa fa-file" aria-hidden="true"></i></a>
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url("admin/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="User Plan Notification"><i class="fa fa-bell" aria-hidden="true"></i></a>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/view_invoice/').$row->user_id;?>" class="btn btn-link view-invoice" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/create_invoice/').$row->user_id;?>" class="btn btn-link send-invoice" title="Resend Invoice"><i class="fa fa-file" aria-hidden="true"></i></a>
                                     <?php endif; ?>
-                                </div>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

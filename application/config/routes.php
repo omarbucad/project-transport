@@ -77,3 +77,6 @@ $route['app/report/daily/edit/(:any)'] = 'app/report/edit_truck/$1';
 $route['app/report/daily/delete/(:any)'] = 'app/report/delete_truck/$1';
 
 $route['app/setup/profile/update'] = 'app/setup/profile/';
+
+//Super Admin Panel
+$route['admin/accounts/user_plan/update/(:any)'] = 'admin/accounts/update_plan/$1';

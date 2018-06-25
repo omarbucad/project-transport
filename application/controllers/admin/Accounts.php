@@ -12,11 +12,11 @@ class Accounts extends MY_Controller {
 	public function index(){
 		$this->data['role'] = $this->session->userdata('user')->role;
 		$this->data['session_data'] = $this->session->userdata('user');
-		$this->data['page_name'] = "Transport Accounts";
-		$this->data['main_page'] = "backend/page/admin/manage_accounts";
+		$this->data['page_name'] = "Manage Accounts";
+		$this->data['main_page'] = "backend/page/admin/accounts/manage_accounts";
 
 		//PAGINATION
-		$this->data['config']["base_url"] = base_url("app/accounts/") ;
+		$this->data['config']["base_url"] = base_url("admin/accounts/") ;
 		$this->data['config']["total_rows"] = $this->accounts->get_admin_accounts(true);
 		$this->pagination->initialize($this->data['config']);
 		$this->data["links"] = $this->pagination->create_links();
@@ -120,5 +120,66 @@ class Accounts extends MY_Controller {
 
 			redirect("app/accounts/".$user_id , 'refresh');
 		}
+	}
+
+	public function update_plan($user_id){
+
+		if($update_plan = $this->accounts->update_user_plan($user_id)){
+			$this->session->set_flashdata('status' , 'success');	
+			$this->session->set_flashdata('message' , 'Successfully Updated User Plan');
+
+			redirect("admin/accounts/" , 'refresh');
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'Something went wrong.');
+
+			redirect("admin/accounts/" , 'refresh');
+		}
+	}
+
+	private function create_invoice_pdf($invoice_id){
+
+		$invoice_information = $this->invoice->get_invoice_by_id($invoice_id);
+
+
+		if($pdf = $this->pdf->create_invoice($invoice_information)){
+
+			$this->db->where("invoice_id" , $invoice_id)->update("invoice" , [
+				"invoice_pdf" => $pdf['file']
+			]);
+
+			$this->send_email_invoice($invoice_information , $pdf['attachment']);
+
+		}
+
+	}
+
+	private function send_email_invoice($invoice_information , $pdf_file , $ajax = false){
+
+		$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
+		$this->email->to($invoice_information->email);
+
+		$this->email->subject('Gravybaby Bill Statement');
+		$this->email->message($this->load->view('backend/email/send_invoice' , $invoice_information , TRUE));
+		$this->email->attach($pdf_file);
+		$this->email->set_mailtype('html');
+
+		if($ajax){
+			if($this->email->send()){
+				echo json_encode(["status" => true , "message" => "Email has been sent"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Sending Failed"]);
+			}
+		}else{
+			$this->email->send();
+		}
+	}
+
+	public function send_invoice_email_ajax($invoice_id){
+
+		$invoice_information = $this->invoice->get_invoice_by_id($invoice_id);
+
+		$this->send_email_invoice($invoice_information , FCPATH.$invoice_information->invoice_pdf , true);
+		
 	}
 }

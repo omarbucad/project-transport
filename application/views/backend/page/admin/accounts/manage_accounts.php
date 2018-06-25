@@ -1,34 +1,36 @@
 <script type="text/javascript">
+    $(document).on("click" , ".send-invoice" , function(){
+
+        var c = confirm("Are you sure to send invoice email?");
+        if(c == true){
+            window.location.href = $(this).data("href");
+        }
+    });
+
     $(document).on("click" , ".update-plan" , function(){
+        var modal = $("#updateModal");
+        var form = modal.find("form");
+        var url = $(this).data("href");
+        var plan = $(this).closest("tr").find('.plan-type').text();
 
-        var url = $(this).data("href");        
-        var id = $(this).data("id");
-
-        // $.ajax({
-        //     url : url ,
-        //     method : "GET" ,
-        //     success : function(response){
-                // var json = jQuery.parseJSON(response);
-                var modal = $("#updateModal").modal("show");
-                
-                // modal.find(".checklist-list").html(" ");
-                // modal.find(".modal-title").html(name);
-                // $.each(json.data , function(k , v){
-                //     var list = $("<li>");
-                //     list.append(v.item_name);
-                //     modal.find(".checklist-list").append(list);
-                // });
-
-        //     }
-        // });
+        form.attr("action",url);
+        form.parent().find('#plan-type').text(plan + " PLAN");
+        modal.modal("show");
+    });
+    $(document).on("click" , ".update-status" , function(){
+        var modal = $("#updateModal");
+        var form = modal.find("form");
+        var c = confirm("Update user plan?");
+        if(c == true){
+           form.submit();
+        }
     });
 </script>
-
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
 
         <div class="container">
-        	<h1>Accounts</h1>
+            <h1>Manage Accounts</h1>
         </div>
         <div class="grey-bg">
             <div class="container ">
@@ -38,11 +40,11 @@
                     </div>
                     <div class="col-xs-4 col-lg-6 text-right no-margin-bottom">
                         <?php if($plan_type == "BASIC" && $total_accounts < 1) : ?>
-                            <a href="<?php echo site_url("admin/accounts/add"); ?>" class="btn btn-success ">Add User</a>
+                            <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
                         <?php elseif($plan_type == "STANDARD" && $total_accounts < 5) : ?>
-                            <a href="<?php echo site_url("admin/accounts/add"); ?>" class="btn btn-success ">Add User</a>
+                            <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
                         <?php elseif(($plan_type == "TRIAL" || $plan_type == "PREMIUM") && $total_accounts < 5) : ?>
-                            <a href="<?php echo site_url("admin/accounts/add"); ?>" class="btn btn-success ">Add User</a>
+                            <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -56,7 +58,7 @@
                             <div class="col-xs-12 col-lg-4">
                                 <div class="form-group">
                                     <label for="s_name">Name</label>
-                                    <input type="text" name="name" class="form-control" value="<?php echo $this->input->get("name")?>" id="s_name" placeholder="Search by name">
+                                    <input type="text" name="name" class="form-control" value="<?php echo $this->input->get("name")?>" id="s_name" placeholder="Search by username or name">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-4">
@@ -88,7 +90,7 @@
                             </div>
                             <div class="col-xs-12 col-lg-4">
                                 <div class="form-group">
-                                    <label for="s_roles">Status</label>
+                                    <label for="s_roles">Account Status</label>
                                     <select class="form-control" id="s_roles" name="status">
                                         <option value="">- Select Status-</option>
                                         <option value="ACTIVE" <?php echo ($this->input->get("status") == "ACTIVE") ? "selected" : ""; ?>>Active</option>
@@ -109,11 +111,11 @@
             <table class="table my-table">
                 <thead>
                     <tr>
-                        <th width="35%">Name</th>                        
-                        <th width="15%">Role</th>
-                        <th width="15%">Account Status</th>
-                        <th width="15%">Plan</th>
-                        <th width="20%">Action</th>
+                        <th width="30%">Name</th>      
+                        <th>Plan</th>
+                        <th>Billing Type</th>
+                        <th>Created</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -128,17 +130,28 @@
                                         <div class="col-xs-6 col-lg-10 no-margin-bottom">
                                             <span><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</span><br>
                                             <small class="help-block"><?php echo $row->email_address; ?></small>
+                                            <small class="help-block"><?php echo $row->status; ?></small>
                                         </div>
                                     </div>
+                                </td>                                
+                                <td>
+                                    <span class="plan-type"><?php echo $row->plan_type; ?></span> - 
+                                    <small class="text-danger"><strong> Day(s) Left: <?php echo "0"; ?></strong></small>
+                                    <div>                                        
+                                        <span class='label label-success' data-toggle="tooltip" title="Created"><?php echo $row->plan_created; ?></span>
+                                        <span class='label label-danger' data-toggle="tooltip" title="Expiration"><?php echo $row->plan_expiration; ?></span>
+                                        <small class="help-block"><strong>Updated By: </strong> <?php echo $row->updated_name; ?></small>
+                                    </div>
                                 </td>
-                                <td><span ><?php echo $row->role; ?></span></td>
-                                <td><span ><?php echo $row->status; ?></span></td>
-                                <td><span ><?php echo $row->plan_type; ?></span></td>
+                                <td><span><?php echo $row->billing_type; ?></span></td>
+                                <td><span><?php echo $row->created; ?></span></td>
                                 <td>
                                     <?php if($row->role != 'DEV ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
-                                    <a href="javascript:void(0);" data-id="<?php echo $row->user_id; ?>" data-href="<?php echo site_url('admin/accounts/user_plan/update');?>" class="btn btn-link update-plan" title="Update User Plan"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url("admin/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link btn-delete" title="Delete User"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/accounts/user_plan/update/').$row->user_id;?>" class="btn btn-link update-plan" title="Update User Plan"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/accounts/user_plan/update/').$row->user_id;?>" class="btn btn-link update-plan" title="Plan Notification"><i class="fa fa-bell" aria-hidden="true"></i></a>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/view_invoice/').$row->user_id;?>" class="btn btn-link view-invoice" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/create_invoice/').$row->user_id;?>" class="btn btn-link send-invoice" title="Resend Invoice"><i class="fa fa-share-square-o" aria-hidden="true"></i></a>
                                     <?php endif; ?>
                                     </div>
                                 </td>
@@ -172,6 +185,7 @@
         </div>
     </div>
 </div>
+
 <!-- Update Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -181,20 +195,28 @@
         <h4 class="modal-title">Update User Plan</h4>
       </div>
       <div class="modal-body">
-        <label>Current: </label><span> PLAN</span>
+        <label>Current: </label> <span id="plan-type"></span>
         <form action="" method="POST" id="update-form">
           <div class="form-group">
             <label>User Plan</label>
-            <select class="form-control" name="plan_type" id="plan">                
+            <select class="form-control" name="plan" id="plan">                
               <option value="TRIAL">TRIAL</option>
               <option value="BASIC">BASIC</option>
               <option value="STANDARD">STANDARD</option>
               <option value="PREMIUM">PREMIUM</option>
             </select>
           </div>
+          <div class="form-group">
+            <label>Billing Type</label>
+            <select class="form-control" name="billing_type">                
+              <option value="MONTHLY">MONTHLY</option>
+              <option value="ANNUAL">ANNUALLY</option>
+            </select>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
+        <small class="help-block text-danger pull-left">*Note: Invoice will be sent automatically.</small>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <a href="javascript:void(0);" class="btn btn-primary update-status">Confirm</a>
       </div>

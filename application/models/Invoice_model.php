@@ -14,6 +14,7 @@ class Invoice_model extends CI_Model {
         
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);
+            $result[$k]->created = convert_timezone($row->created,true);
         }
 
         return $result;
