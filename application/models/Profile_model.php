@@ -128,7 +128,17 @@ class Profile_model extends CI_Model {
         $today = date("M d Y 00:00:00");
         $expiry = convert_timezone($result->plan_expiration, true);
         $timeleft = strtotime($expiry) - strtotime($today);
-        $left = round((($timeleft/24)/60)/60);
+        
+        $days = floor($timeleft / 86400);
+        $timeleft %= 86400;
+
+        $hours = floor($timeleft / 3600);
+        $timeleft %= 3600;
+
+        $minutes = floor($timeleft / 60);
+        $timeleft %= 60;
+
+        $left =  "$days days and $hours hours and $minutes minutes and $timeleft seconds";
         $result->trial_left = $left;
 
         return $result;

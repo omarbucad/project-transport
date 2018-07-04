@@ -18,7 +18,7 @@ class Welcome extends MY_Controller {
 
 		$this->form_validation->set_rules('store_name'		, 'Store Name'			, 'trim|required');
 		$this->form_validation->set_rules('first_name'		, 'First Name'			, 'trim|required');
-		$this->form_validation->set_rules('first_name'		, 'Last Name'			, 'trim|required');
+		$this->form_validation->set_rules('last_name'		, 'Last Name'			, 'trim|required');
 		$this->form_validation->set_rules('email_address'	, 'Email Address'		, 'trim|required|valid_email|is_unique[user.email_address]');
 		$this->form_validation->set_rules('username'		, 'Username'			, 'trim|required|min_length[3]|max_length[15]|is_unique[user.username]');
 

@@ -51,7 +51,7 @@ class Register_model extends CI_Model {
 
         $this->db->insert("user_plan" , [
             "store_id" => $store_id ,
-            "plan_type" => "TRIAL" ,
+            "plan_id" =>  4,
             "plan_created" => time() ,
             "plan_expiration" => strtotime("+1 month") ,
             "billing_type"  => "NA",
@@ -79,12 +79,13 @@ class Register_model extends CI_Model {
     }
 
     public function signin($user){
-        $this->db->select("u.user_id , u.display_name , u.email_address , u.role , u.store_id , u.image_path , u.image_name");
-        $this->db->select("up.plan_type");
+        $this->db->select("u.user_id , u.display_name , u.email_address , u.role , u.store_id , u.image_path , u.image_name, p.plan_id, p.title");
         $this->db->select("a1.country");
-        $this->db->join("user_plan up" , "up.store_id = u.store_id");
+
         $this->db->join("store s" , "s.store_id = u.store_id");
         $this->db->join("store_address a1" , "a1.store_address_id = s.address_id");
+        $this->db->join("user_plan up" , "up.store_id = u.store_id");
+        $this->db->join("plan p","p.plan_id = up.plan_id");
 
         if(is_array($user)){
             $this->db->where("u.username" , $user['username']);

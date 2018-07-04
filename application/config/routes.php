@@ -80,3 +80,4 @@ $route['app/setup/profile/update'] = 'app/setup/profile/';
 
 //Super Admin Panel
 $route['admin/accounts/user_plan/update/(:any)'] = 'admin/accounts/update_plan/$1';
+$route['admin/invoice/resend/(:any)'] = 'admin/invoice/resend_invoice/$1';

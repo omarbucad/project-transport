@@ -291,7 +291,7 @@ if ( ! function_exists('custom_money_format'))
             $money = "0.00";
         }
    
-        $formatted = "RM ";
+        $formatted = "$ ";
 
         $formatted .= number_format(sprintf('%0.2f', preg_replace("/[^0-9.]/", "", $money)), 2);
 

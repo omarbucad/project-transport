@@ -17,7 +17,6 @@ class Login extends MY_Controller {
 			$this->session->set_userdata("user" , $data);
 			$role = $this->session->userdata('user')->role;
 			if($role == "DEV ADMIN"){
-
 				$this->session->set_flashdata('status' , 'success');
 				redirect('/admin/dashboard', 'refresh');
 			}else{

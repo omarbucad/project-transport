@@ -17,12 +17,63 @@
         form.parent().find('#plan-type').text(plan + " PLAN");
         modal.modal("show");
     });
+
     $(document).on("click" , ".update-status" , function(){
         var modal = $("#updateModal");
         var form = modal.find("form");
         var c = confirm("Update user plan?");
         if(c == true){
            form.submit();
+        }
+    });
+
+    $(document).on("click" , ".plan-notif" , function(){
+        var url = $(this).data("href");
+        var c = confirm("Send Plan Notification Email?");
+
+        if(c == true){
+            $.ajax({
+                url : url,
+                success : function(response){
+                    var json = jQuery.parseJSON(response);
+                    if(json.status){
+                        $.notify(json.message , { className:  "success" , position : "top center"});
+                    }else{
+                        $.notify(json.message , { className:  "error" , position : "top center"});
+                    }
+                }
+            });
+        }
+    });
+
+    $(document).on('click' , '.view_invoice_pdf' , function(){
+
+        var modal = $('#invoice_pdf_modal').modal("show");
+
+        var id = $(this).data("id");
+
+        var a = $("<a>" , {href : $(this).data("pdf") , text:$(this).data("pdf") });
+        var object = '<object data="'+$(this).data("pdf") +'" , type="application/pdf" style="width:100%;height:800px;">'+a+'</object>';
+
+        $('#_pdfViewer').html(object);  
+    });
+
+    $(document).on("click" , ".resend-invoice" , function(){
+        var url = $(this).data("href");
+        var c = confirm("Resend Email Invoice?");
+
+        if(c == true){
+            $.ajax({
+                url : url,
+                success : function(response){
+                    var json = jQuery.parseJSON(response);
+                    if(json.status){
+                        $.notify(json.message , { className:  "success" , position : "top center"});
+                    }else{
+                        $.notify(json.message , { className:  "error" , position : "top center"});
+                    }
+                }
+            });
         }
     });
 </script>
@@ -39,13 +90,7 @@
                         <span></span>
                     </div>
                     <div class="col-xs-4 col-lg-6 text-right no-margin-bottom">
-                        <?php if($plan_type == "BASIC" && $total_accounts < 1) : ?>
-                            <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
-                        <?php elseif($plan_type == "STANDARD" && $total_accounts < 5) : ?>
-                            <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
-                        <?php elseif(($plan_type == "TRIAL" || $plan_type == "PREMIUM") && $total_accounts < 5) : ?>
-                            <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
-                        <?php endif; ?>
+                        <a href="<?php echo site_url("admin/accounts/add"); ?>" class="btn btn-success ">Add User</a>
                     </div>
                 </div>
             </div>
@@ -66,10 +111,10 @@
                                     <label for="s_roles">User Plan</label>
                                     <select class="form-control" id="s_roles" name="plan">
                                         <option value="">All Plans</option>
-                                        <option value="TRIAL" <?php echo ($this->input->get("plan") == "TRIAL") ? "selected" : ""; ?>>TRIAL</option>
-                                        <option value="BASIC" <?php echo ($this->input->get("plan") == "BASIC") ? "selected" : ""; ?>>BASIC</option>
-                                        <option value="STANDARD" <?php echo ($this->input->get("plan") == "STANDARD") ? "selected" : ""; ?>>STANDARD</option>
-                                        <option value="PREMIUM" <?php echo ($this->input->get("plan") == "PREMIUM") ? "selected" : ""; ?>>PREMIUM</option>
+                                        <option value="4" <?php echo ($this->input->get("plan") == "4") ? "selected" : ""; ?>>TRIAL</option>
+                                        <option value="1" <?php echo ($this->input->get("plan") == "1") ? "selected" : ""; ?>>BASIC</option>
+                                        <option value="2" <?php echo ($this->input->get("plan") == "2") ? "selected" : ""; ?>>STANDARD</option>
+                                        <option value="3" <?php echo ($this->input->get("plan") == "3") ? "selected" : ""; ?>>PREMIUM</option>
                                     </select>
                                 </div>
                             </div>
@@ -128,18 +173,18 @@
                                             <img src="<?php echo site_url("thumbs/images/user/$row->image_path/80/80/$row->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
                                         </div>
                                         <div class="col-xs-6 col-lg-10 no-margin-bottom">
-                                            <span><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</span><br>
-                                            <small class="help-block"><?php echo $row->email_address; ?></small>
+                                            <a href="<?php echo site_url('admin/accounts/view/').$row->user_id; ?>"><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</a><br>
+                                            <small class="help-block user-email"><?php echo $row->email_address; ?></small>
                                             <small class="help-block"><?php echo $row->status; ?></small>
                                         </div>
                                     </div>
                                 </td>                                
                                 <td>
-                                    <span class="plan-type"><?php echo $row->plan_type; ?></span> - 
-                                    <small class="text-danger"><strong> Day(s) Left: <?php echo "0"; ?></strong></small>
+                                    <span class="plan-type"><?php echo $row->title; ?></span> - 
+                                    <small class="text-danger"><strong> Left: <span class="timeleft"><?php echo $row->timeleft; ?></span></strong></small>
                                     <div>                                        
                                         <span class='label label-success' data-toggle="tooltip" title="Created"><?php echo $row->plan_created; ?></span>
-                                        <span class='label label-danger' data-toggle="tooltip" title="Expiration"><?php echo $row->plan_expiration; ?></span>
+                                        <span class='label label-danger expiration' data-toggle="tooltip" title="Expiration"><?php echo $row->plan_expiration; ?></span>
                                         <small class="help-block"><strong>Updated By: </strong> <?php echo $row->updated_name; ?></small>
                                     </div>
                                 </td>
@@ -149,9 +194,11 @@
                                     <?php if($row->role != 'DEV ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
                                         <a href="javascript:void(0);" data-href="<?php echo site_url('admin/accounts/user_plan/update/').$row->user_id;?>" class="btn btn-link update-plan" title="Update User Plan"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/accounts/user_plan/update/').$row->user_id;?>" class="btn btn-link update-plan" title="Plan Notification"><i class="fa fa-bell" aria-hidden="true"></i></a>
-                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/view_invoice/').$row->user_id;?>" class="btn btn-link view-invoice" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i></a>
-                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/create_invoice/').$row->user_id;?>" class="btn btn-link send-invoice" title="Resend Invoice"><i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/accounts/send_plan_notice/').$row->user_id;?>" class="btn btn-link plan-notif" title="Plan Notification"><i class="fa fa-bell" aria-hidden="true"></i></a>
+                                        <?php if($row->invoice != "") : ?>
+                                         <a href="javascript:void(0);" data-pdf="<?php echo site_url().$row->invoice->invoice_pdf;?>" data-id="<?php echo $row->invoice->invoice_id; ?>" class="btn btn-link view_invoice_pdf" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                        <?php endif; ?>
+                                        <a href="javascript:void(0);" data-href="<?php echo site_url('admin/invoice/resend/').$row->user_id;?>" class="btn btn-link resend-invoice" title="Resend Invoice"><i class="fa fa-share-square-o" aria-hidden="true"></i></a>
                                     <?php endif; ?>
                                     </div>
                                 </td>
@@ -200,10 +247,10 @@
           <div class="form-group">
             <label>User Plan</label>
             <select class="form-control" name="plan" id="plan">                
-              <option value="TRIAL">TRIAL</option>
-              <option value="BASIC">BASIC</option>
-              <option value="STANDARD">STANDARD</option>
-              <option value="PREMIUM">PREMIUM</option>
+              <option value="4">TRIAL</option>
+              <option value="1">BASIC</option>
+              <option value="2">STANDARD</option>
+              <option value="3">PREMIUM</option>
             </select>
           </div>
           <div class="form-group">
@@ -222,4 +269,21 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- PDF VIEW -->
+<div class="modal fade" id="invoice_pdf_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">Invoice Information</h4>
+            </div>
+            <div class="modal-body" id="_pdfViewer">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
 </div>

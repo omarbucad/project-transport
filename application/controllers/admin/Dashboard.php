@@ -8,6 +8,7 @@ class Dashboard extends MY_Controller {
        $this->load->model('vehicle_model', 'vehicle');
        $this->load->model('accounts_model', 'accounts');
        $this->load->model('report_model', 'report');
+       $this->load->model('invoice_model', 'invoice');
 
     }
 

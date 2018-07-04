@@ -30,17 +30,63 @@ class Pdf {
 		}
 
 	}
+
+
+	public function create_report_checklist($data = array() , $output = "D"){
+		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(10, 10, 10, 10));
+
+		try{
+			$filename = "report_".$data->report_number.'_'.time().'.pdf';
+			$path = FCPATH.$this->folder.'/'.$filename;
+
+			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/report_checklist" , $data , TRUE));
+			$this->html2pdf->Output($path , $output);
+
+			return [
+				"attachment" => FCPATH.$this->folder.'/'.$filename ,
+				"file"		 => $this->folder.'/'.$filename
+			];
+
+		}catch (Html2PdfException $e) {
+			$formatter = new ExceptionFormatter($e);
+			echo $formatter->getHtmlMessage();
+		}
+	}
+
+	public function create_report_weekly($data = array() , $output = "D"){
+		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(10, 10, 10, 10));
+
+		$start = date("Y-m-d",strtotime($data['header'][0]->startrange));
+		$end = date("Y-m-d",strtotime($data['header'][0]->endrange));
+
+		try{
+			$filename = 'report_('.$start.'_'.$end.')_'.time().'.pdf';
+			$path = FCPATH.$this->folder.'/'.$filename;
+
+			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/weekly_report" , ["data" => $data] , TRUE));
+			$this->html2pdf->Output($path , $output);
+
+			return [
+				"attachment" => FCPATH.$this->folder.'/'.$filename ,
+				"file"		 => $this->folder.'/'.$filename
+			];
+
+		}catch (Html2PdfException $e) {
+			$formatter = new ExceptionFormatter($e);
+			echo $formatter->getHtmlMessage();
+		}
+	}
+
 	public function create_invoice($data = array()){
 		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(10, 10, 10, 10));
 		try{
-
 			$filename = "INVOICE_".$data->invoice_no.'_'.time().'.pdf';
 			$path = FCPATH.$this->folder.'/'.$filename;
 
-			$this->html2pdf->writeHTML($this->CI->load->view("backend/pdf/plan_invoice" , $data , TRUE));
-			$this->html2pdf->Output($path , 'F');
+			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/plan_invoice" , $data , TRUE));
+			$this->html2pdf->Output($path , "F");
 
-			return [
+			return	[
 				"attachment" => FCPATH.$this->folder.'/'.$filename ,
 				"file"		 => $this->folder.'/'.$filename
 			];

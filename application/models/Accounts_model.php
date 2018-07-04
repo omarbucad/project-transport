@@ -6,14 +6,15 @@ class Accounts_model extends CI_Model {
         $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
         $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
 
-        $this->db->select("u.*, up.plan_type, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name");
+        $this->db->select("u.*, up.user_plan_id, up.plan_id, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name,p.title");
         $this->db->join("user_plan up","up.store_id = u.store_id");
         $this->db->join("user u2", "u2.user_id = up.who_updated");
+        $this->db->join("plan p","p.plan_id = up.plan_id");
 
         $this->db->where("up.active",1);
 
         if($plan = $this->input->get('plan')){
-            $this->db->where("up.plan_type",$plan);
+            $this->db->where("p.plan_id",$plan);
         }
 
         if($status = $this->input->get('status')){
@@ -41,10 +42,110 @@ class Accounts_model extends CI_Model {
             $result[$k]->created = convert_timezone($row->created,true);
             $result[$k]->plan_created = convert_timezone($row->plan_created,true);
             $result[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
+            $result[$k]->invoice = $this->db->select("invoice_pdf, invoice_id")->limit("1")->order_by("created", "DESC")->where("user_id",$result[$k]->user_id)->where("deleted IS NULL")->get("invoice")->row();
+            $result[$k]->timeleft = $this->get_timeleft($result[$k]->user_plan_id);
+        }
+
+
+        return $result;
+    }
+
+    public function get_user($user_id){
+
+
+        $this->db->select("u.*, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name, p.title");
+        $this->db->join("user_plan up","up.store_id = u.store_id");
+        $this->db->join("user u2", "u2.user_id = up.who_updated");
+        $this->db->join("plan p","p.plan_id = up.plan_id");
+
+        $this->db->where("up.active",1);
+        $this->db->where("u.user_id",$user_id);
+        
+        $result = $this->db->where("u.role","SUPER ADMIN")->get("user u")->row();    
+        
+        $result->created = convert_timezone($result->created,true);
+        $result->plan_created = convert_timezone($result->plan_created,true);
+        $result->plan_expiration = convert_timezone($result->plan_expiration,true);
+
+        return $result;
+    }
+
+    public function user_subscription($store_id){
+        $result = $this->db->where("store_id",$store_id)->order_by("plan_created","DESC")->get("user_plan")->result();
+        foreach($result as $k => $row){
+            $result[$k]->plan_created = convert_timezone($row->plan_created,true);
+            $result[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
         }
 
         return $result;
     }
+
+    public function admin_edit_user($user_id){
+        $this->db->trans_start();
+
+        $this->db->where("user_id", $user_id)->update("user" , [
+            "display_name" => $this->input->post("display_name") ,
+            "status" => $this->input->post("status")
+        ]);
+
+        if($this->input->post("password") != ""){
+            $this->db->where("user_id", $user_id);
+            $this->db->update("user" , [
+                "password"=> $this->input->post("password")
+            ]);
+        }
+
+        $this->do_upload($user_id);
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return $user_id;
+        }
+    }
+
+    public function get_timeleft($user_plan_id){
+        $this->db->select("plan_expiration");
+        $this->db->where("user_plan_id",$user_plan_id);
+        $result = $this->db->get("user_plan")->row()->plan_expiration;
+
+        $today = date("M d Y 00:00:00");
+        $expiry = convert_timezone($result, true);
+        $timeleft = strtotime($expiry) - strtotime($today);
+        
+        $days = floor($timeleft / 86400);
+        $timeleft %= 86400;
+
+        $hours = floor($timeleft / 3600);
+        $timeleft %= 3600;
+
+        $minutes = floor($timeleft / 60);
+        $timeleft %= 60;
+
+        $left =  "$days day(s) $hours hr(s) $minutes min(s)";
+
+        return $left;
+    }
+
+    public function email_notice($user_id){
+
+        $this->db->select("u.email_address as email, up.plan_expiration, up.user_plan_id");
+        $this->db->join("user_plan up","up.store_id = u.store_id");
+        $this->db->join("user u2", "u2.user_id = up.who_updated");
+        $this->db->where("up.active",1);
+        $this->db->where("u.user_id",$user_id);
+        
+        $result = $this->db->where("u.role","SUPER ADMIN")->get("user u")->row();    
+        
+        $result->expiration = convert_timezone($result->plan_expiration,true);
+        $result->timeleft = $this->get_timeleft($result->user_plan_id);
+
+        return $result;
+    }
+
+    // APP
 
     public function get_accounts_list($count = false){
         $store_id = $this->data['session_data']->store_id;
@@ -262,13 +363,21 @@ class Accounts_model extends CI_Model {
         $who_updated = $this->session->userdata("user")->user_id;
 
         $post = $this->input->post();
-        if($post["plan"] == "TRIAL"){
+
+        if($post["plan"] == 4){
             $expiration = strtotime("+1 month");
             $billing = "NA";
         }else{
-
             $billing = $post["billing_type"];
             $expiration = ($post["billing_type"] == "MONTHLY") ? strtotime("+1 month") : strtotime("+1 year");
+        }
+
+        if($post["plan"] == 2){
+            $price = 20;
+        }else if($post["plan"] == 3){
+            $price = 50;
+        }else{
+            $price = 0;
         }
 
         if($plan_data){
@@ -277,7 +386,7 @@ class Accounts_model extends CI_Model {
             if($updated){
                 $plan_created = $this->db->insert("user_plan",[
                     "store_id" => $plan_data->store_id,
-                    "plan_type" => $post["plan"],
+                    "plan_id" => $post["plan"],
                     "billing_type" => $billing,
                     "plan_created" => time(),
                     "plan_expiration"   => $expiration,
@@ -286,14 +395,24 @@ class Accounts_model extends CI_Model {
                     "updated" => time(),
                     "who_updated" => $who_updated
                 ]);
+                $plan_id = $this->db->insert_id();
+                
+                $this->db->where("invoice_id",$plan_id);
+                $invoice = $this->db->insert("invoice", array(
+                    "store_id"      => $plan_data->store_id,
+                    "user_id"       => $user_id,
+                    "user_plan_id"  => $plan_id,
+                    "created"       => time(),
+                    "price"         => $price,
+                ));
 
-                $invoice_id = $this->db->insert_id();
+                $invoice_id = $this->db->insert_id();                
                 $invoice_no = date("dmY").'-'.sprintf('%05d', $invoice_id);
                 $this->db->where("invoice_id",$invoice_id);
-                $this->db->update("invoice", array("invoice_no" => $invoice_no));
+                $update = $this->db->update("invoice",array("invoice_no" => $invoice_no));
 
-                if($plan_created){
-                    return true;
+                if($update){
+                    return $invoice_id;
                 }else{
                     return false;
                 }
