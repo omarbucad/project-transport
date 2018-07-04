@@ -159,7 +159,7 @@
         							<li><span><?php echo ($result->no_accounts == 0) ? "Unlimited": $result->no_accounts;?> Driver</span></li>
                                     <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Vehicle</span></li>
                                     <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Trailer</span></li>
-                                    <li><span><?php echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> / Month</span></li>
+                                    <li><span><?php echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> Report(s)/ Month</span></li>
                                     <li><span><?php echo $result->description;?></span></li>
         						</ul>
         					</nav>

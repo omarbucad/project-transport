@@ -17,17 +17,20 @@ class Login extends CI_Controller {
         
         $this->load->model('register_model', 'register');
 
-		$this->post = json_decode(file_get_contents("php://input"));
+        //kapag ionic ito ung gamitin
+		//$this->post = json_decode(file_get_contents("php://input"));
+
+		//kapag hindi
+		$this->post = (object) $this->input->post();
 	}
 
 	public function signin(){
+
 		$username = $this->post->username;
 		$password = $this->post->password;
 
 		if($this->post){
-
-			if($data = $this->register->signin(["username" => $username , "password" => $password])){
-				
+			if($data = $this->register->signin(["username" => $username , "password" => $password])){				
 
 				if($data->image_name == "person-placeholder.jpg"){
 					$data->image = "assets/imgs/person-placeholder.jpg";

@@ -128,7 +128,7 @@ class Accounts extends MY_Controller {
 		if($invoice_id = $this->accounts->update_user_plan($user_id)){
 			$this->create_invoice_pdf($invoice_id);
 			$this->session->set_flashdata('status' , 'success');	
-			$this->session->set_flashdata('message' , 'Successfully Updated User Plan. <br> Invoice Email has been sent.');
+			$this->session->set_flashdata('message' , 'Updated User Plan and Invoice Email has been sent.');
 
 			redirect("admin/accounts/" , 'refresh');
 		}else{

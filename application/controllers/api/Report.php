@@ -16,7 +16,8 @@ class Report extends CI_Controller {
         }
         $this->load->model('report_model', 'reports');
         
-		$this->post = json_decode(file_get_contents("php://input"));
+		//$this->post = json_decode(file_get_contents("php://input"));
+		$this->post = (object) $this->input->post();
 	}
 
 	public function get_report($mechanic = false){
