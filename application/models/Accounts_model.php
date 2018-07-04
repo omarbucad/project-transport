@@ -373,9 +373,10 @@ class Accounts_model extends CI_Model {
         }
 
         if($post["plan"] == 2){
-            $price = 20;
+
+            $price = ($post['billing_type'] == "MONTHLY") ? 20 : 20*12;
         }else if($post["plan"] == 3){
-            $price = 50;
+            $price = ($post['billing_type'] == "MONTHLY") ? 50 : 50*12;
         }else{
             $price = 0;
         }

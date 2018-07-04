@@ -203,6 +203,7 @@ class Setup extends MY_Controller {
 		$this->data['main_page'] = "backend/page/account/view";
 		$this->data['result'] = $this->profile->get_userplan($user_id);
 		$this->data['setup_page'] = $type;
+		$this->data['user_plans'] = $this->db->get("plan")->result();
 
 		if($type == ""){
 			redirect('/app/setup/account/manage', 'refresh');

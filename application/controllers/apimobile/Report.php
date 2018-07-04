@@ -16,8 +16,8 @@ class Report extends CI_Controller {
         }
         $this->load->model('report_model', 'reports');
         
-		$this->post = json_decode(file_get_contents("php://input"));
-		//$this->post = (object) $this->input->post();
+		//$this->post = json_decode(file_get_contents("php://input"));
+		$this->post = (object) $this->input->post();
 	}
 
 	public function get_report($mechanic = false){
@@ -59,7 +59,7 @@ class Report extends CI_Controller {
 			$result[$key]->status = report_type($row->status);
 
 			$result[$key]->pdf = [
-				"path"	=> $this->config->site_url("api/report/pdf/".$this->hash->encrypt($row->report_id)).'/true',
+				"path"	=> $this->config->site_url("apimobile/report/pdf/".$this->hash->encrypt($row->report_id)).'/true',
 				"name"	=> $row->report_number.".pdf"
 			];
 			

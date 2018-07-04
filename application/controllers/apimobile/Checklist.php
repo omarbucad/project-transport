@@ -15,8 +15,8 @@ class Checklist extends CI_Controller {
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
         }
         
-		$this->post = json_decode(file_get_contents("php://input"));
-		//$this->post = (object) $this->input->post();
+		//$this->post = json_decode(file_get_contents("php://input"));
+		$this->post = (object)$this->input->post();
 	}
 
 	public function get_my_checklist(){

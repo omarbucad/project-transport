@@ -128,7 +128,7 @@
         <?php if($setup_page == "manage") : ?>
         <div class="grey-bg margin-bottom">
         	<div class="container ">
-        		<span>Manage your account plan, and payment details. <a href="#" class="text-underline">need help?</a></span>
+        		<span>Manage your account plan, and payment details.</span>
         	</div>
         </div>
         <div class="row ">
@@ -185,7 +185,7 @@
     	<?php else : ?>
         <div class="grey-bg margin-bottom">
             <div class="container ">
-                <span>Select a plan to get the best out of Transport App. <a href="#" class="text-underline">Compare plan details.</a></span>
+                <span>Select a plan to get the best out of Transport App.</span>
             </div>
         </div>
         <div class="container">
@@ -201,12 +201,12 @@
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4><?php echo $result->title ." Plan"; ?></h4>
+                                    <h4><?php echo $user_plans[0]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li>1 Account</li>
-                                        <li>1 Vehicle/Trailer</li>
-                                        <li>50 Reports / Month</li>
-                                        <li>Reports Viewable 1 Week Before Month Ends</li>
+                                        <li><?php echo $user_plans[0]->no_accounts; ?> Account</li>
+                                        <li><?php echo $user_plans[0]->no_vehicle; ?> Vehicle/Trailer</li>
+                                        <li><?php echo $user_plans[0]->no_reports; ?> Reports / Month</li>
+                                        <li><?php echo $user_plans[0]->description; ?></li>
                                         <li>No Export</li>
                                     </ul>
                                 </div>
@@ -224,12 +224,12 @@
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4>Standard Plan</h4>
+                                    <h4><?php echo $user_plans[1]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li>5 Accounts</li>
-                                        <li>10 Vehicles & Trailers</li>
-                                        <li>1000 Reports / Month</li>
-                                        <li>Data Stored for 6 Months</li>
+                                        <li><?php echo $user_plans[1]->no_accounts; ?> Accounts</li>
+                                        <li><?php echo $user_plans[1]->no_vehicle; ?> Vehicles & Trailers</li>
+                                        <li><?php echo $user_plans[1]->no_reports; ?> Reports / Month</li>
+                                        <li><?php echo $user_plans[1]->description; ?></li>
                                         <li>With Export and Reporting</li>
                                     </ul>
                                 </div>
@@ -247,13 +247,13 @@
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4>Premium Plan</h4>
+                                    <h4><?php echo $user_plans[2]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
                                         <li>Unlimited Accounts</li>
                                         <li>Unlimited Vehicles & Trailers</li>
                                         <li>Unlimited Reports</li>
-                                        <li>Data Stored Forever</li>
-                                        <li>With Free Trial</li>
+                                        <li><?php echo $user_plans[2]->description; ?></li>
+                                        <li>&nbsp;</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">

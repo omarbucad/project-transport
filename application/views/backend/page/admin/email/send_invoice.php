@@ -7,5 +7,5 @@
 
 	<p class="help-block">Thank you for availing a subscription in Transport Checklist. Attached is a bill statement of your transaction.</p>
 
-	<p>If you have any comments or questions, please don't hesitate to reach us at <a href="mailto:cherlaj@trackerteer.com">mhar@trackerteer.com</a></p>
+	<p>If you have any comments or questions, please don't hesitate to reach us at <a href="mailto:cherlaj@trackerteer.com">cherlaj@trackerteer.com</a></p>
 </div>

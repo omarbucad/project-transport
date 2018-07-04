@@ -18,10 +18,10 @@ class Login extends CI_Controller {
         $this->load->model('register_model', 'register');
 
         //kapag ionic ito ung gamitin
-		$this->post = json_decode(file_get_contents("php://input"));
+		//$this->post = json_decode(file_get_contents("php://input"));
 
 		//kapag hindi
-		//$this->post = (object) $this->input->post();
+		$this->post = (object)$this->input->post();
 	}
 
 	public function signin(){

@@ -6,7 +6,7 @@ class Invoice_model extends CI_Model {
         $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
         $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
 
-        $this->db->select("i.*,u.display_name, u.user_id, u.username, u.email_address, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, up.active, up.user_plan_id, u2.display_name as updated_by,p.title" );
+        $this->db->select("i.*,u.display_name, u.user_id, u.username, u.email_address, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, up.active, up.user_plan_id, u2.display_name as updated_by,p.*" );
         $this->db->join("user u","u.user_id = i.user_id");
         $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
         $this->db->join("user u2","u2.user_id = up.who_updated");    
@@ -25,6 +25,7 @@ class Invoice_model extends CI_Model {
             $result[$k]->plan_created = convert_timezone($row->plan_created,true);
             $result[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
             $result[$k]->price = custom_money_format($result[$k]->price);
+            $result[$k]->plan_price = custom_money_format($result[$k]->plan_price);
             $result[$k]->timeleft = $this->get_timeleft($result[$k]->user_plan_id);
         }
 
@@ -33,7 +34,7 @@ class Invoice_model extends CI_Model {
 
     public function get_invoice($invoice_id){
 
-        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, u.user_id, u.display_name,u.email_address,s.store_name, sa.*, sc.phone ,p.title");
+        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, u.user_id, u.display_name,u.email_address,s.store_name, sa.*, sc.phone ,p.*");
 
         $this->db->join("user u","u.user_id = i.user_id");
         $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
@@ -49,6 +50,8 @@ class Invoice_model extends CI_Model {
         $result->created = convert_timezone($result->created,true);
         $result->plan_created = convert_timezone($result->plan_created,true);
         $result->plan_expiration = convert_timezone($result->plan_expiration,true);
+        $result->price = custom_money_format($result->price);
+        $result->plan_price = custom_money_format($result->plan_price);
 
         $result->address = $result->street1;
         $result->address .= ($result->street2) ? ", ".$result->street2 : "";
@@ -63,7 +66,7 @@ class Invoice_model extends CI_Model {
 
     public function user_invoice($user_id){
 
-        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, u.display_name,u.email_address,s.store_name, sa.*, sc.phone ,p.title");
+        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, u.display_name,u.email_address,s.store_name, sa.*, sc.phone ,p.*");
 
         $this->db->join("user u","u.user_id = i.user_id");
         $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
@@ -78,7 +81,9 @@ class Invoice_model extends CI_Model {
         
         $result->created = convert_timezone($result->created,true);
         $result->plan_created = convert_timezone($result->plan_created,true);
-        $result->plan_expiration = convert_timezone($result->plan_expiration,true);
+        $result->plan_expiration = convert_timezone($result->plan_expiration,true);        
+        $result->plan_price = custom_money_format($result->plan_price);
+        $result->price = custom_money_format($result->price);
 
         $result->address = $result->street1;
         $result->address .= ($result->street2) ? ", ".$result->street2 : "";

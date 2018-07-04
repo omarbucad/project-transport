@@ -70,7 +70,7 @@
                 </li>
                 <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'setup') ? "active" : "" ;?>">
                     <a data-toggle="collapse" href="#dropdown-element-setup">
-                        <span class="icon fa fa-slack"></span><span class="title">Setup</span>
+                        <span class="icon fa fa-cog"></span><span class="title">Setup</span>
                     </a>
                     <!-- Dropdown level 1 -->
                     <div id="dropdown-element-setup" class="panel-collapse collapse">
