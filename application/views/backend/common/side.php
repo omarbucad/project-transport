@@ -76,7 +76,7 @@
                     <div id="dropdown-element-setup" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
-                                <?php if($this->session->userdata('user')->role == 'SUPER_ADMIN') : ?>
+                                <?php if($this->session->userdata('user')->role == 'SUPER ADMIN') : ?>
                                     <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
                                     <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
                                 <?php endif;?>

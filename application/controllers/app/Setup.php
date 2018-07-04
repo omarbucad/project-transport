@@ -16,7 +16,7 @@ class Setup extends MY_Controller {
 		$this->data['result']    		=  $this->checklist->get_checklist_list();
 		$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
 		$this->data['main_page'] 		= "backend/page/checklist/view";
-		$this->data['plan_type']		= $this->data['session_data']->plan_type;
+		$this->data['plan_type']		= $this->data['session_data']->title;
 
 		$this->load->view('backend/master' , $this->data);
 	}
@@ -198,15 +198,15 @@ class Setup extends MY_Controller {
 	public function account($type){
 		$user_id = $this->data['session_data']->user_id;
 
-		if($type == ""){
-			redirect('/app/setup/account/manage', 'refresh');
-		}
-
 		$this->data['website_title'] = "Setup - Account | ".$this->data['application_name'];
 		$this->data['page_name'] = "Account";
 		$this->data['main_page'] = "backend/page/account/view";
 		$this->data['result'] = $this->profile->get_userplan($user_id);
-		$this->data['setup_page'] = $type; 
+		$this->data['setup_page'] = $type;
+
+		if($type == ""){
+			redirect('/app/setup/account/manage', 'refresh');
+		}
 		$this->load->view('backend/master' , $this->data);
 	}
 

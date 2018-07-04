@@ -13,7 +13,7 @@ class Report extends MY_Controller {
 	public function daily(){
 		$this->data['page_name'] = "Daily Report";
 		$this->data['main_page'] = "backend/page/report/view";
-		$this->data['plan_type'] = $this->data['session_data']->plan_type;
+		$this->data['plan_type'] = $this->data['session_data']->title;
 
 		if($this->input->get("export")){
 			$this->data['result'] = $this->reports->get_reports_list();

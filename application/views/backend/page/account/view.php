@@ -135,7 +135,7 @@
         	<div class="container">
         		<div class="card">
         			<div class="card-body text-center">
-        				<h1>You're currently on the <?php echo $result->plan_type; ?> PLAN</h1>
+        				<h1>You're currently on the <?php echo $result->title; ?> PLAN</h1>
         				<p>Whether you need to add a store, a register, or our most advanced features, <br>Trackerteer is on hand to upgrade your business.</p>
         				<a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="btn btn-success btn-lg">View our Pricing plans</a>
         			</div>
@@ -153,15 +153,14 @@
         					<span>View a breakdown of your current plan. To find out what more you could get, <a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="text-underline">check out our other plans.</a></span>
         				</div>
         				<div class="col-xs-12 col-lg-6">
-        					<h4 style="margin-top: 0px;">Basic Plan</h4>
+        					<h4 style="margin-top: 0px;"><?php echo $result->title ." Plan";?></h4>
         					<nav>
         						<ul>
-        							<li><span>1 Driver</span></li>
-                                    <li><span>1 Vehicle</span></li>
-                                    <li><span>1 Trailer</span></li>
-                                    <li><span>50 Reports / Month</span></li>
-                                    <li><span>Reports Viewable 1 Week Before Month Ends</span></li>
-                                    <li><span>No Export</span></li>
+        							<li><span><?php echo ($result->no_accounts == 0) ? "Unlimited": $result->no_accounts;?> Driver</span></li>
+                                    <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Vehicle</span></li>
+                                    <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Trailer</span></li>
+                                    <li><span><?php echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> / Month</span></li>
+                                    <li><span><?php echo $result->description;?></span></li>
         						</ul>
         					</nav>
         				</div>
@@ -169,7 +168,7 @@
         		</div>
         		<div class="col-xs-12">
                     <div class="trial-time">
-                        <?php if($result->plan_type == 'TRIAL') : ?>
+                        <?php if($result->title == 'TRIAL') : ?>
                             <?php if(!($result->trial_left < 0)) : ?>
                                 <span>Trial Expiration: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?> day(s) left</h4></span>
                             <?php else : ?>
@@ -202,7 +201,7 @@
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4>Basic Plan</h4>
+                                    <h4><?php echo $result->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
                                         <li>1 Account</li>
                                         <li>1 Vehicle/Trailer</li>
