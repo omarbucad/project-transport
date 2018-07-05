@@ -1,11 +1,21 @@
 <script type="text/javascript">
+    $(document).ready(function(){
+        var role = $(this).find(":selected").val();
+
+        if(role != "ADMIN" && role != "MANAGER"){
+            $('#checklist_section').removeClass("hidden");
+        }
+        else{
+            $('#checklist_section').addClass("hidden");   
+        }
+    });
     $(document).on('change' , '#profile_image' , function(){
         readURL(this , ".image-preview" , 'background');
     });
     $(document).on('change', '#user_role', function(){
         var role = $(this).find(":selected").val();
 
-        if(role != "ADMIN"){
+        if(role != "ADMIN" && role != "MANAGER"){
             $('#checklist_section').removeClass("hidden");
         }
         else{
@@ -77,8 +87,10 @@
                                 <label for="role">Role</label>
                                 <select class="form-control" name="role" id="user_role">
                                     <option value="DRIVER" <?php echo ($result->role == "DRIVER") ? "selected" : "" ;?>>Driver</option>
-                                    <option value="ADMIN" <?php echo ($result->role == "ADMIN") ? "selected" : "" ;?>>Admin</option>
                                     <option value="MECHANIC" <?php echo ($result->role == "MECHANIC") ? "selected" : "" ;?>>Mechanic</option>
+                                    <?php if($this->session->userdata('user')->role == "MANAGER") : ?>
+                                        <option value="MANAGER" <?php echo ($result->role == "MANAGER") ? "selected" : "" ;?>>Manager</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                             
@@ -92,18 +104,14 @@
                             <p>List of checklist that can be used</p>
                         </div>
                         <div class="col-xs-12 col-lg-4">
-
-                                <?php foreach($checklist_list as $key => $value) :?>
-
-                                    <div class="checkbox3 checkbox-check  checkbox-light">
-                                          <input type="checkbox" name="checklist[]" id="checkbox-<?php echo $value->checklist_id; ?>" value="<?php echo $value->checklist_id; ?>" <?php echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>>
-                                          <label for="checkbox-<?php echo $value->checklist_id; ?>">
-                                            <?php echo $value->checklist_name?>
-                                          </label>
-                                    </div>
-                                <?php endforeach; ?>
-    
-                            
+                            <?php foreach($checklist_list as $key => $value) :?>
+                                <div class="checkbox3 checkbox-check  checkbox-light">
+                                      <input type="checkbox" name="checklist[]" id="checkbox-<?php echo $value->checklist_id; ?>" value="<?php echo $value->checklist_id; ?>" <?php echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>>
+                                      <label for="checkbox-<?php echo $value->checklist_id; ?>">
+                                        <?php echo $value->checklist_name?>
+                                      </label>
+                                </div>
+                            <?php endforeach; ?>                            
                         </div>
                     </div>
                 </section>

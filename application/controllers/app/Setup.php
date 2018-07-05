@@ -149,7 +149,7 @@ class Setup extends MY_Controller {
 
 	// PROFILE SECTION
 	public function profile(){
-		if($this->session->userdata('user')->role != 'SUPER_ADMIN'){
+		if($this->session->userdata('user')->role != 'SUPER ADMIN'){
 			redirect('app/dashboard');
 		}
 		$user_id = $this->data['session_data']->user_id;
@@ -202,6 +202,9 @@ class Setup extends MY_Controller {
 		$this->data['page_name'] = "Account";
 		$this->data['main_page'] = "backend/page/account/view";
 		$this->data['result'] = $this->profile->get_userplan($user_id);
+		$this->data['user_data'] = $this->account->user_data($user_id);
+
+		//print_r_die($this->data['user_data']);
 		$this->data['setup_page'] = $type;
 		$this->data['user_plans'] = $this->db->get("plan")->result();
 

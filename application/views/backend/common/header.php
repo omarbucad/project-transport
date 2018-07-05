@@ -26,7 +26,10 @@
                             <h4 class="username"><?php echo $session_data->display_name; ?></h4>
                             <p><?php echo $session_data->email_address; ?></p>
                             <div class="btn-group margin-bottom-2x" role="group">
-                                <a href="<?php echo site_url("app/profile"); ?>" class="btn btn-default"><i class="fa fa-user"></i> Profile</a>
+                                <?php if($session_data->role != "SUPER ADMIN"): ?>
+                                    <a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($session_data->user_id); ?>" class="btn btn-default"><i class="fa fa-user"></i> Profile</a>
+                                <?php endif; ?>
+                                
                                 <a href="<?php echo site_url("login/logout"); ?>" class="btn btn-default"><i class="fa fa-sign-out"></i> Logout</a>
                             </div>
                         </div>

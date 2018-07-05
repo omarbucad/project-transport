@@ -115,7 +115,28 @@
             $("div.annually").removeClass("active");
         }
     });
+
+
+     $(document).on('click' , '.view_invoice_pdf' , function(){
+
+        var modal = $('#invoice_pdf_modal').modal("show");
+
+        var id = $(this).data("id");
+
+        var a = $("<a>" , {href : $(this).data("pdf") , text:$(this).data("pdf") });
+        var object = '<object data="'+$(this).data("pdf") +'" , type="application/pdf" style="width:100%;height:800px;">'+a+'</object>';
+
+        $('#_pdfViewer').html(object);  
+    });
 </script>
+<style type="text/css">
+    th, td {
+        padding-left: 0 !important;
+    }
+    a.view_invoice_pdf{
+        padding: 0;
+    }
+</style>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container">
@@ -147,12 +168,12 @@
         		<div class="col-xs-12">
         			<h4>What's in my plan</h4>
         		</div>
-        		<div class="col-xs-12 col-lg-6">
+        		<div class="col-xs-12">
         			<div class="row">
-        				<div class="col-xs-12 col-lg-6">
+        				<div class="col-xs-12 col-lg-3">
         					<span>View a breakdown of your current plan. To find out what more you could get, <a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="text-underline">check out our other plans.</a></span>
         				</div>
-        				<div class="col-xs-12 col-lg-6">
+        				<div class="col-xs-12 col-lg-9">
         					<h4 style="margin-top: 0px;"><?php echo $result->title ." Plan";?></h4>
         					<nav>
         						<ul>
@@ -178,7 +199,34 @@
                     </div>
                 </div>
                 <div class="col-xs-12">
-                    <a href="#" class="text-danger">Delete Account</a>
+                    <h4>User Plan</h4>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-lg-3">
+                            <span>List of user plan subscription.</span>
+                        </div>
+                        <div class="col-xs-12 col-lg-9">
+                            <table class="table">
+                                <tr>
+                                    <th>Plan</th>
+                                    <th>Billing Type</th>
+                                    <th>Created</th>
+                                    <th>Expiration</th>
+                                    <th>Action</th>
+                                </tr>
+                                <?php foreach($user_data->subscription as $key => $value) : ?>
+                                    <tr>
+                                        <td><span><?php echo $value->title; ?></span></td>
+                                        <td><span><?php echo $value->billing_type; ?></span></td>
+                                        <td><span><?php echo $value->plan_created; ?></span></td>
+                                        <td><span><?php echo $value->plan_expiration; ?></span></td>
+                                        <td><a href="javascript:void(0);" data-pdf="<?php echo site_url().$value->invoice_pdf;?>" data-id="<?php echo $value->invoice_id; ?>" class="btn btn-link view_invoice_pdf" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i> View Invoice</a></td>
+                                    </tr>                                    
+                                <?php endforeach; ?>  
+                            </table>                         
+                        </div>
+                    </div>
                 </div>
         	</div>
         </div>
@@ -306,5 +354,22 @@
 
         </div>
     	<?php endif; ?>
+    </div>
+</div>
+
+<div class="modal fade" id="invoice_pdf_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="defaultModalLabel">Invoice Information</h4>
+            </div>
+            <div class="modal-body" id="_pdfViewer">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
     </div>
 </div>

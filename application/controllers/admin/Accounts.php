@@ -46,8 +46,7 @@ class Accounts extends MY_Controller {
 
 			$this->data['page_name'] = "Transport Accounts";
 			$this->data['main_page'] = "backend/page/admin/accounts/edit_info";
-			$this->data['subscriptions'] = $this->accounts->user_subscription($this->session->userdata('user')->store_id);
-			$this->data['result'] = $this->accounts->get_user($user_id);
+			$this->data['result'] = $this->accounts->user_data($user_id);
 			$this->load->view('backend/master' , $this->data);
 
 		}else{
@@ -62,45 +61,6 @@ class Accounts extends MY_Controller {
 				$this->session->set_flashdata('message' , 'Something went wrong');	
 
 				redirect("admin/accounts/view/".$user_id , 'refresh');
-			}
-		}
-	}
-
-	public function edit($user_id){
-		$id = $this->hash->decrypt($user_id);
-
-		$this->form_validation->set_rules('display_name'		, 'Name'			        , 'trim|required');
-		
-		if($this->input->post("password") != ""){
-			$this->form_validation->set_rules('password'		    , 'Password'		  , 'trim|required|md5');
-			$this->form_validation->set_rules('confirm_password'    , 'Confirm Password'  , 'trim|required|matches[password]|md5');
-		}		
-
-		if($this->input->post("role") != "ADMIN"){
-			$this->form_validation->set_rules('checklist[]'		, 'Checklist'			    , 'required');
-		}
-
-		if ($this->form_validation->run() == FALSE){ 
-
-			$this->data['page_name'] = "Transport Accounts";
-			$this->data['main_page'] = "backend/page/users/edit";
-			$this->data['result']    = $this->accounts->get_account_info($id);
-			$this->data['checklist_list'] = $this->checklist->get_checklist_dropdown();
-
-			$this->load->view('backend/master' , $this->data);
-
-		}else{
-
-			if($last_id = $this->accounts->edit_user($id)){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Added a User');	
-
-				redirect("app/accounts/?user_id=".$this->hash->encrypt($last_id).'?submit=submit' , 'refresh');
-			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');	
-
-				redirect("app/accounts/edit/".$user_id , 'refresh');
 			}
 		}
 	}

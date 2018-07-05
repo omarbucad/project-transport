@@ -12,6 +12,18 @@
             $('#checklist_section').addClass("hidden");   
         }
     });
+
+     $(document).on('click' , '.view_invoice_pdf' , function(){
+
+        var modal = $('#invoice_pdf_modal').modal("show");
+
+        var id = $(this).data("id");
+
+        var a = $("<a>" , {href : $(this).data("pdf") , text:$(this).data("pdf") });
+        var object = '<object data="'+$(this).data("pdf") +'" , type="application/pdf" style="width:100%;height:800px;">'+a+'</object>';
+
+        $('#_pdfViewer').html(object);  
+    });
 </script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
@@ -55,10 +67,13 @@
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email"  value="<?php echo $result->email_address; ?>"  class="form-control" placeholder="name@email.com" readonly="true">
                             </div>
-                            <div class="form-group">
-                                <label for="role">Role</label>
-                                <input type="text" name="role" value="<?php echo $result->display_name; ?>"  class="form-control" readonly="true">
-                            </div>
+                            <?php print_r_die($role);?>
+                            <?php if($role != "ADMIN")?>
+                                <div class="form-group">
+                                    <label for="role">Role</label>
+                                    <input type="text" name="role" value="<?php echo $result->role; ?>"  class="form-control" readonly="true">
+                                </div>
+                            <?php endif; ?>
                             <div class="form-group">
                                 <label for="status">Status</label>
                                 <select name="status"  class="form-control" value="<?php echo $result->status; ?>">
@@ -71,7 +86,7 @@
                             <div class="form-group">
                                 <label for="">Profile Image</label>
                                 <div class="image-preview">
-                                    <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
+                                    <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom"  style="height: 100%;object-fit: cover;">
                                 </div>
                                 <input type="file" name="file" id="profile_image" class="btn btn-default">
                             </div>
@@ -92,13 +107,16 @@
                                     <th>Billing Type</th>
                                     <th>Created</th>
                                     <th>Expiration</th>
+                                    <th>Action</th>
                                 </tr>
-                                <?php foreach($subscriptions as $key => $value) :?>
+                                <?php foreach($result->subscription as $key => $value) : ?>
+
                                     <tr>
-                                        <td><span><?php echo $value->plan_type; ?></span></td>
+                                        <td><span><?php echo $value->title; ?></span></td>
                                         <td><span><?php echo $value->billing_type; ?></span></td>
                                         <td><span><?php echo $value->plan_created; ?></span></td>
                                         <td><span><?php echo $value->plan_expiration; ?></span></td>
+                                        <td><a href="javascript:void(0);" data-pdf="<?php echo site_url().$value->invoice_pdf;?>" data-id="<?php echo $value->invoice_id; ?>" class="btn btn-link view_invoice_pdf" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i></a></td>
                                     </tr>                                    
                                 <?php endforeach; ?>  
                             </table>                         
@@ -137,6 +155,24 @@
                     </div>
                 </section>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="invoice_pdf_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="defaultModalLabel">Invoice Information</h4>
+            </div>
+            <div class="modal-body" id="_pdfViewer">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
         </div>
     </div>
 </div>

@@ -191,7 +191,7 @@
                                 <td><span><?php echo $row->billing_type; ?></span></td>
                                 <td><span><?php echo $row->created; ?></span></td>
                                 <td>
-                                    <?php if($row->role != 'DEV ADMIN') : ?>
+                                    <?php if($row->role != 'SUPER ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
                                         <a href="javascript:void(0);" data-href="<?php echo site_url('admin/accounts/user_plan/update/').$row->user_id;?>" class="btn btn-link update-plan" title="Update User Plan"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                         <a href="javascript:void(0);" data-href="<?php echo site_url('admin/accounts/send_plan_notice/').$row->user_id;?>" class="btn btn-link plan-notif" title="Plan Notification"><i class="fa fa-bell" aria-hidden="true"></i></a>

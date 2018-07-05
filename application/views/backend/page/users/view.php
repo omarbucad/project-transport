@@ -40,8 +40,10 @@
                                         <option value="">All Roles</option>
                                         <option value="MECHANIC" <?php echo ($this->input->get("roles") == "MECHANIC") ? "selected" : ""; ?>>Mechanic</option>
                                         <option value="DRIVER" <?php echo ($this->input->get("roles") == "DRIVER") ? "selected" : ""; ?>>Driver</option>
+                                        <option value="MANAGER" <?php echo ($this->input->get("roles") == "MANAGER") ? "selected" : ""; ?>>Manager</option>
+                                        <?php if($this->session->userdata('user')->role == "ADMIN") : ?>
                                         <option value="ADMIN" <?php echo ($this->input->get("roles") == "ADMIN") ? "selected" : ""; ?>>Admin</option>
-                                        <option value="SUPER_ADMIN" <?php echo ($this->input->get("roles") == "SUPER_ADMIN") ? "selected" : ""; ?>>Super Admin</option>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
                             </div>
@@ -86,7 +88,7 @@
                                             <img src="<?php echo site_url("thumbs/images/user/$row->image_path/80/80/$row->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
                                         </div>
                                         <div class="col-xs-6 col-lg-10 no-margin-bottom">
-                                            <a href="<?php echo site_url("app/users/view_user_info/$row->user_id");?>"><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</a><br>
+                                            <?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )<br>
                                             <small class="help-block"><?php echo $row->email_address; ?></small>
                                         </div>
                                     </div>

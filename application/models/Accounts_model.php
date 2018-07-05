@@ -34,7 +34,7 @@ class Accounts_model extends CI_Model {
             return $result = $this->db->get("user u")->num_rows();
         }
         
-        $result = $this->db->where("u.role","SUPER ADMIN")->limit($limit , $skip)->order_by("u.display_name" , "ASC")->get("user u")->result();
+        $result = $this->db->where("u.role","ADMIN")->limit($limit , $skip)->order_by("u.display_name" , "ASC")->get("user u")->result();
 
         
         foreach($result as $k => $row){
@@ -50,31 +50,38 @@ class Accounts_model extends CI_Model {
         return $result;
     }
 
-    public function get_user($user_id){
-
-
-        $this->db->select("u.*, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name, p.title");
-        $this->db->join("user_plan up","up.store_id = u.store_id");
-        $this->db->join("user u2", "u2.user_id = up.who_updated");
-        $this->db->join("plan p","p.plan_id = up.plan_id");
-
-        $this->db->where("up.active",1);
-        $this->db->where("u.user_id",$user_id);
-        
-        $result = $this->db->where("u.role","SUPER ADMIN")->get("user u")->row();    
-        
+    public function user_data($user_id){
+        $result = $this->db->where("u.user_id",$user_id)->get("user u")->row();
         $result->created = convert_timezone($result->created,true);
-        $result->plan_created = convert_timezone($result->plan_created,true);
-        $result->plan_expiration = convert_timezone($result->plan_expiration,true);
 
-        return $result;
-    }
+        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, s.store_name, sa.*, sc.phone ,p.*");
 
-    public function user_subscription($store_id){
-        $result = $this->db->where("store_id",$store_id)->order_by("plan_created","DESC")->get("user_plan")->result();
-        foreach($result as $k => $row){
-            $result[$k]->plan_created = convert_timezone($row->plan_created,true);
-            $result[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
+        $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
+        $this->db->join("user u2","u2.user_id = up.who_updated");        
+        $this->db->join("plan p","p.plan_id = up.plan_id");
+        $this->db->join("store s","s.store_id = i.store_id");
+        $this->db->join("store_address sa","sa.store_address_id = s.address_id");
+        $this->db->join("store_contact sc","sc.contact_id = s.contact_id");
+        $this->db->where("i.deleted IS NULL");
+        $this->db->where("i.user_id",$user_id);
+
+        $result->subscription = $this->db->order_by("i.created","DESC")->get("invoice i")->result();
+        
+
+        foreach($result->subscription as $k => $row){
+            $result->subscription[$k]->created = convert_timezone($row->created,true);
+            $result->subscription[$k]->plan_created = convert_timezone($row->plan_created,true);
+            $result->subscription[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
+            $result->subscription[$k]->price = custom_money_format($row->price);
+            $result->subscription[$k]->plan_price = custom_money_format($row->plan_price);
+
+            $result->subscription[$k]->address = $row->street1;
+            $result->subscription[$k]->address .= ($row->street2) ? ", ".$row->street2 : "";
+            $result->subscription[$k]->address .= ($row->suburb) ? ", ".$row->suburb : "";
+            $result->subscription[$k]->address .= ($row->city) ? ", ".$row->city : "";
+            $result->subscription[$k]->address .= ($row->postcode) ? ", ".$row->postcode : "";
+            $result->subscription[$k]->address .= ($row->state) ? ", ".$row->state : "";
+            $result->subscription[$k]->address .= ($row->country) ? " ,".$row->country : "";
         }
 
         return $result;
@@ -104,6 +111,41 @@ class Accounts_model extends CI_Model {
         }else{
             return $user_id;
         }
+    }
+
+    public function plan_in_week($count = false){
+        $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
+        $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
+
+        $this->db->select("u.*, up.user_plan_id, up.plan_id, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name,p.title");
+        $this->db->join("user_plan up","up.store_id = u.store_id");
+        $this->db->join("user u2", "u2.user_id = up.who_updated");
+        $this->db->join("plan p","p.plan_id = up.plan_id");
+
+        $this->db->where("up.active",1);
+        //1533380085
+        $from = strtotime("today");
+        $to = strtotime("+6 days");
+
+        $this->db->where('up.plan_expiration >=' , $from);
+        $this->db->where('up.plan_expiration <=' , $to);
+        if($count){
+            return $result = $this->db->get("user u")->num_rows();
+        }
+        
+        $result = $this->db->where("u.role","SUPER ADMIN")->limit($limit , $skip)->order_by("up.plan_expiration" , "ASC")->get("user u")->result();
+
+        
+        foreach($result as $k => $row){
+            $result[$k]->status = convert_status($row->status);
+            $result[$k]->created = convert_timezone($row->created,true);
+            $result[$k]->plan_created = convert_timezone($row->plan_created,true);
+            $result[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
+            $result[$k]->invoice = $this->db->select("invoice_pdf, invoice_id")->limit("1")->order_by("created", "DESC")->where("user_id",$result[$k]->user_id)->where("deleted IS NULL")->get("invoice")->row();
+            $result[$k]->timeleft = $this->get_timeleft($result[$k]->user_plan_id);
+        }
+
+        return $result;
     }
 
     public function get_timeleft($user_plan_id){
@@ -151,11 +193,24 @@ class Accounts_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
         $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
         $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
-
+        $role = $this->session->userdata('user')->role;
         if($count){
-            return $result = $this->db->where("store_id" , $store_id)->get("user")->num_rows();
+            if($role == "ADMIN"){
+                $this->db->where("role !=","SUPER ADMIN");
+                return $result = $this->db->where("store_id" , $store_id)->get("user")->num_rows();
+            }else{
+                $this->db->where("role !=","SUPER ADMIN");
+                return $result = $this->db->where("role !=","ADMIN")->get("user")->num_rows();
+            }
         }else{
-            $result = $this->db->where("store_id" , $store_id)->limit($limit , $skip)->order_by("display_name" , "ASC")->get("user")->result();
+            if($role == "ADMIN"){
+                $this->db->where("role !=","SUPER ADMIN");
+                $result = $this->db->where("store_id" , $store_id)->limit($limit , $skip)->order_by("display_name" , "ASC")->get("user")->result();
+            }else{
+                $this->db->where("role !=","SUPER ADMIN");
+                $this->db->where("role !=","ADMIN");
+                $result = $this->db->where("store_id" , $store_id)->limit($limit , $skip)->order_by("display_name" , "ASC")->get("user")->result();
+            }
         }
         
         foreach($result as $k => $row){
