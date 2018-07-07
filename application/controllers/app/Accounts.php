@@ -10,6 +10,9 @@ class Accounts extends MY_Controller {
 
     }
 	public function index(){
+		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+			redirect("app/dashboard");					
+		}
 		$this->data['role'] = $this->session->userdata('user')->role;
 
 		$this->data['page_name'] = "Transport Accounts";
@@ -33,6 +36,9 @@ class Accounts extends MY_Controller {
 	}
 
 	public function add(){
+		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+			redirect("app/dashboard");					
+		}
 
 		$this->form_validation->set_rules('display_name'		, 'Name'			        , 'trim|required');
 		$this->form_validation->set_rules('email'				, 'Email Address'			, 'trim|required');
@@ -92,19 +98,29 @@ class Accounts extends MY_Controller {
 
 			if($last_id = $this->accounts->edit_user($id)){
 				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Added a User');	
-
-				redirect("app/accounts/?user_id=".$this->hash->encrypt($last_id).'?submit=submit' , 'refresh');
+				$this->session->set_flashdata('message' , 'Successfully Updated User Information');	
+				if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+					redirect("app/dashboard");					
+				}else{
+					redirect("app/accounts/?user_id=".$this->hash->encrypt($last_id).'?submit=submit' , 'refresh');
+				}
+				
 			}else{
 				$this->session->set_flashdata('status' , 'error');
 				$this->session->set_flashdata('message' , 'Something went wrong');	
-
-				redirect("app/accounts/edit/".$user_id , 'refresh');
+				if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+					redirect("app/dashboard");
+				}else{
+					redirect("app/accounts/edit/".$user_id , 'refresh');
+				}
 			}
 		}
 	}
 
 	public function delete($user_id){
+		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+			redirect("app/dashboard");					
+		}
 		$id = $this->hash->decrypt($report_id);
 			
 		if($delete_checklist = $this->reports->delete_report($id)){

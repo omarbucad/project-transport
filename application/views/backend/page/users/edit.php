@@ -1,14 +1,14 @@
 <script type="text/javascript">
-    $(document).ready(function(){
-        var role = $(this).find(":selected").val();
+    //$(document).ready(function(){
+        // var role = $(this).find(":selected").val();
 
-        if(role != "ADMIN" && role != "MANAGER"){
-            $('#checklist_section').removeClass("hidden");
-        }
-        else{
-            $('#checklist_section').addClass("hidden");   
-        }
-    });
+        // if(role != "ADMIN" && role != "MANAGER"){
+        //     $('#checklist_section').removeClass("hidden");
+        // }
+        // else{
+        //     $('#checklist_section').addClass("hidden");   
+        // }
+   // });
     $(document).on('change' , '#profile_image' , function(){
         readURL(this , ".image-preview" , 'background');
     });
@@ -26,9 +26,12 @@
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
 
-        <div class="container" >
-        	<a href="<?php echo site_url('app/accounts'); ?>" style="display:inline-block;position: relative;left: -10px;"><i class="fa fa-arrow-left fa-3x"  aria-hidden="true"></i> </a> <h1 style="display:inline-block;"> Create a user</h1>
-        </div>
+        <?php if($this->session->userdata('user')->role != "MECHANIC") : ?>
+        <ol class="breadcrumb">
+            <li><a href="<?php echo site_url('app/accounts'); ?>">Accounts</a></li>
+            <li class="active">Edit User Information</li>
+        </ol>
+        <?php endif; ?>
         <div class="grey-bg ">
             <div class="container ">
                 <div class="row no-margin-bottom">
@@ -87,9 +90,11 @@
                             <div class="form-group">
                                 <label for="role">Role</label>
                                 <select class="form-control" name="role" id="user_role">
-                                    <option value="DRIVER" <?php echo ($result->role == "DRIVER") ? "selected" : "" ;?>>Driver</option>
+                                    <?php if($this->session->userdata('user')->role != "MECHANIC") : ?>
+                                        <option value="DRIVER" <?php echo ($result->role == "DRIVER") ? "selected" : "" ;?>>Driver</option>
+                                    <?php endif; ?>
                                     <option value="MECHANIC" <?php echo ($result->role == "MECHANIC") ? "selected" : "" ;?>>Mechanic</option>
-                                    <?php if($this->session->userdata('user')->role == "MANAGER") : ?>
+                                    <?php if($this->session->userdata('user')->role != "MECHANIC") : ?>
                                         <option value="MANAGER" <?php echo ($result->role == "MANAGER") ? "selected" : "" ;?>>Manager</option>
                                     <?php endif; ?>
                                 </select>
@@ -99,8 +104,8 @@
                     </div>
                 </section>
                 <?php endif; ?>
-                <?php if($result->role != "ADMIN" && $result->role != "MANAGER") : ?>
-                <section class="sec_border_bottom" id="checklist_section">
+                <?php if($result->role != "ADMIN" && $result->role != "MANAGER") : ?>                    
+                <section class='sec_border_bottom <?php echo ($result->role == "MECHANIC") ? "hidden": "" ?>' id="checklist_section">
                     <h3>Checklist</h3>
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">

@@ -130,11 +130,14 @@
 	    			<?php else: ?>
 				    <div class="row">
 			            <ul class="nav nav-tabs">
+			            	<?php if($session_data->role != "MECHANIC") : ?>
 							<li class="active"><a data-toggle="tab" href="#truck">Truck</a></li>
 							<li><a data-toggle="tab" href="#trailer">Trailer</a></li>
-							<li><a data-toggle="tab" href="#report">Report</a></li>
+							<?php endif;?>
+							<li class="<?php echo ($session_data->role != 'MECHANIC') ? '': 'active'; ?>"><a data-toggle="tab" href="#report">Report</a></li>
 						</ul>
 						<div class="tab-content">
+							<?php if($session_data->role != "MECHANIC") : ?>
 							<div id="truck" class="tab-pane fade in active">
 								<div class="row">
 									<div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
@@ -311,7 +314,8 @@
 					    			</div>	
 						    	</div>		      
 						    </div>
-						    <div id="report" class="tab-pane fade">
+							<?php endif; ?>
+						    <div id="report" class="tab-pane fade <?php echo ($session_data->role != 'MECHANIC') ? '': 'in active'; ?>">
 						    	<div class="row">
 						    		<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
 						                <a href="javascript:void(0);" id="today-reports">
@@ -412,7 +416,7 @@
 									</div>
 									<div class="col-lg-12 col-xs-12">
 					    				<div class="panel panel-danger panel-def-und" style="display: none;">
-											<div class="panel-heading">Defects and Under Maintenance Reports</div>
+											<div class="panel-heading">Defects and On Maintenance Reports</div>
 										   	<div class="panel-body">
 										   		<table class="table">
 										   			<thead>

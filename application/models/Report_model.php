@@ -97,7 +97,7 @@ class Report_model extends CI_Model {
                     $row->longitude
                 ];
                 $result->report_statuses[$key]->status = report_status($row->status);
-                $result->report_statuses[$key]->signature = $this->config->site_url("public/upload/signature/".$row->signature);
+                $result->report_statuses[$key]->signature = ($result->report_statuses[$key]->signature == '') ? '' :$this->config->site_url("public/upload/signature/".$row->signature);
                 $result->report_statuses[$key]->created = convert_timezone($row->created,true);
             }
 

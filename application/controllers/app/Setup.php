@@ -8,6 +8,9 @@ class Setup extends MY_Controller {
        $this->load->model('checklist_model', 'checklist');
        $this->load->model('profile_model', 'profile');
        $this->load->model('accounts_model', 'account');
+       if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+			redirect("app/dashboard");					
+		}
 
     }
     // CHECKLIST SECTION
@@ -196,6 +199,9 @@ class Setup extends MY_Controller {
 
 	// ACCOUNT SECTION
 	public function account($type){
+		if($this->session->userdata('user')->role != "ADMIN"){
+			redirect("app/dashboard");					
+		}
 		$user_id = $this->data['session_data']->user_id;
 
 		$this->data['website_title'] = "Setup - Account | ".$this->data['application_name'];

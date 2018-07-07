@@ -35,20 +35,22 @@
                 </li>
                 <?php endif; ?>
                 <?php if($session_data->role != "SUPER ADMIN") : ?>
-                <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
-                    <a data-toggle="collapse" href="#dropdown-element-vechile">
-                        <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-element-vechile" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
-                                <li><a href="<?php echo site_url("app/vehicle/truck"); ?>">Vehicle</a></li>
-                                <li><a href="<?php echo site_url("app/vehicle/trailer"); ?>">Trailer</a></li>
-                            </ul>
+                    <?php if($session_data->role != "MECHANIC") : ?>
+                    <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
+                        <a data-toggle="collapse" href="#dropdown-element-vechile">
+                            <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
+                        </a>
+                        <!-- Dropdown level 1 -->
+                        <div id="dropdown-element-vechile" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul class="nav navbar-nav">
+                                    <li><a href="<?php echo site_url("app/vehicle/truck"); ?>">Vehicle</a></li>
+                                    <li><a href="<?php echo site_url("app/vehicle/trailer"); ?>">Trailer</a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
+                    <?php endif; ?>
                 <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'report') ? "active" : "" ;?>">
                     <a data-toggle="collapse" href="#dropdown-element-report" id="reports-menu-header">
                         <span class="icon fa fa-book"></span><span class="title">Reports</span>
@@ -64,11 +66,14 @@
                         </div>
                     </div>
                 </li>
+
+                <?php if($session_data->role != "MECHANIC") : ?>
                 <li class="<?php echo ($this->uri->segment(2) == 'accounts') ? "active" : "" ;?>">
                     <a href="<?php echo site_url('app/accounts'); ?>">
                         <span class="icon fa fa-users"></span><span class="title">Accounts</span>
                     </a>
                 </li>
+                <?php endif; ?>
                 <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'setup') ? "active" : "" ;?>">
                     <a data-toggle="collapse" href="#dropdown-element-setup">
                         <span class="icon fa fa-cog"></span><span class="title">Setup</span>
@@ -77,21 +82,30 @@
                     <div id="dropdown-element-setup" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
+                                <?php if($this->session->userdata('user')->role == 'MECHANIC' || $this->session->userdata('user')->role == 'MANAGER') :?>
+                                <li><a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($session_data->user_id); ?>">Profile</a></li>
+                                <?php endif; ?>
                                 <?php if($this->session->userdata('user')->role == 'ADMIN') : ?>
                                     <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
                                     <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
                                 <?php endif;?>
-                                
+                
+                                <?php if($session_data->role != "MECHANIC") : ?>
                                 <li><a href="<?php echo site_url("app/setup/checklist"); ?>">Checklist</a></li>
+                                <?php endif; ?>
                             </ul>
                         </div>
                     </div>
                 </li>
+
+                
+                <?php if($session_data->role != "MECHANIC") : ?>
                 <li>
                     <a href="https://play.google.com/store" target="_blank">
                         <span class="icon fa fa-download"></span><span class="title">Download</span>
                     </a>
-                </li>
+                </li>                
+                <?php endif; ?>
                 <?php endif; ?>
             </ul>
         </div>

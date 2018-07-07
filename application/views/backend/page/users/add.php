@@ -26,9 +26,10 @@
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
 
-        <div class="container" >
-        	<a href="<?php echo site_url('app/accounts'); ?>" style="display:inline-block;position: relative;left: -10px;"><i class="fa fa-arrow-left fa-3x"  aria-hidden="true"></i> </a> <h1 style="display:inline-block;"> Create a user</h1>
-        </div>
+        <ol class="breadcrumb">
+            <li><a href="<?php echo site_url('app/accounts'); ?>">Accounts</a></li>
+            <li class="active">Create User</li>
+        </ol>
         <div class="grey-bg ">
             <div class="container ">
                 <div class="row no-margin-bottom">
