@@ -152,20 +152,4 @@ class Report extends MY_Controller {
 		download_send_headers('report_' . date("Y-m-d") . ".csv");
 		echo array2csv($export);
 	}
-
-	public function mechanic_checklist_report(){
-
-		$this->data['page_name'] = "Mechanic Report";
-		$this->data['main_page'] = "backend/page/report/mechanic_view";
-		$this->data['plan_type'] = $this->data['session_data']->title;
-
-		if($this->input->get("export")){
-			$this->data['result'] = $this->reports->get_reports_list();
-			$this->download_csv($this->data['result']);
-		}else{
-
-			$this->data['result'] = $this->reports->get_reports_list();
-			$this->load->view('backend/master' , $this->data);
-		}
-	}
 }
