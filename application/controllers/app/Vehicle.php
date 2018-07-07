@@ -6,6 +6,7 @@ class Vehicle extends MY_Controller {
 	public function __construct() {
        parent::__construct();
        $this->load->model('vehicle_model', 'vehicle');
+       $this->data['plan_type'] = $this->data['session_data']->title;
 
     }
 
@@ -13,7 +14,7 @@ class Vehicle extends MY_Controller {
 		$this->data['page_name'] = "Truck";
 		$this->data['result']    =  $this->vehicle->get_vehicle_list();
 		$this->data['main_page'] = "backend/page/vehicle/truck/view";
-		$this->data['plan_type'] = $this->data['session_data']->title;
+		
 		$vehicle = count($this->vehicle->get_vehicle_list());
 		$trailer = count($this->vehicle->get_trailer_list());
 		$this->data['totalvehicle'] = $vehicle + $trailer;

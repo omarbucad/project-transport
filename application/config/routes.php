@@ -72,11 +72,14 @@ $route['app/setup/checklist/delete/(:any)'] = 'app/setup/delete_checklist/$1';
 $route['app/setup/checklist/item/delete/(:any)'] = 'app/setup/delete_checklist_item/$1';
 $route['app/setup/checklist/item/delete_image/(:any)'] = 'app/setup/delete_item_image/$1';
 
-$route['app/report/daily/add'] = 'app/report/add_report';
-$route['app/report/daily/edit/(:any)'] = 'app/report/edit_truck/$1';
-$route['app/report/daily/delete/(:any)'] = 'app/report/delete_truck/$1';
-
 $route['app/setup/profile/update'] = 'app/setup/profile/';
+
+// $route['app/report/daily/add'] = 'app/report/add_report';
+// $route['app/report/daily/edit/(:any)'] = 'app/report/edit_truck/$1';
+// $route['app/report/daily/delete/(:any)'] = 'app/report/delete_truck/$1';
+
+$route['app/report/mechanic/checklist/'] = 'app/report/mechanic_checklist_report/';
+
 
 //Super Admin Panel
 $route['admin/accounts/user_plan/update/(:any)'] = 'admin/accounts/update_plan/$1';

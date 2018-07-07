@@ -76,6 +76,7 @@
                         </div>
                     </div>
                 </section>
+                <?php if($result->role != "ADMIN") : ?>
                 <section class="sec_border_bottom">
                     <h3>Role</h3>
                     <div class="row">
@@ -97,6 +98,8 @@
                         </div>
                     </div>
                 </section>
+                <?php endif; ?>
+                <?php if($result->role != "ADMIN" && $result->role != "MANAGER") : ?>
                 <section class="sec_border_bottom" id="checklist_section">
                     <h3>Checklist</h3>
                     <div class="row">
@@ -114,7 +117,8 @@
                             <?php endforeach; ?>                            
                         </div>
                     </div>
-                </section>
+                </section>                
+                <?php endif; ?>
                 <section class="sec_border_bottom">
                     <h3>Security</h3>
                     <div class="row">

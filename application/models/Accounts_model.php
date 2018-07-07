@@ -257,6 +257,18 @@ class Accounts_model extends CI_Model {
         return $result;
        
     }
+    public function get_manager(){
+        $store_id = $this->data['session_data']->store_id;
+        $this->db->where("store_id" , $store_id);
+
+        $result = $this->db->where('role',"MANAGER")->get("user")->result();
+
+        foreach($result as $k => $row){
+            $result[$k]->status = convert_status($row->status);
+        }
+        return $result;
+       
+    }
 
     public function get_account_info($user_id){
         $this->db->where("user_id", $user_id);
@@ -276,6 +288,7 @@ class Accounts_model extends CI_Model {
 
     public function add_users(){
         $store_id = $this->data['session_data']->store_id;
+        $session_role = $this->session->userdata('user')->role;
         $role = $this->input->post("role");
         $this->db->trans_start();
 
@@ -284,7 +297,7 @@ class Accounts_model extends CI_Model {
             "username"     => $this->input->post("username") ,
             "password"     => $this->input->post("password"),
             "display_name" => $this->input->post("display_name") ,
-            "role"         => $role ,
+            "role"         => ($session_role == "ADMIN") ? "ADMIN" : $role,
             "store_id"     => $store_id,
             "image_path"   => "public/img/",
             "image_name"   => "person-placeholder.jpg",
@@ -294,7 +307,7 @@ class Accounts_model extends CI_Model {
 
         $last_id = $this->db->insert_id();
 
-        if($role != "ADMIN"){
+        if($session_role != "ADMIN" && $session_role != "MANAGER"){
             foreach($this->input->post("checklist") as $key => $value){
                 $this->db->insert("user_checklist",[
                     "user_id"      => $last_id,
@@ -317,13 +330,14 @@ class Accounts_model extends CI_Model {
 
     public function edit_user($user_id){
         $role = $this->input->post("role");
+        $session_role = $this->session->userdata('user')->role;
         $this->db->trans_start();
 
         $this->db->where("user_id", $user_id)->update("user" , [
             "email_address"=> $this->input->post("email") ,
             "username"     => $this->input->post("username") ,
             "display_name" => $this->input->post("display_name") ,
-            "role"         => $role 
+            "role"         => ($session_role == "ADMIN") ? "ADMIN" : $role
         ]);
 
         if($this->input->post("password") != ""){
@@ -334,7 +348,7 @@ class Accounts_model extends CI_Model {
         }
 
 
-        if($role != "ADMIN"){
+        if($session_role != "ADMIN" && $session_role != "MANAGER"){
   
             $this->db->where("user_id", $user_id)->delete("user_checklist");
             $checklist = $this->input->post("checklist");

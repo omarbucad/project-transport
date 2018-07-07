@@ -1,11 +1,21 @@
 <script type="text/javascript">
+    $(document).ready(function(){
+        var role = $(this).find(":selected").val();
+
+        if(role != "ADMIN" && role != "MANAGER"){
+            $('#checklist_section').removeClass("hidden");
+        }
+        else{
+            $('#checklist_section').addClass("hidden");   
+        }
+    });
     $(document).on('change' , '#profile_image' , function(){
         readURL(this , ".image-preview" , 'background');
     });
     $(document).on('change', '#user_role', function(){
         var role = $(this).find(":selected").val();
 
-        if(role != "ADMIN"){
+        if(role != "ADMIN" && role != "MANAGER"){
             $('#checklist_section').removeClass("hidden");
         }
         else{
@@ -77,11 +87,10 @@
                                 <label for="role">Role</label>
                                 <select class="form-control" name="role" id="user_role">
                                     <option value="DRIVER">Driver</option>
-                                    <option value="ADMIN">Admin</option>
-                                    <option value="MECHANIC">Mechanic</option>
+                                    <option value="MECHANIC">Mechanic</option>                                  
+                                    <option value="MANAGER">Manager</option>
                                 </select>
-                            </div>
-                            
+                            </div>                            
                         </div>
                     </div>
                 </section>

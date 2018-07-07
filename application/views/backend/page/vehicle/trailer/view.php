@@ -37,11 +37,11 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                        <?php if($plan_type == "BASIC" && (count($result) < 1)) : ?>
+                        <?php if($plan_type == "Basic" && (count($result) < 1)) : ?>
                             <a href="<?php echo site_url("app/vehicle/trailer/add"); ?>" class="btn btn-success ">Add Trailer</a>
-                        <?php elseif($plan_type == "STANDARD" &&  $totalvehicle < 10) : ?>
+                        <?php elseif($plan_type == "Standard" &&  $totalvehicle < 10) : ?>
                             <a href="<?php echo site_url("app/vehicle/trailer/add"); ?>" class="btn btn-success ">Add Trailer</a>
-                        <?php elseif($plan_type == "TRIAL" || $plan_type == "PREMIUM") : ?>
+                        <?php elseif($plan_type == "Trial" || $plan_type == "PREMIUM") : ?>
                             <a href="<?php echo site_url("app/vehicle/trailer/add"); ?>" class="btn btn-success ">Add Trailer</a>
                         <?php endif; ?>
                     </div>

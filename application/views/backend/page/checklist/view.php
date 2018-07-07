@@ -101,10 +101,10 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                      <?php if($plan_type != 'BASIC') : ?>
-                        <?php if($plan_type == 'TRIAL' || $plan_type == 'PREMIUM') : ?>
+                      <?php if($plan_type != 'Basic') : ?>
+                        <?php if($plan_type == 'Trial' || $plan_type == 'PREMIUM') : ?>
                           <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
-                        <?php elseif($plan_type == 'STANDARD' && (count($result) < 5)) : ?>
+                        <?php elseif($plan_type == 'Standard' && (count($result) < 5)) : ?>
                           <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
                         <?php endif; ?>
                       <?php endif; ?>

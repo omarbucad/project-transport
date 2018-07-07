@@ -149,7 +149,7 @@ class Setup extends MY_Controller {
 
 	// PROFILE SECTION
 	public function profile(){
-		if($this->session->userdata('user')->role != 'SUPER ADMIN'){
+		if($this->session->userdata('user')->role != 'ADMIN'){
 			redirect('app/dashboard');
 		}
 		$user_id = $this->data['session_data']->user_id;

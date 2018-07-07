@@ -112,6 +112,10 @@
                             <input type="text" name="phone" id="_phone" class="form-control" value="<?php echo set_value('phone'); ?>" required="true">
                         </div>
                         <div class="form-group">
+                            <label for="_phone">City</label>
+                            <input type="text" name="city" id="_city" class="form-control" value="<?php echo set_value('city'); ?>" required="true">
+                        </div>
+                        <div class="form-group">
                             <label for="_country">Country</label>
                             <select class="form-control" name="country" id="_country" required="true">
                                 <?php foreach($countries_list as $code =>  $country) : ?>

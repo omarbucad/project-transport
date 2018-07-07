@@ -189,7 +189,7 @@
         		</div>
         		<div class="col-xs-12">
                     <div class="trial-time">
-                        <?php if($result->title == 'TRIAL') : ?>
+                        <?php if($result->title == 'Trial') : ?>
                             <?php if(!($result->trial_left < 0)) : ?>
                                 <span>Trial Expiration: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?> day(s) left</h4></span>
                             <?php else : ?>

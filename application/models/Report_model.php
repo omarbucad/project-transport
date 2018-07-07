@@ -53,6 +53,8 @@ class Report_model extends CI_Model {
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
 
+        $this->db->where("c.store_id",$this->data['session_data']->store_id);
+
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
         foreach($result as $key => $row){
             if($result[$key]->status == 0){

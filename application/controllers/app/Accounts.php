@@ -21,12 +21,13 @@ class Accounts extends MY_Controller {
 		$this->pagination->initialize($this->data['config']);
 		$this->data["links"] = $this->pagination->create_links();
 
-		$this->data['result']	 = $this->accounts->get_accounts_list();
+		$this->data['result'] = $this->accounts->get_accounts_list();
 		$driver = count($this->accounts->get_driver());
 		$mechanic = count($this->accounts->get_mechanic());
 		$admin = count($this->accounts->get_admin());
-		$this->data['plan_type']		= $this->data['session_data']->title;
-		$this->data['total_accounts']	= $driver + $mechanic + $admin;
+		$manager = count($this->accounts->get_manager());
+		$this->data['plan_type'] = $this->session->userdata('user')->title;
+		$this->data['total_accounts']	= $driver + $mechanic + $admin + $manager;
 
 		$this->load->view('backend/master' , $this->data);
 	}
@@ -39,7 +40,7 @@ class Accounts extends MY_Controller {
 		$this->form_validation->set_rules('password'		    , 'Password'			    , 'trim|required|md5');
 		$this->form_validation->set_rules('confirm_password'    , 'Confirm Password'	    , 'trim|required|matches[password]|md5');
 
-		if($this->input->post("role") != "ADMIN"){
+		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER"){
 			$this->form_validation->set_rules('checklist[]'		, 'Checklist'			    , 'required');
 		}
 
@@ -74,8 +75,7 @@ class Accounts extends MY_Controller {
 			$this->form_validation->set_rules('password'		    , 'Password'		  , 'trim|required|md5');
 			$this->form_validation->set_rules('confirm_password'    , 'Confirm Password'  , 'trim|required|matches[password]|md5');
 		}		
-
-		if($this->input->post("role") != "ADMIN"){
+		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER"){
 			$this->form_validation->set_rules('checklist[]'		, 'Checklist'			    , 'required');
 		}
 

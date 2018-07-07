@@ -19,6 +19,11 @@ class Login extends MY_Controller {
 			if($role == "SUPER ADMIN"){
 				$this->session->set_flashdata('status' , 'success');
 				redirect('/admin/dashboard', 'refresh');
+			}elseif($role == "DRIVER"){
+				$this->session->set_flashdata('status' , 'failed');
+				$this->session->set_flashdata('message' , 'Incorrect Username or Password');
+
+				redirect('/login', 'refresh');
 			}else{
 
 				$this->session->set_flashdata('status' , 'success');
