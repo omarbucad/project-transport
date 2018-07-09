@@ -77,7 +77,7 @@ class Report extends MY_Controller {
 			$this->load->view('backend/master' , $this->data);
 		
 	}
-
+	
 	public function pdf($report_id){
 
 		$report_id = $this->hash->decrypt($report_id);

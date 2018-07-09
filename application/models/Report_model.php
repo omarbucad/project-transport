@@ -97,7 +97,7 @@ class Report_model extends CI_Model {
                     $row->longitude
                 ];
                 $result->report_statuses[$key]->status = report_status($row->status);
-                $result->report_statuses[$key]->signature = ($result->report_statuses[$key]->signature == '') ? '' :$this->config->site_url("public/upload/signature/".$row->signature);
+                $result->report_statuses[$key]->signature = ($result->report_statuses[$key]->signature == '') ? '' : $this->config->site_url("public/upload/signature/".$row->signature);
                 $result->report_statuses[$key]->created = convert_timezone($row->created,true);
             }
 
@@ -106,8 +106,19 @@ class Report_model extends CI_Model {
             //Get All Report Checklist
             $this->db->select("rc.* , ci.item_name");
             $this->db->join("checklist_items ci", "ci.id = rc.checklist_item_id");
-            $result->report_checklist = $this->db->where("report_id", $id)->get("report_checklist rc")->result();
+            $result->report_checklist = $this->db->where("rc.report_id", $id)->get("report_checklist rc")->result();
 
+            //get all report images
+            $result->report_images = $this->db->where('report_id',$id)->get('report_images')->result();
+
+
+            foreach($result->report_checklist as $key => $row){
+                foreach($result->report_images as $k => $r){
+                    if($row->id == $r->report_checklist_id){
+                        $result->report_checklist[$key]->fullpath[] = ($r->image_name == '') ? '' : $this->config->site_url("public/upload/report/".$r->image_path.$r->image_name);
+                    }
+                }
+            }
             $result->status = report_status($result->status);
             $result->created = convert_timezone($result->created,true);
         }

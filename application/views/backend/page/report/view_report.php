@@ -39,10 +39,6 @@
         }).fail(function( jqxhr, settings, exception ) {
            
         });
-
-        
-        
-
 	});
 
 	$(document).on("click" , ".btn-delete" , function(){
@@ -53,6 +49,12 @@
             window.location.href = $(this).data("href");
         }
     });  
+
+    $(document).ready(function() {
+        $('.animated-thumbnail').lightGallery({
+            thumbnail:true
+        });
+    });
 
 </script>
 <style type="text/css">
@@ -71,6 +73,15 @@
 	    border-radius: 100%;
 	    color: white;
 	}
+    .daterangepicker.dropdown-menu {
+        z-index: 100001 !important;
+    }
+    .lg-backdrop{
+        z-index: 999999!important;
+    }
+    .lg-outer{
+        z-index: 999999!important;
+    }
 </style>
 <div class="container margin-bottom">
     <div class="side-body padding-top">
@@ -188,7 +199,7 @@
     							<td><strong>Item</strong></td>
     							<td></td>
     							<td><strong>Remarks</strong></td>
-    							<td><strong></strong></td>
+    							<td><strong>Images</strong></td>
     						</tr>
     						<?php foreach($result->report_checklist as $key => $row) :?>
 	    					<tr>
@@ -199,7 +210,17 @@
 	    							</span>
 	    						</td>
 	    						<td><?php echo $row->checklist_value; ?></td>
-	    						<td>&nbsp;</td>	    						
+	    						<td>
+                                    <div class="animated-thumbnail">
+                                    <?php if(isset($row->fullpath)) : ?>
+                                       <?php foreach($row->fullpath as $k => $v) : ?> 
+                                        <a href="<?php echo $v; ?>">
+                                         <img src="<?php echo $v; ?>" height='40px'>
+                                        </a>
+                                        <?php endforeach; ?>
+                                    <?php endif;?>
+                                    </div>
+                                </td>	    						
 	    					</tr>
 	    					<?php endforeach; ?>
 	    				</table>
