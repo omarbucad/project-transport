@@ -22,12 +22,16 @@ class Checklist extends CI_Controller {
 	public function get_my_checklist(){
 		$store_id = $this->post->store_id;
 		$user_id = $this->post->user_id;
+		if($this->post){
 
 		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type");
 		$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
 		$result = $this->db->where("c.store_id" , $store_id)->where("uc.user_id" , $user_id)->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
 
 		echo json_encode(["status" => 1 , "data" => $result]);
+		}else{
+			 echo json_encode(["status" => 0 , "message" => "Access denied"]);
+		}
 	}
 
 	public function get_vehicle_registration_list(){
@@ -146,6 +150,8 @@ class Checklist extends CI_Controller {
 	           
 	           echo json_encode(["status" => 1 , "message" => "Successfully Submitted"]);
 	        }
+		}else{
+			 echo json_encode(["status" => 0 , "message" => "Access denied"]);
 		}
 	}
 

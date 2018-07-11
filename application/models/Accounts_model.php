@@ -191,25 +191,34 @@ class Accounts_model extends CI_Model {
 
     public function get_accounts_list($count = false){
         $store_id = $this->data['session_data']->store_id;
-        $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
-        $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
         $role = $this->session->userdata('user')->role;
+
+        $plan = $this->data['session_data']->title;
+
+        if($plan == "Basic"){
+            $limit = 1;
+        }else if($plan == "Standard"){
+            $limit = 10;
+        }else{
+            $limit = 0;
+        }
+
         if($count){
             if($role == "ADMIN"){
                 $this->db->where("role !=","SUPER ADMIN");
-                return $result = $this->db->where("store_id" , $store_id)->get("user")->num_rows();
+                return $result = $this->db->where("store_id" , $store_id)->limit($limit)->get("user")->num_rows();
             }else{
                 $this->db->where("role !=","SUPER ADMIN");
-                return $result = $this->db->where("role !=","ADMIN")->get("user")->num_rows();
+                return $result = $this->db->where("role !=","ADMIN")->limit($limit)->get("user")->num_rows();
             }
         }else{
             if($role == "ADMIN"){
                 $this->db->where("role !=","SUPER ADMIN");
-                $result = $this->db->where("store_id" , $store_id)->limit($limit , $skip)->order_by("display_name" , "ASC")->get("user")->result();
+                $result = $this->db->where("store_id" , $store_id)->limit($limit)->order_by("display_name" , "ASC")->get("user")->result();
             }else{
                 $this->db->where("role !=","SUPER ADMIN");
                 $this->db->where("role !=","ADMIN");
-                $result = $this->db->where("store_id" , $store_id)->limit($limit , $skip)->order_by("display_name" , "ASC")->get("user")->result();
+                $result = $this->db->where("store_id" , $store_id)->limit($limit)->order_by("display_name" , "ASC")->get("user")->result();
             }
         }
         
@@ -224,7 +233,17 @@ class Accounts_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
         $this->db->where("store_id" , $store_id);
 
-        $result = $this->db->where('role',"DRIVER")->get("user")->result();
+        $plan = $this->data['session_data']->title;
+
+        if($plan == "Basic"){
+            $limit = 1;
+        }else if($plan == "Standard"){
+            $limit = 10;
+        }else{
+            $limit = 0;
+        }
+
+        $result = $this->db->where('role',"DRIVER")->limit($limit)->get("user")->result();
 
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);
@@ -237,7 +256,18 @@ class Accounts_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
         $this->db->where("store_id" , $store_id);
 
-        $result = $this->db->where('role',"MECHANIC")->get("user")->result();
+        $plan = $this->data['session_data']->title;
+
+        if($plan == "Basic"){
+            $limit = 1;
+        }else if($plan == "Standard"){
+            $limit = 10;
+        }else{
+            $limit = 0;
+        }
+
+
+        $result = $this->db->where('role',"MECHANIC")->limit($limit)->get("user")->result();
 
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);
@@ -261,7 +291,17 @@ class Accounts_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
         $this->db->where("store_id" , $store_id);
 
-        $result = $this->db->where('role',"MANAGER")->get("user")->result();
+        $plan = $this->data['session_data']->title;
+
+        if($plan == "Basic"){
+            $limit = 1;
+        }else if($plan == "Standard"){
+            $limit = 10;
+        }else{
+            $limit = 0;
+        }
+
+        $result = $this->db->where('role',"MANAGER")->limit($limit)->get("user")->result();
 
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);
@@ -290,34 +330,49 @@ class Accounts_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
         $session_role = $this->session->userdata('user')->role;
         $role = $this->input->post("role");
+
+        $plan = $this->data['session_data']->title;
+
+        $count = $this->data['session_data']->no_accounts();
+        $accounts = $this->db->where("store_id",$this->data['session_data']->title)->get("accounts")->num_rows();
         $this->db->trans_start();
-
-        $this->db->insert("user" , [
-            "email_address"=> $this->input->post("email") ,
-            "username"     => $this->input->post("username") ,
-            "password"     => $this->input->post("password"),
-            "display_name" => $this->input->post("display_name") ,
-            "role"         => ($session_role == "ADMIN") ? "ADMIN" : $role,
-            "store_id"     => $store_id,
-            "image_path"   => "public/img/",
-            "image_name"   => "person-placeholder.jpg",
-            "status"       => 1,
-            "created"      => time()
-        ]);
-
-        $last_id = $this->db->insert_id();
-
-        if($session_role != "ADMIN" && $session_role != "MANAGER"){
-            foreach($this->input->post("checklist") as $key => $value){
-                $this->db->insert("user_checklist",[
-                    "user_id"      => $last_id,
-                    "checklist_id" => $value
-                ]);
-            }
+        if($plan == "Basic" && $accounts < ($count + 1)){
+            $valid = true;
+        }else if($plan == "Standard" && $accounts < ($count + 1)){
+            $valid = true;
+        }else if($accounts >= $count){
+            $valid = false;
+        }else{
+            $valid = true;
         }
-       
+        if($valid){            
+            $this->db->insert("user" , [
+                "email_address"=> $this->input->post("email") ,
+                "username"     => $this->input->post("username") ,
+                "password"     => $this->input->post("password"),
+                "display_name" => $this->input->post("display_name") ,
+                "role"         => ($session_role == "ADMIN") ? "ADMIN" : $role,
+                "store_id"     => $store_id,
+                "image_path"   => "public/img/",
+                "image_name"   => "person-placeholder.jpg",
+                "status"       => 1,
+                "created"      => time()
+            ]);
 
-        $this->do_upload($last_id);
+            $last_id = $this->db->insert_id();
+
+            if($session_role != "ADMIN" && $session_role != "MANAGER"){
+                foreach($this->input->post("checklist") as $key => $value){
+                    $this->db->insert("user_checklist",[
+                        "user_id"      => $last_id,
+                        "checklist_id" => $value
+                    ]);
+                }
+            }
+            $this->do_upload($last_id);
+        }else{
+            return $valid;
+        }
 
         $this->db->trans_complete();
 

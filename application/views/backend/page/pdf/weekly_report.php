@@ -77,7 +77,9 @@
 	            <td class="td_data"><span><?php echo $row->start_mileage?></span></td>
 	            <td class="td_data"><span><?php echo $row->end_mileage?></span></td>
 	            <td class="td_data" style="padding-top: 0!important;"><span>
-	                  <img src="<?php echo site_url("public/upload/signature/").$row->signature; ?>" class="img img-responsive thumbnail no-margin-bottom" style="height: 30px;">                          
+	            	 <?php if(isset($row->signature)){ ?>
+	                  <img src="<?php echo $row->signature; ?>" class="img img-responsive thumbnail no-margin-bottom" style="height: 30px;">  
+	                  <?php }?>                        
 	                </span>
 	            </td>
 	        </tr>

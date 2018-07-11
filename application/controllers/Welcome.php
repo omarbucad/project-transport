@@ -10,6 +10,7 @@ class Welcome extends MY_Controller {
     }
 
 	public function index(){
+		$this->data["user_plans"] = $this->db->get("plan")->result();
 		$this->load->view('frontend/index' , $this->data);
 	}
 

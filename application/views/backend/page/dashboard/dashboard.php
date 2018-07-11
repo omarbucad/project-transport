@@ -93,7 +93,8 @@
     <div class="side-body padding-top">
         <div class="container">
         	<h1 class="text-left">Welcome, <?php echo $this->data['session_data']->display_name;?>!</h1>
-        	<div class="card">
+        	<?php if(!$this->session->userdata("user")->expired): ?>
+        		<div class="card">
 	    		<div class="card-body">
 	    			<?php if((count($drivers) == 0) && (count($trucks == 0))) : ?>
 	    			<div class="container-fluid text-center margin-bottom">
@@ -421,10 +422,10 @@
 										   		<table class="table">
 										   			<thead>
 										   				<tr>
-										   					<th>Report No.</th>
-										   					<th>Type</th>
-										   					<th>Notes</th>
-										   					<th>Status</th>
+										   					<th width="25%">Report No.</th>
+										   					<th width="25%">Type</th>
+										   					<th width="25%">Notes</th>
+										   					<th width="25%">Status</th>
 										   				</tr>
 										   			</thead>
 										   			<tbody>
@@ -501,7 +502,24 @@
 						</div>
 	    			<?php endif; ?>
 	    		</div>
-	    	</div>
+	    		</div>
+	    	<?php else : ?>
+	    		<div class="card">
+	    			<a href="<?php echo ($this->session->userdata("user")->role == 'ADMIN') ? site_url('app/setup/account/pricing') : '#'; ?>" >
+	                    <div class="card summary-inline">
+	                        <div class="card-body">
+	                            <i class="icon fa fa-warning fa-3x text-danger" style="float: left"></i>
+	                            <div class="content" style="float:left;margin-left: 10px;">
+	                                <div class="title" style="font-size: 2em;">Plan Subscription Has Already Expired. </div>
+	                                <div class="sub-title text-danger"style="text-align:left;padding-top:3px;">*Your data will be available after subscription has been renewed.</div>
+	                                
+	                            </div>
+	                            <div class="clear-both"></div>
+	                        </div>
+	                    </div>
+	                </a>
+	    		</div>
+	    	<?php endif; ?>
         </div>
         <div class="text-center">
 			<p class="help-block">For help with setting up <?php echo $application_name; ?>, check out the <a href="#" class="link-style"> Getting Started Guide</a></p>

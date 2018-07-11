@@ -11,9 +11,9 @@
                         <span></span>
                     </div>
                     <div class="col-xs-4 col-lg-6 text-right no-margin-bottom">
-                        <?php if($plan_type == "Basic" && $total_accounts < 1) : ?>
+                        <?php if($plan_type == "Basic" && $total_accounts < ($this->session->userdata('user')->no_accounts + 1)) : ?>
                             <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
-                        <?php elseif($plan_type == "Standard" && $total_accounts < 5) : ?>
+                        <?php elseif($plan_type == "Standard" && $total_accounts < ($this->session->userdata('user')->no_accounts + 1)) : ?>
                             <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
                         <?php elseif(($plan_type == "Trial" || $plan_type == "PREMIUM")) : ?>
                             <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>

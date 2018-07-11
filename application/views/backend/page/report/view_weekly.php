@@ -128,7 +128,9 @@
                                   <select class="form-control" name="checklist_type" value="<?php echo set_value('checklist_type');?>">
                                     <option value="">- Select Checklist Type -</option>
                                     <?php foreach($checklist_type as $row) :?>
+                                      <?php if($row->checklist_name != "Trailer Checklist") : ?>
                                       <option value="<?php echo $row->checklist_id; ?>" <?php echo ($this->input->get("checklist_type") == $row->checklist_id) ? "selected" : "" ;?> ><?php echo $row->checklist_name; ?></option>
+                                      <?php endif; ?>
                                     <?php endforeach; ?>     
                                   </select>
                                 </div>
@@ -205,7 +207,9 @@
                         <td><span><?php echo $row->start_mileage?></span></td>
                         <td><span><?php echo $row->end_mileage?></span></td>
                         <td><span>
-                          <img src="<?php echo site_url("public/upload/signature/").$row->signature; ?>" class="img img-responsive thumbnail no-margin-bottom" style="height: 50px;">                          
+                          <?php if(isset($row->signature)) : ?>
+                          <img src="<?php echo $row->signature; ?>" style="height: 40px;">  
+                          <?php endif;?>                        
                         </span></td>
                       </tr>
                     <?php endforeach;?>

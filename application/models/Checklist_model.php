@@ -9,7 +9,7 @@ class Checklist_model extends CI_Model {
             TODO :: Searching logic here
         */
         if($checklist_name = $this->input->get("checklist_name")){
-            $this->db->where("checklist_name", $checklist_name);
+            $this->db->like("checklist_name", $checklist_name);
         }
         if($this->input->get("status") != ""){
             $this->db->where("status", $this->input->get("status"));
@@ -117,7 +117,7 @@ class Checklist_model extends CI_Model {
         }
     }
 
-    public function get_meech_and_driver_list(){
+    public function get_mech_and_driver_list(){
          $store_id = $this->data['session_data']->store_id;
          $this->db->select("user_id , display_name , image_path , image_name , role");
          $result = $this->db->where("store_id" , $store_id)->where_in("role" , ['mechanic' , 'driver'])->order_by("display_name" , "ASC")->get("user")->result();

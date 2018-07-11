@@ -4,12 +4,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Setup extends MY_Controller {
 
 	public function __construct() {
-       parent::__construct();
-       $this->load->model('checklist_model', 'checklist');
-       $this->load->model('profile_model', 'profile');
-       $this->load->model('accounts_model', 'account');
-       if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+	    parent::__construct();
+	    $this->load->model('checklist_model', 'checklist');
+	    $this->load->model('profile_model', 'profile');
+	    $this->load->model('accounts_model', 'account');
+	    if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					
+		}
+		if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+			redirect("app/dashboard");
 		}
 
     }
@@ -17,7 +20,7 @@ class Setup extends MY_Controller {
 	public function checklist(){
 		$this->data['page_name'] 		= "Checklist";
 		$this->data['result']    		=  $this->checklist->get_checklist_list();
-		$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
+		$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
 		$this->data['main_page'] 		= "backend/page/checklist/view";
 		$this->data['plan_type']		= $this->data['session_data']->title;
 
@@ -34,7 +37,7 @@ class Setup extends MY_Controller {
 			if ($this->form_validation->run() == FALSE){ 
 				$this->data['page_name'] = "Checklist Item";
 				$this->data['main_page'] = "backend/page/checklist/add_item";
-				$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
+				$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
 				$this->data['post']		 = $this->input->post();
 				$this->load->view('backend/master' , $this->data);
 			}else{
@@ -89,7 +92,7 @@ class Setup extends MY_Controller {
 			$this->data['page_name'] = "Checklist Information";
 			$this->data['main_page'] = "backend/page/checklist/edit";
 			$this->data['result'] = $this->checklist->get_checklist($checklist_id);
-			$this->data['accounts_list']    =  $this->checklist->get_meech_and_driver_list();
+			$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
 			$this->data['user_checklist'] = $this->checklist->get_userchecklist($checklist_id);
 			$this->data['checklist_items'] = $this->checklist->get_checklist_items($checklist_id);
 

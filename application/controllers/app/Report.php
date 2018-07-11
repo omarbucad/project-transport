@@ -9,11 +9,16 @@ class Report extends MY_Controller {
        $this->load->model('accounts_model', 'accounts');
        $this->load->model('checklist_model', 'checklist');
        $this->load->model('vehicle_model', 'vehicle');
+       if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+			redirect("app/dashboard");
+		}
     }
 	public function daily(){
 		$this->data['page_name'] = "Daily Report";
 		$this->data['main_page'] = "backend/page/report/view";
 		$this->data['plan_type'] = $this->data['session_data']->title;
+		
+		$role = $this->data['session_data']->role;
 
 		if($this->input->get("export")){
 			$this->data['result'] = $this->reports->get_reports_list();

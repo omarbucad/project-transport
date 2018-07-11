@@ -12,6 +12,7 @@ class Dashboard extends MY_Controller {
     }
 
 	public function index(){
+		//1533440433
 
 		$this->data['page_name'] = "Dashboard";
 		$this->data['main_page'] = "backend/page/dashboard/dashboard";

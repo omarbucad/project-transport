@@ -188,8 +188,8 @@ if ( ! function_exists('convert_timezone'))
         }
 
         if($with_timezone){
-            //$timezone = get_timezone();
-            $timezone = "Asia/Kuala_Lumpur";
+            $timezone = get_timezone();
+            //$timezone = "Asia/Kuala_Lumpur";
 
             if($with_hours){
                 $date_format = $custom_format_date_with_hour;
@@ -373,3 +373,43 @@ if ( ! function_exists('sao_side'))
         }
     }
 }
+
+if ( ! function_exists('get_timezone'))
+{
+    function get_timezone()
+    {
+        $CI =& get_instance();
+
+        if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+          $ip=$_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+          $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        else{
+          $ip=$_SERVER['REMOTE_ADDR'];
+        }
+
+        $check = $CI->db->where('ip_address' , $ip)->get('timezone')->row();
+
+        if($check){
+            return $check->timezone;
+        }else{
+            //$data = file_get_contents("http://freegeoip.net/json/".$ip);
+            //$data = file_get_contents("https://ipapi.co/210.4.107.115/json/");
+            $data = file_get_contents("https://api.ipdata.co/210.4.107.115?api-key=83d9b5dd65c9df1ab11c6bbffc4973a213440ee52d377547289e516a");
+            //$data = file_get_contents("https://api.ipdata.co/210.4.107.115?api-key=83d9b5dd65c9df1ab11c6bbffc4973a213440ee52d377547289e516a");
+            //$data = file_get_contents("http://api.ipstack.com/134.201.250.155?access_key=7caab6737ec2f78861757d3b25cf6309");
+            $data = json_decode($data);
+
+            $timezone =  ($data->time_zone->name) ? $data->time_zone->name : "Asia/Manila";
+                
+            $arr = array("ip_address" => $ip , "timezone" => $timezone);
+
+            $CI->db->insert('timezone' , $arr);
+
+            return $timezone;
+        }
+    }   
+}
+

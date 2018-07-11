@@ -7,6 +7,9 @@ class Accounts extends MY_Controller {
        parent::__construct();
        $this->load->model('accounts_model', 'accounts');
        $this->load->model('checklist_model', 'checklist');
+       if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+			redirect("app/dashboard");
+		}
 
     }
 	public function index(){

@@ -108,7 +108,9 @@
                                     <label for="s_roles">Status</label>
                                     <select class="form-control" name="status" value="<?php echo set_value('status');?>">
                                         <option value="">- Select Status -</option>
+                                        <?php if($this->session->userdata("user")->role != "MECHANIC") : ?>
                                         <option value="0" <?php echo ($this->input->get("status") == "0") ? "selected" : "" ;?> >No Defect</option>
+                                        <?php endif; ?>
                                         <option value="1" <?php echo ($this->input->get("status") == "1") ? "selected" : "" ;?>>Open</option>
                                         <option value="2" <?php echo ($this->input->get("status") == "2") ? "selected" : "" ;?>>On Maintenance</option>
                                         <option value="3" <?php echo ($this->input->get("status") == "3") ? "selected" : "" ;?>>Fixed</option>

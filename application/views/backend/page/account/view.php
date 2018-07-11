@@ -191,7 +191,13 @@
                     <div class="trial-time">
                         <?php if($result->title == 'Trial') : ?>
                             <?php if(!($result->trial_left < 0)) : ?>
-                                <span>Trial Expiration: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?> day(s) left</h4></span>
+                                <span>Trial Expiration: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?></h4></span>
+                            <?php else : ?>
+                                <span><h4 class='help-block text-danger'>Trial Already Expired</h4></span>
+                            <?php endif;?>
+                        <?php else: ?>
+                            <?php if(!($result->trial_left < 0)) : ?>
+                                <span>Plan Expires in: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?></h4></span>
                             <?php else : ?>
                                 <span><h4 class='help-block text-danger'>Trial Already Expired</h4></span>
                             <?php endif;?>
@@ -267,7 +273,7 @@
                             <div class="pricing-table dark-blue" id="div-standard">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
-                                        <div class="pricing">$20</div>
+                                        <div class="pricing"><?php echo "$".$user_plans[1]->plan_price; ?></div>
                                         <div class="pricing-type">per month</div>
                                     </div>
                                 </div>
@@ -290,7 +296,7 @@
                             <div class="pricing-table dark-blue" id="div-premium">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
-                                        <div class="pricing">$50</div>
+                                        <div class="pricing"><?php echo "$".$user_plans[2]->plan_price; ?></div>
                                         <div class="pricing-type">per month</div>
                                     </div>
                                 </div>
@@ -346,8 +352,11 @@
                         <input type="hidden" name="last_name" value="Customer's Last Name" />
                         <input type="hidden" name="payer_email" value="customer@example.com" />
                         <input type="hidden" name="item_number" value="123456" / >
-                        
-                        <a href="javascript:void(0);" class="btn btn-success btn-lg">Switch Plan</a>
+                        <?php if(!$this->session->userdata("user")->expired): ?>
+                            <a href="javascript:void(0);" class="btn btn-success btn-lg">Switch Plan</a>
+                        <?php else: ?>
+                            <a href="javascript:void(0);" class="btn btn-success btn-lg">Buy Now</a>
+                        <?php endif; ?>
                     </form>
                 </div>
             </div>

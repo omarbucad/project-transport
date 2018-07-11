@@ -142,7 +142,7 @@ class Profile_model extends CI_Model {
         $minutes = floor($timeleft / 60);
         $timeleft %= 60;
 
-        $left =  "$days days and $hours hours and $minutes minutes and $timeleft seconds";
+        $left =  "$days days $hours hours $minutes minutes";
         $result->trial_left = $left;
 
         return $result;

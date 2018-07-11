@@ -4,6 +4,7 @@ class Vehicle_model extends CI_Model {
 
     public function get_vehicle_list(){
         $store_id = $this->data['session_data']->store_id;
+        $plan = $this->data['session_data']->title;
 
         /*
             TODO :: Searching logic here
@@ -25,7 +26,16 @@ class Vehicle_model extends CI_Model {
 
         $this->db->where("deleted IS NULL");
 
-        $result = $this->db->where("store_id" , $store_id)->order_by("vehicle_registration_number" , "ASC")->get("vehicle")->result();
+
+        if($plan == "Basic"){
+            $limit = 1;
+        }else if($plan == "Standard"){
+            $limit = 10;
+        }else{
+            $limit = 0;
+        }
+
+        $result = $this->db->where("store_id" , $store_id)->order_by("vehicle_registration_number" , "ASC")->limit($limit)->get("vehicle")->result();
 
         foreach($result as $key => $row){
             $result[$key]->status = convert_status($row->status);
@@ -58,17 +68,34 @@ class Vehicle_model extends CI_Model {
     public function add_truck(){
         $store_id = $this->data['session_data']->store_id;
 
-        $this->db->insert("vehicle" , [
-            "vehicle_registration_number"   => $this->input->post("registration_number"),
-            "tyre_pressure"                 => $this->input->post("tyre_pressure"),
-            "thread_depth"                  => $this->input->post("thread_depth"),
-            "status"                        => 1 ,
-            "store_id"                      => $store_id ,
-            "description"                   => $this->input->post("description"),
-            "created"                       => time()
-        ]);
+        $plan = $this->data['session_data']->title;
+        $count = $this->data['session_data']->no_vehicle();
+        $vehicle = $this->db->where("store_id",$this->data['session_data']->title)->get("vehicle")->num_rows();
 
-        return $this->db->insert_id();
+        if($plan == "Basic" && $vehicle < $count){
+            $valid = true;
+        }else if($plan == "Standard" && $vehicle < $count){
+            $valid = true;
+        }else if($vehicle >= $count){
+            $valid = false;
+        }else{
+            $valid = true;
+        }
+        if($valid){
+            $this->db->insert("vehicle" , [
+                "vehicle_registration_number"   => $this->input->post("registration_number"),
+                "tyre_pressure"                 => $this->input->post("tyre_pressure"),
+                "thread_depth"                  => $this->input->post("thread_depth"),
+                "status"                        => 1 ,
+                "store_id"                      => $store_id ,
+                "description"                   => $this->input->post("description"),
+                "created"                       => time()
+            ]);
+
+            return $this->db->insert_id();
+        }else{
+            return $valid;
+        }
     }
 
     public function edit_truck($vehicle_id){
@@ -114,7 +141,8 @@ class Vehicle_model extends CI_Model {
 
     public function get_trailer_list(){
         $store_id = $this->data['session_data']->store_id;
-        $this->db->where("store_id" , $store_id);
+
+        $plan = $this->data['session_data']->title;
 
         /*
             TODO :: Searching logic here
@@ -137,7 +165,15 @@ class Vehicle_model extends CI_Model {
 
         $this->db->where("deleted IS NULL");
 
-        $result = $this->db->order_by("trailer_number" , "ASC")->get("trailer")->result();
+        if($plan == "Basic"){
+            $limit = 1;
+        }else if($plan == "Standard"){
+            $limit = 10;
+        }else{
+            $limit = 0;
+        }
+
+        $result = $this->db->where("store_id" , $store_id)->order_by("trailer_number" , "ASC")->limit($limit)->get("trailer")->result();
 
         foreach($result as $key => $row){
             $result[$key]->status = convert_status($row->status);
@@ -157,15 +193,33 @@ class Vehicle_model extends CI_Model {
     public function add_trailer(){
         $store_id = $this->data['session_data']->store_id;
 
-        $this->db->insert("trailer" , [
-            "trailer_number"                => $this->input->post("trailer_number"),
-            "status"                        => 1 ,
-            "store_id"                      => $store_id ,
-            "description"                   => $this->input->post("description"),
-            "created"                       => time()
-        ]);
+        $plan = $this->data['session_data']->title;
+        $count = $this->data['session_data']->no_vehicle();
+        $trailer = $this->db->where("store_id",$this->data['session_data']->title)->get("trailer")->num_rows();
 
-        return $this->db->insert_id();
+        if($plan == "Basic" && $trailer < $count){
+            $valid = true;
+        }else if($plan == "Standard" && $trailer < $count){
+            $valid = true;
+        }else if($trailer >= $count){
+            $valid = false;
+        }else{
+            $valid = true;
+        }
+
+        if($valid){
+             $this->db->insert("trailer" , [
+                "trailer_number"                => $this->input->post("trailer_number"),
+                "status"                        => 1 ,
+                "store_id"                      => $store_id ,
+                "description"                   => $this->input->post("description"),
+                "created"                       => time()
+            ]);
+
+            return $this->db->insert_id();
+        }else{
+            return $valid;
+        }
     }
 
     public function edit_trailer($trailer_id){

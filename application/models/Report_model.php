@@ -4,6 +4,8 @@ class Report_model extends CI_Model {
 
     public function get_reports_list(){
 
+        $role = $this->data['session_data']->role;
+
         if($report_id = $this->input->get("report_id")){
 
             $report_id = $this->hash->decrypt($report_id);
@@ -45,6 +47,9 @@ class Report_model extends CI_Model {
             $this->db->where("r.created <= " , $end);
         }   
         // End of Search
+        if($role == 'MECHANIC'){
+            $this->db->where("rs.status !=", 0);
+        }
 
         $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
 
@@ -197,11 +202,12 @@ class Report_model extends CI_Model {
         $checklist = array();        
 
         foreach($result['header'] as $key => $row){
-            if($result['header'][$key]->status == 0){
-                $result['header'][$key]->status_created = 0;
-            }else{
+            // if($result['header'][$key]->status == 0){
+            //     $result['header'][$key]->status_created = 0;
+            // }else{
                 $result['header'][$key]->status_created = convert_timezone($row->status_created,false);
-            }
+            //}
+            $result['header'][$key]->signature = ($row->signature == '') ? '' : $this->config->site_url("public/upload/signature/".$row->signature);
 
             $result['header'][$key]->address = $row->street1.",";
             $result['header'][$key]->address .= ($row->street2) ? $row->street2."," : "";
@@ -254,6 +260,7 @@ class Report_model extends CI_Model {
     }
 
     public function get_today_reports(){
+        $role = $this->session->userdata("user")->role;
 
         $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
 
@@ -264,7 +271,9 @@ class Report_model extends CI_Model {
 
         $this->db->where("r.created >=", strtotime("today midnight"));
         $this->db->where("r.created <=", strtotime("tomorrow midnight -1 second"));
-
+        if($role == "MECHANIC"){
+            $this->db->where("rs.status !=",0);
+        }
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
         foreach($result as $key => $row){

@@ -34,7 +34,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?php echo site_url("welcome"); ?>">
-                    <div class="icon fa fa-paper-plane"></div>
+                    <div class="icon"><img src="<?php echo site_url('public/img/favicon.png') ?>" height="30px" width="auto"></div>
                     <div class="title"><?php echo $application_name; ?></div>
                 </a>
             </div>
@@ -52,9 +52,9 @@
 
     <div class="jumbotron app-header">
         <div class="container">
-            <h2 class="text-center"><i class="app-logo fa fa-connectdevelop fa-5x color-white"></i><div class="color-white"><?php echo $application_name; ?></div></h2>
-            <p class="text-center color-white app-description">This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-            <p class="text-center"><a class="btn btn-primary btn-lg app-btn text-uppercase" href="<?php echo site_url("welcome/register"); ?>" role="button">TRY <?php echo $application_name; ?> FOR FREE</a></p>
+            <h2 class="text-center"><img class="app-logo" src="<?php echo site_url('public/img/favicon.png') ?>"><div class="color-white"><?php echo $application_name; ?></div></h2>
+            <p class="text-center color-white app-description">Complete your defect checklist in minutes.</p>
+            <p class="text-center"><a class="btn btn-primary btn-lg app-btn text-uppercase" href="<?php echo site_url("welcome/register"); ?>" role="button">TRY PREMIUM FOR FREE</a></p>
         </div>
     </div>
     <div class="container-fluid app-content-a">
@@ -62,29 +62,26 @@
             <div class="row text-center">
                 <div class="col-md-4 col-sm-6">
                     <span class="fa-stack fa-lg fa-5x">
-                      <i class="fa fa-circle-thin fa-stack-2x"></i>
-                      <i class="fa fa-twitter fa-stack-1x"></i>
+                      <i class="fa fa-bolt fa-stack-1x"></i>
                     </span>
-                    <h2>Heading</h2>
-                    <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                    <h2>Automated</h2>
+                    <p>Increase efficiency in checklist report  management and vehicle maintenance.</p>
                 </div>
                 <!-- /.col-lg-4 -->
                 <div class="col-md-4 col-sm-6">
                     <span class="fa-stack fa-lg fa-5x">
-                      <i class="fa fa-circle-thin fa-stack-2x"></i>
-                      <i class="fa fa-inbox fa-stack-1x"></i>
+                      <i class="fa fa-cogs fa-stack-1x"></i>
                     </span>
-                    <h2>Heading</h2>
-                    <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                    <h2>Customizable</h2>
+                    <p>Start with the default checklist or create your own checklist</p>
                 </div>
                 <!-- /.col-lg-4 -->
                 <div class="col-md-4 col-sm-6">
                     <span class="fa-stack fa-lg fa-5x">
-                      <i class="fa fa-circle-thin fa-stack-2x"></i>
-                      <i class="fa fa-comments-o fa-stack-1x"></i>
+                      <i class="fa fa-mobile fa-stack-1x"></i>
                     </span>
-                    <h2>Heading</h2>
-                    <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                    <h2>Mobile App</h2>
+                    <p>Access your data on the go.</p>
                 </div>
                 <!-- /.col-lg-4 -->
             </div>
@@ -96,8 +93,8 @@
                 <div class="col-md-7 col-sm-6">
                 </div>
                 <div class="col-md-5 col-sm-6 text-right color-white">
-                    <h2 class="featurette-heading">First featurette heading. It'll blow your mind.</h2>
-                    <p class="lead">This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                    <h2 class="featurette-heading">Manage your reports anywhere you go.</h2>
+                    <p class="lead">Transport Checklist is a robust defect monitoring system with a fully traceable route from defect to report to repair available in your desktop and smartphone.</p>
                 </div>
             </div>
         </div>
@@ -107,7 +104,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="text-center app-content-header">Pricing</h2>
-                    <p class="text-center app-content-description">This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                    <p class="text-center app-content-description"></p>
                 </div>
             </div>
             <div class="row">
@@ -122,13 +119,12 @@
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4>Basic Plan</h4>
+                                    <h4><?php echo $user_plans[0]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li>1 Driver</li>
-                                        <li>1 Vehicle</li>
-                                        <li>1 Trailer</li>
-                                        <li>50 Reports / Month</li>
-                                        <li>Reports Viewable 1 Week Before Month Ends</li>
+                                        <li><?php echo $user_plans[0]->no_accounts; ?> Account</li>
+                                        <li><?php echo $user_plans[0]->no_vehicle; ?> Vehicle/Trailer</li>
+                                        <li><?php echo $user_plans[0]->no_reports; ?> Reports / Month</li>
+                                        <li><?php echo $user_plans[0]->description; ?></li>
                                         <li>No Export</li>
                                     </ul>
                                 </div>
@@ -138,26 +134,25 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <div class="pricing-table green">
+                            <div class="pricing-table dark-blue">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
-                                        <div class="pricing">$20</div>
+                                        <div class="pricing"><?php echo "$".$user_plans[1]->plan_price; ?></div>
                                         <div class="pricing-type">per month</div>
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4>Standard Plan</h4>
+                                    <h4><?php echo $user_plans[1]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li>5 Drivers</li>
-                                        <li>10 Vehicles</li>
-                                        <li>10 Trailers</li>
-                                        <li>1000 Reports / Month</li>
-                                        <li>Data Stored for 6 Months</li>
+                                        <li><?php echo $user_plans[1]->no_accounts; ?> Accounts</li>
+                                        <li><?php echo $user_plans[1]->no_vehicle; ?> Vehicles & Trailers</li>
+                                        <li><?php echo $user_plans[1]->no_reports; ?> Reports / Month</li>
+                                        <li><?php echo $user_plans[1]->description; ?></li>
                                         <li>With Export and Reporting</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
-                                    <button type="button" class="btn btn-success">Buy Now</button>
+                                    <button type="button" class="btn btn-primary">Buy Now</button>
                                 </div>
                             </div>
                         </div>
@@ -165,19 +160,18 @@
                             <div class="pricing-table  dark-blue">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
-                                        <div class="pricing">$50</div>
+                                        <div class="pricing"><?php echo "$".$user_plans[2]->plan_price; ?></div>
                                         <div class="pricing-type">per month</div>
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4>Premium Plan</h4>
+                                    <h4><?php echo $user_plans[2]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li>Unlimited Drivers</li>
-                                        <li>Unlimited Vehicles</li>
-                                        <li>Unlimited Trailers</li>
+                                        <li>Unlimited Accounts</li>
+                                        <li>Unlimited Vehicles & Trailers</li>
                                         <li>Unlimited Reports</li>
-                                        <li>Data Stored Forever</li>
-                                        <li>With Free Trial</li>
+                                        <li><?php echo $user_plans[2]->description; ?></li>
+                                        <li>&nbsp;</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
@@ -194,7 +188,7 @@
         <div class="container">
             <div class="row featurette">
                 <div class="col-md-6"><h2 class="color-white contact-us-header">Contact Us</h2>
-                <p class="color-white contact-us-description">This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p></div>
+                <p class="color-white contact-us-description">Trackerteer is here to provide you with more information and answer any questions. Please don't hesitate to get in touch with us.</p></div>
                 <div class="col-md-6">
                     <form>
 
