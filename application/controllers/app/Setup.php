@@ -11,13 +11,14 @@ class Setup extends MY_Controller {
 	    if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					
 		}
-		if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
-			redirect("app/dashboard");
-		}
 
     }
     // CHECKLIST SECTION
 	public function checklist(){
+
+		if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+			redirect("app/dashboard");
+		}
 		$this->data['page_name'] 		= "Checklist";
 		$this->data['result']    		=  $this->checklist->get_checklist_list();
 		$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
@@ -155,6 +156,10 @@ class Setup extends MY_Controller {
 
 	// PROFILE SECTION
 	public function profile(){
+		
+		if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+			redirect("app/dashboard");
+		}
 		if($this->session->userdata('user')->role != 'ADMIN'){
 			redirect('app/dashboard');
 		}
