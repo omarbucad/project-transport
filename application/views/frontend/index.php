@@ -182,6 +182,11 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <p class="text-center app-content-description">Plan offers doesn't fit your needs? Click <a href="#" class="text-danger">here</a> to request a Quote.</p>
+                </div>
+            </div>
         </div>
     </div>
     <div class="container-fluid app-content-b contact-us">

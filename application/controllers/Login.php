@@ -16,19 +16,19 @@ class Login extends MY_Controller {
 		if($data = $this->register->signin($this->input->post())){
 			$this->session->set_userdata("user" , $data);
 			$role = $this->session->userdata('user')->role;
-			$ex = convert_timezone($this->session->userdata("user")->plan_expiration, true,true);
-		    $exp = new DateTime($ex);
-		    $expiration = $exp->format('M d Y H:i:s');
-		    $today = convert_timezone(strtotime(date("Y-m-d H:i:s")) , true ,true);
-		    $timezone = get_timezone();
-		    $dt = new DateTime($today, new DateTimeZone( $timezone ));
-		    $now = $dt->format('M d Y H:i:s');
+			// $ex = convert_timezone($this->session->userdata("user")->plan_expiration, true,true);
+		 //    $exp = new DateTime($ex);
+		 //    $expiration = $exp->format('M d Y H:i:s');
+		 //    $today = convert_timezone(strtotime(date("Y-m-d H:i:s")) , true ,true);
+		 //    $timezone = get_timezone();
+		 //    $dt = new DateTime($today, new DateTimeZone( $timezone ));
+		 //    $now = $dt->format('M d Y H:i:s');
 
 		    if($role != "SUPER ADMIN"){
-		    	if(!$now < $expiration){
-			    	$expired = true;
+		    	if($this->session->userdata("user")->plan_expiration > strtotime("now")){
+			    	$expired = false;
 				}else{
-					$expired = false;
+					$expired = true;
 				}
 				$this->session->userdata('user')->expired = $expired;
 		    }			

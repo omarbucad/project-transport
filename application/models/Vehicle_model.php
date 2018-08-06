@@ -76,10 +76,10 @@ class Vehicle_model extends CI_Model {
             $valid = true;
         }else if($plan == "Standard" && $vehicle < $count){
             $valid = true;
+        }else if(($plan == "Trial" || $plan == "Premium") && $count == 0){
+            $valid = true;
         }else if($vehicle >= $count){
             $valid = false;
-        }else{
-            $valid = true;
         }
         if($valid){
             $this->db->insert("vehicle" , [
@@ -201,10 +201,10 @@ class Vehicle_model extends CI_Model {
             $valid = true;
         }else if($plan == "Standard" && $trailer < $count){
             $valid = true;
-        }else if($trailer >= $count){
-            $valid = false;
-        }else{
+        }else if(($plan == "Trial" || $plan == "Premium") && $count == 0){
             $valid = true;
+        }else if($vehicle >= $count){
+            $valid = false;
         }
 
         if($valid){

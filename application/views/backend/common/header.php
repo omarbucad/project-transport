@@ -26,7 +26,7 @@
                             <h4 class="username"><?php echo $session_data->display_name; ?></h4>
                             <p><?php echo $session_data->email_address; ?></p>
                             <div class="btn-group margin-bottom-2x" role="group">
-                                <?php if(isset($session_data->expired) && !$session_data->expired) : ?>
+                                <?php if(isset($session_data->expired) && $session_data->expired == false) : ?>
                                 <?php if($session_data->role == "MANAGER" || $session_data->role == "MECHANIC"): ?>
                                     <a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($session_data->user_id); ?>" class="btn btn-default"><i class="fa fa-user"></i> Profile</a>
                                 <?php elseif($session_data->role == "ADMIN") : ?>

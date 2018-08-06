@@ -332,18 +332,17 @@ class Accounts_model extends CI_Model {
         $role = $this->input->post("role");
 
         $plan = $this->data['session_data']->title;
-
-        $count = $this->data['session_data']->no_accounts();
-        $accounts = $this->db->where("store_id",$this->data['session_data']->title)->get("accounts")->num_rows();
+        $count = $this->data['session_data']->no_accounts;
+        $accounts = $this->db->where("store_id",$store_id)->get("user")->num_rows();
         $this->db->trans_start();
         if($plan == "Basic" && $accounts < ($count + 1)){
             $valid = true;
         }else if($plan == "Standard" && $accounts < ($count + 1)){
             $valid = true;
+        }else if(($plan == "Trial" || $plan == "Premium") && $count == 0){
+            $valid = true;
         }else if($accounts >= $count){
             $valid = false;
-        }else{
-            $valid = true;
         }
         if($valid){            
             $this->db->insert("user" , [

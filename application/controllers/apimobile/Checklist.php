@@ -62,25 +62,27 @@ class Checklist extends CI_Controller {
 	}
 
 	public function save_checklist(){
-		if($this->post){
-			$data = $this->post;
+		//$data = (object)$this->input->post();
+		$data = (object)$this->input->post();
+		$user = json_decode($data->user);
+		if($data){
 			$remind_in = NULL;
 			$this->db->trans_start();
 
 			//Create report
-			if($data->user->role == "MECHANIC"){
+			if($user->role == "MECHANIC"){
 				$checklist_data = $this->db->select("reminder_every")->where("checklist_id" , $data->checklist_type)->get("checklist")->row();
 				$remind_in = remind_in($checklist_data->reminder_every);
 
 				//then update all the report of the vehicle into remind done
 
-				$this->db->where("report_by" , $data->user->user_id)->where("vehicle_registration_number" , $data->vehicle_registration_number)->update("report" , [
+				$this->db->where("report_by" , $user->user_id)->where("vehicle_registration_number" , $data->vehicle_registration_number)->update("report" , [
 					"remind_done" => true
 				]);
 			}
 
 			$this->db->insert("report" , [
-				"report_by"						=> $data->user->user_id ,
+				"report_by"						=> $user->user_id ,
 				"vehicle_registration_number"	=> (isset($data->vehicle_registration_number)) ? $data->vehicle_registration_number : "" ,
 				"trailer_number"				=> (isset($data->trailer_number)) ? $data->trailer_number : "" ,
 				"checklist_id"					=> $data->checklist_type ,
@@ -101,7 +103,7 @@ class Checklist extends CI_Controller {
 				"report_id"			=> $report_id ,
 				"status"			=> ($this->isDefect()) ? 1 : 0 ,
 				"notes"				=> "Initial" ,
-				"user_id"			=> $data->user->user_id ,
+				"user_id"			=> $user->user_id ,
 				"created"			=> time(),
 				"longitude"			=> $data->longitude,
 				"latitude"			=> $data->latitude,

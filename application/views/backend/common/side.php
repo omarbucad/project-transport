@@ -40,7 +40,7 @@
                 <?php endif; ?>
                 <?php if($session_data->role != "SUPER ADMIN") : ?>
 
-                    <?php if(!$session_data->expired) : ?>
+                    <?php if($session_data->expired == false) : ?>
                         <?php if($session_data->role != "MECHANIC") : ?>
                         <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
                             <a data-toggle="collapse" href="#dropdown-element-vechile">
@@ -58,7 +58,7 @@
                         </li>
                         <?php endif; ?>
                     <?php endif; ?>
-                <?php if(!$session_data->expired) : ?>
+                <?php if($session_data->expired == false) : ?>
                     <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'report') ? "active" : "" ;?>">
                         <a data-toggle="collapse" href="#dropdown-element-report" id="reports-menu-header">
                             <span class="icon fa fa-book"></span><span class="title">Reports</span>
@@ -91,18 +91,18 @@
                     <div id="dropdown-element-setup" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
-                                <?php if(!$session_data->expired) : ?>
+                                <?php if($session_data->expired == false) : ?>
                                     <?php if($this->session->userdata('user')->role == 'MECHANIC' || $this->session->userdata('user')->role == 'MANAGER') :?>
                                     <li><a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($session_data->user_id); ?>">Profile</a></li>
                                     <?php endif; ?>
                                 <?php endif; ?>
                                 <?php if($this->session->userdata('user')->role == 'ADMIN') : ?>
-                                    <?php if(!$session_data->expired) : ?>
+                                    <?php if($session_data->expired  == false) : ?>
                                         <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
                                     <?php endif; ?>
                                     <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
                                 <?php endif;?>
-                                <?php if(!$session_data->expired) : ?>
+                                <?php if($session_data->expired == false) : ?>
                                     <?php if($session_data->role != "MECHANIC") : ?>
                                     <li><a href="<?php echo site_url("app/setup/checklist"); ?>">Checklist</a></li>
                                     <?php endif; ?>

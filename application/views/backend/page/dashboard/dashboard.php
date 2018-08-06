@@ -93,7 +93,7 @@
     <div class="side-body padding-top">
         <div class="container">
         	<h1 class="text-left">Welcome, <?php echo $this->data['session_data']->display_name;?>!</h1>
-        	<?php if(!$this->session->userdata("user")->expired): ?>
+        	<?php if($this->session->userdata("user")->expired  == false): ?>
         		<div class="card">
 	    		<div class="card-body">
 	    			<?php if((count($drivers) == 0) && (count($trucks == 0))) : ?>
