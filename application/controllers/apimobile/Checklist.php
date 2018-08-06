@@ -112,8 +112,10 @@ class Checklist extends CI_Controller {
 			$status_id = $this->db->insert_id();
 
 			//save checklist items
+			$checklist = json_decode($data->checklist);
+			print_r_die($checklist);
+			foreach($checklist as $item){
 
-			foreach($data->checklist as $item){
 				$item_batch = array(
 					"report_id"				=> $report_id ,
 					"checklist_item_id"		=> $item->checklist_id ,
@@ -124,8 +126,10 @@ class Checklist extends CI_Controller {
 				$this->db->insert("report_checklist" , $item_batch);
 				$report_checklist_id = $this->db->insert_id();
 
-				if($item->images){
-					$this->save_image($report_id , $report_checklist_id , $item->images);
+				if(!empty($item->images)){
+					foreach($item->images as $key){
+						$this->save_image($report_id , $report_checklist_id , $key);
+					}
 				}
 			}
 
