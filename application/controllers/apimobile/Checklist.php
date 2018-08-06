@@ -113,7 +113,6 @@ class Checklist extends CI_Controller {
 
 			//save checklist items
 			$checklist = json_decode($data->checklist);
-			print_r_die($checklist);
 			foreach($checklist as $item){
 
 				$item_batch = array(
@@ -126,10 +125,9 @@ class Checklist extends CI_Controller {
 				$this->db->insert("report_checklist" , $item_batch);
 				$report_checklist_id = $this->db->insert_id();
 
-				if(!empty($item->images)){
-					foreach($item->images as $key){
-						$this->save_image($report_id , $report_checklist_id , $key);
-					}
+				if($item->images){
+					
+						$this->save_image($report_id , $report_checklist_id , $item_images);
 				}
 			}
 
@@ -177,10 +175,12 @@ class Checklist extends CI_Controller {
 	}
 
 	private function isDefect(){
+		$data = (object)$this->input->post();
+		$checklist = json_decode($data->checklist);
 		$_isDefect = false;
 
-		foreach($this->post->checklist as $row){
-			if($row->checkbox){
+		foreach($checklist as $row){
+			if($row->checkbox == 1){
 				$_isDefect = true;
 			}
 		}
