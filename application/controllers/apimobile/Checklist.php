@@ -127,7 +127,7 @@ class Checklist extends CI_Controller {
 				$this->db->insert("report_checklist" , $item_batch);
 				$report_checklist_id = $this->db->insert_id();
 
-				if($item->images){					
+				if(!empty($item->images)){
 						$this->save_image($report_id , $report_checklist_id , $item->images);
 				}
 			}
