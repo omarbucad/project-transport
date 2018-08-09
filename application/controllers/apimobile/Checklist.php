@@ -207,8 +207,8 @@ class Checklist extends CI_Controller {
 
         $path = $folder.'/'.$name;
 
-        $encoded = $image;
-	    $data = base64_decode($encoded);
+        $image;
+	    $data = base64_decode($image);
 
 
 	    //make sure you are the owner and have the rights to write content
@@ -240,8 +240,7 @@ class Checklist extends CI_Controller {
 
 	        $path = $folder.'/'.$name;
 
-	        $encoded = $img;
-		    $data = base64_decode($encoded);
+		    $data = base64_decode($img);
 
 		    //make sure you are the owner and have the rights to write content
 		    file_put_contents($path, $data);
