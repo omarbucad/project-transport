@@ -192,7 +192,6 @@ class Checklist extends CI_Controller {
 	private function save_signature($report_number){
 		$data = (object)$this->input->post();
 		$image = $data->signature;
-
 		$name = $report_number.'_'.time().'.PNG';
         $year = date("Y");
         $month = date("m");
@@ -209,15 +208,7 @@ class Checklist extends CI_Controller {
         $path = $folder.'/'.$name;
 
         $encoded = $image;
-
-	    //explode at ',' - the last part should be the encoded image now
-	    $exp = explode(',', $encoded);
-
-	    //we just get the last element with array_pop
-	    $base64 = array_pop($exp);
-
-	    //decode the image and finally save it
-	    $data = base64_decode($base64);
+	    $data = base64_decode($encoded);
 
 
 	    //make sure you are the owner and have the rights to write content
@@ -250,15 +241,7 @@ class Checklist extends CI_Controller {
 	        $path = $folder.'/'.$name;
 
 	        $encoded = $img;
-
-		    //explode at ',' - the last part should be the encoded image now
-		    $exp = explode(',', $encoded);
-
-		    //we just get the last element with array_pop
-		    $base64 = array_pop($exp);		    
-
-		    //decode the image and finally save it
-		    $data = base64_decode($base64);
+		    $data = base64_decode($encoded);
 
 		    //make sure you are the owner and have the rights to write content
 		    file_put_contents($path, $data);
@@ -271,7 +254,6 @@ class Checklist extends CI_Controller {
 		    ]);
 
 		    $ctr++;
-		}		
-
+		}	
 	}
 }
