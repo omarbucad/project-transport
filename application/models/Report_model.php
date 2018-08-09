@@ -120,6 +120,7 @@ class Report_model extends CI_Model {
             foreach($result->report_checklist as $key => $row){
                 foreach($result->report_images as $k => $r){
                     if($row->id == $r->report_checklist_id){
+
                         $result->report_checklist[$key]->fullpath[] = ($r->image_name == '') ? '' : $this->config->site_url("public/upload/report/".$r->image_path.$r->image_name);
                     }
                 }

@@ -81,11 +81,12 @@ class Checklist extends CI_Controller {
 				]);
 			}
 
+
 			$this->db->insert("report" , [
 				"report_by"						=> $user->user_id ,
 				"vehicle_registration_number"	=> (isset($data->vehicle_registration_number)) ? $data->vehicle_registration_number : "" ,
 				"trailer_number"				=> (isset($data->trailer_number)) ? $data->trailer_number : "" ,
-				"checklist_id"					=> $data->checklist_type ,
+				"checklist_id"					=> $data->checklist_id,
 				"start_mileage"					=> $data->start_mileage ,
 				"end_mileage"					=> $data->end_mileage ,
 				"report_notes"					=> (isset($data->note)) ? $data->note : "" ,
@@ -113,6 +114,7 @@ class Checklist extends CI_Controller {
 
 			//save checklist items
 			$checklist = json_decode($data->checklist);
+
 			foreach($checklist as $item){
 
 				$item_batch = array(
@@ -125,9 +127,8 @@ class Checklist extends CI_Controller {
 				$this->db->insert("report_checklist" , $item_batch);
 				$report_checklist_id = $this->db->insert_id();
 
-				if($item->images){
-					
-						$this->save_image($report_id , $report_checklist_id , $item_images);
+				if($item->images){					
+						$this->save_image($report_id , $report_checklist_id , $item->images);
 				}
 			}
 
@@ -189,7 +190,8 @@ class Checklist extends CI_Controller {
 	}
 
 	private function save_signature($report_number){
-		$image = $this->post->signature;
+		$data = (object)$this->input->post();
+		$image = $data->signature;
 
 		$name = $report_number.'_'.time().'.PNG';
         $year = date("Y");
@@ -227,10 +229,10 @@ class Checklist extends CI_Controller {
 	private function save_image($report_id , $report_checklist_id , $images){
 
 		$img_batch = array();
-
+		$ctr = 1;
 		foreach($images as $img){
 
-			$name = $report_id.'_'.$report_checklist_id.'_'.time().'.PNG';
+			$name = $report_id.'_'.$report_checklist_id.'_'.$ctr.'_'.time().'.PNG';
 	        $year = date("Y");
 	        $month = date("m");
 	        
@@ -253,24 +255,23 @@ class Checklist extends CI_Controller {
 		    $exp = explode(',', $encoded);
 
 		    //we just get the last element with array_pop
-		    $base64 = array_pop($exp);
+		    $base64 = array_pop($exp);		    
 
 		    //decode the image and finally save it
 		    $data = base64_decode($base64);
 
-
 		    //make sure you are the owner and have the rights to write content
 		    file_put_contents($path, $data);
-
-		    $img_batch[] = array(
+		    
+		    $this->db->insert('report_images', [
 		    	"report_id"				=> $report_id ,
 		    	"report_checklist_id"	=> $report_checklist_id ,
 		    	"image_path"			=> $year."/".$month.'/' ,
 		    	"image_name"			=> $name
-		    );
-		}
+		    ]);
 
-		$this->db->insert_batch('report_images', $img_batch);
+		    $ctr++;
+		}		
 
 	}
 }

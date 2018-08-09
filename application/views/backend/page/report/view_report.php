@@ -213,9 +213,9 @@
 	    						<td>
                                     <div class="animated-thumbnail">
                                     <?php if(isset($row->fullpath)) : ?>
-                                       <?php foreach($row->fullpath as $k => $v) : ?> 
-                                        <a href="<?php echo $v; ?>">
-                                         <img src="<?php echo $v; ?>" height='40px'>
+                                       <?php foreach($row->fullpath as $k) : ?> 
+                                        <a href="<?php echo $k; ?>">
+                                         <img src="<?php echo $k; ?>" height='40px'>
                                         </a>
                                         <?php endforeach; ?>
                                     <?php endif;?>

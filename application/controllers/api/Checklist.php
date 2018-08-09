@@ -255,6 +255,7 @@ class Checklist extends CI_Controller {
 		    //we just get the last element with array_pop
 		    $base64 = array_pop($exp);
 
+
 		    //decode the image and finally save it
 		    $data = base64_decode($base64);
 
