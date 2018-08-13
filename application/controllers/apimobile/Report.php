@@ -57,11 +57,12 @@ class Report extends CI_Controller {
 			$result[$key]->created   = convert_timezone($row->created , true );
 			$result[$key]->status_raw = report_type($row->status , true);
 			$result[$key]->status = report_type($row->status);
+			$result[$key]->pdf = $this->pdf($row->report_id);
 
-			$result[$key]->pdf = [
-				"path"	=> $this->config->site_url("apimobile/report/pdf/".$this->hash->encrypt($row->report_id)).'/true',
-				"name"	=> $row->report_number.".pdf"
-			];
+			// $result[$key]->pdf = [
+			// 	"path"	=> $this->config->site_url("apimobile/report/pdf/".$this->hash->encrypt($row->report_id)),
+			// 	"name"	=> $row->report_number.".pdf"
+			// ];
 			
 
 			$this->db->select("rc.checklist_ischeck , rc.checklist_value , ci.item_name , rc.id");
@@ -97,14 +98,15 @@ class Report extends CI_Controller {
 
 	public function pdf($report_id){
 
-		$report_id = $this->hash->decrypt($report_id);
+		//$report_id = $this->hash->decrypt($report_id);
 		$report = $this->reports->get_report_by_id($report_id);
 
 		$pdf = $this->pdf->create_report_checklist($report , "F");
 
 		$pdf['file'] = $this->config->site_url($pdf['file']);
 
-		echo json_encode($pdf);
+		//echo json_encode($pdf);
+		return $pdf;
 	}
 
 	public function fix_report(){

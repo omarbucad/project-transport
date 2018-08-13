@@ -124,9 +124,9 @@ class Accounts extends MY_Controller {
 		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					
 		}
-		$id = $this->hash->decrypt($report_id);
+		$id = $this->hash->decrypt($user_id);
 			
-		if($delete_checklist = $this->reports->delete_report($id)){
+		if($delete_checklist = $this->accounts->delete_user($id)){
 
 			$this->session->set_flashdata('status' , 'success');	
 			$this->session->set_flashdata('message' , 'Successfully Deleted User');

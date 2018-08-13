@@ -99,7 +99,7 @@
                                     <?php if($row->role != 'SUPER ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
                                     <a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link btn-delete" title="Delete User"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    <a href="<?php echo site_url("app/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link btn-delete" title="Delete User"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                     <?php endif; ?>
                                 </div>
                                 </td>
