@@ -190,6 +190,8 @@ class Accounts_model extends CI_Model {
     // APP
 
     public function get_accounts_list($count = false){
+
+
         $store_id = $this->data['session_data']->store_id;
         $role = $this->session->userdata('user')->role;
 

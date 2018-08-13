@@ -23,9 +23,9 @@ class Accounts extends MY_Controller {
 
 		//PAGINATION
 		$this->data['config']["base_url"] = base_url("app/accounts/") ;
-		$this->data['config']["total_rows"] = $this->accounts->get_accounts_list(true);
-		$this->pagination->initialize($this->data['config']);
-		$this->data["links"] = $this->pagination->create_links();
+		// $this->data['config']["total_rows"] = $this->accounts->get_accounts_list(true);
+		// $this->pagination->initialize($this->data['config']);
+		// $this->data["links"] = $this->pagination->create_links();
 
 		$this->data['result'] = $this->accounts->get_accounts_list();
 		$driver = count($this->accounts->get_driver());
