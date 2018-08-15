@@ -25,7 +25,7 @@ class Report extends CI_Controller {
 		$report_by = $this->post->user_id;
 		$store_id = $this->post->store_id;
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -57,7 +57,7 @@ class Report extends CI_Controller {
 			$result[$key]->created   = convert_timezone($row->created , true );
 			$result[$key]->status_raw = report_type($row->status , true);
 			$result[$key]->status = report_type($row->status);
-			$result[$key]->pdf = $this->pdf($row->report_id);
+			//$result[$key]->pdf = $this->pdf($row->report_id);
 
 			// $result[$key]->pdf = [
 			// 	"path"	=> $this->config->site_url("apimobile/report/pdf/".$this->hash->encrypt($row->report_id)),
@@ -80,7 +80,7 @@ class Report extends CI_Controller {
 				$result[$key]->checklist[$k]->images = $images;
 			}
 
-			$this->db->select("rs.status , rs.notes  , u.display_name , rs.created , rs.longitude , rs.latitude , rs.signature");
+			$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.longitude , rs.latitude , rs.signature");
 			$this->db->join("user u" , "u.user_id = rs.user_id");
 			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "ASC")->get("report_status rs")->result();
 
@@ -130,9 +130,12 @@ class Report extends CI_Controller {
 
 			$status_id = $this->db->insert_id();
 
+			$pdf = $this->pdf($this->post->report);	
 
 			$this->db->where("report_id" , $this->post->report)->update('report' , [
-				"status_id"		=> $status_id
+				"status_id"		=> $status_id,
+				"pdf_path"			=> $pdf['path'],
+				"pdf_file" 			=> $pdf['filename']
 			]);
 
 			$this->db->trans_complete();

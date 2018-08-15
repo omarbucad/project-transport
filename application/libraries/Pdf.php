@@ -44,7 +44,9 @@ class Pdf {
 
 			return [
 				"attachment" => FCPATH.$this->folder.'/'.$filename ,
-				"file"		 => $this->folder.'/'.$filename
+				"file"		 => $this->folder.'/'.$filename,
+				"filename"	 => $filename,
+				"path" 		 => $this->folder.'/'
 			];
 
 		}catch (Html2PdfException $e) {

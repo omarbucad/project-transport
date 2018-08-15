@@ -29,7 +29,7 @@ class Accounts_model extends CI_Model {
         if($type = $this->input->get('type')){
             $this->db->where("up.billing_type",$type);
         }
-
+        $this->db->where("u.deleted IS NULL");
         if($count){
             return $result = $this->db->get("user u")->num_rows();
         }
@@ -208,18 +208,22 @@ class Accounts_model extends CI_Model {
         if($count){
             if($role == "ADMIN"){
                 $this->db->where("role !=","SUPER ADMIN");
+                $this->db->where("deleted IS NULL");
                 return $result = $this->db->where("store_id" , $store_id)->limit($limit)->get("user")->num_rows();
             }else{
                 $this->db->where("role !=","SUPER ADMIN");
+                $this->db->where("deleted IS NULL");
                 return $result = $this->db->where("role !=","ADMIN")->limit($limit)->get("user")->num_rows();
             }
         }else{
             if($role == "ADMIN"){
                 $this->db->where("role !=","SUPER ADMIN");
+                $this->db->where("deleted IS NULL");
                 $result = $this->db->where("store_id" , $store_id)->limit($limit)->order_by("display_name" , "ASC")->get("user")->result();
             }else{
                 $this->db->where("role !=","SUPER ADMIN");
                 $this->db->where("role !=","ADMIN");
+                $this->db->where("deleted IS NULL");
                 $result = $this->db->where("store_id" , $store_id)->limit($limit)->order_by("display_name" , "ASC")->get("user")->result();
             }
         }

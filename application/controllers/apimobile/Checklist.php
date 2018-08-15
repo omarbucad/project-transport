@@ -16,6 +16,7 @@ class Checklist extends CI_Controller {
         }
         
 		//$this->post = json_decode(file_get_contents("php://input"));
+		 $this->load->model('report_model', 'reports');
 		$this->post = (object)$this->input->post();
 	}
 
@@ -128,19 +129,16 @@ class Checklist extends CI_Controller {
 				$report_checklist_id = $this->db->insert_id();
 
 				if(!empty($item->images)){
-						$this->save_image($report_id , $report_checklist_id , $item->images);
+					$this->save_image($report_id , $report_checklist_id , $item->images);
 				}
 			}
 
 			$report_number = date("dmY").'-'.sprintf('%05d', $report_id);
 
-			
-
 			$this->db->where("report_id" , $report_id)->update("report" , [
 				"report_number"		=> $report_number,
-				"status_id"			=> $status_id 
+				"status_id"			=> $status_id ,
 			]);
-
 			$this->db->trans_complete();
 
 			if ($this->db->trans_status() === FALSE){
@@ -148,8 +146,14 @@ class Checklist extends CI_Controller {
 	            $this->return_false();
 
 	        }else{
+	            $pdf = $this->pdf($report_id);
+
+	            $this->db->where("report_id" , $report_id)->update("report" , [
+					"pdf_path"			=> $pdf['path'],
+					"pdf_file" 			=> $pdf['filename']
+				]);
 	           
-	           echo json_encode(["status" => 1 , "message" => "Successfully Submitted"]);
+	            echo json_encode(["status" => 1 , "message" => "Successfully Submitted"]);
 	        }
 		}
 	}
@@ -187,6 +191,17 @@ class Checklist extends CI_Controller {
 		}
 
 		return $_isDefect;
+	}
+
+	private function pdf($report_id){
+
+		$report = $this->reports->get_report_by_id($report_id);
+
+		$pdf = $this->pdf->create_report_checklist($report , "F");
+
+		$pdf['file'] = $this->config->site_url($pdf['file']);
+
+		return $pdf;
 	}
 
 	private function save_signature($report_number){
