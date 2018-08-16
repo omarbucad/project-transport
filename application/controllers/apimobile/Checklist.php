@@ -85,12 +85,12 @@ class Checklist extends CI_Controller {
 
 			$this->db->insert("report" , [
 				"report_by"						=> $user->user_id ,
-				"vehicle_registration_number"	=> (isset($data->vehicle_registration_number)) ? $data->vehicle_registration_number : "" ,
-				"trailer_number"				=> (isset($data->trailer_number)) ? $data->trailer_number : "" ,
+				"vehicle_registration_number"	=> (isset($data->vehicle_registration_number)) ? $data->vehicle_registration_number : NULL ,
+				"trailer_number"				=> (isset($data->trailer_number)) ? $data->trailer_number : NULL ,
 				"checklist_id"					=> $data->checklist_id,
 				"start_mileage"					=> $data->start_mileage ,
 				"end_mileage"					=> $data->end_mileage ,
-				"report_notes"					=> (isset($data->note)) ? $data->note : "" ,
+				"report_notes"					=> (isset($data->note)) ? $data->note : NULL ,
 				"created"						=> time(),
 				"remind_in"						=> $remind_in,
 				"remind_done"					=> false
@@ -107,8 +107,8 @@ class Checklist extends CI_Controller {
 				"notes"				=> "Initial" ,
 				"user_id"			=> $user->user_id ,
 				"created"			=> time(),
-				"longitude"			=> $data->longitude,
-				"latitude"			=> $data->latitude,
+				"longitude"			=> ($data->longitude == '') ? NULL : $data->longitude,
+				"latitude"			=> ($data->latitude == '') ? NULL : $data->latitude,
 				"signature"			=> $signature_path
 			]);
 			$status_id = $this->db->insert_id();
@@ -121,7 +121,7 @@ class Checklist extends CI_Controller {
 				$item_batch = array(
 					"report_id"				=> $report_id ,
 					"checklist_item_id"		=> $item->checklist_id ,
-					"checklist_value"		=> $item->note ,
+					"checklist_value"		=> ($item->note == '') ? NULL : $item->note,
 					"checklist_ischeck"		=> $item->checkbox,
 				);
 

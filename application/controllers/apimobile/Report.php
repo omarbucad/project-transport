@@ -82,7 +82,7 @@ class Report extends CI_Controller {
 
 			$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.longitude , rs.latitude , rs.signature");
 			$this->db->join("user u" , "u.user_id = rs.user_id");
-			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "ASC")->get("report_status rs")->result();
+			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
 
 			foreach($status as $k => $r){
 				$status[$k]->status = report_type($r->status );
