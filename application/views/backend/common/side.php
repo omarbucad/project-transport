@@ -4,7 +4,7 @@
         <div class="side-menu-container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">
-                    <div class="icon fa fa-truck"></div>
+                    <div class="icon"><img src="<?php echo site_url("public/img/vehicle-checklist.png");?>"   height="30px" width="auto"></div>
                     <div class="title"><?php echo $application_name; ?></div>
                 </a>
                 <button type="button" class="navbar-expand-toggle pull-right visible-xs">
@@ -116,7 +116,7 @@
                 <?php if($session_data->role != "MECHANIC") : ?>
                 <li>
                     <a href="https://play.google.com/store" target="_blank">
-                        <span class="icon fa fa-download"></span><span class="title">Download</span>
+                        <span class="icon fa fa-download"></span><span class="title">Download App</span>
                     </a>
                 </li>                
                 <?php endif; ?>

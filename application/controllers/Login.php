@@ -24,13 +24,14 @@ class Login extends MY_Controller {
 		 //    $dt = new DateTime($today, new DateTimeZone( $timezone ));
 		 //    $now = $dt->format('M d Y H:i:s');
 
-		    if($role != "SUPER ADMIN"){
-		    	if($this->session->userdata("user")->plan_expiration > strtotime("now")){
+		    if($role == "ADMIN" || $role == "MECHANIC"){
+	    		if($this->session->userdata("user")->plan_expiration > strtotime("now")){
 			    	$expired = false;
 				}else{
 					$expired = true;
 				}
 				$this->session->userdata('user')->expired = $expired;
+		    	
 		    }			
 
 			if($role == "SUPER ADMIN"){
@@ -38,7 +39,7 @@ class Login extends MY_Controller {
 				redirect('/admin/dashboard', 'refresh');
 			}elseif($role == "DRIVER"){
 				$this->session->set_flashdata('status' , 'failed');
-				$this->session->set_flashdata('message' , 'Incorrect Username or Password');
+				$this->session->set_flashdata('message' , 'Driver account is not allowed.');
 
 				redirect('/login', 'refresh');
 			}else{

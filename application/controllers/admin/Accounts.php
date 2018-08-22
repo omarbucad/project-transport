@@ -24,9 +24,9 @@ class Accounts extends MY_Controller {
 		$this->data["links"] = $this->pagination->create_links();
 
 		$this->data['result']	 = $this->accounts->get_admin_accounts();
-		$driver = count($this->accounts->get_driver());
-		$mechanic = count($this->accounts->get_mechanic());
-		$admin = count($this->accounts->get_admin());
+		// $driver = count($this->accounts->get_driver());
+		// $mechanic = count($this->accounts->get_mechanic());
+		// $admin = count($this->accounts->get_admin());
 		// $this->data['plan_type']		= $this->data['session_data']->plan_type;
 		// $this->data['total_accounts']	= $driver + $mechanic + $admin;
 
@@ -120,7 +120,7 @@ class Accounts extends MY_Controller {
 		$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
 		$this->email->to($invoice_information->email_address);
 
-		$this->email->subject('Transport Checklist - Bill Statement');
+		$this->email->subject('Vehicle Checklist - Bill Statement');
 		$this->email->message($this->load->view('backend/page/admin/email/send_invoice' , $invoice_information , TRUE));
 		$this->email->attach($pdf_file);
 		$this->email->set_mailtype('html');
@@ -138,7 +138,7 @@ class Accounts extends MY_Controller {
 			$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
 			$this->email->to($data->email);
 
-			$this->email->subject('Transport Checklist - Plan Expiry Notice');
+			$this->email->subject('Vehicle Checklist - Plan Expiry Notice');
 			$this->email->message($this->load->view('backend/page/admin/email/plan_notification' , $data , TRUE));
 			$this->email->set_mailtype('html');
 

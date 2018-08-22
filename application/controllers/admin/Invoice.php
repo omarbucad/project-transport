@@ -32,7 +32,7 @@ class Invoice extends MY_Controller {
 			$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
 			$this->email->to($invoice_information->email);
 
-			$this->email->subject('Transport Checklist Statement');
+			$this->email->subject('Vehicle Checklist Statement');
 			$this->email->message($this->load->view('backend/page/admin/email/send_invoice' , $invoice_information , TRUE));
 			$this->email->attach($pdf_file);
 			$this->email->set_mailtype('html');
@@ -58,7 +58,7 @@ class Invoice extends MY_Controller {
 			$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
 			$this->email->to($result->email_address);
 
-			$this->email->subject('Transport Checklist - Bill Statement');
+			$this->email->subject('Vehicle Checklist - Bill Statement');
 			$this->email->message($this->load->view('backend/page/admin/email/send_invoice' , $result , TRUE));
 			$this->email->attach($result->invoice_pdf);
 		

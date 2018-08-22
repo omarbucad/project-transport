@@ -41,7 +41,7 @@
                             <a href="<?php echo site_url("app/vehicle/trailer/add"); ?>" class="btn btn-success ">Add Trailer</a>
                         <?php elseif($plan_type == "Standard" &&  $totalvehicle < $this->session->userdata('user')->no_accounts + 1) : ?>
                             <a href="<?php echo site_url("app/vehicle/trailer/add"); ?>" class="btn btn-success ">Add Trailer</a>
-                        <?php elseif($plan_type == "Trial" || $plan_type == "PREMIUM") : ?>
+                        <?php elseif($plan_type == "Trial" || $plan_type == "Premium") : ?>
                             <a href="<?php echo site_url("app/vehicle/trailer/add"); ?>" class="btn btn-success ">Add Trailer</a>
                         <?php endif; ?>
                     </div>

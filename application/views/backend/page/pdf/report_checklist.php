@@ -60,7 +60,8 @@
 			</tr>
 
 			<tr >
-				<td colspan="3" class="tr_header"><?php echo $checklist_name; ?></td>
+				<td colspan="2" class="tr_header"><?php echo $checklist_name; ?></td>
+				<td class="tr_header">Status</td>
 				<td class="tr_header">Remarks</td>
 			</tr>
 
@@ -71,10 +72,12 @@
 						<?php echo ($key+1).'. '.$checklist->item_name; ?>
 					</td>
 					<td>
-						<?php if($checklist->checklist_ischeck) : ?>
-							<img src="<?php echo base_url("public/img/x.png"); ?>">
+						<?php if($checklist->checklist_ischeck == 1) : ?>
+							<?php echo "Defect"; ?>
+						<?php elseif($checklist->checklist_ischeck == 2) : ?>
+							<?php echo "Rechecked"; ?>
 						<?php else : ?>
-							<img src="<?php echo base_url("public/img/c.png"); ?>">
+							<?php echo "Good"; ?>
 						<?php endif; ?>
 					</td>
 					<td><?php echo $checklist->checklist_value; ?></td>

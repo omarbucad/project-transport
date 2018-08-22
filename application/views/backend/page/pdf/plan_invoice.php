@@ -19,8 +19,8 @@
 
 			<tr>
 				<td colspan="4" style="text-align: center;">
-					<img src="<?php echo site_url('public/img/favicon.png');?>">
-					<h1 style="margin-bottom: 5px;">Transport Checklist</h1>
+					<img src="<?php echo site_url('public/img/vehicle0checklist.png');?>">
+					<h1 style="margin-bottom: 5px;">Vehicle Checklist</h1>
 					<span>Trackerteer Web Development Corporation</span>
 				</td>				
 			</tr>	

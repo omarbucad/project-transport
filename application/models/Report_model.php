@@ -22,7 +22,7 @@ class Report_model extends CI_Model {
         }
 
         if($this->input->get('checklist_name')){
-            $this->db->where('c.checklist_name' , $this->input->get('checklist_name'));
+            $this->db->like('c.checklist_name' , $this->input->get('checklist_name'));
         }
 
         if($this->input->get('trailer_number')){
@@ -58,7 +58,7 @@ class Report_model extends CI_Model {
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
 
-        $this->db->where("c.store_id",$this->data['session_data']->store_id);
+        $this->db->where("u.store_id",$this->data['session_data']->store_id);
 
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
         foreach($result as $key => $row){
@@ -275,6 +275,7 @@ class Report_model extends CI_Model {
         if($role == "MECHANIC"){
             $this->db->where("rs.status !=",0);
         }
+        $this->db->where("u.store_id",$this->session->userdata('user')->store_id);
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
         foreach($result as $key => $row){
@@ -300,8 +301,9 @@ class Report_model extends CI_Model {
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
-
+        $this->db->where("u.store_id",$this->session->userdata('user')->store_id);
         $this->db->where_in("rs.status", [1,2]);  
+
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
         foreach($result as $key => $row){
@@ -332,6 +334,8 @@ class Report_model extends CI_Model {
         $this->db->where("rs.created <=", strtotime("tomorrow midnight -1 second"));
 
         $this->db->where("rs.status", 3);  
+        $this->db->where("u.store_id",$this->session->userdata('user')->store_id);
+
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
         foreach($result as $key => $row){

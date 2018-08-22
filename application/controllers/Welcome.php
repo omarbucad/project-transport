@@ -46,6 +46,17 @@ class Welcome extends MY_Controller {
 
 				$this->session->set_userdata("user" , $user_data);
 
+				$role = $this->session->userdata('user')->role;
+				if($role == "ADMIN"){
+		    		if($this->session->userdata("user")->plan_expiration > strtotime("now")){
+				    	$expired = false;
+					}else{
+						$expired = true;
+					}
+					$this->session->userdata('user')->expired = $expired;
+			    	
+			    }			
+
 				redirect('/app/dashboard', 'refresh');
 			}else{
 				$this->session->set_flashdata('status' , 'error');

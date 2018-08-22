@@ -1,7 +1,7 @@
 <div style="margin-top: 100px;"></div>
 <div class="container">
 
-	<h2>Transport Checklist - Plan Expiration Notice</h2>
+	<h2>Vehicle Checklist - Plan Expiration Notice</h2>
 
 	<p>Dear Valued Customer,</p>
 

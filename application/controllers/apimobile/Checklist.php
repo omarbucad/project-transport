@@ -31,6 +31,26 @@ class Checklist extends CI_Controller {
 		echo json_encode(["status" => 1 , "data" => $result]);
 	}
 
+	public function get_checklist_by_type(){
+		$store_id = $this->post->store_id;
+		$user_id = $this->post->user_id;
+		$type = $this->post->type;
+		
+		if($type == 'VEHICLE'){
+			$c_type = "TRUCK";
+		}else{
+			$c_type = "TRAILER";
+		}
+
+		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type");
+		$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
+		$this->db->where("c.vehicle_type",$type);
+		$this->db->where("c.vehicle_type","BOTH");
+		$result = $this->db->where("c.store_id" , $store_id)->where("uc.user_id" , $user_id)->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
+
+		echo json_encode(["status" => 1 , "data" => $result]);
+	}
+
 	public function get_vehicle_registration_list(){
 		$store_id = $this->post->store_id;
 
@@ -107,6 +127,8 @@ class Checklist extends CI_Controller {
 				"notes"				=> "Initial" ,
 				"user_id"			=> $user->user_id ,
 				"created"			=> time(),
+				"start_longitude"	=> ($data->start_longitude == '') ? NULL : $data->start_longitude,
+				"start_latitude"	=> ($data->start_latitude == '') ? NULL : $data->start_latitude,
 				"longitude"			=> ($data->longitude == '') ? NULL : $data->longitude,
 				"latitude"			=> ($data->latitude == '') ? NULL : $data->latitude,
 				"signature"			=> $signature_path
@@ -115,6 +137,7 @@ class Checklist extends CI_Controller {
 
 			//save checklist items
 			$checklist = json_decode($data->checklist);
+			
 
 			foreach($checklist as $item){
 

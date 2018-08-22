@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-xs-4 col-lg-4">
                 <nav>
-                    <label style="color: #929191;">Transport Checklist</label>
+                    <label style="color: #929191;">Vehicle Checklist</label>
                     <ul class="list-inline">
                         <li class="list-inline-item"><a href="http://trackerteer.com/about">About</a></li>
                         <li class="list-inline-item"><a href="http://trackerteer.com/careers">Contact</a></li>

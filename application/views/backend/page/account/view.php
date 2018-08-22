@@ -140,7 +140,7 @@
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container">
-        	<h1>Account</h1>
+        	<h1>Plan Subscription</h1>
         	<div class="account_container_btn">
         		<a href="<?php echo site_url("app/setup/account/manage"); ?>" class="<?php echo ($setup_page == "manage") ? "active" : "" ;?>" >Manage My Account</a>
         		<a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="<?php echo ($setup_page == "pricing") ? "active" : "" ;?>">View Pricing Plans</a>
@@ -177,10 +177,10 @@
         					<h4 style="margin-top: 0px;"><?php echo $result->title ." Plan";?></h4>
         					<nav>
         						<ul>
-        							<li><span><?php echo ($result->no_accounts == 0) ? "Unlimited": $result->no_accounts;?> Driver</span></li>
-                                    <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Vehicle</span></li>
-                                    <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Trailer</span></li>
-                                    <li><span><?php echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> Report(s)/ Month</span></li>
+        							<li><span><?php echo ($result->no_accounts == 0) ? "Unlimited": $result->no_accounts;?> Accounts</span></li>
+                                    <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Vehicle / Trailer</span></li>
+                                    <!-- <li><span><?php //echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Trailer</span></li> -->
+                                    <li><span><?php echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> Report(s)<?php echo ($result->title == "Trial") ? "" : "/ Month"; ?></span></li>
                                     <li><span><?php echo $result->description;?></span></li>
         						</ul>
         					</nav>

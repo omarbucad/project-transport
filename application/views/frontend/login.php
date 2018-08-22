@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Favicon-->
-    <link rel="icon" href="<?php echo site_url('public/img/favicon.png') ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo site_url('public/img/vehicle-checklist.png') ?>" type="image/x-icon">
     <!-- Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/themes/flat-blue.css?version='.$version) ?>">
     <style type="text/css">
         body.login-page {
-            background: url("<?php echo site_url('public/img/app-header-bg.jpg') ?>") no-repeat center center fixed;
+            background: url("<?php echo site_url('public/img/banner3.jpg') ?>") no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
@@ -50,28 +50,33 @@
                     <div class="col-xs-12 col-lg-5 no-margin-bottom">
                         <div class="row">
                             <div class="container-fluid">
-                                <h6><a href="#" class="new_in">New in <?php echo $application_name; ?> <i class="fa fa-external-link" aria-hidden="true"></i></a></h6>
+                                <h6><!-- <a href="#" class="new_in">New in <?php //echo $application_name; ?> ? <i class="fa fa-external-link" aria-hidden="true"></i> </a>--></h6>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-lg-8 col-lg-offset-2 no-margin-bottom">
-                                <a href="#"><img src="<?php echo site_url("public/img/favicon.png"); ?>" class="img img-responsive"></a>
+                                <a href="#"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive"   height="30px" width="auto"></a>
                             </div>
                         </div>
                         <div class="row">
                             <div class="container-fluid">
+                                <h4 class="text-center">Vehicle Checklist</h4>
+                            </div>
+                        </div>
+                       <!--  <div class="row">
+                            <div class="container-fluid">
                                 <h6><a href="#" class="new_in">Advanced user permissions</a></h6>
                             </div>
                         </div>
-                        <p class="help-block">Get even more control over what your employees can see and do in <?php echo $application_name; ?>.</p>
+                        <p class="help-block">Get even more control over what your employees can see and do in <?php echo $application_name; ?>.</p> -->
                     </div>
                     <div class="col-xs-12 col-lg-7 no-margin-bottom">
 
-                            <div class="row">
-                                <div class="container-fluid">
-                                    <h2 class="text-center">Sign in</h2>
-                                </div>
+                        <div class="row">
+                            <div class="container-fluid">
+                                <h2 class="text-center">Sign in</h2>
                             </div>
+                        </div>
   
                         <?php if($this->session->flashdata("status")) : ?>
                         <div class="alert alert-danger" role="alert">

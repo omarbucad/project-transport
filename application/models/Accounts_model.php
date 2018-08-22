@@ -6,9 +6,10 @@ class Accounts_model extends CI_Model {
         $skip = ($this->input->get("per_page")) ? $this->input->get("per_page") : 0;
         $limit = ($this->input->get("limit")) ? $this->input->get("limit") : 10;
 
-        $this->db->select("u.*, up.user_plan_id, up.plan_id, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name,p.title");
+        $this->db->select("u.*, up.user_plan_id, up.plan_id, up.billing_type, up.plan_created, up.plan_expiration, up.updated, up.active, up.who_updated, u2.display_name as updated_name, s.store_name,p.title");
         $this->db->join("user_plan up","up.store_id = u.store_id");
         $this->db->join("user u2", "u2.user_id = up.who_updated");
+        $this->db->join("store s","s.store_id = u.store_id");
         $this->db->join("plan p","p.plan_id = up.plan_id");
 
         $this->db->where("up.active",1);
@@ -204,6 +205,11 @@ class Accounts_model extends CI_Model {
         }else{
             $limit = 0;
         }
+        
+
+        if($name = $this->input->get("name")){
+            $this->db->like("username",$name);
+        }
 
         if($count){
             if($role == "ADMIN"){
@@ -239,17 +245,18 @@ class Accounts_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
         $this->db->where("store_id" , $store_id);
 
-        $plan = $this->data['session_data']->title;
+        // $plan = $this->data['session_data']->title;
 
-        if($plan == "Basic"){
-            $limit = 1;
-        }else if($plan == "Standard"){
-            $limit = 10;
-        }else{
-            $limit = 0;
-        }
+        // if($plan == "Basic"){
+        //     $limit = 1;
+        // }else if($plan == "Standard"){
+        //     $limit = 10;
+        // }else{
+        //     $limit = 0;
+        // }
 
-        $result = $this->db->where('role',"DRIVER")->limit($limit)->get("user")->result();
+
+        $result = $this->db->where('role',"DRIVER")->get("user")->result();
 
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);
@@ -356,7 +363,7 @@ class Accounts_model extends CI_Model {
                 "username"     => $this->input->post("username") ,
                 "password"     => $this->input->post("password"),
                 "display_name" => $this->input->post("display_name") ,
-                "role"         => ($session_role == "ADMIN") ? "ADMIN" : $role,
+                "role"         => $role,
                 "store_id"     => $store_id,
                 "image_path"   => "public/img/",
                 "image_name"   => "person-placeholder.jpg",

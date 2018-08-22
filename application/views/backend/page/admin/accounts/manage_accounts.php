@@ -175,6 +175,7 @@
                                         <div class="col-xs-6 col-lg-10 no-margin-bottom">
                                             <a href="<?php echo site_url('admin/accounts/view/').$row->user_id; ?>"><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</a><br>
                                             <small class="help-block user-email"><?php echo $row->email_address; ?></small>
+                                            <small class="help-block"><?php echo $row->store_name;?></small>
                                             <small class="help-block"><?php echo $row->status; ?></small>
                                         </div>
                                     </div>

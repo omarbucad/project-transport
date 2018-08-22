@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Favicon-->
-    <link rel="icon" href="<?php echo site_url('public/img/favicon.png') ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo site_url('public/img/vehicle-checklist.png') ?>" type="image/x-icon">
     <!-- Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
@@ -34,7 +34,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?php echo site_url("welcome"); ?>">
-                    <div class="icon"><img src="<?php echo site_url('public/img/favicon.png') ?>" height="30px" width="auto"></div>
+                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="30px" width="auto"></div>
                     <div class="title"><?php echo $application_name; ?></div>
                 </a>
             </div>
@@ -52,7 +52,7 @@
 
     <div class="jumbotron app-header">
         <div class="container">
-            <h2 class="text-center"><img class="app-logo" src="<?php echo site_url('public/img/favicon.png') ?>"><div class="color-white"><?php echo $application_name; ?></div></h2>
+            <h2 class="text-center"><img class="app-logo" src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="100px" width="auto"><div class="color-white"><?php echo $application_name; ?></div></h2>
             <p class="text-center color-white app-description">Complete your defect checklist in minutes.</p>
             <p class="text-center"><a class="btn btn-primary btn-lg app-btn text-uppercase" href="<?php echo site_url("welcome/register"); ?>" role="button">TRY PREMIUM FOR FREE</a></p>
         </div>
@@ -81,7 +81,7 @@
                       <i class="fa fa-mobile fa-stack-1x"></i>
                     </span>
                     <h2>Mobile App</h2>
-                    <p>Access your data on the go.</p>
+                    <p>Allow Drivers and Mechanic to create reports using the app.</p>
                 </div>
                 <!-- /.col-lg-4 -->
             </div>
@@ -93,8 +93,8 @@
                 <div class="col-md-7 col-sm-6">
                 </div>
                 <div class="col-md-5 col-sm-6 text-right color-white">
-                    <h2 class="featurette-heading">Manage your reports anywhere you go.</h2>
-                    <p class="lead">Transport Checklist is a robust defect monitoring system with a fully traceable route from defect to report to repair available in your desktop and smartphone.</p>
+                    <h2 class="featurette-heading">Vehicle Defect Report Management</h2>
+                    <p class="lead">Vehicle Checklist is a robust defect monitoring system with a fully traceable route from defect to report to repair available in your desktop.</p>
                 </div>
             </div>
         </div>
@@ -182,11 +182,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+           <!--  <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <p class="text-center app-content-description">Plan offers doesn't fit your needs? Click <a href="#" class="text-danger">here</a> to request a Quote.</p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="container-fluid app-content-b contact-us">

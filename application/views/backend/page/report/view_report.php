@@ -147,7 +147,6 @@
 	    				</table>
 
     				</div>
-                    <?php //print_r_die($result->report_statuses[1]->signature); ?>
     				<div class="col-lg-6 no-margin-bottom">
     					<table class="table">
     						<tr>

@@ -8,7 +8,8 @@ class Register_model extends CI_Model {
     	/* ADDRESS */
 
         $this->db->insert("store_address" , [
-        	"country" => $this->input->post("country")
+        	"country" => $this->input->post("country"),
+            "city" => $this->input->post("city")
         ]);
         $address_id = $this->db->insert_id();
 

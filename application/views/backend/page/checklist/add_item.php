@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <?php //print_r_die($post['description']);?>
+                   
                     <section class="sec_border_bottom">
                     <h3>Checklist Details</h3>
                     <div class="row">

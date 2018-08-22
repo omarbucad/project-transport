@@ -6,6 +6,7 @@ class Vehicle extends MY_Controller {
 	public function __construct() {
 	    parent::__construct();
 	    $this->load->model('vehicle_model', 'vehicle');
+	    
 	    $this->data['plan_type'] = $this->data['session_data']->title;
 	    if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					

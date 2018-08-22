@@ -127,17 +127,17 @@ if ( ! function_exists('report_type'))
         */
         if($raw){
             switch ($type) {
-                case 3:
-                    return 'Fixed';
-                    break;
-                case 2:
-                    return 'On Maintenance';
-                    break;
+                // case 3:
+                //     return 'Fixed';
+                //     break;
+                // case 2:
+                //     return 'On Maintenance';
+                //     break;
                 case 1:
-                    return 'Open';
+                    return 'DEFECT';
                     break;                    
                 case 0:
-                    return 'No Defect';
+                    return 'GOOD';
                     break;
                 default:
                     # code...
@@ -146,21 +146,21 @@ if ( ! function_exists('report_type'))
         }else{
             switch ($type) {
                 
-                case 3:
-                    return '<span class="label label-success">Fixed</span>';
-                    break;
-                case 2:
-                    return '<span class="label label-warning">On Maintenance</span>';
-                    break;
+                // case 3:
+                //     return '<span class="label label-success">Fixed</span>';
+                //     break;
+                // case 2:
+                //     return '<span class="label label-warning">On Maintenance</span>';
+                //     break;
                 case 1:
-                    return '<span class="label label-danger">Open</span>';
+                    return '<span class="label label-danger">DEFECT</span>';
                     break;
                 case 0:
-                    return '<span class="label label-primary">No Defect</span>';
+                    return '<span class="label label-success">GOOD</span>';
                     break; 
-                default:
-                    # code...
-                    break;
+                // default:
+                //     # code...
+                //     break;
             }
         }
     }   
@@ -232,27 +232,27 @@ if ( ! function_exists('report_type'))
                 case 1:
                     return 'Open';
                 break;
-                case 2:
-                    return 'Under Maintenance';
-                break;
-                case 3:
-                    return 'Fixed';
-                break;
+                // case 2:
+                //     return 'Under Maintenance';
+                // break;
+                // case 3:
+                //     return 'Fixed';
+                // break;
             }
         }else{
             switch ($type) {
                 case 0:
-                    return '<span class="label label-primary">No Defect</span>';
+                    return '<span class="label label-success">GOOD</span>';
                 break;
                 case 1:
-                    return '<span class="label label-danger">Open</span>';
+                    return '<span class="label label-danger">DEFECT</span>';
                 break;
-                case 2:
-                    return '<span class="label label-warning">Under Maintenance</span>';
-                break;
-                case 3:
-                    return '<span class="label label-success">Fixed</span>';
-                break;
+                // case 2:
+                //     return '<span class="label label-warning">Under Maintenance</span>';
+                // break;
+                // case 3:
+                //     return '<span class="label label-success">Fixed</span>';
+                // break;
             }
         }
     }   

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Favicon-->
-    <link rel="icon" href="<?php echo site_url('public/img/favicon.png') ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo site_url('public/img/vehicle-checklist.png') ?>" type="image/x-icon">
     <!-- Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
@@ -35,7 +35,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?php echo site_url("welcome");?>">
-                    <div class="icon fa fa-paper-plane"></div>
+                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>"  height="30px" width="auto"></div>
                     <div class="title"><?php echo $application_name; ?></div>
                 </a>
             </div>
@@ -54,7 +54,7 @@
     <div class="jumbotron app-header">
         <div class="container">
             <h2 class="text-center"><div class="color-white">Start your free 30 day trial now.</div></h2>
-            <p class="text-center color-white app-description">No credit card. No commitment. Just a few quick questions to set up your trial.</p>
+            <p class="text-center color-white app-description">No payment. No commitment. Just a few quick questions to set up your trial.</p>
         </div>
     </div>
     <div class="container card">

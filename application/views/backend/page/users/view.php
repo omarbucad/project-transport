@@ -15,7 +15,7 @@
                             <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
                         <?php elseif($plan_type == "Standard" && $total_accounts < ($this->session->userdata('user')->no_accounts + 1)) : ?>
                             <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
-                        <?php elseif(($plan_type == "Trial" || $plan_type == "PREMIUM")) : ?>
+                        <?php elseif(($plan_type == "Trial" || $plan_type == "Premium")) : ?>
                             <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
                         <?php endif; ?>
                     </div>
@@ -25,7 +25,7 @@
         <div class="card margin-bottom">
             <div class="container">
                 <div class="card-body no-padding-left no-padding-right">
-                    <form action="<?php echo site_url("app/users/"); ?>" method="GET">
+                    <form action="<?php echo site_url("app/accounts"); ?>" method="GET">
                         <div class="row">
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
@@ -98,8 +98,15 @@
                                 <td>
                                     <?php if($row->role != 'SUPER ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">
-                                    <a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <?php if($row->role == "ADMIN") : ?>
+                                        <a href="<?php echo site_url("app/setup/profile/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <?php else : ?>
+                                        <a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <?php endif; ?>
+
+                                    <?php if($row->role == "SUPER ADMIN") : ?>
                                     <a href="<?php echo site_url("app/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link btn-delete" title="Delete User"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    <?php endif; ?>
                                     <?php endif; ?>
                                 </div>
                                 </td>

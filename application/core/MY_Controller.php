@@ -8,8 +8,8 @@ class MY_Controller extends CI_Controller {
     public function __construct() {
         parent::__construct();
            
-        $this->data['website_title'] = "Transport Checklist";
-        $this->data['application_name'] = "Transport Checklist";
+        $this->data['website_title'] = "Vehicle Checklist";
+        $this->data['application_name'] = "Vehicle Checklist";
         $this->data['company_name'] = "Trackerteer Web Developer Inc.";
         $this->data['version'] = "1.0";
         $this->data['year'] = date("Y");

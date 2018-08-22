@@ -67,8 +67,7 @@
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email"  value="<?php echo $result->email_address; ?>"  class="form-control" placeholder="name@email.com" readonly="true">
                             </div>
-                            <?php print_r_die($role);?>
-                            <?php if($role != "ADMIN")?>
+                            <?php if($role != "ADMIN") : ?>
                                 <div class="form-group">
                                     <label for="role">Role</label>
                                     <input type="text" name="role" value="<?php echo $result->role; ?>"  class="form-control" readonly="true">
