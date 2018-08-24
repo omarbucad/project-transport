@@ -54,6 +54,14 @@ class Report extends CI_Controller {
 
 		foreach($result as $key => $row){
 			
+			// $query = $this->db->query("YOUR QUERY");
+
+			// while ($row = $query->unbuffered_row())
+			// {
+			//         echo $row->title;
+			//         echo $row->name;
+			//         echo $row->body;
+			// }
 			$result[$key]->created   = convert_timezone($row->created , true );
 			$result[$key]->status_raw = report_type($row->status , true);
 			$result[$key]->status = report_type($row->status);
@@ -80,7 +88,7 @@ class Report extends CI_Controller {
 				$result[$key]->checklist[$k]->images = $images;
 			}
 
-			$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.longitude , rs.latitude , rs.signature");
+			$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
 			$this->db->join("user u" , "u.user_id = rs.user_id");
 			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
 

@@ -77,6 +77,7 @@ class Checklist extends CI_Controller {
 		foreach($result as $key => $row){
 			$result[$key]->color = "light";
 			$result[$key]->image = ($row->image_name) ? $this->config->site_url("thumbs/images/checklist/".$row->image_path."/250/250/".$row->image_name) : "";
+			$result[$key]->help_image  = ($row->help_image_name) ? $this->config->site_url("thumbs/images/checklist/".$row->help_image_path."/250/250/".$row->help_image_name) : "";
 		}
 
 		echo json_encode(["status" => true , "data" => $result]);

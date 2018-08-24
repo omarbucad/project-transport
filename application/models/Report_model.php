@@ -96,11 +96,18 @@ class Report_model extends CI_Model {
             $marks = array();
 
             foreach ($result->report_statuses as $key => $row) {
-                $marks[] = [
+                $loc_end = [
                     $row->display_name,
                     $row->latitude,
                     $row->longitude
                 ];
+                $loc_start = [
+                    $row->display_name,
+                    $row->start_latitude,
+                    $row->start_longitude
+                ];
+                array_push($marks, $loc_end);
+                array_push($marks, $loc_start);
                 $result->report_statuses[$key]->status = report_status($row->status);
                 $result->report_statuses[$key]->signature = ($result->report_statuses[$key]->signature == '') ? '' : $this->config->site_url("public/upload/signature/".$row->signature);
                 $result->report_statuses[$key]->created = convert_timezone($row->created,true);

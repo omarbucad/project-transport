@@ -250,7 +250,20 @@
                                 <p class="help-block">Image Only</p>
                             </div>
                         </div>
-                        <div class="col-lg-6 text-right no-margin-bottom">
+                        <div class="col-lg-6 no-margin-bottom">
+                            <div class="div-image <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? '':'hidden'; ?>">
+                                <div class="item-image">
+                                    <img src="<?php echo site_url("thumbs/images/checklist/").$row['help_image_path']."/150/150/".$row['help_image_name']; ?>" class="img img-responsive thumbnail no-margin-bottom">
+                                </div>
+                                <a href="javascript:void(0);" class="delete-image btn btn-xs btn-danger" data-href="<?php echo site_url('app/setup/checklist/item/delete_image/');?>" data-id="<?php echo $row['id']; ?>">Delete Image</a>
+                            </div>
+                            <div class="div-upload <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? 'hidden':''; ?>">
+                                <input type="hidden" class="has-image" name="item[has_image][]" value="">
+                                <input type="file" name="file[]" class="item-file" value="">
+                                <p class="help-block">Image Only</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-right no-margin-bottom">
                             <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-remove-item" data-href="<?php echo site_url('app/setup/checklist/item/delete/').$row['id'];?>">Remove Item</a>
                         </div>
                     </div>

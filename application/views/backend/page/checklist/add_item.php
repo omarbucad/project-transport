@@ -160,11 +160,15 @@
 
                     </div> 
                     <div class="row">
-                        <div class="col-lg-6 no-margin-bottom">
+                        <div class="col-lg-12">                            
+                            <p class="help-block">Item Image</p>
                             <input type="file" name="file[]" class="item-file">
-                            <p class="help-block">Image Only</p>
                         </div>
-                        <div class="col-lg-6 text-right no-margin-bottom">
+                        <div class="col-lg-12 no-margin-bottom">
+                            <p class="help-block">Help Note Image</p>
+                            <input type="file" name="help_img[]" class="help-file">
+                        </div>
+                        <div class="col-lg-12 text-right no-margin-bottom">
                             <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-remove-item">Remove Item</a>
                         </div>
                     </div>

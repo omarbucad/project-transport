@@ -57,6 +57,9 @@ class Checklist_model extends CI_Model {
         $a = $this->input->post("account");
 
         $images = $_FILES['file'];
+
+        $help_img = $_FILES['help_img'];
+
         
         $this->db->trans_start();
 
@@ -78,8 +81,26 @@ class Checklist_model extends CI_Model {
                 $img = $this->upload_image($file);
             }else{
                 $img = array(
-                    "image_path" => "",
-                    "image_name" => ""
+                    "image_path" => NULL,
+                    "image_name" => NULL
+                );
+            }
+
+            $help_image = [
+                'name'  => $help_img['name'][$k],
+                'type'  => $help_img['type'][$k],
+                'tmp_name'  => $help_img['tmp_name'][$k],
+                'error'  => $help_img['error'][$k],
+                'size'  => $help_img['size'][$k],
+            ];
+
+
+            if($help_image['name'] != ''){
+                $h_img = $this->upload_helpimage($help_image);
+            }else{
+                $h_img = array(
+                    "help_image_path" => NULL,
+                    "help_image_name" => NULL
                 );
             }
 
@@ -89,7 +110,9 @@ class Checklist_model extends CI_Model {
                 "help_text"     => $items['help'][$k],
                 "item_position" => $items['position'][$k] ,
                 "image_path"    => $img['image_path'],
-                "image_name"    => $img['image_name']
+                "image_name"    => $img['image_name'],
+                "help_image_path"    => $h_img['help_image_path'],
+                "help_image_name"    => $h_img['help_image_name']
             );
         }
 
@@ -213,6 +236,95 @@ class Checklist_model extends CI_Model {
                 return [
                     "image_path" => NULL,
                     "image_name" => NULL
+                ];
+            }
+        }
+    }
+
+    private function upload_helpimage($file){
+        $year = date("Y");
+        $month = date("m");
+        $folder = "./public/upload/checklist/".$year."/".$month;
+
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+            mkdir($folder.'/thumbnail', 0777, true);
+
+            create_index_html($folder);
+        }
+
+
+        $config['upload_path']      = $folder;
+        $config['allowed_types']    = 'jpg|jpeg|png';
+        if(isset($file[0])){
+            $data = $file;
+            $img_info = array();
+            $this->load->library('upload', $config);                
+            $this->load->library('image_lib');
+
+            foreach($file as $k =>$val){
+
+
+                $_FILES['help_img']['name'] = $data[$k]['name'];
+                $_FILES['help_img']['type'] = $data[$k]['type'];
+                $_FILES['help_img']['tmp_name'] = $data[$k]['tmp_name'];
+                $_FILES['help_img']['error'] = $data[$k]['error'];
+                $_FILES['help_img']['size'] = $data[$k]['size'];
+
+                $image_name = md5(time()).'_'.$data[$k]['name'];
+                $image_name = str_replace("^", "_", $image_name);                
+                $config['file_name']    = $image_name;
+
+                $this->upload->initialize($config);
+
+                if ($this->upload->do_upload('help_img')){
+                    $image = $this->upload->data();
+                    if(isset($file[$k]['id'])){
+                        if($file[$k]['id'] != 0){
+                            $this->db->where("id" , $file[$k]['id'])->update("checklist_items" , [
+                                "help_image_path" => $year."/".$month,
+                                "help_image_name" => $image['file_name']
+                            ]);
+                            $img_info[] = array(
+                                "help_image_path" => NULL,
+                                "help_image_name" => NULL,
+                                "id"         => $file[$k]['id']
+                            );
+
+                        }else{                            
+                            $img_info[] = array(
+                                "hekp_image_path" => $year."/".$month,
+                                "help_image_name" => $image['file_name'],
+                                "id"         => 0
+                            );
+                        }                        
+                    }
+                }
+            }
+
+            return $img_info;
+        }elseif(isset($file['name'])){
+
+            $_FILES['help_img'] = $file;
+            $image_name = md5(time()).'_'.$_FILES['help_img']['name'];
+            $image_name = str_replace("^", "_", $image_name);
+
+            $config['file_name']        = $image_name;
+
+            $this->load->library('upload', $config);
+            $this->load->library('image_lib');
+
+            if ($this->upload->do_upload('help_img')){
+                $image = $this->upload->data();
+                return [
+                    "help_image_path" => $year."/".$month ,
+                    "help_image_name" => $image['file_name']
+                ];
+
+            }else{
+                return [
+                    "help_image_path" => NULL,
+                    "help_image_name" => NULL
                 ];
             }
         }
