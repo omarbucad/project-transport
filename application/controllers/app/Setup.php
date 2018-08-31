@@ -144,6 +144,15 @@ class Setup extends MY_Controller {
 		}
 	}
 
+	public function delete_item_helpimage($item_id){
+		$delete_item = $this->checklist->delete_help_image($item_id);
+		if($delete_item){
+			echo json_encode(["status" => true , "message" => "Checklist Item Help Image Deleted"]);
+		}else{
+			echo json_encode(["status" => false , "message" => "Something went wrong. Please try again."]);
+		}
+	}
+
 	public function view_checklist($checklist_id){
 		if($view_list = $this->checklist->get_checklist_items($checklist_id)){
 			echo json_encode(["status" => true, "data" => $view_list]);

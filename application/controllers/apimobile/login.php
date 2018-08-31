@@ -37,6 +37,7 @@ class Login extends CI_Controller {
 				}else{
 					$data->image = $this->config->site_url("thumbs/images/user/".$data->image_path."/80/80/".$data->image_name);
 				}
+				$data->servertime = time();
 				
 
 				echo json_encode(["status" => true , "data" => $data]);

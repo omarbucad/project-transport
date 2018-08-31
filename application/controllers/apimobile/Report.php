@@ -104,6 +104,28 @@ class Report extends CI_Controller {
 		echo json_encode($result);
 	}
 
+	// public function get_report_by_vehicle(){
+	// 	$store_id = $this->post->store_id;
+	// 	$registration = $this->post->vehicle_registration_number;
+
+	// 	$this->db->select("pdf_path,pdf_file");
+	// 	$this->db->where("store_id",$store_id);
+	// 	$this->db->where("vehicle_registration_number",$registration);
+		
+	// }
+	// public function get_report_by_trailer(){
+	// 	$store_id = $this->post->store_id;
+	// 	$registration = $this->post->vehicle_registration_number;
+
+	// 	$this->db->select("pdf_path,pdf_file");
+	// 	$this->db->where("store_id",$store_id);
+	// 	$this->db->where("vehicle_registration_number",$registration);
+	// 	$this->db->where("created >=", strtotime("today midnight"));
+ //        $this->db->where("created <=", strtotime("tomorrow midnight -1 second"))->get("report");
+		
+	// }
+
+
 	public function pdf($report_id){
 
 		//$report_id = $this->hash->decrypt($report_id);

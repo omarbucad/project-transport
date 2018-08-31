@@ -104,7 +104,7 @@
                                         <a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     <?php endif; ?>
 
-                                    <?php if($row->role == "SUPER ADMIN") : ?>
+                                    <?php if($row->role != "ADMIN" || $row->role != "SUPER ADMIN") : ?>
                                     <a href="<?php echo site_url("app/accounts/delete/").$this->hash->encrypt($row->user_id); ?>" class="btn btn-link btn-delete" title="Delete User"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                     <?php endif; ?>
                                     <?php endif; ?>

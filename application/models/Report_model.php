@@ -76,6 +76,11 @@ class Report_model extends CI_Model {
         return $result;
     }
 
+    public function get_pdf_file($id){
+        $result = $this->db->select("pdf_path,pdf_file")->where("report_id",$id)->get("report")->row();
+        return $result;
+    }
+
     public function get_report_by_id($id){
 
         $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name');

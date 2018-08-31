@@ -51,6 +51,7 @@ class Checklist extends CI_Controller {
 		echo json_encode(["status" => 1 , "data" => $result]);
 	}
 
+	
 	public function get_vehicle_registration_list(){
 		$store_id = $this->post->store_id;
 
@@ -69,15 +70,30 @@ class Checklist extends CI_Controller {
 		echo json_encode(["status" => true , "data" => $result]);
 	}
 
+	public function get_all_vehicles(){
+		$store_id = $this->post->store_id;
+		$data = array();
+
+		$this->db->select("vehicle_id , vehicle_registration_number");
+		$data['truck'] = $this->db->where("store_id" , $store_id)->where("status" , 1)->where("deleted IS NULL")->order_by("vehicle_registration_number" , "ASC")->get("vehicle")->result();
+
+		$this->db->select("trailer_id , trailer_number");
+		$data['trailer'] = $this->db->where("store_id" , $store_id)->where("status" , 1)->where("deleted IS NULL")->order_by("trailer_number" , "ASC")->get("trailer")->result();
+
+		echo json_encode(["status" => true , "data" => $data]);
+
+	}
+
 	public function get_checklist_items(){
 		$checklist_id = $this->post->checklist_id;
 
-		$result = $this->db->select()->where("checklist_id" , $checklist_id)->where("DELETED IS NULL")->order_by("item_position" , "ASC")->get("checklist_items")->result();
+		$result = $this->db->select("id,checklist_id,item_name,item_position,help_text")->where("checklist_id" , $checklist_id)->where("DELETED IS NULL")->order_by("item_position" , "ASC")->get("checklist_items")->result();
 
 		foreach($result as $key => $row){
-			$result[$key]->color = "light";
-			$result[$key]->image = ($row->image_name) ? $this->config->site_url("thumbs/images/checklist/".$row->image_path."/250/250/".$row->image_name) : "";
-			$result[$key]->help_image  = ($row->help_image_name) ? $this->config->site_url("thumbs/images/checklist/".$row->help_image_path."/250/250/".$row->help_image_name) : "";
+			$this->db->where("deleted IS NULL");
+			$images = $this->db->select("image_path,image_name,help_image_path,help_image_name")->where("id",$row->id)->get("checklist_items")->row();
+			$result[$key]->image = ($images->image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->image_path."/250/250/".$images->image_name) : "";
+			$result[$key]->help_image  = ($images->help_image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->help_image_path."/250/250/".$images->help_image_name) : "";
 		}
 
 		echo json_encode(["status" => true , "data" => $result]);

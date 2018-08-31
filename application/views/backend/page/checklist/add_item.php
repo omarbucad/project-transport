@@ -2,6 +2,7 @@
     $(document).on("click" , ".btn-add-more" , function(){
 
         var clone = $(".item-clone").last().clone().find("input:text").val("").end();
+        clone.find("textarea").val("");
 
         $(".item-clone").last().after(clone);
 

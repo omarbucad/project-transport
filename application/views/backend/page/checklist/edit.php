@@ -10,6 +10,12 @@
             clone.find("div.div-image").addClass("hidden");
             clone.find("div.div-upload").removeClass("hidden");
         }
+         if(clone.find("div.div-help-image").hasClass("hidden")){
+            clone.find("div.div-help-upload").removeClass("hidden");
+        }else{
+            clone.find("div.div-help-image").addClass("hidden");
+            clone.find("div.div-help-upload").removeClass("hidden");
+        }
 
         $(".item-clone").last().after(clone);
 
@@ -95,12 +101,38 @@
                 success : function(response){
                     var json = jQuery.parseJSON(response);
                     
-                    
                     if(json.status){
                         btn.closest("div.col-lg-6").find("div.div-image").addClass("hidden");
                         btn.closest("div.col-lg-6").find("div.div-upload").removeClass("hidden");
                         $.notify("Successfully deleted image" , { className:  "success" , position : "top center"});
 
+                        setTimeout(function () { 
+                          location.reload();
+                        }, 2000);
+                    }
+                }
+            });
+        }
+    });
+
+    $(document).on("click" , ".delete-help-image" , function(){
+        var c = confirm("Are you sure");
+        var btn = $(this);
+        var url = $(this).data('href') + $(this).data('id');
+        if(c == true){
+            $.ajax({
+                url : url ,
+                method : "GET" ,
+                success : function(response){
+                    var json = jQuery.parseJSON(response);
+                    
+                    if(json.status){
+                        btn.closest("div.col-lg-6").find("div.div-helpimage").addClass("hidden");
+                        btn.closest("div.col-lg-6").find("div.div-helpupload").removeClass("hidden");
+                        $.notify("Successfully deleted image" , { className:  "success" , position : "top center"});
+                        setTimeout(function () { 
+                          location.reload();
+                        }, 2000);
                     }
                 }
             });
@@ -110,6 +142,17 @@
     $(document).on("click" , "input[type='submit']" , function(){
         
         $(".has-image").each(function(index, item){
+            var id = $(item).closest("div.panel-body").find("input.item-id").val();
+            var v = $(item).closest("div.col-lg-6").find("input[type='file']").val();
+            if(v == ""){
+                $(item).val(0);
+            }else{
+                $(item).val(id);
+            }
+
+        });
+
+        $(".has-helpimage").each(function(index, item){
             var id = $(item).closest("div.panel-body").find("input.item-id").val();
             var v = $(item).closest("div.col-lg-6").find("input[type='file']").val();
             if(v == ""){
@@ -251,16 +294,16 @@
                             </div>
                         </div>
                         <div class="col-lg-6 no-margin-bottom">
-                            <div class="div-image <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? '':'hidden'; ?>">
+                            <div class="div-help-image <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? '':'hidden'; ?>">
                                 <div class="item-image">
                                     <img src="<?php echo site_url("thumbs/images/checklist/").$row['help_image_path']."/150/150/".$row['help_image_name']; ?>" class="img img-responsive thumbnail no-margin-bottom">
                                 </div>
-                                <a href="javascript:void(0);" class="delete-image btn btn-xs btn-danger" data-href="<?php echo site_url('app/setup/checklist/item/delete_image/');?>" data-id="<?php echo $row['id']; ?>">Delete Image</a>
+                                <a href="javascript:void(0);" class="delete-help-image btn btn-xs btn-danger" data-href="<?php echo site_url('app/setup/checklist/item/delete_helpimage/');?>" data-id="<?php echo $row['id']; ?>">Delete Help Image</a>
                             </div>
-                            <div class="div-upload <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? 'hidden':''; ?>">
-                                <input type="hidden" class="has-image" name="item[has_image][]" value="">
-                                <input type="file" name="file[]" class="item-file" value="">
-                                <p class="help-block">Image Only</p>
+                            <div class="div-help-upload <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? 'hidden':''; ?>">
+                                <input type="hidden" class="has-helpimage" name="item[has_help_image][]" value="">
+                                <input type="file" name="help_img[]" class="item-helpfile" value="">
+                                <p class="help-block">Help Image</p>
                             </div>
                         </div>
                         <div class="col-lg-12 text-right no-margin-bottom">

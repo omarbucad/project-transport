@@ -217,7 +217,7 @@
                             <td valign="top">
                                 <?php if($row->status != '<span class="label label-success">No Defect</span>') : ?>
                                   <a href="javascript:void(0);" data-id="<?php echo $row->report_number;?>" data-href="<?php echo site_url('app/report/report_status/').$row->report_id;?>" class="btn btn-link btn-update" style="padding: 3px 6px;margin:0;" title="Update Status"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                                  <a href="<?php echo site_url('app/report/pdf/').$this->hash->encrypt($row->report_id);?>" class="btn btn-link btn-print" style="padding: 3px 6px;margin:0;" title="Download PDF" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a>
+                                  <a href="<?php echo $this->config->site_url().$row->pdf_path.$row->pdf_file;?>" class="btn btn-link btn-print" style="padding: 3px 6px;margin:0;" title="Download PDF" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a>
                                 <?php endif; ?>
                             </td>
                         </tr>

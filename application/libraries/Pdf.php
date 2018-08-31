@@ -21,7 +21,7 @@ class Pdf {
 		$year = date("Y");
 		$month = date("m");
 
-		$this->folder = "/public/upload/pdf/".$year."/".$month;
+		$this->folder = "public/upload/pdf/".$year."/".$month;
 
 		if (!file_exists(FCPATH.$this->folder)) {
 
