@@ -85,8 +85,6 @@ class Report extends MY_Controller {
 	
 	public function pdf($report_id){
 
-	
-
 		$report_id = $this->hash->decrypt($report_id);
 		$report = $this->reports->get_report_by_id($report_id);
 
