@@ -51,12 +51,13 @@ class Report_model extends CI_Model {
             $this->db->where("rs.status !=", 0);
         }
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by,vt.type');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
+        $this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 
         $this->db->where("u.store_id",$this->data['session_data']->store_id);
 
@@ -83,12 +84,12 @@ class Report_model extends CI_Model {
 
     public function get_report_by_id($id){
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name,vt.type');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
-
+        $this->db->join('vehicle_type vt',"vt.vehicle_type_id = c.vehicle_type_id");
         $result = $this->db->where("r.report_id" , $id)->order_by("r.created" , "DESC")->get("report r")->row();
 
         if($result){
@@ -202,7 +203,7 @@ class Report_model extends CI_Model {
 
         //$store_id = $this->data['session_data']->store_id;
 
-        $this->db->select('r.* , rs.status, rs.created as status_created,rs.signature, c.checklist_name, u.display_name, u2.display_name as updated_by, s.store_name, s.address_id,sa.*');
+        $this->db->select('r.* , rs.status, rs.created as status_created,rs.signature, c.checklist_name, u.display_name, u2.display_name as updated_by, s.store_name, s.address_id,sa.*,vt.type');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
@@ -210,6 +211,7 @@ class Report_model extends CI_Model {
         $this->db->join('user u2','u2.user_id = rs.user_id');
         $this->db->join('store s', 's.store_id = u.store_id');
         $this->db->join('store_address sa', 'sa.store_address_id = s.address_id');
+        $this->db->join('vehicle_type vt',"vt.vehicle_type_id = c.vehicle_type_id");
 
         $result['header'] = $this->db->order_by("r.created" , "ASC")->get("report r")->result();
         $checklist = array();        

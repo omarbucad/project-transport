@@ -198,12 +198,13 @@
                                 <textarea name="description" class="textarea"><?php echo $result->description?></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="vehicle">Vehicle</label>
-                                <select name="vehicle" id="vehicle" class="form-control" value="<?php echo $result->vehicle_type;?>">
-                                  <option value="TRUCK" <?php echo ($result->vehicle_type == 'TRUCK') ? 'selected': '';?> >Truck</option>
-                                  <option value="TRAILER" <?php echo ($result->vehicle_type == 'TRAILER') ? 'selected': '';?> >Trailer</option>
-                                  <option value="BOTH" <?php echo ($result->vehicle_type == 'BOTH') ? 'selected': '';?> >Both Truck & Trailer</option>
-                                </select>
+                                <label for="type">Vehicle Type</label>
+                              <select class="form-control" name="type" id="type">
+                                <option value="">- Select Vehicle Type -</option>
+                                <?php foreach($types as $key => $val) :?>
+                                    <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($result->vehicle_type_id == $val->vehicle_type_id) ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                                <?php endforeach; ?>                                    
+                              </select>
                             </div>
                             <div class="form-group">
                                 <label for="checklist_for">Checklist For</label>
@@ -257,10 +258,9 @@
                 </div>
             </div>
 
-
             <?php foreach($checklist_items as $key => $row) : ?>
             <div class="panel panel-primary item-clone">
-                <div class="panel-heading">Item <span>1</span></div>
+                <div class="panel-heading">Item <!-- <span>1</span> --></div>
                 <div class="panel-body">
                     <div style="padding:5px 15px;">
                         <input type="hidden" name="item[id][]" value="<?php echo ($row['id']) ? $row['id'] : '0'; ?>" class="item-id">

@@ -85,10 +85,29 @@ class Report extends MY_Controller {
 	
 	public function pdf($report_id){
 
+	
+
 		$report_id = $this->hash->decrypt($report_id);
 		$report = $this->reports->get_report_by_id($report_id);
 
-		$this->pdf->create_report_checklist($report , "I");
+		$pdf = $this->pdf->create_report_checklist($report , "F");
+
+		$update = $this->db->where("report_id" , $report->report_id)->update("report" , [
+			"pdf_path"			=> $pdf['path'],
+			"pdf_file" 			=> $pdf['filename']
+		]);
+		
+		if($update){
+			$this->session->set_flashdata('status' , 'success');	
+			$this->session->set_flashdata('message' , 'Successfully Generated PDF!');
+
+			redirect("app/report/daily" , 'refresh');
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'Something went wrong.');
+
+			redirect("app/report/daily" , 'refresh');
+		}
 	
 	}
 

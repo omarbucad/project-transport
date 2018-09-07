@@ -91,11 +91,13 @@
                                 <textarea name="description" class="textarea" ><?php echo $post['description']; ?></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="vehicle">Vehicle</label>
-                                <select name="vehicle" id="vehicle" class="form-control" value="<?php echo set_value('vehicle');?>">
-                                  <option value="TRUCK" class="<?php echo ($post['vehicle'] == 'TRUCK') ? 'selected': '';?>">Truck</option>
-                                  <option value="TRAILER" class="<?php echo ($post['vehicle'] == 'TRAILER') ? 'selected': '';?>">Trailer</option>
-                                  <option value="BOTH" class="<?php echo ($post['vehicle'] == 'BOTH') ? 'selected': '';?>">Both Truck & Trailer</option>
+
+                                <label for="type">Vehicle Type</label>
+                                <select class="form-control" name="type" id="type">
+                                    <option value="">- Select Vehicle Type -</option>
+                                    <?php foreach($types as $key => $val) :?>
+                                        <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($post['type'] == $val->vehicle_type_id) ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                                    <?php endforeach; ?>                                    
                                 </select>
                             </div>
                             <div class="form-group">

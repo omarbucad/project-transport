@@ -68,7 +68,7 @@ class Register_model extends CI_Model {
         ]);
 
         //SETUP THE DEFAULT CHECKLIST IN THIS COMPANY
-        $this->setup_checklist($store_id);
+        //$this->setup_checklist($store_id);
 
         $this->db->trans_complete();
 

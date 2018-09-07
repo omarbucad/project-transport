@@ -189,7 +189,7 @@
                     <tr>
                       <th>DRIVERS NAME</th>
                       <th>VEHICLE REG</th>
-                      <th>TRAILER NUMBER</th>
+                      <th>VEHICLE TYPE</th>
                       <th>DATE</th>
                       <th>START MILEAGE</th>
                       <th>FINISH MILEAGE</th>
@@ -197,12 +197,14 @@
                     </tr>
                   </thead>
                   <tbody>
-
+                      <?php $headercount = 0;?>
                     <?php foreach($result['header'] as $row) : ?>
+                      <?php $headercount++;?>
+                      <?php if($headercount <= 7) : ?>
                       <tr class="customer-row">
                         <td><span><?php echo $row->display_name; ?></span></td>
                         <td><span><?php echo $row->vehicle_registration_number; ?></span></td>
-                        <td><span><?php echo $row->trailer_number; ?></span></td>
+                        <td><span><?php echo $row->type; ?></span></td>
                         <td><span><?php echo $row->created;?></span></td>
                         <td><span><?php echo $row->start_mileage?></span></td>
                         <td><span><?php echo $row->end_mileage?></span></td>
@@ -212,6 +214,7 @@
                           <?php endif;?>                        
                         </span></td>
                       </tr>
+                    <?php endif; ?>
                     <?php endforeach;?>
                   </tbody>              
                 </table>
@@ -223,7 +226,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><span style="display: block;">SERVICEABLE ✔</span><span style="display: block;">DEFECT ✖</span></th>
+                            <th><span style="display: block;">CHECKLIST ITEMS</span></th>
                             <th>DAY 1</th>
                             <th>DAY 2</th>
                             <th>DAY 3</th>
@@ -233,23 +236,41 @@
                             <th>DAY 7</th>
                         </tr>
                         <tr>
+                        <?php $countdays = 0;?> 
                             <th>DATE</th>
                             <?php foreach($result['header'] as $row) : ?>
-                            <td><span><small><?php echo $row->status_created; ?></small></span></td>
+                              <?php $countdays++;?>
+                              <?php if($countdays <= 7): ?>                              
+                                <td><span><small><?php echo $row->status_created; ?></small></span></td>
+                              <?php endif;?>
                             <?php endforeach; ?>
                         </tr>
                     </thead>
-                    <tbody>                           
+                    <tbody>                          
                       <?php foreach($result['checklist'] as $key => $value) : ?>
                         <tr class="customer-row" style="cursor: default;">
                           <td><span><?php echo $value['item_name'];?></span></td>
-                          <td><span><?php if($value['day1'] == 1){ echo '✖'; } elseif($value['day1'] == ""){} else{ echo '✔'; }?></span></td>
-                          <td><span><?php if($value['day2'] == 1){ echo '✖'; } elseif($value['day2'] == ""){} else{ echo '✔'; }?></span></td>
-                          <td><span><?php if($value['day3'] == 1){ echo '✖'; } elseif($value['day3'] == ""){} else{ echo '✔'; }?></span></td>
-                          <td><span><?php if($value['day4'] == 1){ echo '✖'; } elseif($value['day4'] == ""){} else{ echo '✔'; }?></span></td>
-                          <td><span><?php if($value['day5'] == 1){ echo '✖'; } elseif($value['day5'] == ""){} else{ echo '✔'; }?></span></td>
-                          <td><span><?php if($value['day6'] == 1){ echo '✖'; } elseif($value['day6'] == ""){} else{ echo '✔'; }?></span></td>
-                          <td><span><?php if($value['day7'] == 1){ echo '✖'; } elseif($value['day7'] == ""){} else{ echo '✔'; }?></span></td>
+                          <?php if($value['day1'] != '') : ?>
+                          <td><span><?php if($value['day1'] == 1){ echo 'DEFECT'; } elseif($value['day1'] == 2){echo 'RECHECKED';} else{ echo 'RECHECKED'; }?></span></td>
+                          <?php endif; ?>
+                          <?php if($value['day2'] != '') : ?>
+                          <td><span><?php if($value['day2'] == 1){ echo 'DEFECT'; } elseif($value['day2'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <?php endif; ?>
+                          <?php if($value['day3'] != '') : ?>
+                          <td><span><?php if($value['day3'] == 1){ echo 'DEFECT'; } elseif($value['day3'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <?php endif; ?>
+                          <?php if($value['day4'] != '') : ?>
+                          <td><span><?php if($value['day4'] == 1){ echo 'DEFECT'; } elseif($value['day4'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <?php endif; ?>
+                          <?php if($value['day5'] != '') : ?>
+                          <td><span><?php if($value['day5'] == 1){ echo 'DEFECT'; } elseif($value['day5'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <?php endif; ?>
+                          <?php if($value['day6'] != '') : ?>
+                          <td><span><?php if($value['day6'] == 1){ echo 'DEFECT'; } elseif($value['day6'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <?php endif; ?>
+                          <?php if($value['day7'] != '') : ?>
+                          <td><span><?php if($value['day7'] == 1){ echo 'DEFECT'; } elseif($value['day7'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <?php endif; ?>
                           
                         </tr>
                       <?php endforeach; ?>

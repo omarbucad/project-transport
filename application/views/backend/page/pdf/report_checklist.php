@@ -15,6 +15,11 @@
 			padding:5px;
 			font-weight: bold;
 		}
+		td{
+			word-wrap: break-word;
+			word-break: break-all;
+		}
+
 	</style>
 </head>
 <body>
@@ -43,11 +48,9 @@
 			</tr>
 			<tr>
 				<th >Registration No.</th>
-				<td><?php echo $vehicle_registration_number; ?></td>
-				<?php if($trailer_number) : ?>
-					<th>Trailer No.</th>
-					<td><?php echo $trailer_number; ?></td>	
-				<?php endif;?>
+				<td><?php echo $vehicle_registration_number; ?></td>				
+				<th>Vehicle Type</th>
+				<td><?php echo $type; ?></td>	
 				
 			</tr>
 			<tr>
@@ -58,7 +61,9 @@
 				<th>Report Notes</th>
 				<td><?php echo $report_notes; ?></td>
 			</tr>
-
+			<tr>
+				<td colspan="4" style="padding:10px;"></td>
+			</tr>
 			<tr >
 				<td colspan="2" class="tr_header"><?php echo $checklist_name; ?></td>
 				<td class="tr_header">Status</td>
@@ -67,10 +72,8 @@
 
 			<?php foreach($report_checklist as $key => $checklist) : ?>
 
-				<tr>
-					<td colspan="2">
-						<?php echo ($key+1).'. '.$checklist->item_name; ?>
-					</td>
+				<tr style="margin-bottom: 30px;">
+					<td colspan="2" style="width:300px;padding-right: 10px;"><?php echo ($key+1).". ".$checklist->item_name; ?></td>
 					<td>
 						<?php if($checklist->checklist_ischeck == 1) : ?>
 							<?php echo "Defect"; ?>
@@ -86,8 +89,6 @@
 			<?php endforeach; ?>
 			
 			<tr>
-				<td colspan="4"  style="padding:20px;"></td>
-			</tr><tr>
 				<td colspan="4" class="tr_header" style="padding:10px;"></td>
 			</tr>
 			<tr>

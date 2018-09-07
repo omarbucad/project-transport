@@ -101,13 +101,16 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                      <?php if($plan_type != 'Basic') : ?>
-                        <?php if($plan_type == 'Trial' || $plan_type == 'Premium') : ?>
+                      <!-- <?php //if($plan_type != 'Basic') : ?>
+                        <?php //if($plan_type == 'Trial' || $plan_type == 'Premium') : ?>
                           <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
-                        <?php elseif($plan_type == 'Standard' && (count($result) < 5)) : ?>
+                        <?php //elseif($plan_type == 'Standard' && (count($result) < 5)) : ?>
                           <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
-                        <?php endif; ?>
-                      <?php endif; ?>
+                        <?php// endif; ?>
+                      <?php// endif; ?> -->
+                      <?php if($this->session->userdata("user")->role == 'SUPER ADMIN') : ?>
+                       <a href="javascript:void(0);" class="btn btn-success checklist-modal">Add Checklist</a>
+                      <?php endif;?>
                     </div>
                 </div>
             </div>
@@ -117,10 +120,21 @@
                 <div class="card-body no-padding-left no-padding-right">
                     <form action="<?php echo site_url('app/setup/checklist')?>" method="GET">
                         <div class="row">
-                            <div class="col-xs-12 col-lg-6 no-margin-bottom">
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
                                     <label for="s_name">Checklist Name</label>
                                     <input type="text" name="checklist_name" class="form-control" id="s_name" placeholder="Checklist Name" value="<?php echo $this->input->get("checklist_name"); ?>">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
+                                <div class="form-group">
+                                    <label for="s_product_type">Type</label>
+                                    <select class="form-control" name="type" id="type">
+                                    <option value="">- Select Vehicle Type -</option>
+                                    <?php foreach($types as $key => $val) :?>
+                                        <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                                    <?php endforeach; ?>                                    
+                                </select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
@@ -159,10 +173,10 @@
                                 <span><strong><a href="javascript:void(0);" class="link-style view-list" data-name="<?php echo $row->checklist_name; ?>" data-id="<?php echo $row->checklist_id; ?>" data-href="<?php echo site_url('app/setup/checklist/view/').$this->hash->encrypt($row->checklist_id);?>"><?php echo $row->checklist_name; ?></a></strong></span>
                             </td>
                             <td><span><?php echo $row->description; ?></span></td>
-                            <td><span><?php echo $row->vehicle_type; ?></span></td>
+                            <td><span><?php echo $row->type; ?></span></td>
                             <td><span><?php echo $row->status; ?></span></td>
                             <td>
-                              <?php if ($row->description != "Default Checklist" && $row->description != "Default Checklist") : ?>
+                              <?php if ($this->session->userdata("user")->role == 'SUPER ADMIN') : ?>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <a href="<?php echo site_url("app/setup/checklist/edit/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("app/setup/checklist/delete/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link btn-delete" title="Remove Checklist"><i class="fa fa-trash" aria-hidden="true"></i></a>
@@ -192,12 +206,15 @@
             <input type="text" name="checklist_name" id="checklist_name" class="form-control" required="">
           </div>
           <div class="form-group">
-            <label for="vehicle">Vehicle</label>
-            <select name="vehicle" id="vehicle_type" class="form-control">
-              <option value="TRUCK">Truck</option>
-              <option value="TRAILER">Trailer</option>
-              <option value="BOTH">Both Truck & Trailer</option>
-            </select>
+            <label for="vehicle">Vehicle Type</label>
+            <div class="form-group">
+             <select class="form-control" name="type" id="type">
+                <option value="">- Select Vehicle Type -</option>
+                  <?php foreach($types as $key => $val) :?>
+                      <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get('type') == $val->vehicle_type_id) ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                  <?php endforeach; ?>                                    
+                </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="checklist_for">Checklist For</label>

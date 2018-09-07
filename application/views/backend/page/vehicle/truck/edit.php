@@ -4,7 +4,7 @@
             <li><a href="<?php echo site_url('app/vehicle/truck'); ?>">Vehicle List</a></li>
             <li class="active">Edit Vehicle</li>
         </ol>
-        <form class="form-horizontal" action="<?php echo site_url("app/vehicle/truck/edit/").$this->hash->encrypt($result->vehicle_id); ?>" method="POST" enctype="multipart/form-data">
+        <form class="form-horizontal" action="<?php echo site_url("app/vehicle/edit/").$this->hash->encrypt($result->vehicle_id); ?>" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
             <!-- STORE SETTINGS -->
             <div class="card margin-bottom">
@@ -21,25 +21,22 @@
                                 <input type="text" name="vehicle_registration_number" class="form-control" value="<?php echo $result->vehicle_registration_number;?>">
                             </div>
                         </dd>
-
-                        <dt>Tyre Pressure</dt>
-                        <dd>
-                            <div class="form-group">
-                                <input type="text" name="tyre_pressure" value="<?php echo $result->tyre_pressure; ?>" class="form-control">
-                            </div>
-                        </dd>
                         
-                        <dt>Thread Depth</dt>
-                        <dd>
-                            <div class="form-group">
-                                <input type="text" name="thread_depth" value="<?php echo $result->thread_depth; ?>" class="form-control">
-                            </div>
-                        </dd>
-
                         <dt>Description</dt>
                         <dd>
                             <div class="form-group">
                                 <textarea name="description" class="textarea"><?php echo $result->description;?></textarea>
+                            </div>
+                        </dd>
+                        <dt>Type</dt>
+                        <dd>
+                            <div class="form-group">
+                                <select class="form-control" name="type" id="type" value="<?php echo $result->vehicle_type_id;?>">
+                                    <option value="">- Select Vehicle Type -</option>
+                                    <?php foreach($types as $key => $val) :?>
+                                        <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($result->vehicle_type_id == $val->vehicle_type_id) ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                                    <?php endforeach; ?>                                    
+                                </select>
                             </div>
                         </dd>
 
@@ -58,7 +55,7 @@
             </div>
 
             <div class="text-right margin-bottom">
-                <a href="<?php echo site_url('app/vehicle/truck');?>" class="btn btn-default">Cancel</a>
+                <a href="<?php echo site_url('app/vehicle');?>" class="btn btn-default">Cancel</a>
                 <input type="submit" name="submit" value="Save" class="btn btn-success">
             </div>
         </form>

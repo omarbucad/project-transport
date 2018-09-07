@@ -3,29 +3,29 @@
 class Checklist_model extends CI_Model {
 
     public function get_checklist_list(){
-        $store_id = $this->data['session_data']->store_id;
 
         /*
             TODO :: Searching logic here
         */
         if($checklist_name = $this->input->get("checklist_name")){
-            $this->db->like("checklist_name", $checklist_name);
+            $this->db->like("c.checklist_name", $checklist_name);
         }
         if($this->input->get("status") != ""){
-            $this->db->where("status", $this->input->get("status"));
+            $this->db->where("c.status", $this->input->get("status"));
         }
 
-        if($checklist_id = $this->input->get("checklist_id")){
+        if($checklist_id = $this->input->get("c.checklist_id")){
 
             
             $checklist_id = $this->hash->decrypt($checklist_id);
 
-            $this->db->where("checklist_id" , $checklist_id);
+            $this->db->where("c.checklist_id" , $checklist_id);
         }
+        $this->db->select("c.*,vt.type");
+        $this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 
-        $this->db->where("deleted IS NULL");
-
-        $result = $this->db->where("store_id" , $store_id)->order_by("created" , "ASC")->get("checklist")->result();
+        $this->db->where("c.deleted IS NULL");
+        $result = $this->db->order_by("c.created" , "ASC")->get("checklist c")->result();
 
         foreach($result as $key => $row){
             $result[$key]->status = convert_status($row->status);
@@ -35,14 +35,12 @@ class Checklist_model extends CI_Model {
     }
 
     public function add_checklist_name(){
-        $store_id = $this->data['session_data']->store_id;
 
         $this->db->insert("checklist" , [
             "checklist_name"   => $this->input->post("checklist_name"),
             "status"           => 1,
-            "store_id"         => $store_id ,
             "description"      => $this->input->post("description"),
-            "vehicle_type"     => $this->input->post("vehicle"),
+            "vehicle_type_id"  => $this->input->post("type"),
             "checklist_for"    => $this->input->post("checklist_for"),
             "reminder_every"   => ($this->input->post("checklist_for") == "MECHANIC") ? $this->input->post("reminder") : "",
             "created"          => time()
@@ -94,7 +92,6 @@ class Checklist_model extends CI_Model {
                 'size'  => $help_img['size'][$k],
             ];
 
-
             if($help_image['name'] != ''){
                 $h_img = $this->upload_helpimage($help_image);
             }else{
@@ -118,16 +115,16 @@ class Checklist_model extends CI_Model {
 
         $this->db->insert_batch("checklist_items" , $batch);
 
-        $accounts = array();
-        if(!empty($a)){
-            foreach($a as $row){
-                $accounts[] = [
-                    "user_id"       => $row ,
-                    "checklist_id"  => $checklist_id
-                ];
-            }
-            $this->db->insert_batch("user_checklist" , $accounts);
-        }
+        // $accounts = array();
+        // if(!empty($a)){
+        //     foreach($a as $row){
+        //         $accounts[] = [
+        //             "user_id"       => $row ,
+        //             "checklist_id"  => $checklist_id
+        //         ];
+        //     }
+        //     $this->db->insert_batch("user_checklist" , $accounts);
+        // }
         
         
 
@@ -349,7 +346,7 @@ class Checklist_model extends CI_Model {
         $checklist_info = $this->db->update("checklist", [
             "checklist_name" => $this->input->post("checklist_name"),
             "description"    => $this->input->post("description"),
-            "vehicle_type"   => $this->input->post("vehicle"),
+            "vehicle_type_id"   => $this->input->post("type"),
             "status"         => $this->input->post("status"),
             "checklist_for"  => $this->input->post("checklist_for"),
             "reminder_every" => ($this->input->post("checklist_for") == "MECHANIC") ? $this->input->post("reminder") : "",
@@ -457,19 +454,18 @@ class Checklist_model extends CI_Model {
         $this->db->where('checklist_id',$checklistid);
         $this->db->delete("user_checklist");
         
-        if(!empty($a)){
-            $accounts = array();
-            foreach($a as $row){
-                $accounts[] = [
-                    "user_id"       => $row,
-                    "checklist_id"  => $checklistid
-                ];
-            }
-            $this->db->where("checklist_id", $checklistid);
-            $this->db->delete("user_checklist");
-            $this->db->insert_batch("user_checklist" , $accounts);
-        }
-
+        // if(!empty($a)){
+        //     $accounts = array();
+        //     foreach($a as $row){
+        //         $accounts[] = [
+        //             "user_id"       => $row,
+        //             "checklist_id"  => $checklistid
+        //         ];
+        //     }
+        //     $this->db->where("checklist_id", $checklistid);
+        //     $this->db->delete("user_checklist");
+        //     $this->db->insert_batch("user_checklist" , $accounts);
+        // }
         $this->db->trans_complete();
 
         if($this->db->trans_status() === FALSE){
@@ -569,13 +565,13 @@ class Checklist_model extends CI_Model {
     }
 
     public function get_checklist_dropdown(){
-        $store_id = $this->data['session_data']->store_id;
+       // $store_id = $this->data['session_data']->store_id;
 
 
         $this->db->where("deleted IS NULL");
         $this->db->where("status !=", 0);
 
-        $result = $this->db->where("store_id" , $store_id)->order_by("created" , "ASC")->get("checklist")->result();
+        $result = $this->db->order_by("created" , "ASC")->get("checklist")->result();
 
         return $result;
     }
@@ -583,9 +579,10 @@ class Checklist_model extends CI_Model {
     public function get_checklist($checklist_id){
 
         $id = $this->hash->decrypt($checklist_id);
-
-        $this->db->where("checklist_id", $id);
-        $result = $this->db->get('checklist')->row();
+        $this->db->select("c.*,vt.type");
+        $this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
+        $this->db->where("c.checklist_id", $id);
+        $result = $this->db->get('checklist c')->row();
 
         return $result;
     }

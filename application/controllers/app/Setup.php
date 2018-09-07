@@ -6,24 +6,28 @@ class Setup extends MY_Controller {
 	public function __construct() {
 	    parent::__construct();
 	    $this->load->model('checklist_model', 'checklist');
+	    $this->load->model('vehicle_model', 'vehicle');
 	    $this->load->model('profile_model', 'profile');
 	    $this->load->model('accounts_model', 'account');
-	    if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+	    if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" && $this->session->userdata('user')->role != "SUPER ADMIN"){
 			redirect("app/dashboard");					
 		}
 
     }
     // CHECKLIST SECTION
 	public function checklist(){
-
-		if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
-			redirect("app/dashboard");
+		if($this->session->userdata('user')->role != "SUPER ADMIN"){
+				if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+				redirect("app/dashboard");
+			}
 		}
+
 		$this->data['page_name'] 		= "Checklist";
 		$this->data['result']    		=  $this->checklist->get_checklist_list();
 		$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
 		$this->data['main_page'] 		= "backend/page/checklist/view";
 		$this->data['plan_type']		= $this->data['session_data']->title;
+		$this->data['types'] = $this->vehicle->vehicle_type_list();
 
 		$this->load->view('backend/master' , $this->data);
 	}
@@ -33,6 +37,10 @@ class Setup extends MY_Controller {
 		if($this->input->post()){
 
 			$this->form_validation->set_rules('checklist_name'	, 'Checklist Name'	, 'trim|required');
+			if($this->input->post('type') == ''){
+				$this->form_validation->set_rules('type'	, 'Vehicle Type'	, 'trim|required');	
+			}
+			
 			$this->form_validation->set_rules('item[name][0]'	, 'Item'	, 'trim|required');
 
 			if ($this->form_validation->run() == FALSE){ 
@@ -40,6 +48,7 @@ class Setup extends MY_Controller {
 				$this->data['main_page'] = "backend/page/checklist/add_item";
 				$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
 				$this->data['post']		 = $this->input->post();
+				$this->data['types'] = $this->vehicle->vehicle_type_list();
 				$this->load->view('backend/master' , $this->data);
 			}else{
 
@@ -70,6 +79,7 @@ class Setup extends MY_Controller {
 			$this->data['page_name'] = "Checklist Item";
 			$this->data['main_page'] = "backend/page/checklist/add_item";
 			$this->data['result'] = $this->checklist->get_checklist($checklist_id);
+			$this->data['types'] = $this->vehicle->vehicle_type_list();
 			$this->load->view('backend/master' , $this->data);
 		}
 		else{
@@ -89,29 +99,34 @@ class Setup extends MY_Controller {
 	}
 
 	public function edit_checklist($checklist_id){
-		if (empty($this->input->post())){ 
-			$this->data['page_name'] = "Checklist Information";
-			$this->data['main_page'] = "backend/page/checklist/edit";
-			$this->data['result'] = $this->checklist->get_checklist($checklist_id);
-			$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
-			$this->data['user_checklist'] = $this->checklist->get_userchecklist($checklist_id);
-			$this->data['checklist_items'] = $this->checklist->get_checklist_items($checklist_id);
-
-			$this->load->view('backend/master' , $this->data);
-		}
-		else{
-			if($result = $this->checklist->edit_checklist($checklist_id)){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Updated Checklist');	
-				
-				redirect("app/setup/checklist/?checklist_id=".$checklist_id, 'refresh');
-
-			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');
+			$this->form_validation->set_rules('checklist_name'	, 'Checklist Name'	, 'trim|required');
+			if($this->input->post('type') == ''){
+				$this->form_validation->set_rules('type'	, 'Vehicle Type'	, 'trim|required');	
 			}
-		}
-		
+
+			if($this->form_validation->run() == FALSE){ 
+				$this->data['page_name'] = "Checklist Information";
+				$this->data['main_page'] = "backend/page/checklist/edit";
+				$this->data['result'] = $this->checklist->get_checklist($checklist_id);
+				$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
+				$this->data['user_checklist'] = $this->checklist->get_userchecklist($checklist_id);
+				$this->data['checklist_items'] = $this->checklist->get_checklist_items($checklist_id);
+				$this->data['types'] = $this->vehicle->vehicle_type_list();
+
+				$this->load->view('backend/master' , $this->data);
+			}
+			else{
+				if($result = $this->checklist->edit_checklist($checklist_id)){
+					$this->session->set_flashdata('status' , 'success');	
+					$this->session->set_flashdata('message' , 'Successfully Updated Checklist');	
+					
+					redirect("app/setup/checklist/?checklist_id=".$checklist_id, 'refresh');
+
+				}else{
+					$this->session->set_flashdata('status' , 'error');
+					$this->session->set_flashdata('message' , 'Something went wrong');
+				}
+			}
 	}
 
 	public function delete_checklist($checklist_id){

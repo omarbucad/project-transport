@@ -1,11 +1,11 @@
 <div class="container margin-bottom">
     <div class="side-body padding-top">
     	<ol class="breadcrumb">
-    		<li><a href="<?php echo site_url('app/vehicle/truck'); ?>">Truck List</a></li>
-    		<li class="active">New Truck</li>
+    		<li><a href="<?php echo site_url('app/vehicle/truck'); ?>">Vehicle List</a></li>
+    		<li class="active">Add Vehicle</li>
     	</ol>	
-    	<h3>New Truck</h3>
-    	<form class="form-horizontal" action="<?php echo site_url("app/vehicle/truck/add"); ?>" method="POST" enctype="multipart/form-data">
+    	<h3>Vehicle Information</h3>
+    	<form class="form-horizontal" action="<?php echo site_url("app/vehicle/add"); ?>" method="POST" enctype="multipart/form-data">
     		<input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
     		<!-- STORE SETTINGS -->
     		<div class="card margin-bottom">
@@ -19,24 +19,22 @@
 	    				<dt>Registration Number</dt>
 	    				<dd>
 	    					<div class="form-group">
-	    						<input type="text" name="registration_number" value="<?php echo set_value("registration_number"); ?>" class="form-control">
+	    						<input type="text" name="registration_number" value="<?php echo set_value("registration_number"); ?>" class="form-control" placeholder="Registration Number">
 	    					</div>
 	    				</dd>
 
-	    				<dt>Tyre Pressure</dt>
+	    				<dt>Type</dt>
 	    				<dd>
 	    					<div class="form-group">
-	    						<input type="text" name="tyre_pressure" value="<?php echo set_value("tyre_pressure"); ?>" class="form-control">
+	    						<select class="form-control" name="type" id="type">
+                                    <option value="">- Select Vehicle Type -</option>
+                                    <?php foreach($types as $key => $val) :?>
+                                        <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                                    <?php endforeach; ?>                                    
+                                </select>
 	    					</div>
 	    				</dd>
 	    				
-	    				<dt>Thread Depth</dt>
-	    				<dd>
-	    					<div class="form-group">
-	    						<input type="text" name="thread_depth" value="<?php echo set_value("thread_depth"); ?>" class="form-control">
-	    					</div>
-	    				</dd>
-
 	    				<dt>Description</dt>
 	    				<dd>
 	    					<div class="form-group">
@@ -52,7 +50,7 @@
 
 
 	    	<div class="text-right margin-bottom">
-	    		<a href="<?php echo site_url('app/vehicle/truck');?>"  class="btn btn-default">Cancel</a>
+	    		<a href="<?php echo site_url('app/vehicle');?>"  class="btn btn-default">Cancel</a>
 	    		<input type="submit" name="submit" value="Save" class="btn btn-success">
 	    	</div>
     	</form>

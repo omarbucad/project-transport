@@ -96,7 +96,7 @@
                 <div class="col-xs-12 col-lg-8 no-margin-bottom">                
                 </div> 
             	<div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                    <a href="<?php echo site_url('app/report/pdf/').$this->hash->encrypt($result->report_id);?>" class="btn btn-success btn-print" target="_blank">Print Report</a>
+                    <a href="<?php echo $this->config->site_url().$row->pdf_path.$row->pdf_file;?>" class="btn btn-success btn-print" target="_blank">Print Report</a>
 					<a href="<?php echo site_url('app/report/daily');?>" class="btn btn-primary"  style="margin-right:25px;">Back to Reports List</a>
                 </div>
                                
@@ -126,12 +126,11 @@
     						<td><strong>Vehicle</strong></td>
     						<td><?php echo $result->vehicle_registration_number;?></td>
     					</tr>
-    					<?php if($result->trailer_number) : ?>
+    					
                         <tr>
-                            <td><strong>Trailer Number</strong></td>
-                            <td><?php echo $result->trailer_number; ?></td>
+                            <td><strong>Vehicle Type</strong></td>
+                            <td><?php echo $result->type; ?></td>
                         </tr>
-                        <?php endif; ?>
     					
     					<tr>
     						<td><strong>Start Mileage</strong></td>
@@ -197,17 +196,21 @@
     						<table class="table">
     						<tr>
     							<td><strong>Item</strong></td>
-    							<td></td>
-    							<td><strong>Remarks</strong></td>
+    							<td><strong>Status</strong></td>
+    							<td><strong>Notes</strong></td>
     							<td><strong>Images</strong></td>
     						</tr>
     						<?php foreach($result->report_checklist as $key => $row) :?>
 	    					<tr>
 	    						<td><?php echo $row->item_name; ?></td>
 	    						<td>
-	    							<span class="<?php echo ($row->checklist_ischeck == '1') ? 'span-danger' : 'span-success';?>" data-toggle="tooltip" data-placement="right" title="<?php echo ($row->checklist_ischeck == '1') ? 'Defective' : 'Serviceable'; ?>" >
-	    								<strong><?php echo ($row->checklist_ischeck == '1') ? '✖' : '✔'; ?></strong>
-	    							</span>
+	    							<?php if($row->checklist_ischeck == 1) : ?>
+                                        <?php echo "Defect"; ?>
+                                    <?php elseif($row->checklist_ischeck == 2) : ?>
+                                        <?php echo "Rechecked"; ?>
+                                    <?php else : ?>
+                                        <?php echo "Good"; ?>
+                                    <?php endif; ?>
 	    						</td>
 	    						<td><?php echo $row->checklist_value; ?></td>
 	    						<td>

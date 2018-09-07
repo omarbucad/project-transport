@@ -10,21 +10,25 @@ class Vehicle_model extends CI_Model {
             TODO :: Searching logic here
         */
         if($this->input->get("status") != ""){
-            $this->db->where("status", $this->input->get("status"));
+            $this->db->where("v.status", $this->input->get("status"));
+        }
+
+        if($this->input->get("type") != ""){
+            $this->db->where("v.vehicle_type_id", $this->input->get("type"));
         }
 
         if($reg_number = $this->input->get("registration_number")){
-            $this->db->where("vehicle_registration_number", $reg_number);
+            $this->db->where("v.vehicle_registration_number", $reg_number);
         }
 
         if($vehicle_id = $this->input->get("vehicle_id")){
             
             $vehicle_id = $this->hash->decrypt($vehicle_id);
 
-            $this->db->where("vehicle_id" , $vehicle_id);
+            $this->db->where("v.vehicle_id" , $vehicle_id);
         }
 
-        $this->db->where("deleted IS NULL");
+        $this->db->where("v.deleted IS NULL");
 
 
         if($plan == "Basic"){
@@ -34,13 +38,19 @@ class Vehicle_model extends CI_Model {
         }else{
             $limit = 0;
         }
-
-        $result = $this->db->where("store_id" , $store_id)->order_by("vehicle_registration_number" , "ASC")->limit($limit)->get("vehicle")->result();
+        $this->db->select("v.*,vt.type");
+        $this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+        $result = $this->db->where("store_id" , $store_id)->order_by("v.vehicle_registration_number" , "ASC")->limit($limit)->get("vehicle v")->result();
 
         foreach($result as $key => $row){
             $result[$key]->status = convert_status($row->status);
         }
 
+        return $result;
+    }
+
+    public function vehicle_type_list(){
+        $result = $this->db->get("vehicle_type")->result();
         return $result;
     }
 
@@ -84,8 +94,7 @@ class Vehicle_model extends CI_Model {
         if($valid){
             $this->db->insert("vehicle" , [
                 "vehicle_registration_number"   => $this->input->post("registration_number"),
-                "tyre_pressure"                 => $this->input->post("tyre_pressure"),
-                "thread_depth"                  => $this->input->post("thread_depth"),
+                "vehicle_type_id"               => $this->input->post("type"),
                 "status"                        => 1 ,
                 "store_id"                      => $store_id ,
                 "description"                   => $this->input->post("description"),
@@ -105,8 +114,7 @@ class Vehicle_model extends CI_Model {
         $this->db->where("vehicle_id", $id);
         $this->db->update("vehicle" , [
             "vehicle_registration_number"   => $this->input->post("vehicle_registration_number"),
-            "tyre_pressure"                 => $this->input->post("tyre_pressure"),
-            "thread_depth"                  => $this->input->post("thread_depth"),
+            "vehicle_type_id"               => $this->input->post("type"),
             "status"                        => $this->input->post("status"),
             "description"                   => $this->input->post("description")
         ]);

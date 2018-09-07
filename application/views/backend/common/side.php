@@ -37,25 +37,35 @@
                         <span class="icon fa fa-clipboard"></span><span class="title">Invoice</span>
                     </a>
                 </li>
+                <li class="<?php echo ($this->uri->segment(2) == 'setup') ? "active" : "" ;?>">
+                    <a href="<?php echo site_url("app/setup/checklist"); ?>">
+                        <span class="icon fa fa-check-square-o"></span><span class="title">Checklist</span>
+                    </a>
+                </li>
                 <?php endif; ?>
                 <?php if($session_data->role != "SUPER ADMIN") : ?>
 
                     <?php if($session_data->expired == false) : ?>
                         <?php if($session_data->role != "MECHANIC") : ?>
-                        <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
+                            <li class="<?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
+                                <a href="<?php echo site_url('app/vehicle/'); ?>">
+                                    <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
+                                </a>
+                            </li>
+                        <!-- <li class="panel panel-default dropdown <?php //echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
                             <a data-toggle="collapse" href="#dropdown-element-vechile">
                                 <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
-                            </a>
+                            </a> -->
                             <!-- Dropdown level 1 -->
-                            <div id="dropdown-element-vechile" class="panel-collapse collapse">
+                            <!-- div id="dropdown-element-vechile" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul class="nav navbar-nav">
-                                        <li><a href="<?php echo site_url("app/vehicle/truck"); ?>">Vehicle</a></li>
-                                        <li><a href="<?php echo site_url("app/vehicle/trailer"); ?>">Trailer</a></li>
+                                        <li><a href="<?php //echo site_url("app/vehicle/truck"); ?>">Vehicle</a></li>
+                                        <li><a href="<?php //echo site_url("app/vehicle/trailer"); ?>">Trailer</a></li>
                                     </ul>
                                 </div>
                             </div>
-                        </li>
+                        </li> -->
                         <?php endif; ?>
                     <?php endif; ?>
                 <?php if($session_data->expired == false) : ?>

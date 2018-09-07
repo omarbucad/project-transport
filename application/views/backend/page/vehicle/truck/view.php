@@ -28,7 +28,7 @@
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container" >
-        	<h1>Vehicle Information</h1>
+        	<h1>Manage Vehicles</h1>
         </div>
         <div class="grey-bg ">
             <div class="container ">
@@ -38,11 +38,11 @@
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
                         <?php if($plan_type == "Basic" && (count($result) < $this->session->userdata('user')->no_accounts)) : ?>
-                            <a href="<?php echo site_url("app/vehicle/truck/add"); ?>" class="btn btn-success ">Add Vehicle</a>
+                            <a href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
                         <?php elseif($plan_type == "Standard" &&  $totalvehicle < $this->session->userdata('user')->no_accounts) : ?>
-                            <a href="<?php echo site_url("app/vehicle/truck/add"); ?>" class="btn btn-success ">Add Vehicle</a>
+                            <a href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
                         <?php elseif($plan_type == "Trial" || $plan_type == "Premium") : ?>
-                            <a href="<?php echo site_url("app/vehicle/truck/add"); ?>" class="btn btn-success ">Add Vehicle</a>
+                            <a href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -51,12 +51,24 @@
         <div class="card margin-bottom">
             <div class="container">
                 <div class="card-body no-padding-left no-padding-right">
-                    <form action="<?php echo site_url('app/vehicle/truck')?>" method="GET">
+                    <form action="<?php echo site_url('app/vehicle')?>" method="GET">
                         <div class="row">
-                            <div class="col-xs-12 col-lg-6 no-margin-bottom">
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
                                     <label for="s_name">Registration number</label>
                                     <input type="text" name="registration_number" class="form-control" id="s_name" placeholder="Registration Number" value="<?php echo $this->input->get("registration_number"); ?>">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
+                                <div class="form-group">
+                                    <label for="type">Type</label>
+                                    <select class="form-control" name="type" id="type">
+                                        <option value="">- Select Vehicle Type -</option>
+                                        <?php foreach($types as $key => $val) :?>
+                                            <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                                        <?php endforeach; ?>
+                                        
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
@@ -84,7 +96,8 @@
                     <tr>
                         <th width="30%">Registration Number</th>
                         <th width="20%">Description</th>
-                        <th width="20%">Status</th>
+                        <th width="10%">Type</th>
+                        <th width="10%">Status</th>
                         <th width="30%"></th>
                     </tr>
                 </thead>
@@ -95,11 +108,12 @@
                                 <span><strong><?php echo $row->vehicle_registration_number; ?></strong></span>
                             </td>
                             <td><span><?php echo $row->description; ?></span></td>
+                            <td><span><?php echo $row->type;?></span></td>
                             <td><span><?php echo $row->status; ?></span></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
-                                    <a href="<?php echo site_url("app/vehicle/truck/edit/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/truck/delete/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-delete" title="Remove Vehicle"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    <a href="<?php echo site_url("app/vehicle/edit/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/delete/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-delete" title="Remove Vehicle"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>

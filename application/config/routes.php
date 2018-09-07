@@ -54,15 +54,15 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
-$route['app/vehicle/truck/add'] = 'app/vehicle/add_truck';
-$route['app/vehicle/truck/edit/(:any)'] = 'app/vehicle/edit_truck/$1';
-$route['app/vehicle/truck/delete/(:any)'] = 'app/vehicle/delete_truck/$1';
+// $route['app/vehicle/truck/add'] = 'app/vehicle/add_truck';
+// $route['app/vehicle/truck/edit/(:any)'] = 'app/vehicle/edit_truck/$1';
+// $route['app/vehicle/truck/delete/(:any)'] = 'app/vehicle/delete_truck/$1';
 
-$route['app/vehicle/trailer/add'] = 'app/vehicle/add_trailer';
-$route['app/vehicle/trailer/edit/(:any)'] = 'app/vehicle/edit_trailer/$1';
-$route['app/vehicle/trailer/delete/(:any)'] = 'app/vehicle/delete_trailer/$1';
+// $route['app/vehicle/trailer/add'] = 'app/vehicle/add_trailer';
+// $route['app/vehicle/trailer/edit/(:any)'] = 'app/vehicle/edit_trailer/$1';
+// $route['app/vehicle/trailer/delete/(:any)'] = 'app/vehicle/delete_trailer/$1';
 
-$route['app/vehicle/type/edit/(:any)'] = 'app/vehicle/edit_type/$1';
+// $route['app/vehicle/type/edit/(:any)'] = 'app/vehicle/edit_type/$1';
 
 $route['app/setup/checklist/add'] = 'app/setup/checklist';
 $route['app/setup/checklist/view/(:any)'] = 'app/setup/view_checklist/$1';

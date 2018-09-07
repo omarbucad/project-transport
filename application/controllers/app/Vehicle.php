@@ -16,55 +16,99 @@ class Vehicle extends MY_Controller {
 		}
 
     }
-
-	public function truck(){
-		$this->data['page_name'] = "Truck";
+    public function index(){
+		$this->data['page_name'] = "Vehicles";
 		$this->data['result']    =  $this->vehicle->get_vehicle_list();
 		$this->data['main_page'] = "backend/page/vehicle/truck/view";
 		
 		$vehicle = count($this->vehicle->get_vehicle_list());
-		$trailer = count($this->vehicle->get_trailer_list());
-		$this->data['totalvehicle'] = $vehicle + $trailer;
+		$this->data['types'] = $this->vehicle->vehicle_type_list();
+		$this->data['totalvehicle'] = $vehicle;
 		$this->load->view('backend/master' , $this->data);
 	}
 
-	public function add_truck(){
+	// public function truck(){
+	// 	$this->data['page_name'] = "Truck";
+	// 	$this->data['result']    =  $this->vehicle->get_vehicle_list();
+	// 	$this->data['main_page'] = "backend/page/vehicle/truck/view";
+		
+	// 	$vehicle = count($this->vehicle->get_vehicle_list());
+	// 	$trailer = count($this->vehicle->get_trailer_list());
+	// 	$this->data['totalvehicle'] = $vehicle + $trailer;
+	// 	$this->load->view('backend/master' , $this->data);
+	// }
+	public function add(){
 		
 
 		$this->form_validation->set_rules('registration_number'		, 'Registration Number'	, 'trim|required');
 
+		if($this->input->post("type") == ""){
+			$this->form_validation->set_rules('type'		, 'Vehicle'	, 'trim|required');
+		}
+
 		if ($this->form_validation->run() == FALSE){ 
 
-			$this->data['page_name'] = "Add Truck Information";
+			$this->data['page_name'] = "Add Vehicle Information";
 			$this->data['main_page'] = "backend/page/vehicle/truck/add";
+			$this->data['types'] = $this->vehicle->vehicle_type_list();
 			$this->load->view('backend/master' , $this->data);
 
 		}else{
 
 			if($vehicle_id = $this->vehicle->add_truck()){
 				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Added a new Truck');	
+				$this->session->set_flashdata('message' , 'Added Successfully');	
 
-				redirect("app/vehicle/truck/?vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
+				redirect("app/vehicle/vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
 			}else{
 				$this->session->set_flashdata('status' , 'error');
 				$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/vehicle/truck/add" , 'refresh');
+				redirect("app/vehicle/add" , 'refresh');
 			}
 		}
 	}
 
-	public function edit_truck($vehicle_id){
+	// public function add_truck(){
+		
+
+	// 	$this->form_validation->set_rules('registration_number'		, 'Registration Number'	, 'trim|required');
+
+	// 	if ($this->form_validation->run() == FALSE){ 
+
+	// 		$this->data['page_name'] = "Add Truck Information";
+	// 		$this->data['main_page'] = "backend/page/vehicle/truck/add";
+	// 		$this->load->view('backend/master' , $this->data);
+
+	// 	}else{
+
+	// 		if($vehicle_id = $this->vehicle->add_truck()){
+	// 			$this->session->set_flashdata('status' , 'success');	
+	// 			$this->session->set_flashdata('message' , 'Successfully Added a new Truck');	
+
+	// 			redirect("app/vehicle/truck/?vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
+	// 		}else{
+	// 			$this->session->set_flashdata('status' , 'error');
+	// 			$this->session->set_flashdata('message' , 'Something went wrong');	
+
+	// 			redirect("app/vehicle/truck/add" , 'refresh');
+	// 		}
+	// 	}
+	// }
+	public function edit($vehicle_id){
 		$this->form_validation->set_rules('vehicle_registration_number'	, 'Vehicle Registration Number'	, 'trim|required');
-		$this->form_validation->set_rules('description'	, 'Description'	, 'trim|required');
 		$this->form_validation->set_rules('status'		, 'Status'	, 'trim|required');
+		if($this->input->post("type") == ""){
+			$this->form_validation->set_rules('type'		, 'Vehicle'	, 'trim|required');
+		}
 
 		if ($this->form_validation->run() == FALSE){ 
 
 			$this->data['page_name'] = "Edit Truck Information";
 			$this->data['main_page'] = "backend/page/vehicle/truck/edit";
 			$this->data['result'] = $this->vehicle->get_truck($vehicle_id);
+
+			$this->data['types'] = $this->vehicle->vehicle_type_list();
 			$this->load->view('backend/master' , $this->data);
 
 		}else{
@@ -73,17 +117,44 @@ class Vehicle extends MY_Controller {
 				$this->session->set_flashdata('status' , 'success');	
 				$this->session->set_flashdata('message' , 'Successfully Updated Truck');	
 
-				redirect("app/vehicle/truck/?vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
+				redirect("app/vehicle/?vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
 			}else{
 				$this->session->set_flashdata('status' , 'error');
 				$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/vehicle/truck/edit" , 'refresh');
+				redirect("app/vehicle/edit" , 'refresh');
 			}
 		}
 	}
 
-	public function delete_truck($vehicle_id){
+	// public function edit_truck($vehicle_id){
+	// 	$this->form_validation->set_rules('vehicle_registration_number'	, 'Vehicle Registration Number'	, 'trim|required');
+	// 	$this->form_validation->set_rules('description'	, 'Description'	, 'trim|required');
+	// 	$this->form_validation->set_rules('status'		, 'Status'	, 'trim|required');
+
+	// 	if ($this->form_validation->run() == FALSE){ 
+
+	// 		$this->data['page_name'] = "Edit Truck Information";
+	// 		$this->data['main_page'] = "backend/page/vehicle/truck/edit";
+	// 		$this->data['result'] = $this->vehicle->get_truck($vehicle_id);
+	// 		$this->load->view('backend/master' , $this->data);
+
+	// 	}else{
+
+	// 		if($vehicle_id = $this->vehicle->edit_truck($vehicle_id)){
+	// 			$this->session->set_flashdata('status' , 'success');	
+	// 			$this->session->set_flashdata('message' , 'Successfully Updated Truck');	
+
+	// 			redirect("app/vehicle/truck/?vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
+	// 		}else{
+	// 			$this->session->set_flashdata('status' , 'error');
+	// 			$this->session->set_flashdata('message' , 'Something went wrong');	
+
+	// 			redirect("app/vehicle/truck/edit" , 'refresh');
+	// 		}
+	// 	}
+	// }
+	public function delete($vehicle_id){
 		$delete_truck = $this->vehicle->delete_truck($vehicle_id);
 		if($delete_truck){
 
@@ -94,128 +165,140 @@ class Vehicle extends MY_Controller {
 
 		}
 	}
-	public function trailer(){
-		$this->data['page_name'] = "Trailer";
-		$this->data['result']    =  $this->vehicle->get_trailer_list();
-		$this->data['main_page'] = "backend/page/vehicle/trailer/view";
-		$vehicle = count($this->vehicle->get_vehicle_list());
-		$trailer = count($this->vehicle->get_trailer_list());
-		$this->data['totalvehicle'] = $vehicle + $trailer;
-		$this->load->view('backend/master' , $this->data);
-	}
 
-	public function add_trailer(){
+	// public function delete_truck($vehicle_id){
+	// 	$delete_truck = $this->vehicle->delete_truck($vehicle_id);
+	// 	if($delete_truck){
 
-		$this->form_validation->set_rules('trailer_number'		, 'Trailer Number'	, 'trim|required');
+	// 		$this->session->set_flashdata('status' , 'success');	
+	// 		$this->session->set_flashdata('message' , 'Successfully Deleted Truck');
 
-		if ($this->form_validation->run() == FALSE){ 
+	// 		redirect("app/vehicle/trailer" , 'refresh');
 
-			$this->data['page_name'] = "Add Trailer Information";
-			$this->data['main_page'] = "backend/page/vehicle/trailer/add";
-			$this->load->view('backend/master' , $this->data);
+	// 	}
+	// }
+	// public function trailer(){
+	// 	$this->data['page_name'] = "Trailer";
+	// 	$this->data['result']    =  $this->vehicle->get_trailer_list();
+	// 	$this->data['main_page'] = "backend/page/vehicle/trailer/view";
+	// 	$vehicle = count($this->vehicle->get_vehicle_list());
+	// 	$trailer = count($this->vehicle->get_trailer_list());
+	// 	$this->data['totalvehicle'] = $vehicle + $trailer;
+	// 	$this->load->view('backend/master' , $this->data);
+	// }
 
-		}else{
+	// public function add_trailer(){
 
-			if($trailer_id = $this->vehicle->add_trailer()){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Added a new Trailer');	
+	// 	$this->form_validation->set_rules('trailer_number'		, 'Trailer Number'	, 'trim|required');
 
-				redirect("app/vehicle/trailer/?trailer_id=".$this->hash->encrypt($trailer_id), 'refresh');
-			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');	
+	// 	if ($this->form_validation->run() == FALSE){ 
 
-				redirect("app/vehicle/trailer/add" , 'refresh');
-			}
-		}
-	}
+	// 		$this->data['page_name'] = "Add Trailer Information";
+	// 		$this->data['main_page'] = "backend/page/vehicle/trailer/add";
+	// 		$this->load->view('backend/master' , $this->data);
 
-	public function edit_trailer($trailer_id){
-		$this->form_validation->set_rules('trailer_number'		, 'Trailer Number'	, 'trim|required');
-		$this->form_validation->set_rules('description'		, 'Description'	, 'trim|required');
-		$this->form_validation->set_rules('status'		, 'Status'	, 'trim|required');
+	// 	}else{
 
-		if ($this->form_validation->run() == FALSE){ 
+	// 		if($trailer_id = $this->vehicle->add_trailer()){
+	// 			$this->session->set_flashdata('status' , 'success');	
+	// 			$this->session->set_flashdata('message' , 'Successfully Added a new Trailer');	
 
-			$this->data['page_name'] = "Edit Trailer Information";
-			$this->data['main_page'] = "backend/page/vehicle/trailer/edit";
-			$this->data['result'] = $this->vehicle->get_trailer($trailer_id);
-			$this->load->view('backend/master' , $this->data);
+	// 			redirect("app/vehicle/trailer/?trailer_id=".$this->hash->encrypt($trailer_id), 'refresh');
+	// 		}else{
+	// 			$this->session->set_flashdata('status' , 'error');
+	// 			$this->session->set_flashdata('message' , 'Something went wrong');	
 
-		}else{
+	// 			redirect("app/vehicle/trailer/add" , 'refresh');
+	// 		}
+	// 	}
+	// }
 
-			if($trailer_id = $this->vehicle->edit_trailer($trailer_id)){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Updated Trailer');	
+	// public function edit_trailer($trailer_id){
+	// 	$this->form_validation->set_rules('trailer_number'		, 'Trailer Number'	, 'trim|required');
+	// 	$this->form_validation->set_rules('description'		, 'Description'	, 'trim|required');
+	// 	$this->form_validation->set_rules('status'		, 'Status'	, 'trim|required');
 
-				redirect("app/vehicle/trailer/?trailer_id=".$this->hash->encrypt($trailer_id), 'refresh');
-			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');	
+	// 	if ($this->form_validation->run() == FALSE){ 
 
-				redirect("app/vehicle/trailer/edit" , 'refresh');
-			}
-		}
-	}
+	// 		$this->data['page_name'] = "Edit Trailer Information";
+	// 		$this->data['main_page'] = "backend/page/vehicle/trailer/edit";
+	// 		$this->data['result'] = $this->vehicle->get_trailer($trailer_id);
+	// 		$this->load->view('backend/master' , $this->data);
 
-	public function delete_trailer($trailer_id){
-		$delete_trailer = $this->vehicle->delete_trailer($trailer_id);
-		if($delete_trailer){
+	// 	}else{
 
-			$this->session->set_flashdata('status' , 'success');	
-			$this->session->set_flashdata('message' , 'Successfully Deleted Trailer');
+	// 		if($trailer_id = $this->vehicle->edit_trailer($trailer_id)){
+	// 			$this->session->set_flashdata('status' , 'success');	
+	// 			$this->session->set_flashdata('message' , 'Successfully Updated Trailer');	
 
-			redirect("app/vehicle/trailer" , 'refresh');
+	// 			redirect("app/vehicle/trailer/?trailer_id=".$this->hash->encrypt($trailer_id), 'refresh');
+	// 		}else{
+	// 			$this->session->set_flashdata('status' , 'error');
+	// 			$this->session->set_flashdata('message' , 'Something went wrong');	
 
-		}
-	}
+	// 			redirect("app/vehicle/trailer/edit" , 'refresh');
+	// 		}
+	// 	}
+	// }
+
+	// public function delete_trailer($trailer_id){
+	// 	$delete_trailer = $this->vehicle->delete_trailer($trailer_id);
+	// 	if($delete_trailer){
+
+	// 		$this->session->set_flashdata('status' , 'success');	
+	// 		$this->session->set_flashdata('message' , 'Successfully Deleted Trailer');
+
+	// 		redirect("app/vehicle/trailer" , 'refresh');
+
+	// 	}
+	// }
 
 	// Vehicle Type
-	public function type(){
-		$this->form_validation->set_rules('name'		, 'Vehicle Type'	, 'trim|required');
+	// public function type(){
+	// 	$this->form_validation->set_rules('name'		, 'Vehicle Type'	, 'trim|required');
 
-		if ($this->form_validation->run() == FALSE){ 
-			$this->data['page_name'] = "Vehicle Type";
-			$this->data['result']    =  $this->vehicle->get_type_list();
-			$this->data['main_page'] = "backend/page/vehicle/vehicle_type/view";
-			$this->load->view('backend/master' , $this->data);
-		}else{
+	// 	if ($this->form_validation->run() == FALSE){ 
+	// 		$this->data['page_name'] = "Vehicle Type";
+	// 		$this->data['result']    =  $this->vehicle->get_type_list();
+	// 		$this->data['main_page'] = "backend/page/vehicle/vehicle_type/view";
+	// 		$this->load->view('backend/master' , $this->data);
+	// 	}else{
 
-			if($type_id = $this->vehicle->add_type()){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Added a new Vehicle Type');	
+	// 		if($type_id = $this->vehicle->add_type()){
+	// 			$this->session->set_flashdata('status' , 'success');	
+	// 			$this->session->set_flashdata('message' , 'Successfully Added a new Vehicle Type');	
 
-				redirect("app/vehicle/type/?type_id=".$this->hash->encrypt($type_id), 'refresh');
-			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');	
+	// 			redirect("app/vehicle/type/?type_id=".$this->hash->encrypt($type_id), 'refresh');
+	// 		}else{
+	// 			$this->session->set_flashdata('status' , 'error');
+	// 			$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/vehicle/type/" , 'refresh');
-			}
-		}
-	}
+	// 			redirect("app/vehicle/type/" , 'refresh');
+	// 		}
+	// 	}
+	// }
 
-	public function edit_type($id){
-		$this->form_validation->set_rules('name'		, 'Vehicle Type'	, 'trim|required');
+	// public function edit_type($id){
+	// 	$this->form_validation->set_rules('name'		, 'Vehicle Type'	, 'trim|required');
 
-		if ($this->form_validation->run() == FALSE){ 
-			$this->data['page_name'] = "Truck";
-			$this->data['result']    =  $this->vehicle->get_type_info($id);
-			$this->data['main_page'] = "backend/page/vehicle/vehicle_type/edit";
-			$this->load->view('backend/master' , $this->data);
-		}else{
+	// 	if ($this->form_validation->run() == FALSE){ 
+	// 		$this->data['page_name'] = "Truck";
+	// 		$this->data['result']    =  $this->vehicle->get_type_info($id);
+	// 		$this->data['main_page'] = "backend/page/vehicle/vehicle_type/edit";
+	// 		$this->load->view('backend/master' , $this->data);
+	// 	}else{
 
-			if($this->vehicle->edit_type($id)){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Updated Vehicle Type');	
+	// 		if($this->vehicle->edit_type($id)){
+	// 			$this->session->set_flashdata('status' , 'success');	
+	// 			$this->session->set_flashdata('message' , 'Successfully Updated Vehicle Type');	
 
-				redirect("app/vehicle/type/?type_id=".$id, 'refresh');
-			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');	
+	// 			redirect("app/vehicle/type/?type_id=".$id, 'refresh');
+	// 		}else{
+	// 			$this->session->set_flashdata('status' , 'error');
+	// 			$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/vehicle/type/" , 'refresh');
-			}
-		}
-	}
+	// 			redirect("app/vehicle/type/" , 'refresh');
+	// 		}
+	// 	}
+	// }
 }

@@ -16,43 +16,38 @@ class Checklist extends CI_Controller {
         }
         
 		//$this->post = json_decode(file_get_contents("php://input"));
-		 $this->load->model('report_model', 'reports');
+		$this->load->model('report_model', 'reports');
 		$this->post = (object)$this->input->post();
 	}
 
 	public function get_my_checklist(){
-		$store_id = $this->post->store_id;
-		$user_id = $this->post->user_id;
 
-		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type");
-		$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
-		$result = $this->db->where("c.store_id" , $store_id)->where("uc.user_id" , $user_id)->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
+		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id");
+		$result = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
 
 		echo json_encode(["status" => 1 , "data" => $result]);
 	}
 
 	public function get_checklist_by_type(){
-		$store_id = $this->post->store_id;
-		$user_id = $this->post->user_id;
-		$type = $this->post->type;
+		//$user_id = $this->post->user_id;
+		$type = $this->post->vehicle_type_id;
 		
-		if($type == 'VEHICLE'){
-			$c_type = "TRUCK";
+
+		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id");
+		//$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
+		$this->db->where("c.vehicle_type_id",$type);
+		$result = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->row();
+		if($result){
+
+			echo json_encode(["status" => true , "data" => $result]);
 		}else{
-			$c_type = "TRAILER";
+			echo json_encode(["status" => false , "message" => "No checklist available"]);
 		}
 
-		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type");
-		$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
-		$this->db->where("c.vehicle_type",$type);
-		$this->db->where("c.vehicle_type","BOTH");
-		$result = $this->db->where("c.store_id" , $store_id)->where("uc.user_id" , $user_id)->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
-
-		echo json_encode(["status" => 1 , "data" => $result]);
 	}
 
 	
-	public function get_vehicle_registration_list(){
+/*	public function get_vehicle_registration_list(){
 		$store_id = $this->post->store_id;
 
 		$this->db->select("vehicle_id , vehicle_registration_number");
@@ -68,17 +63,14 @@ class Checklist extends CI_Controller {
 		$result = $this->db->where("store_id" , $store_id)->where("status" , 1)->where("deleted IS NULL")->order_by("trailer_number" , "ASC")->get("trailer")->result();
 
 		echo json_encode(["status" => true , "data" => $result]);
-	}
+	}*/
 
 	public function get_all_vehicles(){
 		$store_id = $this->post->store_id;
-		$data = array();
 
-		$this->db->select("vehicle_id , vehicle_registration_number");
-		$data['truck'] = $this->db->where("store_id" , $store_id)->where("status" , 1)->where("deleted IS NULL")->order_by("vehicle_registration_number" , "ASC")->get("vehicle")->result();
-
-		$this->db->select("trailer_id , trailer_number");
-		$data['trailer'] = $this->db->where("store_id" , $store_id)->where("status" , 1)->where("deleted IS NULL")->order_by("trailer_number" , "ASC")->get("trailer")->result();
+		$this->db->select("v.vehicle_id , v.vehicle_registration_number, v.vehicle_type_id, vt.type");
+		$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+		$data = $this->db->where("store_id" , $store_id)->where("v.status" , 1)->where("V.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
 
 		echo json_encode(["status" => true , "data" => $data]);
 
@@ -86,17 +78,25 @@ class Checklist extends CI_Controller {
 
 	public function get_checklist_items(){
 		$checklist_id = $this->post->checklist_id;
+		if($checklist_id){
+			$result = $this->db->select("id,checklist_id,item_name,item_position,help_text")->where("checklist_id" , $checklist_id)->where("DELETED IS NULL")->order_by("item_position" , "ASC")->get("checklist_items")->result();
+			if($result){
 
-		$result = $this->db->select("id,checklist_id,item_name,item_position,help_text")->where("checklist_id" , $checklist_id)->where("DELETED IS NULL")->order_by("item_position" , "ASC")->get("checklist_items")->result();
+				foreach($result as $key => $row){
+				$this->db->where("deleted IS NULL");
+					$images = $this->db->select("image_path,image_name,help_image_path,help_image_name")->where("id",$row->id)->get("checklist_items")->row();
+					$result[$key]->image = ($images->image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->image_path."/250/250/".$images->image_name) : "";
+					$result[$key]->help_image  = ($images->help_image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->help_image_path."/250/250/".$images->help_image_name) : "";
+				}
 
-		foreach($result as $key => $row){
-			$this->db->where("deleted IS NULL");
-			$images = $this->db->select("image_path,image_name,help_image_path,help_image_name")->where("id",$row->id)->get("checklist_items")->row();
-			$result[$key]->image = ($images->image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->image_path."/250/250/".$images->image_name) : "";
-			$result[$key]->help_image  = ($images->help_image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->help_image_path."/250/250/".$images->help_image_name) : "";
+				echo json_encode(["status" => true , "data" => $result]);
+			}else{
+				echo json_encode(["status" => false , "message" => "No checklist data available"]);
+			}
+
+		}else{
+			echo json_encode(["status" => false , "message" => "No checklist id passed"]);
 		}
-
-		echo json_encode(["status" => true , "data" => $result]);
 	}
 
 	public function save_checklist(){
@@ -122,8 +122,7 @@ class Checklist extends CI_Controller {
 
 			$this->db->insert("report" , [
 				"report_by"						=> $user->user_id ,
-				"vehicle_registration_number"	=> (isset($data->vehicle_registration_number)) ? $data->vehicle_registration_number : NULL ,
-				"trailer_number"				=> (isset($data->trailer_number)) ? $data->trailer_number : NULL ,
+				"vehicle_registration_number"	=> ($data->vehicle_registration_number != '') ? $data->vehicle_registration_number : NULL ,
 				"checklist_id"					=> $data->checklist_id,
 				"start_mileage"					=> $data->start_mileage ,
 				"end_mileage"					=> $data->end_mileage ,
