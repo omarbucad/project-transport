@@ -50,6 +50,8 @@ class Vehicle_model extends CI_Model {
     }
 
     public function vehicle_type_list(){
+        $this->db->where("deleted IS NULL");
+        $this->db->where("status",1);
         $result = $this->db->get("vehicle_type")->result();
         return $result;
     }
@@ -272,7 +274,6 @@ class Vehicle_model extends CI_Model {
     // VEHICLE TYPE
 
     public function get_type_list(){
-        $store_id = $this->data['session_data']->store_id;
 
         /*
             TODO :: Searching logic here
@@ -282,31 +283,24 @@ class Vehicle_model extends CI_Model {
         }
 
         if($type_name = $this->input->get("type_name")){
-            $this->db->where("name", $type_name);
+            $this->db->where("type", $type_name);
         }
 
-        if($id = $this->input->get("type_id")){
-            
-            $id = $this->hash->decrypt($id);
-
-            $this->db->where("id" , $id);
-        }
 
         $this->db->where("deleted IS NULL");
+        $result = $this->db->get("vehicle_type")->result();
 
-        $result = $this->db->where("store_id" , $store_id)->order_by("id" , "ASC")->get("vehicle_type")->result();
 
         foreach($result as $key => $row){
             $result[$key]->status = convert_status($row->status);
         }
-
         return $result;
     }
 
     public function get_type_info($type_id){
         $id = $this->hash->decrypt($type_id);
 
-        $this->db->where('id',$id);
+        $this->db->where('vehicle_type_id',$id);
         $result = $this->db->get('vehicle_type')->row();
 
         return $result;
@@ -314,11 +308,10 @@ class Vehicle_model extends CI_Model {
     }
 
     public function add_type(){
-        $store_id = $this->data['session_data']->store_id;
 
         $this->db->insert('vehicle_type',[
-            "name" => $this->input->post('name'),
-            "store_id" => $store_id,
+            "type" => $this->input->post('name'),
+            "created" => time(),
             "status" => 1
         ]);
 
@@ -327,14 +320,33 @@ class Vehicle_model extends CI_Model {
     }
 
     public function edit_type($type_id){
-        $id = $this->hash->decrypt($type_id);
 
         $this->db->trans_start();
 
-        $this->db->where('id',$id);
+        $this->db->where('vehicle_type_id',$type_id);
         $this->db->update('vehicle_type',[
-            "name" => $this->input->post('name'),
+            "type" => $this->input->post('name'),
             "status" => $this->input->post('status')
+        ]);
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }
+        
+    }
+
+    public function delete_type($type_id){
+        $type_id = $this->hash->decrypt($type_id);
+
+        $this->db->trans_start();
+
+        $this->db->where('vehicle_type_id',$type_id);
+        $this->db->update('vehicle_type',[
+            "deleted" => time()
         ]);
 
         $this->db->trans_complete();

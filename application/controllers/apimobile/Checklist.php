@@ -70,7 +70,8 @@ class Checklist extends CI_Controller {
 
 		$this->db->select("v.vehicle_id , v.vehicle_registration_number, v.vehicle_type_id, vt.type");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
-		$data = $this->db->where("store_id" , $store_id)->where("v.status" , 1)->where("V.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
+		$this->db->where("vt.deleted IS NULL");
+		$data = $this->db->where("store_id" , $store_id)->where("v.status" , 1)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
 
 		echo json_encode(["status" => true , "data" => $data]);
 

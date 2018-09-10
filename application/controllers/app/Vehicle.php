@@ -59,7 +59,7 @@ class Vehicle extends MY_Controller {
 				$this->session->set_flashdata('status' , 'success');	
 				$this->session->set_flashdata('message' , 'Added Successfully');	
 
-				redirect("app/vehicle/vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
+				redirect("app/vehicle/", 'refresh');
 			}else{
 				$this->session->set_flashdata('status' , 'error');
 				$this->session->set_flashdata('message' , 'Something went wrong');	

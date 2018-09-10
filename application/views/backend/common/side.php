@@ -32,14 +32,19 @@
                         <span class="icon fa fa-users"></span><span class="title">Accounts</span>
                     </a>
                 </li>
-                <li class="<?php echo ($this->uri->segment(2) == 'invoice') ? "active" : "" ;?>">
-                    <a href="<?php echo site_url('admin/invoice'); ?>">
+                <!-- <li class="<?php// echo ($this->uri->segment(2) == 'invoice') ? "active" : "" ;?>">
+                    <a href="<?php //echo site_url('admin/invoice'); ?>">
                         <span class="icon fa fa-clipboard"></span><span class="title">Invoice</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="<?php echo ($this->uri->segment(2) == 'setup') ? "active" : "" ;?>">
                     <a href="<?php echo site_url("app/setup/checklist"); ?>">
                         <span class="icon fa fa-check-square-o"></span><span class="title">Checklist</span>
+                    </a>
+                </li>
+                <li class="<?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
+                    <a href="<?php echo site_url("admin/vehicle/types"); ?>">
+                        <span class="icon fa fa-car"></span><span class="title">Vehicle Types</span>
                     </a>
                 </li>
                 <?php endif; ?>
