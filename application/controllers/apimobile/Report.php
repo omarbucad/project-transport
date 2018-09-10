@@ -148,7 +148,7 @@ class Report extends CI_Controller {
 		$this->db->where("r.created >=",$start);
 		$this->db->where("r.created <=",$end);
 
-		$this->db->where("u.store_id" , $store_id)->where("rs.user_id" , $report_by)->group_by("r.report_id");
+		$this->db->where("u.store_id" , $store_id);
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 
 		foreach($result as $key => $row){
