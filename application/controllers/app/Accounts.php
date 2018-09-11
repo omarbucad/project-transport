@@ -28,12 +28,7 @@ class Accounts extends MY_Controller {
 		// $this->data["links"] = $this->pagination->create_links();
 
 		$this->data['result'] = $this->accounts->get_accounts_list();
-		$driver = count($this->accounts->get_driver());
-		$mechanic = count($this->accounts->get_mechanic());
-		$admin = count($this->accounts->get_admin());
-		$manager = count($this->accounts->get_manager());
 		$this->data['plan_type'] = $this->session->userdata('user')->title;
-		$this->data['total_accounts']	= $driver + $mechanic + $admin + $manager;
 
 		$this->load->view('backend/master' , $this->data);
 	}
@@ -55,7 +50,7 @@ class Accounts extends MY_Controller {
 
 		if ($this->form_validation->run() == FALSE){ 
 
-			$this->data['page_name'] = "Transport Accounts";
+			$this->data['page_name'] = "Vehicle Checklist Accounts";
 			$this->data['main_page'] = "backend/page/users/add";
 			$this->data['checklist_list'] = $this->checklist->get_checklist_dropdown();
 			$this->load->view('backend/master' , $this->data);
@@ -90,7 +85,7 @@ class Accounts extends MY_Controller {
 
 		if ($this->form_validation->run() == FALSE){ 
 
-			$this->data['page_name'] = "Transport Accounts";
+			$this->data['page_name'] = "Vehicle Checklist Accounts";
 			$this->data['main_page'] = "backend/page/users/edit";
 			$this->data['result']    = $this->accounts->get_account_info($id);
 			$this->data['checklist_list'] = $this->checklist->get_checklist_dropdown();

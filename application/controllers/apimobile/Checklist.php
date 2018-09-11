@@ -225,7 +225,7 @@ class Checklist extends CI_Controller {
 		$_isDefect = false;
 
 		foreach($checklist as $row){
-			if($row->checkbox == 1){
+			if($row->checkbox == 1 || $row->checkbox == 2){
 				$_isDefect = true;
 			}
 		}

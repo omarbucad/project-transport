@@ -177,7 +177,7 @@
         					<h4 style="margin-top: 0px;"><?php echo $result->title ." Plan";?></h4>
         					<nav>
         						<ul>
-        							<li><span><?php echo ($result->no_accounts == 0) ? "Unlimited": $result->no_accounts;?> Accounts</span></li>
+        							
                                     <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Vehicle / Trailer</span></li>
                                     <!-- <li><span><?php //echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Trailer</span></li> -->
                                     <li><span><?php echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> Report(s)<?php echo ($result->title == "Trial") ? "" : "/ Month"; ?></span></li>
@@ -257,7 +257,6 @@
                                 <div class="pt-body">
                                     <h4><?php echo $user_plans[0]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li><?php echo $user_plans[0]->no_accounts; ?> Account</li>
                                         <li><?php echo $user_plans[0]->no_vehicle; ?> Vehicle/Trailer</li>
                                         <li><?php echo $user_plans[0]->no_reports; ?> Reports / Month</li>
                                         <li><?php echo $user_plans[0]->description; ?></li>
@@ -280,7 +279,6 @@
                                 <div class="pt-body">
                                     <h4><?php echo $user_plans[1]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li><?php echo $user_plans[1]->no_accounts; ?> Accounts</li>
                                         <li><?php echo $user_plans[1]->no_vehicle; ?> Vehicles & Trailers</li>
                                         <li><?php echo $user_plans[1]->no_reports; ?> Reports / Month</li>
                                         <li><?php echo $user_plans[1]->description; ?></li>
@@ -303,7 +301,6 @@
                                 <div class="pt-body">
                                     <h4><?php echo $user_plans[2]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li>Unlimited Accounts</li>
                                         <li>Unlimited Vehicles & Trailers</li>
                                         <li>Unlimited Reports</li>
                                         <li><?php echo $user_plans[2]->description; ?></li>

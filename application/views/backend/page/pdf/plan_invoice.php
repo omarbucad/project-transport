@@ -19,7 +19,7 @@
 
 			<tr>
 				<td colspan="4" style="text-align: center;">
-					<img src="<?php echo site_url('public/img/vehicle0checklist.png');?>">
+					<img src="<?php echo site_url('public/img/vehicle-checklist.png');?>">
 					<h1 style="margin-bottom: 5px;">Vehicle Checklist</h1>
 					<span>Trackerteer Web Development Corporation</span>
 				</td>				

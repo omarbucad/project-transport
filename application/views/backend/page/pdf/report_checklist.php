@@ -79,6 +79,8 @@
 							<?php echo "Defect"; ?>
 						<?php elseif($checklist->checklist_ischeck == 2) : ?>
 							<?php echo "Rechecked"; ?>
+						<?php elseif($checklist->checklist_ischeck == 3) : ?>
+							<?php echo "N/A"; ?>
 						<?php else : ?>
 							<?php echo "Good"; ?>
 						<?php endif; ?>
