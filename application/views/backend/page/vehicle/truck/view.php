@@ -24,6 +24,71 @@
         }
     });
 
+    $(document).on("click" , ".btn-add" , function(){
+
+        $("#addvehicle").modal("show");
+    });
+
+    $(document).on("click" , ".add-vehicle" , function(){
+
+        var form = $("#add-form");
+        var reg = form.find("input[name='registration_number']").val();  
+        var type = form.find("#type").val();  
+        var c = confirm("Are you sure?");
+
+        if(c == true){
+            if(reg == '' || type == ''){
+                alert("registration number is required");
+                return true;
+            }else{
+                form.submit();
+            }
+        }
+    });
+
+    $(document).on("click" , ".btn-edit" , function(){
+
+        $("#editvehicle").modal("show");
+
+        var form = $('#edit-form');
+        var url = $(this).data("href");
+        var id = $(this).data("id");
+        var editurl = "<?php echo site_url('app/vehicle/edit/')?>" + id;
+        form.attr("action",editurl);
+
+        $.ajax({
+            url : url ,
+            method : "POST" ,
+            success : function(response){
+              var json = jQuery.parseJSON(response);
+              if(json.status){
+                
+                form.trigger('reset');
+                form.find("select[name='status']").val(json.data.status);  
+                form.find("#type").val(json.data.vehicle_type_id);  
+                form.find("input[name='vehicle_registration_number']").val(json.data.vehicle_registration_number);  
+                
+              }
+            }
+        });
+    });
+
+    $(document).on("click" , ".edit-vehicle" , function(){
+
+        var form = $("#edit-form");
+        var reg = form.find("input[name='vehicle_registration_number']").val();  
+        var c = confirm("Are you sure?");
+
+        if(c == true){
+            if(reg == ''){
+                alert("registration number is required");
+                return true;
+            }else{
+                form.submit();
+            }
+        }
+    });
+
 </script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
@@ -38,11 +103,11 @@
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
                         <?php if($plan_type == "Basic" && (count($result) < $this->session->userdata('user')->no_accounts)) : ?>
-                            <a href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
+                            <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success btn-add">Add Vehicle</a>
                         <?php elseif($plan_type == "Standard" &&  $totalvehicle < $this->session->userdata('user')->no_accounts) : ?>
-                            <a href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
+                            <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
                         <?php elseif($plan_type == "Trial" || $plan_type == "Premium") : ?>
-                            <a href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
+                            <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success btn-add">Add Vehicle</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -55,13 +120,13 @@
                         <div class="row">
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
-                                    <label for="s_name">Registration number</label>
+                                    <label for="s_name">Search by Registration number</label>
                                     <input type="text" name="registration_number" class="form-control" id="s_name" placeholder="Registration Number" value="<?php echo $this->input->get("registration_number"); ?>">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
-                                    <label for="type">Type</label>
+                                    <label for="type">Search by Vehicle Type</label>
                                     <select class="form-control" name="type" id="type">
                                         <option value="">- Select Vehicle Type -</option>
                                         <?php foreach($types as $key => $val) :?>
@@ -73,17 +138,16 @@
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
-                                    <label for="s_product_type">Status</label>
+                                    <label for="s_product_type">Search by Status</label>
                                     <select class="form-control" name="status" id="s_product_type">
                                         <option value="">- Select Status -</option>
                                         <option value="1" <?php echo ($this->input->get("status") == "Active") ? "selected" : "" ; ?> >Active</option>
-                                        <option value="0" <?php echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option>
-                                        
+                                        <option value="0" <?php echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option>                                        
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 text-right no-margin-bottom">
-                                <input type="submit" name="submit" value="Apply Filter" class="btn btn-primary btn-vertical-center btn-same-size">
+                                <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
                             </div>
                         </div>
                     </form>
@@ -94,11 +158,10 @@
             <table class="customer-table">
                 <thead>
                     <tr>
-                        <th width="30%">Registration Number</th>
-                        <th width="20%">Description</th>
-                        <th width="10%">Type</th>
-                        <th width="10%">Status</th>
-                        <th width="30%"></th>
+                        <th width="40%">Registration Number</th>
+                        <th width="20%">Type</th>
+                        <th width="20%">Status</th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,12 +170,11 @@
                             <td>
                                 <span><strong><?php echo $row->vehicle_registration_number; ?></strong></span>
                             </td>
-                            <td><span><?php echo $row->description; ?></span></td>
                             <td><span><?php echo $row->type;?></span></td>
                             <td><span><?php echo $row->status; ?></span></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
-                                    <a href="<?php echo site_url("app/vehicle/edit/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/get_vehicle_info/").$this->hash->encrypt($row->vehicle_id); ?>" data-id="<?php echo $this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-edit" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/delete/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-delete" title="Remove Vehicle"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                 </div>
                             </td>
@@ -122,4 +184,76 @@
             </table>
         </div>
     </div>
+</div>
+<!-- Add Modal -->
+<div class="modal fade" id="addvehicle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Vehicle</h4>
+      </div>
+      <div class="modal-body">
+        <form action="<?php echo site_url('app/vehicle/add');?>" method="POST" id="add-form">
+            <div class="form-group">
+                <label for="vehicle_registration_number">Registration Number</label>
+                <input type="text" name="vehicle_registration_number" class="form-control" placeholder="Registration Number" required="true">
+            </div>
+            <div class="form-group">
+                <label for="type">Vehicle Type</label>
+                <select class="form-control" name="type" id="type">
+                    <option value="">- Select Vehicle Type -</option>
+                    <?php foreach($types as $key => $val) :?>
+                        <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                    <?php endforeach; ?>                    
+                </select>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <a href="javascript:void(0);" class="btn btn-primary add-vehicle">Confirm</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editvehicle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Vehicle</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" method="POST" id="edit-form">
+            <div class="form-group">
+                <label for="vehicle_registration_number">Registration Number</label>
+                <input type="text" name="vehicle_registration_number" class="form-control" placeholder="Registration Number" required="true">
+            </div>
+            <div class="form-group">
+                <label for="type">Vehicle Type</label>
+                <select class="form-control" name="type" id="type">
+                    <option value="">- Select Vehicle Type -</option>
+                    <?php foreach($types as $key => $val) :?>
+                        <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                    <?php endforeach; ?>                    
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" name="status">
+                    <option value="1" <?php echo ($this->input->get("status") == "Active") ? "selected" : "" ; ?> >Active</option>
+                    <option value="0" <?php echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option> 
+                </select>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <a href="javascript:void(0);" class="btn btn-primary edit-vehicle">Confirm</a>
+      </div>
+    </div>
+  </div>
 </div>

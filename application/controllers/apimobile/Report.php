@@ -286,4 +286,62 @@ class Report extends CI_Controller {
 
         return $year."/".$month.'/'.$name;
 	}
+
+	public function allreports(){
+
+		$store_id = $this->post->store_id;
+
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type");
+		$this->db->select("u.display_name , u2.display_name as updated_by");
+		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
+		$this->db->select("c.checklist_name");
+		$this->db->join("user u" , "u.user_id = r.report_by");
+		$this->db->join("report_status rs" , "rs.id = r.status_id");
+		$this->db->join("user u2" , "rs.user_id = u2.user_id");
+		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
+		$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
+
+		$this->db->where("u.store_id" , $store_id);
+
+		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
+		if($result){
+			foreach($result as $key => $row){
+
+				$result[$key]->created   = convert_timezone($row->created , true );
+				$result[$key]->status_raw = report_type($row->status , true);
+				$result[$key]->status = report_type($row->status);
+
+				$this->db->select("rc.checklist_ischeck , rc.checklist_value , ci.item_name , rc.id");
+				$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
+				$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
+
+				foreach($result[$key]->checklist as $k => $r){
+					$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
+
+					foreach($images as $ki => $ro){
+						$images[$ki]->thumbnail = $this->config->site_url("thumbs/images/report/".$ro->image_path."250/250/".$ro->image_name);
+						$images[$ki]->image = $this->config->site_url("thumbs/images/report/".$ro->image_path."500/500/".$ro->image_name);
+					}
+
+					$result[$key]->checklist[$k]->images = $images;
+				}
+
+				$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
+				$this->db->join("user u" , "u.user_id = rs.user_id");
+				$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
+
+				foreach($status as $k => $r){
+					$status[$k]->status = report_type($r->status );
+					$status[$k]->created   = convert_timezone($r->created , true );
+					$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
+				}
+				$result[$key]->signature = $status[0]->signature;
+				$result[$key]->status_list = $status;
+			}
+
+			echo json_encode(["status" => 1, "data" => $result, "action" => "allreports"]);
+		}else{
+			echo json_encode(["status" => 0, "message" => "No data available", "action" => "allreports"]);
+		}
+	}
 }

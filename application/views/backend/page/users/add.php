@@ -95,7 +95,7 @@
                         </div>
                     </div>
                 </section>
-                <section class="sec_border_bottom" id="checklist_section">
+                <!-- <section class="sec_border_bottom" id="checklist_section">
                     <h3>Checklist</h3>
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
@@ -103,20 +103,20 @@
                         </div>
                         <div class="col-xs-12 col-lg-4">
                             <div class="form-group">
-                                <?php foreach($checklist_list as $key => $value) :?>
+                                <?php //oreach($checklist_list as $key => $value) :?>
 
                                     <div class="checkbox3 checkbox-check  checkbox-light">
-                                          <input type="checkbox" name="checklist[]" id="checkbox-<?php echo $value->checklist_id; ?>" value="<?php echo $value->checklist_id; ?>">
-                                          <label for="checkbox-<?php echo $value->checklist_id; ?>">
-                                            <?php echo $value->checklist_name?>
+                                          <input type="checkbox" name="checklist[]" id="checkbox-<?php //echo $value->checklist_id; ?>" value="<?php //echo $value->checklist_id; ?>">
+                                          <label for="checkbox-<?php// echo $value->checklist_id; ?>">
+                                            <?php //cho $value->checklist_name?>
                                           </label>
                                     </div>
-                                <?php endforeach; ?>
+                                <?php// endforeach; ?>
                             </div>
                             
                         </div>
                     </div>
-                </section>
+                </section> -->
                 <section class="sec_border_bottom">
                     <h3>Security</h3>
                     <div class="row">

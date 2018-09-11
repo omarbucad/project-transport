@@ -99,7 +99,6 @@ class Vehicle_model extends CI_Model {
                 "vehicle_type_id"               => $this->input->post("type"),
                 "status"                        => 1 ,
                 "store_id"                      => $store_id ,
-                "description"                   => $this->input->post("description"),
                 "created"                       => time()
             ]);
 
@@ -117,8 +116,7 @@ class Vehicle_model extends CI_Model {
         $this->db->update("vehicle" , [
             "vehicle_registration_number"   => $this->input->post("vehicle_registration_number"),
             "vehicle_type_id"               => $this->input->post("type"),
-            "status"                        => $this->input->post("status"),
-            "description"                   => $this->input->post("description")
+            "status"                        => $this->input->post("status")
         ]);
         
         $this->db->trans_complete();

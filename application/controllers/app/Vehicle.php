@@ -17,6 +17,7 @@ class Vehicle extends MY_Controller {
 
     }
     public function index(){
+    	
 		$this->data['page_name'] = "Vehicles";
 		$this->data['result']    =  $this->vehicle->get_vehicle_list();
 		$this->data['main_page'] = "backend/page/vehicle/truck/view";
@@ -95,35 +96,26 @@ class Vehicle extends MY_Controller {
 	// 		}
 	// 	}
 	// }
-	public function edit($vehicle_id){
-		$this->form_validation->set_rules('vehicle_registration_number'	, 'Vehicle Registration Number'	, 'trim|required');
-		$this->form_validation->set_rules('status'		, 'Status'	, 'trim|required');
-		if($this->input->post("type") == ""){
-			$this->form_validation->set_rules('type'		, 'Vehicle'	, 'trim|required');
-		}
 
-		if ($this->form_validation->run() == FALSE){ 
-
-			$this->data['page_name'] = "Edit Truck Information";
-			$this->data['main_page'] = "backend/page/vehicle/truck/edit";
-			$this->data['result'] = $this->vehicle->get_truck($vehicle_id);
-
-			$this->data['types'] = $this->vehicle->vehicle_type_list();
-			$this->load->view('backend/master' , $this->data);
-
+	public function get_vehicle_info($vehicle_id){
+		if($vehicle = $this->vehicle->get_truck($vehicle_id)){
+			echo json_encode(["status" => true,"data" => $vehicle]);
 		}else{
+			echo json_encode(["status" => false, "message" => "No data available"]);
+		}
+	}
+	public function edit($vehicle_id){
+		
+		if($vehicle_id = $this->vehicle->edit_truck($vehicle_id)){
+			$this->session->set_flashdata('status' , 'success');	
+			$this->session->set_flashdata('message' , 'Successfully Updated Truck');	
 
-			if($vehicle_id = $this->vehicle->edit_truck($vehicle_id)){
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Successfully Updated Truck');	
+			redirect("app/vehicle/", 'refresh');
+		}else{
+			$this->session->set_flashdata('status' , 'error');
+			$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/vehicle/?vehicle_id=".$this->hash->encrypt($vehicle_id), 'refresh');
-			}else{
-				$this->session->set_flashdata('status' , 'error');
-				$this->session->set_flashdata('message' , 'Something went wrong');	
-
-				redirect("app/vehicle/edit" , 'refresh');
-			}
+			redirect("app/vehicle/" , 'refresh');
 		}
 	}
 
@@ -161,8 +153,13 @@ class Vehicle extends MY_Controller {
 			$this->session->set_flashdata('status' , 'success');	
 			$this->session->set_flashdata('message' , 'Successfully Deleted Truck');
 
-			redirect("app/vehicle/trailer" , 'refresh');
+			redirect("app/vehicle" , 'refresh');
 
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'Something went wrong');
+
+			redirect("app/vehicle" , 'refresh');
 		}
 	}
 

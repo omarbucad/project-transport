@@ -373,14 +373,14 @@ class Accounts_model extends CI_Model {
 
             $last_id = $this->db->insert_id();
 
-            if($session_role != "ADMIN" && $session_role != "MANAGER"){
-                foreach($this->input->post("checklist") as $key => $value){
-                    $this->db->insert("user_checklist",[
-                        "user_id"      => $last_id,
-                        "checklist_id" => $value
-                    ]);
-                }
-            }
+            // if($session_role != "ADMIN" && $session_role != "MANAGER"){
+            //     foreach($this->input->post("checklist") as $key => $value){
+            //         $this->db->insert("user_checklist",[
+            //             "user_id"      => $last_id,
+            //             "checklist_id" => $value
+            //         ]);
+            //     }
+            // }
             $this->do_upload($last_id);
         }else{
             return $valid;
@@ -415,22 +415,22 @@ class Accounts_model extends CI_Model {
         }
 
 
-        if($session_role != "ADMIN" && $session_role != "MANAGER"){
+        // if($session_role != "ADMIN" && $session_role != "MANAGER"){
   
-            $this->db->where("user_id", $user_id)->delete("user_checklist");
-            $checklist = $this->input->post("checklist");
-            $user_checklist = array();
+        //     $this->db->where("user_id", $user_id)->delete("user_checklist");
+        //     $checklist = $this->input->post("checklist");
+        //     $user_checklist = array();
 
-            foreach ($checklist as $key => $value) {
-                $user_checklist[] = array(
-                    "user_id"       => $user_id ,
-                    "checklist_id"  => $value
-                );
-            }
+        //     foreach ($checklist as $key => $value) {
+        //         $user_checklist[] = array(
+        //             "user_id"       => $user_id ,
+        //             "checklist_id"  => $value
+        //         );
+        //     }
 
-            $this->db->insert_batch("user_checklist" , $user_checklist);
+        //     $this->db->insert_batch("user_checklist" , $user_checklist);
   
-        }
+        // }
        
         $this->do_upload($user_id);
 

@@ -22,12 +22,6 @@
                             </div>
                         </dd>
                         
-                        <dt>Description</dt>
-                        <dd>
-                            <div class="form-group">
-                                <textarea name="description" class="textarea"><?php echo $result->description;?></textarea>
-                            </div>
-                        </dd>
                         <dt>Type</dt>
                         <dd>
                             <div class="form-group">

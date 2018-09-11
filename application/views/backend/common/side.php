@@ -74,20 +74,25 @@
                         <?php endif; ?>
                     <?php endif; ?>
                 <?php if($session_data->expired == false) : ?>
-                    <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'report') ? "active" : "" ;?>">
+                    <!-- li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'report') ? "active" : "" ;?>">
                         <a data-toggle="collapse" href="#dropdown-element-report" id="reports-menu-header">
                             <span class="icon fa fa-book"></span><span class="title">Reports</span>
-                        </a>
+                        </a>-->
                         <!-- Dropdown level 1 -->
-                        <div id="dropdown-element-report" class="panel-collapse collapse">
+                        <!-- <div id="dropdown-element-report" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="<?php echo site_url("app/report/daily"); ?>">Daily</a>
+                                    <li><a href="<?php// echo site_url("app/report/daily"); ?>">Daily</a>
                                     </li>
-                                    <li><a href="<?php echo site_url("app/report/weekly"); ?>">Weekly</a></li>
+                                     <li><a href="<?php //echo site_url("app/report/weekly"); ?>">Weekly</a></li> 
                                 </ul>
                             </div>
                         </div>
+                    </li>  -->
+                    <li class="<?php echo ($this->uri->segment(2) == 'report') ? "active" : "" ;?>">
+                        <a href="<?php echo site_url('app/report/daily'); ?>">
+                            <span class="icon fa fa-book"></span><span class="title">Reports</span>
+                        </a>
                     </li>
 
                     <?php if($session_data->role != "MECHANIC") : ?>
