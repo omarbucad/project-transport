@@ -101,6 +101,18 @@ class Account extends CI_Controller {
 			"deleted" => NULL
 		]);
 
+		$user_id = $this->db->insert_id();
+
+		if($data->image){
+			$img = $this->save_profile_image($user_id);
+			$this->db->where("user_id",$user_id);
+			$this->db->update("user",[
+				"image_path" => $img['image_path'],
+				"image_name" => $img['image_name']
+			]);
+		}
+
+
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
@@ -126,6 +138,15 @@ class Account extends CI_Controller {
 			"deleted" => NULL
 		]);
 
+		if($data->image){
+			$img = $this->save_profile_image($data->user_id);
+			$this->db->where("user_id",$data->user_id);
+			$this->db->update("user",[
+				"image_path" => $img['image_path'],
+				"image_name" => $img['image_name']
+			]);
+		}
+		
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){

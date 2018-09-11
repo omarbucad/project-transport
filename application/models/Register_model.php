@@ -80,7 +80,7 @@ class Register_model extends CI_Model {
     }
 
     public function signin($user){
-        $this->db->select("u.user_id , u.display_name , u.email_address , u.role , u.store_id , u.image_path , u.image_name, p.plan_id, p.title,p.no_accounts, p.no_vehicle,up.plan_expiration");
+        $this->db->select("u.user_id , u.display_name , u.email_address , u.role , u.store_id , u.image_path , u.image_name, p.plan_id, p.title, p.no_vehicle,up.plan_expiration");
         $this->db->select("a1.country");
 
         $this->db->join("store s" , "s.store_id = u.store_id");
