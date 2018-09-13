@@ -344,4 +344,27 @@ class Report extends CI_Controller {
 			echo json_encode(["status" => 0, "message" => "No data available", "action" => "allreports"]);
 		}
 	}
+
+	public function done_checklist(){
+		$data = $this->post;
+
+		$vehicle_registration_number = $data->vehicle_registration_number;
+		$user_id = $data->user_id;
+		$checklist_id = $data->checklist_id;
+		$today = date("M d Y", time());
+
+		$this->db->where("vehicle_registration_number", $vehicle_registration_number);
+		$this->db->where("report_by",$user_id);
+		$this->db->where("checklist_id", $checklist_id);
+		$this->db->where("created >=",strtotime($today . " 00:00"));
+		$this->db->where("created <=",strtotime($today . " 11:59"));
+
+		$result = $this->db->get("report")->num_rows();
+
+		if($result > 0){
+			echo json_encode(["status" => 1 , "message" => "Done Checklist", "action" => "done_checklist"]);
+		}else{
+			echo json_encode(["status" => 0 , "message" => "Not Yet", "action" => "done_checklist"]);
+		}
+	}
 }
