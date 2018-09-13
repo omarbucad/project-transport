@@ -78,9 +78,9 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                      <?php if($plan_type == "Standard" || $plan_type == "Trial" || $plan_type == "Premium") : ?>
-                        <a href="<?php echo my_current_url("&export=true"); ?>" class="btn btn-primary ">Export</a>
-                      <?php endif; ?>
+                    <!--   <?php //if($plan_type == "Standard" || $plan_type == "Trial" || $plan_type == "Premium") : ?>
+                        <a href="<?php //echo my_current_url("&export=true"); ?>" class="btn btn-primary ">Export</a>
+                      <?php //endif; ?> -->
                     </div>
                 </div>
             </div>
