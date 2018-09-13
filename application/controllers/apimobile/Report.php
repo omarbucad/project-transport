@@ -354,17 +354,23 @@ class Report extends CI_Controller {
 		$today = date("M d Y", time());
 
 		$this->db->where("vehicle_registration_number", $vehicle_registration_number);
-		$this->db->where("report_by",$user_id);
 		$this->db->where("checklist_id", $checklist_id);
 		$this->db->where("created >=",strtotime($today . " 00:00"));
 		$this->db->where("created <=",strtotime($today . " 11:59"));
 
-		$result = $this->db->get("report")->num_rows();
+		$result = $this->db->order_by("created","DESC")->limit(1)->get("report")->row();
 
-		if($result > 0){
-			echo json_encode(["status" => 1 , "message" => "Done Checklist", "action" => "done_checklist"]);
+		if($result){
+			
+			if($value->report_by == $user_id){
+				echo json_encode(["status" => 0 , "message" => "Consecutive Checklist Report is not allowed", "action" => "done_checklist"]);	
+			}else{
+				echo json_encode(["status" => 1 , "message" => "Allowed to Checklist", "action" => "done_checklist"]);	
+			}
+			
+			
 		}else{
-			echo json_encode(["status" => 0 , "message" => "Not Yet", "action" => "done_checklist"]);
+			echo json_encode(["status" => 1 , "message" => "Allowed to Checklist", "action" => "done_checklist"]);
 		}
 	}
 }
