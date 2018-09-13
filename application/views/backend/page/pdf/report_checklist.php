@@ -47,12 +47,17 @@
 				<td><?php echo $end_mileage; ?></td>
 			</tr>
 			<tr>
-				<th >Registration No.</th>
+				<th>Registration No.</th>
 				<td><?php echo $vehicle_registration_number; ?></td>				
 				<th>Vehicle Type</th>
 				<td><?php echo $type; ?></td>	
-				
 			</tr>
+			<?php if($trailer_number != '' && $type == 1) : ?>   
+			<tr>
+				<th>Trailer Number</th>
+				<td><?php echo $trailer_number; ?></td>
+			</tr>
+			<?php endif; ?>
 			<tr>
 				<th >Report By</th>
 				<td><?php echo $display_name; ?></td>

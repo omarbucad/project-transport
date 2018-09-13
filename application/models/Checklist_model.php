@@ -41,8 +41,8 @@ class Checklist_model extends CI_Model {
             "status"           => 1,
             "description"      => $this->input->post("description"),
             "vehicle_type_id"  => $this->input->post("type"),
-            "checklist_for"    => $this->input->post("checklist_for"),
-            "reminder_every"   => ($this->input->post("checklist_for") == "MECHANIC") ? $this->input->post("reminder") : "",
+            "checklist_for"    => "DRIVER",
+            "reminder_every"   => "",
             "created"          => time()
         ]);
 
@@ -348,8 +348,8 @@ class Checklist_model extends CI_Model {
             "description"    => $this->input->post("description"),
             "vehicle_type_id"   => $this->input->post("type"),
             "status"         => $this->input->post("status"),
-            "checklist_for"  => $this->input->post("checklist_for"),
-            "reminder_every" => ($this->input->post("checklist_for") == "MECHANIC") ? $this->input->post("reminder") : "",
+            "checklist_for"  => "DRIVER",
+            "reminder_every" => "",
         ]);
 
         $items = $this->input->post("item");

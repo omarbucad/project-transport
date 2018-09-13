@@ -103,6 +103,7 @@ class Checklist extends CI_Controller {
 	public function save_checklist(){
 		//$data = (object)$this->input->post();
 		$data = (object)$this->input->post();
+
 		$user = json_decode($data->user);
 		if($data){
 			$remind_in = NULL;
@@ -124,6 +125,7 @@ class Checklist extends CI_Controller {
 			$this->db->insert("report" , [
 				"report_by"						=> $user->user_id ,
 				"vehicle_registration_number"	=> ($data->vehicle_registration_number != '') ? $data->vehicle_registration_number : NULL ,
+				"trailer_number"				=> ($data->trailer_number != '') ? $data->trailer_number : NULL ,
 				"checklist_id"					=> $data->checklist_id,
 				"start_mileage"					=> $data->start_mileage ,
 				"end_mileage"					=> $data->end_mileage ,

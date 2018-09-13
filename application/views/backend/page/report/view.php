@@ -192,6 +192,9 @@
                                 
                                 <small class="help-block"><strong>Vehicle</strong>: <?php echo $row->vehicle_registration_number; ?></small>
                                 <small class="help-block"><strong>Vehicle Type</strong>: <?php echo $row->type; ?></small>
+                                <?php if($row->trailer_number != '' && $row->type == 1) : ?>
+                                  <small class="help-block"><strong>Trailer Number</strong>: <?php echo $row->trailer_number; ?></small>
+                                <?php endif; ?>
                                
                               </span>
                                 

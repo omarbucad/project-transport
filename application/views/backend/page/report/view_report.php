@@ -130,6 +130,13 @@
                             <td><strong>Vehicle Type</strong></td>
                             <td><?php echo $result->type; ?></td>
                         </tr>
+
+                        <?php if($result->trailer_number != '' && $result->type == 1) : ?>
+                        <tr>
+                            <td><strong>Trailer Number</strong></td>
+                            <td><?php echo $result->trailer_number; ?></td>
+                        </tr>
+                        <?php endif; ?>
     					
     					<tr>
     						<td><strong>Start Mileage</strong></td>
@@ -217,7 +224,7 @@
 	    						<td>
                                     <div class="animated-thumbnail">
                                     <?php if(isset($row->fullpath)) : ?>
-                                       <?php foreach($row->fullpath as $k) : ?> 
+                                        <?php foreach($row->fullpath as $k) : ?> 
                                         <a href="<?php echo $k; ?>">
                                          <img src="<?php echo $k; ?>" height='40px'>
                                         </a>

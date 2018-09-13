@@ -100,26 +100,26 @@
                                     <?php endforeach; ?>                                    
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="checklist_for">Checklist For</label>
-                                <select name="checklist_for" id="checklist_for" class="form-control" value="<?php echo set_value('checklist_for'); ?>">
-                                  <option value="DRIVER" class="<?php echo($post['checklist_for'] == 'DRIVER') ? 'selected' : '';?>">Driver</option>
-                                  <option value="MECHANIC" class="<?php echo($post['checklist_for'] == 'MECHANIC') ? 'selected' : '';?>">Mechanic</option>
+                                <select name="checklist_for" id="checklist_for" class="form-control" value="<?php //echo set_value('checklist_for'); ?>">
+                                  <option value="DRIVER" class="<?php //echo($post['checklist_for'] == 'DRIVER') ? 'selected' : '';?>">Driver</option>
+                                  <option value="MECHANIC" class="<?php //echo($post['checklist_for'] == 'MECHANIC') ? 'selected' : '';?>">Mechanic</option>
                                 </select>
-                            </div>
-                            <div class="form-group hide" id="reminder_group">
+                            </div> -->
+                            <!-- <div class="form-group hide" id="reminder_group">
                                 <label for="reminder">Reminder</label>
-                                <select name="reminder" id="reminder" class="form-control" value="<?php echo set_value('reminder');?>">
-                                  <option value="1 MONTH" class="<?php echo ($post['reminder'] == '1 MONTH') ? 'selected' : '' ;?>">1 Month</option>
-                                  <option value="2 MONTHS" class="<?php echo ($post['reminder'] == '2 MONTHS') ? 'selected' : '' ;?>">2 Months</option>
-                                  <option value="3 MONTHS" class="<?php echo ($post['reminder'] == '3 MONTHS') ? 'selected' : '' ;?>">3 Months</option>
-                                  <option value="6 MONTHS" class="<?php echo ($post['reminder'] == '6 MONTHS') ? 'selected' : '' ;?>">6 Months</option>
+                                <select name="reminder" id="reminder" class="form-control" value="<?php //echo set_value('reminder');?>">
+                                  <option value="1 MONTH" class="<?php// echo ($post['reminder'] == '1 MONTH') ? 'selected' : '' ;?>">1 Month</option>
+                                  <option value="2 MONTHS" class="<?php //echo ($post['reminder'] == '2 MONTHS') ? 'selected' : '' ;?>">2 Months</option>
+                                  <option value="3 MONTHS" class="<?php //echo ($post['reminder'] == '3 MONTHS') ? 'selected' : '' ;?>">3 Months</option>
+                                  <option value="6 MONTHS" class="<?php //echo ($post['reminder'] == '6 MONTHS') ? 'selected' : '' ;?>">6 Months</option>
                                 </select>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </section>
-                <section class="sec_border_bottom">
+                <!-- <section class="sec_border_bottom">
                     <h3>Users</h3>
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
@@ -127,18 +127,18 @@
                         </div>
                         <div class="col-xs-12 col-lg-4">
                             <fieldset id="fs">
-                            <?php foreach($accounts_list as $key => $row) : ?>
-                              <div class="checkbox3 checkbox-check checkbox-light" data-type="<?php echo $row->role; ?>">
-                                <input type="checkbox" id="checkbox-fa-light-<?php echo $key; ?>" name="account[]" value="<?php echo $row->user_id; ?>" checked="">
-                                <label for="checkbox-fa-light-<?php echo $key; ?>">
-                                  <?php echo $row->display_name; ?>
+                            <?php //foreach($accounts_list as $key => $row) : ?>
+                              <div class="checkbox3 checkbox-check checkbox-light" data-type="<?php //echo $row->role; ?>">
+                                <input type="checkbox" id="checkbox-fa-light-<?php //echo $key; ?>" name="account[]" value="<?php //echo $row->user_id; ?>" checked="">
+                                <label for="checkbox-fa-light-<?php// echo $key; ?>">
+                                  <?php //echo $row->display_name; ?>
                                 </label>
                               </div>
-                            <?php endforeach; ?>
+                            <?php// endforeach; ?>
                             </fieldset>
                         </div>
                     </div>
-                </section>
+                </section> -->
                     
                 </div>
             </div>

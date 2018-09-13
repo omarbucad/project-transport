@@ -216,13 +216,13 @@
                 </select>
             </div>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="checklist_for">Checklist For</label>
             <select name="checklist_for" id="checklist_for" class="form-control">
               <option value="DRIVER">Driver</option>
               <option value="MECHANIC">Mechanic</option>
             </select>
-          </div>
+          </div> -->
           <div class="form-group hide" id="reminder_group">
             <label for="reminder">Reminder</label>
             <select name="reminder" id="reminder" class="form-control">
@@ -236,17 +236,6 @@
             <label for="description">Description</label>
             <textarea name="description" id="description" class="textarea"></textarea>
           </div>
-          <fieldset id="fs">
-            <legend>Accounts</legend>
-            <?php foreach($accounts_list as $key => $row) : ?>
-              <div class="checkbox3 checkbox-check checkbox-light" data-type="<?php echo $row->role; ?>">
-                <input type="checkbox" id="checkbox-fa-light-<?php echo $key; ?>" name="account[]" value="<?php echo $row->user_id; ?>" checked="">
-                <label for="checkbox-fa-light-<?php echo $key; ?>">
-                  <?php echo $row->display_name; ?>
-                </label>
-              </div>
-            <?php endforeach; ?>
-          </fieldset>
         </form>
       </div>
       <div class="modal-footer">
