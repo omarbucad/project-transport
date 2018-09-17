@@ -84,7 +84,7 @@ class Report_model extends CI_Model {
 
     public function get_report_by_id($id){
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name,vt.type');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name,vt.type,vt.vehicle_type_id');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');

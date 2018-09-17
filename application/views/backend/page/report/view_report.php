@@ -130,8 +130,7 @@
                             <td><strong>Vehicle Type</strong></td>
                             <td><?php echo $result->type; ?></td>
                         </tr>
-
-                        <?php if($result->trailer_number != '' && $result->type == 1) : ?>
+                        <?php if($result->trailer_number != '') : ?>
                         <tr>
                             <td><strong>Trailer Number</strong></td>
                             <td><?php echo $result->trailer_number; ?></td>

@@ -164,7 +164,7 @@ class Checklist extends CI_Controller {
 					"report_id"				=> $report_id ,
 					"checklist_item_id"		=> $item->checklist_id ,
 					"checklist_value"		=> ($item->note == '') ? NULL : $item->note,
-					"checklist_ischeck"		=> $item->checkbox,
+					"checklist_ischeck"		=> $item->checkbox
 				);
 
 				$this->db->insert("report_checklist" , $item_batch);
@@ -172,6 +172,22 @@ class Checklist extends CI_Controller {
 
 				if(!empty($item->images)){
 					$this->save_image($report_id , $report_checklist_id , $item->images);
+				}
+			}
+
+			if($data->trailer_number != ''){
+				$this->db->select("id");
+				$this->db->where("checklist_id", $data->checklist_id);
+				$this->db->where("item_position >=", 29);
+				$c_items = $this->db->get("checklist_items")->result();
+
+				foreach ($c_items as $c => $c_v) {
+					$this->db->insert("report_checklist",[
+						"report_id"				=> $report_id ,
+						"checklist_item_id"		=> $c_v->id ,
+						"checklist_value"		=> NULL,
+						"checklist_ischeck"		=> 3
+					]);
 				}
 			}
 
@@ -227,7 +243,7 @@ class Checklist extends CI_Controller {
 		$_isDefect = false;
 
 		foreach($checklist as $row){
-			if($row->checkbox == 1 || $row->checkbox == 2){
+			if($row->checkbox == 1){
 				$_isDefect = true;
 			}
 		}

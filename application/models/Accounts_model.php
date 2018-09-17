@@ -352,14 +352,14 @@ class Accounts_model extends CI_Model {
 
     public function edit_user($user_id){
         $role = $this->input->post("role");
-        $session_role = $this->session->userdata('user')->role;
+        
         $this->db->trans_start();
 
         $this->db->where("user_id", $user_id)->update("user" , [
             "email_address"=> $this->input->post("email") ,
             "username"     => $this->input->post("username") ,
             "display_name" => $this->input->post("display_name") ,
-            "role"         => ($session_role == "ADMIN") ? "ADMIN" : $role
+            "role"         => $this->input->post("role")
         ]);
 
         if($this->input->post("password") != ""){

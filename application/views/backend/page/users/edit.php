@@ -10,7 +10,7 @@
         // }
    // });
     $(document).on('change' , '#profile_image' , function(){
-        readURL(this , ".image-preview" , 'background');
+        readURL($(this) , ".image-preview" , 'background');
     });
     $(document).on('change', '#user_role', function(){
         var role = $(this).find(":selected").val();

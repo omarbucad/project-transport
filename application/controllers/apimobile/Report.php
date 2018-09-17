@@ -25,7 +25,7 @@ class Report extends CI_Controller {
 		$report_by = $this->post->user_id;
 		$store_id = $this->post->store_id;
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -35,20 +35,9 @@ class Report extends CI_Controller {
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 
-		switch ($mechanic) {
-			case 'defect':
-				$this->db->where_in("rs.status" , [1 , 2])->where("u.store_id" , $store_id);
-				break;
-			case 'mechanic':
-				$time = strtotime("+ 1 week");
-				$this->db->where("r.remind_in > " , $time)->where("r.remind_done" , false)->where("r.report_by" , $report_by);
-			case 'all':
-				$this->db->where("u.store_id" , $store_id)->where("rs.user_id" , $report_by)->group_by("r.report_id");
-				break;
-			default:
-				$this->db->where("r.report_by" , $report_by);
-				break;
-		}
+		$this->db->where("r.report_by" , $report_by);
+		$this->db->where("u.store_id" , $store_id);
+
 
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 
