@@ -40,58 +40,44 @@ class Report extends CI_Controller {
 
 
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
+		if($result){
+			foreach($result as $key => $row){
+				
+				$result[$key]->created   = convert_timezone($row->created , true );
+				$result[$key]->status_raw = report_type($row->status , true);
+				$result[$key]->status = report_type($row->status);
 
+				$this->db->select("rc.checklist_ischeck , rc.checklist_value , ci.item_name , rc.id");
+				$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
+				$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
-		foreach($result as $key => $row){
-			
-			// $query = $this->db->query("YOUR QUERY");
+				foreach($result[$key]->checklist as $k => $r){
+					$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
 
-			// while ($row = $query->unbuffered_row())
-			// {
-			//         echo $row->title;
-			//         echo $row->name;
-			//         echo $row->body;
-			// }
-			$result[$key]->created   = convert_timezone($row->created , true );
-			$result[$key]->status_raw = report_type($row->status , true);
-			$result[$key]->status = report_type($row->status);
-			//$result[$key]->pdf = $this->pdf($row->report_id);
+					foreach($images as $ki => $ro){
+						$images[$ki]->thumbnail = $this->config->site_url("thumbs/images/report/".$ro->image_path."250/250/".$ro->image_name);
+						$images[$ki]->image = $this->config->site_url("thumbs/images/report/".$ro->image_path."500/500/".$ro->image_name);
+					}
 
-			// $result[$key]->pdf = [
-			// 	"path"	=> $this->config->site_url("apimobile/report/pdf/".$this->hash->encrypt($row->report_id)),
-			// 	"name"	=> $row->report_number.".pdf"
-			// ];
-			
-
-			$this->db->select("rc.checklist_ischeck , rc.checklist_value , ci.item_name , rc.id");
-			$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
-			$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
-
-			foreach($result[$key]->checklist as $k => $r){
-				$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
-
-				foreach($images as $ki => $ro){
-					$images[$ki]->thumbnail = $this->config->site_url("thumbs/images/report/".$ro->image_path."250/250/".$ro->image_name);
-					$images[$ki]->image = $this->config->site_url("thumbs/images/report/".$ro->image_path."500/500/".$ro->image_name);
+					$result[$key]->checklist[$k]->images = $images;
 				}
 
-				$result[$key]->checklist[$k]->images = $images;
-			}
+				$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
+				$this->db->join("user u" , "u.user_id = rs.user_id");
+				$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
 
-			$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
-			$this->db->join("user u" , "u.user_id = rs.user_id");
-			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
-
-			foreach($status as $k => $r){
-				$status[$k]->status = report_type($r->status );
-				$status[$k]->created   = convert_timezone($r->created , true );
-				$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
+				foreach($status as $k => $r){
+					$status[$k]->status = report_type($r->status );
+					$status[$k]->created   = convert_timezone($r->created , true );
+					$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
+				}
+				$result[$key]->signature = $status[0]->signature;
+				$result[$key]->status_list = $status;
 			}
-			$result[$key]->signature = $status[0]->signature;
-			$result[$key]->status_list = $status;
+			echo json_encode(["status" => true, "data" => $result, "action" => "get_report"]);
+		}else{
+			echo json_encode(["status" => false, "message" => "No data available", "action" => "get_report"]);
 		}
-
-		echo json_encode($result);
 	}
 
 	// public function get_report_by_vehicle(){
@@ -139,42 +125,45 @@ class Report extends CI_Controller {
 
 		$this->db->where("u.store_id" , $store_id);
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
+		if($result){
+			foreach($result as $key => $row){
 
-		foreach($result as $key => $row){
+				$result[$key]->created   = convert_timezone($row->created , true );
+				$result[$key]->status_raw = report_type($row->status , true);
+				$result[$key]->status = report_type($row->status);			
 
-			$result[$key]->created   = convert_timezone($row->created , true );
-			$result[$key]->status_raw = report_type($row->status , true);
-			$result[$key]->status = report_type($row->status);			
+				$this->db->select("rc.checklist_ischeck , rc.checklist_value , ci.item_name , rc.id");
+				$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
+				$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
-			$this->db->select("rc.checklist_ischeck , rc.checklist_value , ci.item_name , rc.id");
-			$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
-			$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
+				foreach($result[$key]->checklist as $k => $r){
+					$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
 
-			foreach($result[$key]->checklist as $k => $r){
-				$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
+					foreach($images as $ki => $ro){
+						$images[$ki]->thumbnail = $this->config->site_url("thumbs/images/report/".$ro->image_path."250/250/".$ro->image_name);
+						$images[$ki]->image = $this->config->site_url("thumbs/images/report/".$ro->image_path."500/500/".$ro->image_name);
+					}
 
-				foreach($images as $ki => $ro){
-					$images[$ki]->thumbnail = $this->config->site_url("thumbs/images/report/".$ro->image_path."250/250/".$ro->image_name);
-					$images[$ki]->image = $this->config->site_url("thumbs/images/report/".$ro->image_path."500/500/".$ro->image_name);
+					$result[$key]->checklist[$k]->images = $images;
 				}
 
-				$result[$key]->checklist[$k]->images = $images;
-			}
+				$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
+				$this->db->join("user u" , "u.user_id = rs.user_id");
+				$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
 
-			$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
-			$this->db->join("user u" , "u.user_id = rs.user_id");
-			$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
-
-			foreach($status as $k => $r){
-				$status[$k]->status = report_type($r->status );
-				$status[$k]->created   = convert_timezone($r->created , true );
-				$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
+				foreach($status as $k => $r){
+					$status[$k]->status = report_type($r->status );
+					$status[$k]->created   = convert_timezone($r->created , true );
+					$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
+				}
+				$result[$key]->signature = $status[0]->signature;
+				$result[$key]->status_list = $status;
 			}
-			$result[$key]->signature = $status[0]->signature;
-			$result[$key]->status_list = $status;
+			echo json_encode(["status" => true, "data" => $result, "action" => "vehicle_reports_today"]);
+		}else{
+			echo json_encode(["status" => false, "message" => "No data available", "action" => "vehicle_reports_today"]);
 		}
-
-		echo json_encode($result);
+		
 	}
 
 
@@ -224,11 +213,11 @@ class Report extends CI_Controller {
 
 			if ($this->db->trans_status() === FALSE){
 
-	           echo json_encode(["status" => 0 , "message" => "Submit Failed"]);
+	           echo json_encode(["status" => false , "message" => "Submit Failed"]);
 
 	        }else{
 	           
-	           echo json_encode(["status" => 1 , "message" => "Successfully Submitted"]);
+	           echo json_encode(["status" => true , "message" => "Successfully Submitted"]);
 	        }
 		}
 	}
@@ -328,9 +317,9 @@ class Report extends CI_Controller {
 				$result[$key]->status_list = $status;
 			}
 
-			echo json_encode(["status" => 1, "data" => $result, "action" => "allreports"]);
+			echo json_encode(["status" => true, "data" => $result, "action" => "allreports"]);
 		}else{
-			echo json_encode(["status" => 0, "message" => "No data available", "action" => "allreports"]);
+			echo json_encode(["status" => false, "message" => "No data available", "action" => "allreports"]);
 		}
 	}
 
@@ -352,14 +341,14 @@ class Report extends CI_Controller {
 		if($result){
 			
 			if($value->report_by == $user_id){
-				echo json_encode(["status" => 0 , "message" => "Consecutive Checklist Report is not allowed", "action" => "done_checklist"]);	
+				echo json_encode(["status" => false , "message" => "Consecutive Checklist Report is not allowed", "action" => "done_checklist"]);	
 			}else{
-				echo json_encode(["status" => 1 , "message" => "Allowed to Checklist", "action" => "done_checklist"]);	
+				echo json_encode(["status" => true , "message" => "Allowed to Checklist", "action" => "done_checklist"]);	
 			}
 			
 			
 		}else{
-			echo json_encode(["status" => 1 , "message" => "Allowed to Checklist", "action" => "done_checklist"]);
+			echo json_encode(["status" => true , "message" => "Allowed to Checklist", "action" => "done_checklist"]);
 		}
 	}
 }

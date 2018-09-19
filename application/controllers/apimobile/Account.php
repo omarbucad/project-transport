@@ -84,43 +84,43 @@ class Account extends CI_Controller {
 
 	}
 
-	public function register_driver(){
-		$data = $this->post;		
+	// public function register_driver(){
+	// 	$data = $this->post;		
 
-		$this->db->insert("user",[
-			"display_name" => "Firstname Lastname",
-			"email_address" => $data->email,
-			"username" => $data->username,
-			"role" => "DRIVER",
-			"store_id" => $data->store_id,
-			"status" => 1,
-			"created" => time(),
-			"password" => md5($data->password),
-			"store_id" => $store_id
-		]);
+	// 	$this->db->insert("user",[
+	// 		"display_name" => "Firstname Lastname",
+	// 		"email_address" => $data->email,
+	// 		"username" => $data->username,
+	// 		"role" => "DRIVER",
+	// 		"store_id" => $data->store_id,
+	// 		"status" => 1,
+	// 		"created" => time(),
+	// 		"password" => md5($data->password),
+	// 		"store_id" => $store_id
+	// 	]);
 
-		$userid = $this->db->insert_id();
+	// 	$userid = $this->db->insert_id();
 
-		if($data->image){
-			$img = $this->save_profile_image($userid);
-			$this->db->where("user_id",$userid);
-			$this->db->update("user",[
-				"image_path" => $img['image_path'],
-				"image_name" => $img['image_name']
-			]);
-		}
+	// 	if($data->image){
+	// 		$img = $this->save_profile_image($userid);
+	// 		$this->db->where("user_id",$userid);
+	// 		$this->db->update("user",[
+	// 			"image_path" => $img['image_path'],
+	// 			"image_name" => $img['image_name']
+	// 		]);
+	// 	}
 
-		$this->login_trail($userid);
+	// 	$this->login_trail($userid);
 
-		$this->db->trans_complete();
+	// 	$this->db->trans_complete();
 
-        if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
-        }else{
-            echo json_encode(["status" => true , "message" => "Successfully Registered", "action" => "register"]);
-        }
+ //        if ($this->db->trans_status() === FALSE){
+ //            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
+ //        }else{
+ //            echo json_encode(["status" => true , "message" => "Successfully Registered", "action" => "register"]);
+ //        }
 
-	}
+	// }
 
 	public function get_user(){
 		$data = $this->post;		
@@ -142,7 +142,7 @@ class Account extends CI_Controller {
 				}else{
 					$result->full_path = $this->config->site_url("public/upload/user/".$result->image_path.$result->image_name);
 				}
-				echo json_encode(["status" => true , "data" => $result, "action" => "register"]);
+				echo json_encode(["status" => true , "data" => $result, "action" => "get_user"]);
 			}else{
 				echo json_encode(["status" => false , "message" => "No Data Available", "action" => "get_user"]);
 			}            
@@ -156,14 +156,14 @@ class Account extends CI_Controller {
 		$this->db->trans_start();
 
 		$this->db->insert("user",[
-			"display_name" => $data->fullname,
+			"display_name" => $data->display_name,
 			"email_address" => $data->email,
 			"username" => $data->username,
 			"role" => $data->role,
 			"status" => 1,
 			"created" => time(),
 			"password" => md5($data->password),
-			"store_id" => $store_id,
+			"store_id" => $data->store_id,
 			"deleted" => NULL
 		]);
 
@@ -182,7 +182,7 @@ class Account extends CI_Controller {
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
+            echo json_encode(["status" => false , "message" => "Failed", "action" => "add"]);
         }else{
             echo json_encode(["status" => true , "message" => "Added Successfully", "action" => "add"]);
         }
