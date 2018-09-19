@@ -193,16 +193,29 @@ class Account extends CI_Controller {
 		
 		$this->db->trans_start();
 		$this->db->where("user_id", $data->user_id);
-		$this->db->update("user",[
-			"display_name" => $data->fullname,
-			"email_address" => $data->email,
-			"username" => $data->username,
-			"role" => $data->role,
-			"status" => 1,
-			"password" => md5($data->password),
-			"store_id" => $store_id,
-			"deleted" => NULL
-		]);
+		if($data->password != ''){
+			$this->db->update("user",[
+				"display_name" => $data->fullname,
+				"email_address" => $data->email,
+				"username" => $data->username,
+				"role" => $data->role,
+				"status" => 1,
+				"password" => md5($data->password),
+				"store_id" => $store_id,
+				"deleted" => NULL
+			]);
+		}else{
+			$this->db->update("user",[
+				"display_name" => $data->fullname,
+				"email_address" => $data->email,
+				"username" => $data->username,
+				"role" => $data->role,
+				"status" => 1,
+				"store_id" => $store_id,
+				"deleted" => NULL
+			]);
+		}
+		
 
 		if($data->image){
 			$img = $this->save_profile_image($data->user_id);
