@@ -63,12 +63,18 @@ class Account extends CI_Controller {
 			"updated" => NULL
 		]);
 
-		if($data->image){
+		if(isset($data->image)){
 			$img = $this->save_profile_image($userid);
 			$this->db->where("user_id",$userid);
 			$this->db->update("user",[
 				"image_path" => $img['image_path'],
 				"image_name" => $img['image_name']
+			]);
+		}else{
+			$this->db->where("user_id",$user_id);
+			$this->db->update("user",[
+				"image_path" => 'public/img/' ,
+				"image_name" => 'person-placeholder.jpg'
 			]);
 		}
 
@@ -152,6 +158,7 @@ class Account extends CI_Controller {
 
 	public function add(){
 		$data = $this->post;
+		// print_r_die($data);
 
 		$this->db->trans_start();
 
@@ -169,12 +176,18 @@ class Account extends CI_Controller {
 
 		$user_id = $this->db->insert_id();
 
-		if($data->image){
+		if(isset($data->image)){
 			$img = $this->save_profile_image($user_id);
 			$this->db->where("user_id",$user_id);
 			$this->db->update("user",[
 				"image_path" => $img['image_path'],
 				"image_name" => $img['image_name']
+			]);
+		}else{
+			$this->db->where("user_id",$user_id);
+			$this->db->update("user",[
+				"image_path" => 'public/img/' ,
+				"image_name" => 'person-placeholder.jpg'
 			]);
 		}
 
@@ -190,12 +203,11 @@ class Account extends CI_Controller {
 
 	public function edit(){
 		$data = $this->post;
-		
 		$this->db->trans_start();
 		$this->db->where("user_id", $data->user_id);
-		if($data->password != ''){
+		if(isset($data->password)){
 			$this->db->update("user",[
-				"display_name" => $data->fullname,
+				"display_name" => $data->display_name,
 				"email_address" => $data->email,
 				"username" => $data->username,
 				"role" => $data->role,
@@ -206,18 +218,18 @@ class Account extends CI_Controller {
 			]);
 		}else{
 			$this->db->update("user",[
-				"display_name" => $data->fullname,
+				"display_name" => $data->display_name,
 				"email_address" => $data->email,
 				"username" => $data->username,
 				"role" => $data->role,
 				"status" => 1,
-				"store_id" => $store_id,
+				"store_id" => $data->store_id,
 				"deleted" => NULL
 			]);
 		}
 		
 
-		if($data->image){
+		if(isset($data->image)){
 			$img = $this->save_profile_image($data->user_id);
 			$this->db->where("user_id",$data->user_id);
 			$this->db->update("user",[
@@ -313,7 +325,7 @@ class Account extends CI_Controller {
 				if($value->image_path == "public/img/"){
 				 	$result[$key]->full_path = $this->config->site_url($value->image_path.$value->image_name);
 				}else{
-					$result[$key]->full_path = $this->config->site_url("public/upload/user/".$value->image_path.$value->image_name);
+					$result[$key]->full_path = $this->config->site_url("public/upload/user/".$value->image_path."/".$value->image_name);
 				}
 			}
 			echo json_encode(["status" => true, "data" => $result, "action" => "get_all_emp"]);

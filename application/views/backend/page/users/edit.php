@@ -104,26 +104,26 @@
                     </div>
                 </section>
                 <?php endif; ?>
-                <?php if($result->role != "ADMIN" && $result->role != "MANAGER") : ?>                    
-                <section class='sec_border_bottom <?php echo ($result->role == "MECHANIC") ? "hidden": "" ?>' id="checklist_section">
+                <!-- <?php// if($result->role != "ADMIN" && $result->role != "MANAGER") : ?>                    
+                <section class='sec_border_bottom <?php// echo ($result->role == "MECHANIC") ? "hidden": "" ?>' id="checklist_section">
                     <h3>Checklist</h3>
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
                             <p>List of checklist that can be used</p>
                         </div>
                         <div class="col-xs-12 col-lg-4">
-                            <?php foreach($checklist_list as $key => $value) :?>
+                            <?php //foreach($checklist_list as $key => $value) :?>
                                 <div class="checkbox3 checkbox-check  checkbox-light">
-                                      <input type="checkbox" name="checklist[]" id="checkbox-<?php echo $value->checklist_id; ?>" value="<?php echo $value->checklist_id; ?>" <?php echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>>
-                                      <label for="checkbox-<?php echo $value->checklist_id; ?>">
-                                        <?php echo $value->checklist_name?>
+                                      <input type="checkbox" name="checklist[]" id="checkbox-<?php// echo $value->checklist_id; ?>" value="<?php// echo $value->checklist_id; ?>" <?php// echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>>
+                                      <label for="checkbox-<?php //echo $value->checklist_id; ?>">
+                                        <?php// echo $value->checklist_name?>
                                       </label>
                                 </div>
-                            <?php endforeach; ?>                            
+                            <?php //endforeach; ?>                            
                         </div>
                     </div>
                 </section>                
-                <?php endif; ?>
+                <?php// endif; ?> -->
                 <section class="sec_border_bottom">
                     <h3>Security</h3>
                     <div class="row">
