@@ -251,7 +251,7 @@ class Account extends CI_Controller {
 		$data = $this->post;
 		
 		$this->db->trans_start();
-
+		$this->db->where("store_id", $data->store_id);
 		$this->db->where("user_id", $data->user_id);
 		$this->db->update("user",[
 			"deleted" => time()

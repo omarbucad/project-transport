@@ -71,9 +71,13 @@ class Checklist extends CI_Controller {
 		$this->db->select("v.vehicle_id , v.vehicle_registration_number, v.vehicle_type_id, vt.type");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
 		$this->db->where("vt.deleted IS NULL");
-		$data = $this->db->where("store_id" , $store_id)->where("v.status" , 1)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
-
-		echo json_encode(["status" => true , "data" => $data]);
+		$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
+		if($data){
+			echo json_encode(["status" => true , "data" => $data, "action" => "get_all_vehicles"]);
+		}else{
+			echo json_encode(["status" => false , "No data available", "action" => "get_all_vehicles"]);
+		}
+		
 
 	}
 
@@ -92,11 +96,11 @@ class Checklist extends CI_Controller {
 
 				echo json_encode(["status" => true , "data" => $result]);
 			}else{
-				echo json_encode(["status" => false , "message" => "No checklist data available"]);
+				echo json_encode(["status" => false , "message" => "No checklist data available", "action" => "get_checklist_items"]);
 			}
 
 		}else{
-			echo json_encode(["status" => false , "message" => "No checklist id passed"]);
+			echo json_encode(["status" => false , "message" => "No checklist id passed", "action" => "get_checklist_items"]);
 		}
 	}
 
@@ -211,7 +215,7 @@ class Checklist extends CI_Controller {
 					"pdf_file" 			=> $pdf['filename']
 				]);
 	           
-	            echo json_encode(["status" => 1 , "message" => "Successfully Submitted"]);
+	            echo json_encode(["status" => 1 , "message" => "Successfully Submitted","action" => "save_checklist"]);
 	        }
 		}
 	}

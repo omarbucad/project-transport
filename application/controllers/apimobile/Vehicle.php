@@ -29,7 +29,7 @@ class Vehicle extends CI_Controller {
 
 		$this->db->insert("vehicle",[
 			"vehicle_registration_number" => $data->vehicle_registration_number,
-			"status" => $data->status,
+			//"status" => 1,
 			"vehicle_type_id" => $data->vehicle_type_id,
 			"created" => time(),
 			"store_id" => $data->store_id,
@@ -39,9 +39,9 @@ class Vehicle extends CI_Controller {
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => 0 , "message" => "Failed", "action" => "register"]);
+            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
         }else{
-            echo json_encode(["status" => 1 , "message" => "Added Successfully", "action" => "add"]);
+            echo json_encode(["status" => true , "message" => "Added Successfully", "action" => "add"]);
         }
 	}
 
@@ -49,10 +49,11 @@ class Vehicle extends CI_Controller {
 		$data = $this->post;
 		
 		$this->db->trans_start();
+		$this->db->where("store_id",$data->store_id);
 		$this->db->where("vehicle_id", $data->vehicle_id);
 		$this->db->update("vehicle",[
 			"vehicle_registration_number" => $data->vehicle_registration_number,
-			"status" => $data->status,
+			//"status" => $data->status,
 			"vehicle_type_id" => $data->vehicle_type_id,
 			"deleted" => NULL
 		]);
@@ -60,9 +61,9 @@ class Vehicle extends CI_Controller {
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => 0 , "message" => "Failed", "action" => "edit"]);
+            echo json_encode(["status" => false , "message" => "Failed", "action" => "edit"]);
         }else{
-            echo json_encode(["status" => 1 , "message" => "Updated Successfully", "action" => "edit"]);
+            echo json_encode(["status" => true , "message" => "Updated Successfully", "action" => "edit"]);
         }
 	}
 
@@ -70,7 +71,7 @@ class Vehicle extends CI_Controller {
 		$data = $this->post;
 		
 		$this->db->trans_start();
-
+		$this->db->where("store_id",$data->store_id);
 		$this->db->where("vehicle_id", $data->vehicle_id);
 		$this->db->update("vehicle",[
 			"deleted" => time()
@@ -79,9 +80,9 @@ class Vehicle extends CI_Controller {
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => 0 , "message" => "Failed", "action" => "edit"]);
+            echo json_encode(["status" => false , "message" => "Failed", "action" => "edit"]);
         }else{
-            echo json_encode(["status" => 1 , "message" => "Deleted Successfully", "action" => "edit"]);
+            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "edit"]);
         }
 	}
 }

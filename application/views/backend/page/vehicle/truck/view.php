@@ -64,7 +64,7 @@
               if(json.status){
                 
                 form.trigger('reset');
-                form.find("select[name='status']").val(json.data.status);  
+                //form.find("select[name='status']").val(json.data.status);  
                 form.find("#type").val(json.data.vehicle_type_id);  
                 form.find("input[name='vehicle_registration_number']").val(json.data.vehicle_registration_number);  
                 
@@ -118,13 +118,13 @@
                 <div class="card-body no-padding-left no-padding-right">
                     <form action="<?php echo site_url('app/vehicle')?>" method="GET">
                         <div class="row">
-                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
+                            <div class="col-xs-12 col-lg-4 no-margin-bottom">
                                 <div class="form-group">
                                     <label for="s_name">Search by Registration number</label>
                                     <input type="text" name="registration_number" class="form-control" id="s_name" placeholder="Registration Number" value="<?php echo $this->input->get("registration_number"); ?>">
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
+                            <div class="col-xs-12 col-lg-4 no-margin-bottom">
                                 <div class="form-group">
                                     <label for="type">Search by Vehicle Type</label>
                                     <select class="form-control" name="type" id="type">
@@ -136,17 +136,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
-                                <div class="form-group">
-                                    <label for="s_product_type">Search by Status</label>
-                                    <select class="form-control" name="status" id="s_product_type">
-                                        <option value="">- Select Status -</option>
-                                        <option value="1" <?php echo ($this->input->get("status") == "Active") ? "selected" : "" ; ?> >Active</option>
-                                        <option value="0" <?php echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option>                                        
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-lg-3 text-right no-margin-bottom">
+                            <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
                                 <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
                             </div>
                         </div>
@@ -160,7 +150,6 @@
                     <tr>
                         <th width="40%">Registration Number</th>
                         <th width="20%">Type</th>
-                        <th width="20%">Status</th>
                         <th width="20%"></th>
                     </tr>
                 </thead>
@@ -171,7 +160,6 @@
                                 <span><strong><?php echo $row->vehicle_registration_number; ?></strong></span>
                             </td>
                             <td><span><?php echo $row->type;?></span></td>
-                            <td><span><?php echo $row->status; ?></span></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/get_vehicle_info/").$this->hash->encrypt($row->vehicle_id); ?>" data-id="<?php echo $this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-edit" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
@@ -241,13 +229,13 @@
                     <?php endforeach; ?>                    
                 </select>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="status">Status</label>
                 <select class="form-control" name="status">
-                    <option value="1" <?php echo ($this->input->get("status") == "Active") ? "selected" : "" ; ?> >Active</option>
-                    <option value="0" <?php echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option> 
+                    <option value="1" <?php //echo ($this->input->get("status") == "Active") ? "selected" : "" ; ?> >Active</option>
+                    <option value="0" <?php //echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option> 
                 </select>
-            </div>
+            </div> -->
         </form>
       </div>
       <div class="modal-footer">

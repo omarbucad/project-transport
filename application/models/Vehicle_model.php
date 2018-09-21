@@ -9,9 +9,9 @@ class Vehicle_model extends CI_Model {
         /*
             TODO :: Searching logic here
         */
-        if($this->input->get("status") != ""){
-            $this->db->where("v.status", $this->input->get("status"));
-        }
+        // if($this->input->get("status") != ""){
+        //     $this->db->where("v.status", $this->input->get("status"));
+        // }
 
         if($this->input->get("type") != ""){
             $this->db->where("v.vehicle_type_id", $this->input->get("type"));
@@ -42,9 +42,9 @@ class Vehicle_model extends CI_Model {
         $this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
         $result = $this->db->where("store_id" , $store_id)->order_by("v.vehicle_registration_number" , "ASC")->limit($limit)->get("vehicle v")->result();
 
-        foreach($result as $key => $row){
-            $result[$key]->status = convert_status($row->status);
-        }
+        // foreach($result as $key => $row){
+        //     $result[$key]->status = convert_status($row->status);
+        // }
 
         return $result;
     }
@@ -97,7 +97,7 @@ class Vehicle_model extends CI_Model {
             $this->db->insert("vehicle" , [
                 "vehicle_registration_number"   => $this->input->post("registration_number"),
                 "vehicle_type_id"               => $this->input->post("type"),
-                "status"                        => 1 ,
+                //"status"                        => 1 ,
                 "store_id"                      => $store_id ,
                 "created"                       => time()
             ]);
@@ -116,7 +116,7 @@ class Vehicle_model extends CI_Model {
         $this->db->update("vehicle" , [
             "vehicle_registration_number"   => $this->input->post("vehicle_registration_number"),
             "vehicle_type_id"               => $this->input->post("type"),
-            "status"                        => $this->input->post("status")
+            //"status"                        => $this->input->post("status")
         ]);
         
         $this->db->trans_complete();
