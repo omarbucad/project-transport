@@ -19,7 +19,7 @@
 			word-wrap: break-word;
 			word-break: break-all;
 		}
-
+		
 	</style>
 </head>
 <body>
@@ -33,7 +33,9 @@
 				<td style="width:20%"></td>
 				<td style="width:30%"></td>
 			</tr>
-
+			<tr>
+				<td><h3><?php echo $store_name; ?></h3></td>
+			</tr>		
 			<tr>
 				<th>Report #</th>
 				<td><?php echo $report_number; ?></td>

@@ -25,7 +25,7 @@ class Report extends CI_Controller {
 		$report_by = $this->post->user_id;
 		$store_id = $this->post->store_id;
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -34,6 +34,7 @@ class Report extends CI_Controller {
 		$this->db->join("user u2" , "rs.user_id = u2.user_id");
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
+		$this->db->join("store s","s.store_id = u.store_id");
 
 		$this->db->where("r.report_by" , $report_by);
 		$this->db->where("u.store_id" , $store_id);
@@ -109,7 +110,7 @@ class Report extends CI_Controller {
         $start = strtotime(trim($today.' 00:00'));
         $end   = strtotime(trim($today.' 23:59'));
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -118,6 +119,7 @@ class Report extends CI_Controller {
 		$this->db->join("user u2" , "rs.user_id = u2.user_id");
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
+		$this->db->join("store s","s.store_id = u.store_id");
 
 		$this->db->where("r.vehicle_registration_number",$vehicle_registration_number);
 		$this->db->where("r.created >=",$start);
@@ -269,7 +271,7 @@ class Report extends CI_Controller {
 
 		$store_id = $this->post->store_id;
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -278,6 +280,7 @@ class Report extends CI_Controller {
 		$this->db->join("user u2" , "rs.user_id = u2.user_id");
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
+		$this->db->join("store s","s.store_id = u.store_id");
 
 		$this->db->where("u.store_id" , $store_id);
 

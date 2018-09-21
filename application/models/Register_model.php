@@ -57,7 +57,7 @@ class Register_model extends CI_Model {
             "plan_expiration" => strtotime("+1 month") ,
             "billing_type"  => "NA",
             "who_updated" => $user_id ,
-            "ip_address" => $this->input->ip_address() ,
+//            "ip_address" => $this->input->ip_address() ,
             "active" => 1,
             "updated" => time()
         ]);

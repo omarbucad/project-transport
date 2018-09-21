@@ -59,7 +59,7 @@ class Vehicle_model extends CI_Model {
     
     public function get_activetruck(){
         $store_id = $this->data['session_data']->store_id;
-        $this->db->where("status",1);
+       // $this->db->where("status",1);
         return $result = $this->db->where("store_id" , $store_id)->get("vehicle")->result();
     }
     

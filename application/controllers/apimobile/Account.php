@@ -24,7 +24,7 @@ class Account extends CI_Controller {
 		$data = $this->post;
 
 		$this->db->trans_start();
-		$this->db->insert("store_address",[	"street 1" => NULL]);
+		$this->db->insert("store_address",[	"street1" => "Street"]);
 
 		$address_id = $this->db->insert_id();
 
@@ -45,11 +45,11 @@ class Account extends CI_Controller {
 			"status" => 1,
 			"created" => time(),
 			"password" => md5($data->password),
-			"store_id" => $store_id
+			"store_id" => $store_id,
+			"deleted" => NULL
 		]);
 
 		$userid = $this->db->insert_id();
-
 
 		$this->db->insert("user_plan",[
 			"store_id" => $store_id,
@@ -58,7 +58,7 @@ class Account extends CI_Controller {
 			"plan_expiration" => strtotime("+1 month", time()),
 			"billing_type" => "NA",
 			"who_updated" => $userid,
-			"ip_address" => $data->ip_address,
+			// "ip_address" => $data->ip_address,
 			"active" => 1,
 			"updated" => NULL
 		]);
@@ -318,7 +318,10 @@ class Account extends CI_Controller {
 	}
 
 	public function get_all_emp(){
+
+		$data = $this->input;
 		$this->db->where("deleted IS NULL");
+		$this->db->where("store_id",$data->store_id);
 		$result = $this->db->where_in("role", ["DRIVER","MANAGER"])->get("user")->result();
 		if($result){
 			foreach ($result as $key => $value) {
