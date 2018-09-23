@@ -67,7 +67,7 @@ class Checklist extends CI_Controller {
 
 	public function get_all_vehicles(){
 		$store_id = $this->post->store_id;
-
+		
 		$this->db->select("v.vehicle_id , v.vehicle_registration_number, v.vehicle_type_id, vt.type");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
 		$this->db->where("vt.deleted IS NULL");
@@ -75,7 +75,7 @@ class Checklist extends CI_Controller {
 		if($data){
 			echo json_encode(["status" => true , "data" => $data, "action" => "get_all_vehicles"]);
 		}else{
-			echo json_encode(["status" => false , "No data available", "action" => "get_all_vehicles"]);
+			echo json_encode(["status" => false , "message" => "No data available", "action" => "get_all_vehicles"]);
 		}
 		
 

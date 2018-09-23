@@ -71,7 +71,7 @@ class Account extends CI_Controller {
 				"image_name" => $img['image_name']
 			]);
 		}else{
-			$this->db->where("user_id",$user_id);
+			$this->db->where("user_id",$userid);
 			$this->db->update("user",[
 				"image_path" => 'public/img/' ,
 				"image_name" => 'person-placeholder.jpg'
@@ -319,21 +319,29 @@ class Account extends CI_Controller {
 
 	public function get_all_emp(){
 
-		$data = $this->input;
-		$this->db->where("deleted IS NULL");
-		$this->db->where("store_id",$data->store_id);
-		$result = $this->db->where_in("role", ["DRIVER","MANAGER"])->get("user")->result();
-		if($result){
-			foreach ($result as $key => $value) {
-				if($value->image_path == "public/img/"){
-				 	$result[$key]->full_path = $this->config->site_url($value->image_path.$value->image_name);
-				}else{
-					$result[$key]->full_path = $this->config->site_url("public/upload/user/".$value->image_path."/".$value->image_name);
+		$data = $this->post;
+		if($data->store_id){
+			$this->db->where("deleted IS NULL");
+			$this->db->where("store_id",$data->store_id);
+			$result = $this->db->where_in("role", ["DRIVER","MANAGER"])->get("user")->result();
+
+			//print_r_die($this->db->last_query());
+			if($result){
+				foreach ($result as $key => $value) {
+					if($value->image_path == "public/img/"){
+					 	$result[$key]->full_path = $this->config->site_url($value->image_path.$value->image_name);
+					}else{
+						$result[$key]->full_path = $this->config->site_url("public/upload/user/".$value->image_path."/".$value->image_name);
+					}
 				}
+				echo json_encode(["status" => true, "data" => $result, "action" => "get_all_emp"]);
+			}else{
+				echo json_encode(["status" => false, "message" => "No data available", "action" => "get_all_emp"]);
 			}
-			echo json_encode(["status" => true, "data" => $result, "action" => "get_all_emp"]);
 		}else{
-			echo json_encode(["status" => false, "message" => "Something went wrong. Try again.", "action" => "get_all_emp"]);
+			echo json_encode(["status" => true, "message" => "No store id", "action" => "get_all_emp"]);
 		}
+		
+		
 	}
 }
