@@ -158,6 +158,7 @@ class Account extends CI_Controller {
 
 	public function add(){
 		$data = $this->post;
+		//print_r_die($data);
 		// print_r_die($data);
 
 		$this->db->trans_start();
@@ -191,7 +192,6 @@ class Account extends CI_Controller {
 			]);
 		}
 
-
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
@@ -203,6 +203,7 @@ class Account extends CI_Controller {
 
 	public function edit(){
 		$data = $this->post;
+		//print_r_die($data);
 		$this->db->trans_start();
 		$this->db->where("user_id", $data->user_id);
 		if(isset($data->password)){
@@ -213,7 +214,7 @@ class Account extends CI_Controller {
 				"role" => $data->role,
 				"status" => 1,
 				"password" => md5($data->password),
-				"store_id" => $store_id,
+				"store_id" => $data->store_id,
 				"deleted" => NULL
 			]);
 		}else{
@@ -235,6 +236,25 @@ class Account extends CI_Controller {
 			$this->db->update("user",[
 				"image_path" => $img['image_path'],
 				"image_name" => $img['image_name']
+			]);
+		}
+
+		if($data->role == "ADMIN"){
+			$this->db->where("user_id",$data->user_id);
+			$this->db->update("store",[
+				"store_name" => $data->company_name
+			]);
+
+			$this->db->where("store_address_id",$data->store_address_id);
+			$this->db->update("store_address",[
+				"street1" => $data->street1,
+				"street2" => $data->street2,
+				"suburb" => $data->suburb,
+				"city" => $data->city,
+				"state" => $data->state,
+				"postcode" => $data->postcode,
+				"country" => $data->country,
+				"timezone" => NULL
 			]);
 		}
 		

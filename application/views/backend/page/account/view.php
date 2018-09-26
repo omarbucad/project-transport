@@ -239,7 +239,7 @@
     	<?php else : ?>
         <div class="grey-bg margin-bottom">
             <div class="container ">
-                <span>Select a plan to get the best out of Transport App.</span>
+                <span>Select a plan to get the best out of Vehicle Checklist App.</span>
             </div>
         </div>
         <div class="container">

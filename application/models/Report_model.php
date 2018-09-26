@@ -99,6 +99,8 @@ class Report_model extends CI_Model {
             // Get All Status 
             $this->db->select("rs.* , u.display_name");
             $this->db->join("user u", "u.user_id = rs.user_id");
+            $this->db->where("rs.longitude !=", NULL);
+            $this->db->where("rs.latitude !=", NULL);
             $result->report_statuses = $this->db->where("rs.report_id", $id)->order_by("rs.created" , "ASC")->get("report_status rs")->result();
 
             $marks = array();
@@ -130,15 +132,28 @@ class Report_model extends CI_Model {
 
             //get all report images
             $result->report_images = $this->db->where('report_id',$id)->get('report_images')->result();
+            $result->update_images = $this->db->where('report_id',$id)->get('report_update_images')->result();
 
 
             foreach($result->report_checklist as $key => $row){
+                if($row->updated_timestamp != ''){
+                    $result->report_checklist[$key]->updated_timestamp = convert_timezone($row->updated_timestamp,true);
+                }
+
                 foreach($result->report_images as $k => $r){
                     if($row->id == $r->report_checklist_id){
 
                         $result->report_checklist[$key]->fullpath[] = ($r->image_name == '') ? '' : $this->config->site_url("public/upload/report/".$r->image_path.$r->image_name);
                     }
                 }
+                if($row->updated_ischeck != ''){
+                    foreach ($result->update_images as $u => $i) {
+                        if($row->id == $i->report_checklist_id){
+
+                        $result->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
+                        }
+                    }
+                }                
             }
             $result->status = report_status($result->status);
             $result->created = convert_timezone($result->created,true);

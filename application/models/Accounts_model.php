@@ -482,7 +482,7 @@ class Accounts_model extends CI_Model {
                     "billing_type" => $billing,
                     "plan_created" => time(),
                     "plan_expiration"   => $expiration,
-                    "ip_address" => $this->input->ip_address(),
+                    //"ip_address" => $this->input->ip_address(),
                     "active" => 1,
                     "updated" => time(),
                     "who_updated" => $who_updated

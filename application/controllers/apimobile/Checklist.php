@@ -25,7 +25,7 @@ class Checklist extends CI_Controller {
 		$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id");
 		$result = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
 
-		echo json_encode(["status" => 1 , "data" => $result]);
+		echo json_encode(["status" => 1 , "data" => $result, "action" => "get_my_checklist"]);
 	}
 
 	public function get_checklist_by_type(){
@@ -39,9 +39,9 @@ class Checklist extends CI_Controller {
 		$result = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->row();
 		if($result){
 
-			echo json_encode(["status" => true , "data" => $result]);
+			echo json_encode(["status" => true , "data" => $result, "action" => "get_checklist_by_type"]);
 		}else{
-			echo json_encode(["status" => false , "message" => "No checklist available"]);
+			echo json_encode(["status" => false , "message" => "No checklist available", "action" => "get_checklist_by_type"]);
 		}
 
 	}
@@ -132,16 +132,19 @@ class Checklist extends CI_Controller {
 				"trailer_number"				=> ($data->trailer_number != '') ? $data->trailer_number : NULL ,
 				"checklist_id"					=> $data->checklist_id,
 				"start_mileage"					=> $data->start_mileage ,
-				"end_mileage"					=> $data->end_mileage ,
+				"end_mileage"					=> (isset($data->end_mileage)) ? $data->end_mileage : NULL ,
 				"report_notes"					=> (isset($data->note)) ? $data->note : NULL ,
 				"created"						=> time(),
 				"remind_in"						=> $remind_in,
 				"remind_done"					=> false
 			]);
-
+			$signature_path = '';
 			$report_id = $this->db->insert_id();
-
-			$signature_path = $this->save_signature($report_id);
+			
+			if(isset($data->end_mileage)){
+				$signature_path = $this->save_signature($report_id);
+			}
+			
 
 			//Create status
 			$this->db->insert("report_status" , [
@@ -152,9 +155,9 @@ class Checklist extends CI_Controller {
 				"created"			=> time(),
 				"start_longitude"	=> ($data->start_longitude == '') ? NULL : $data->start_longitude,
 				"start_latitude"	=> ($data->start_latitude == '') ? NULL : $data->start_latitude,
-				"longitude"			=> ($data->longitude == '') ? NULL : $data->longitude,
-				"latitude"			=> ($data->latitude == '') ? NULL : $data->latitude,
-				"signature"			=> $signature_path
+				"longitude"			=> (isset($data->longitude)) ?  $data->longitude : NULL ,
+				"latitude"			=> (isset($data->latitude)) ? $data->latitude : NULL,
+				"signature"			=> ($signature_path == '')? NULL : $signature_path
 			]);
 			$status_id = $this->db->insert_id();
 
@@ -205,7 +208,7 @@ class Checklist extends CI_Controller {
 
 			if ($this->db->trans_status() === FALSE){
 
-	            $this->return_false();
+	            echo json_encode(["status" => false , "message" => "Something went wrong","action" => "save_checklist"]);
 
 	        }else{
 	            $pdf = $this->pdf($report_id);
@@ -215,31 +218,12 @@ class Checklist extends CI_Controller {
 					"pdf_file" 			=> $pdf['filename']
 				]);
 	           
-	            echo json_encode(["status" => 1 , "message" => "Successfully Submitted","action" => "save_checklist"]);
+	            echo json_encode(["status" => true , "message" => "Successfully Submitted","action" => "save_checklist"]);
 	        }
 		}
 	}
 
-	private function return_false($rules = 0){
-		$msg = "Server Error , Please Try Again Later";
-
-		switch ($rules) {
-			case 1:
-				
-				$msg = "Invalid Username & Password";
-
-				break;
-			
-			default:
-				# code...
-				break;
-		}
-
-		echo json_encode([
-				"status" 	=> false ,
-				"message" 	=> $msg
-		]);
-	}
+	
 
 	private function isDefect(){
 		$data = (object)$this->input->post();

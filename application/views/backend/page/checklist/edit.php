@@ -206,13 +206,13 @@
                                 <?php endforeach; ?>                                    
                               </select>
                             </div>
-                            <div class="form-group">
+                           <!--  <div class="form-group">
                                 <label for="checklist_for">Checklist For</label>
-                                <select name="checklist_for" id="checklist_for" class="form-control" value="<?php echo $result->checklist_for; ?>">
-                                  <option value="DRIVER" <?php echo($result->checklist_for == 'DRIVER') ? 'selected' : ''; ?> >Driver</option>
-                                  <option value="MECHANIC" <?php echo($result->checklist_for == 'MECHANIC') ? 'selected' : ''; ?> >Mechanic</option>
+                                <select name="checklist_for" id="checklist_for" class="form-control" value="<?php// echo $result->checklist_for; ?>">
+                                  <option value="DRIVER" <?php// echo($result->checklist_for == 'DRIVER') ? 'selected' : ''; ?> >Driver</option>
+                                  <option value="MECHANIC" <?php// echo($result->checklist_for == 'MECHANIC') ? 'selected' : ''; ?> >Mechanic</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="status">Status</label>
                                 <select class="form-control" name="status">
@@ -234,7 +234,7 @@
                         </div>
                     </div>
                 </section>
-                <section class="sec_border_bottom">
+                <!-- <section class="sec_border_bottom">
                     <h3>Users</h3>
                     <div class="row user-div">
                         <div class="col-xs-12 col-lg-4">
@@ -242,18 +242,18 @@
                         </div>
                         <div class="col-xs-12 col-lg-4">
                             <fieldset id="fs">
-                            <?php foreach($accounts_list as $key => $row) : ?>
-                              <div class="checkbox3 checkbox-check checkbox-light" data-type="<?php echo $row->role; ?>">
-                                <input type="checkbox" id="checkbox-fa-light-<?php echo $key; ?>" name="account[]" <?php echo (isset($user_checklist[$row->user_id])) ? "checked" : ""; ?> value="<?php echo $row->user_id; ?>" >
-                                <label for="checkbox-fa-light-<?php echo $key; ?>">
-                                  <?php echo $row->display_name; ?>
+                            <?php// foreach($accounts_list as $key => $row) : ?>
+                              <div class="checkbox3 checkbox-check checkbox-light" data-type="<?php //echo $row->role; ?>">
+                                <input type="checkbox" id="checkbox-fa-light-<?php //echo $key; ?>" name="account[]" <?php //echo (isset($user_checklist[$row->user_id])) ? "checked" : ""; ?> value="<?php //echo $row->user_id; ?>" >
+                                <label for="checkbox-fa-light-<?php// echo $key; ?>">
+                                  <?php //echo $row->display_name; ?>
                                 </label>
                               </div>
-                            <?php endforeach; ?>
+                            <?php //endforeach; ?>
                             </fieldset>
                         </div>
                     </div>
-                </section>
+                </section> -->
                     
                 </div>
             </div>

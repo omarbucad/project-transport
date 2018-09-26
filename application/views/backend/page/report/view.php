@@ -69,7 +69,7 @@
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container" >
-        	<h1>Daily Reports</h1>
+        	<h1>Manage Reports</h1>
         </div>
         <div class="grey-bg ">
             <div class="container ">

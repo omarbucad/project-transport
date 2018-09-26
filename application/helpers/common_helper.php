@@ -121,18 +121,19 @@ if ( ! function_exists('report_type'))
         /*
             0 - NO DEFECT
             1 - OPEN
-            2 - ON MAINTENANCE
-            3 - FIXED
+            2 - FIXED
+            3 - ON MAINTENANCE
+
 
         */
         if($raw){
             switch ($type) {
                 // case 3:
-                //     return 'Fixed';
-                //     break;
-                // case 2:
                 //     return 'On Maintenance';
                 //     break;
+                case 2:
+                    return 'Fixed';
+                    break;
                 case 1:
                     return 'DEFECT';
                     break;                    
@@ -146,10 +147,10 @@ if ( ! function_exists('report_type'))
         }else{
             switch ($type) {
                 
+                case 2:
+                    return '<span class="label label-success">Fixed</span>';
+                    break;
                 // case 3:
-                //     return '<span class="label label-success">Fixed</span>';
-                //     break;
-                // case 2:
                 //     return '<span class="label label-warning">On Maintenance</span>';
                 //     break;
                 case 1:
@@ -232,9 +233,9 @@ if ( ! function_exists('report_type'))
                 case 1:
                     return 'Open';
                 break;
-                // case 2:
-                //     return 'Under Maintenance';
-                // break;
+                case 2:
+                    return 'Fixed';
+                break;
                 // case 3:
                 //     return 'Fixed';
                 // break;
@@ -247,9 +248,9 @@ if ( ! function_exists('report_type'))
                 case 1:
                     return '<span class="label label-danger">DEFECT</span>';
                 break;
-                // case 2:
-                //     return '<span class="label label-warning">Under Maintenance</span>';
-                // break;
+                case 2:
+                    return '<span class="label label-warning">Fixed</span>';
+                break;
                 // case 3:
                 //     return '<span class="label label-success">Fixed</span>';
                 // break;

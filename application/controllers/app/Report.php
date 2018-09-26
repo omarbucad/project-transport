@@ -14,7 +14,7 @@ class Report extends MY_Controller {
 		}
     }
 	public function daily(){
-		$this->data['page_name'] = "Daily Report";
+		$this->data['page_name'] = "Manage Report";
 		$this->data['main_page'] = "backend/page/report/view";
 		$this->data['plan_type'] = $this->data['session_data']->title;
 		

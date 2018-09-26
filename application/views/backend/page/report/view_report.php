@@ -157,7 +157,7 @@
     						<tr>
     							<td><strong>Updated By</strong></td>
     							<td><strong>Notes</strong></td>
-                                <td><strong>Updated</strong></td>
+                                <td><strong>Status</strong></td>
     							<td><strong></strong></td>
     						</tr>
     						<?php foreach($result->report_statuses as $key => $row) :?>
@@ -204,6 +204,8 @@
     							<td><strong>Status</strong></td>
     							<td><strong>Notes</strong></td>
     							<td><strong>Images</strong></td>
+                                <td><strong>Update</strong></td>
+                                <td><strong>Update Images</strong></td>
     						</tr>
     						<?php foreach($result->report_checklist as $key => $row) :?>
 	    					<tr>
@@ -230,7 +232,39 @@
                                         <?php endforeach; ?>
                                     <?php endif;?>
                                     </div>
-                                </td>	    						
+                                </td>
+                                
+                                <td>
+                                <?php if(isset($row->updated_ischeck)) : ?>
+                                    <?php if($row->updated_ischeck == 1) : ?>
+                                        <?php echo "Defect"; ?>
+                                    <?php elseif($row->updated_ischeck == 2) : ?>
+                                        <?php echo "Rechecked"; ?>
+                                    <?php elseif($row->updated_ischeck == 3) : ?>
+                                        <?php echo "N/A"; ?>
+                                    <?php else : ?>
+                                        <?php echo "Good"; ?>
+                                    <?php endif; ?>
+                                    - <span><?php echo $row->updated_timestamp;?></span>
+                                <?php else: ?>     
+                                    &nbsp;
+                                <?php endif; ?>
+                                </td>	
+                                <td>
+                                <?php if(isset($row->updated_ischeck)) : ?>
+                                    <div class="animated-thumbnail">
+                                    <?php if(isset($row->update_img_fullpath)) : ?>
+                                        <?php foreach($row->update_img_fullpath as $k) : ?> 
+                                        <a href="<?php echo $k; ?>">
+                                         <img src="<?php echo $k; ?>" height='40px'>
+                                        </a>
+                                        <?php endforeach; ?>
+                                    <?php endif;?>
+                                    </div>
+                                <?php else: ?>     
+                                    &nbsp;
+                                <?php endif; ?>
+                                </td>    				
 	    					</tr>
 	    					<?php endforeach; ?>
 	    				</table>

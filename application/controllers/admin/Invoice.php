@@ -12,7 +12,7 @@ class Invoice extends MY_Controller {
 	public function index(){
 		$this->data['role'] = $this->session->userdata('user')->role;
 		$this->data['session_data'] = $this->session->userdata('user');
-		$this->data['page_name'] = "Transport Invoices";
+		$this->data['page_name'] = "Vehicle Checklist Invoices";
 		$this->data['main_page'] = "backend/page/admin/invoice/invoice";
 
 		//PAGINATION

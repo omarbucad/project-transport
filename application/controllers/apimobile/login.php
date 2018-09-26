@@ -40,7 +40,7 @@ class Login extends CI_Controller {
 				$data->servertime = time();
 				
 
-				echo json_encode(["status" => true , "data" => $data]);
+				echo json_encode(["status" => true , "data" => $data, "action" => "signin"]);
 			}else{
 				$this->return_false(1);
 			}
@@ -68,7 +68,8 @@ class Login extends CI_Controller {
 
 		echo json_encode([
 				"status" 	=> false ,
-				"message" 	=> $msg
+				"message" 	=> $msg ,
+				"action" 	=> "signin"
 		]);
 	}
 }

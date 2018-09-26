@@ -39,7 +39,7 @@ class Vehicle extends CI_Controller {
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
+            echo json_encode(["status" => false , "message" => "Failed", "action" => "add"]);
         }else{
             echo json_encode(["status" => true , "message" => "Added Successfully", "action" => "add"]);
         }

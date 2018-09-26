@@ -44,7 +44,7 @@ class Accounts extends MY_Controller {
 
 		if ($this->form_validation->run() == FALSE){ 
 
-			$this->data['page_name'] = "Transport Accounts";
+			$this->data['page_name'] = "Vehicle Checklist Accounts";
 			$this->data['main_page'] = "backend/page/admin/accounts/edit_info";
 			$this->data['result'] = $this->accounts->user_data($user_id);
 			$this->load->view('backend/master' , $this->data);

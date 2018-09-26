@@ -69,7 +69,7 @@ class Login extends MY_Controller {
 
 		if ($this->form_validation->run() == FALSE){ 
 
-			$this->data['title_page'] = "Transport | Forgotten Password";
+			$this->data['title_page'] = "Vehicle Checklist | Forgotten Password";
 
 			$this->load->view('frontend/forgot_password' , $this->data);
 

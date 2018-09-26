@@ -28,10 +28,11 @@
 		<table style="width:100%;">
 
 			<tr>
+				<td style="width:12%"></td>
+				<td style="width:18%"></td>
+				<td style="width:12%"></td>
 				<td style="width:20%"></td>
-				<td style="width:30%"></td>
 				<td style="width:20%"></td>
-				<td style="width:30%"></td>
 			</tr>
 			<tr>
 				<td><h3><?php echo $store_name; ?></h3></td>
@@ -46,7 +47,7 @@
 				<th>Start Mileage</th>
 				<td><?php echo $start_mileage; ?></td>
 				<th>End Mileage</th>
-				<td><?php echo $end_mileage; ?></td>
+				<td><?php echo ($end_mileage != '') ? $end_mileage : ""; ?></td>
 			</tr>
 			<tr>
 				<th>Registration No.</th>
@@ -66,7 +67,7 @@
 			</tr>
 			<tr>
 				<th>Report Notes</th>
-				<td><?php echo $report_notes; ?></td>
+				<td><?php echo ($report_notes != '') ? $report_notes : ""; ?></td>
 			</tr>
 			<tr>
 				<td colspan="4" style="padding:10px;"></td>
@@ -75,6 +76,7 @@
 				<td colspan="2" class="tr_header"><?php echo $checklist_name; ?></td>
 				<td class="tr_header">Status</td>
 				<td class="tr_header">Remarks</td>
+				<td class="tr_header">Update</td>
 			</tr>
 
 			<?php foreach($report_checklist as $key => $checklist) : ?>
@@ -93,17 +95,37 @@
 						<?php endif; ?>
 					</td>
 					<td><?php echo $checklist->checklist_value; ?></td>
+					<td>
+						<?php if(isset($checklist->updated_ischeck)) : ?>
+                            <?php if($checklist->updated_ischeck == 1) : ?>
+                                <?php echo "Defect"; ?>
+                            <?php elseif($checklist->updated_ischeck == 2) : ?>
+                                <?php echo "Rechecked"; ?>
+                            <?php elseif($checklist->updated_ischeck == 3) : ?>
+                                <?php echo "N/A"; ?>
+                            <?php else : ?>
+                                <?php echo "Good"; ?>
+                            <?php endif; ?>
+                            - <span><?php echo $checklist->updated_timestamp; ?></span>
+                        <?php else: ?>     
+                            &nbsp;
+                        <?php endif; ?>
+					</td>
 				</tr>
 
 			<?php endforeach; ?>
 			
 			<tr>
-				<td colspan="4" class="tr_header" style="padding:10px;"></td>
+				<td colspan="5" class="tr_header" style="padding:10px;"></td>
 			</tr>
 			<tr>
-				<td colspan="4" style="padding:5px;">
+				<td colspan="5" style="padding:5px;">
+					<?php if(!empty($report_statuses)) : ?>
 					<img src="<?php echo $report_statuses[0]->signature;?>" style="height:50px;"><br>
 					<?php echo $report_statuses[0]->display_name;?><br>
+					<?php else: ?>
+						<?php echo $display_name;?><br>
+					<?php endif; ?>
 					<span>__________________________</span><br>
 					<span>Signature over printed name</span>
 				</td>
