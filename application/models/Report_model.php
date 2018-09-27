@@ -63,17 +63,82 @@ class Report_model extends CI_Model {
         $this->db->where("u.store_id",$this->data['session_data']->store_id);
 
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
-        foreach($result as $key => $row){
-            if($result[$key]->status == 0){
-                $result[$key]->status_created = 0;
+        foreach($result as $r => $l){
+            //print_r_die($result);
+            if($result[$r]->status == 0){
+                $result[$r]->status_created = 0;
             }else{
-                $result[$key]->status_created = convert_timezone($row->status_created,true);
+                $result[$r]->status_created = convert_timezone($l->status_created,true);
             }
-            $result[$key]->status = report_status($row->status);
-            $result[$key]->raw_status = report_status($row->status,true);
-            $result[$key]->created = convert_timezone($row->created,true);
+            $result[$r]->status = report_status($l->status);
+            $result[$r]->raw_status = report_status($l->status,true);
+            $result[$r]->created = convert_timezone($l->created,true);
+            //  $result[$r]->status = report_status($result[$r]->status);
+            // $result[$r]->created = convert_timezone($result[$r]->created,true);
             
+
+              // Get All Status 
+            $this->db->select("rs.* , u.display_name");
+            $this->db->join("user u", "u.user_id = rs.user_id");
+            $this->db->where("rs.longitude !=", NULL);
+            $this->db->where("rs.latitude !=", NULL);
+            $result[$r]->report_statuses = $this->db->where("rs.report_id", $l->report_id)->order_by("rs.created" , "ASC")->get("report_status rs")->result();
+
+           // $marks = array();
+
+            foreach ($result[$r]->report_statuses as $key => $row) {
+                // $loc_end = [
+                //     $row->display_name,
+                //     $row->latitude,
+                //     $row->longitude
+                // ];
+                // $loc_start = [
+                //     $row->display_name,
+                //     $row->start_latitude,
+                //     $row->start_longitude
+                // ];
+                // array_push($marks, $loc_end);
+                // array_push($marks, $loc_start);
+                $result[$r]->report_statuses[$key]->status = report_status($row->status);
+                $result[$r]->report_statuses[$key]->signature = ($result[$r]->report_statuses[$key]->signature == '') ? '' : $this->config->site_url("public/upload/signature/".$row->signature);
+                $result[$r]->report_statuses[$key]->created = convert_timezone($row->created,true);
+            }
+
+           // $result[$r]->locations = json_encode($marks);
+
+            //Get All Report Checklist
+            $this->db->select("rc.* , ci.item_name");
+            $this->db->join("checklist_items ci", "ci.id = rc.checklist_item_id");
+            $result[$r]->report_checklist = $this->db->where("rc.report_id", $l->report_id)->get("report_checklist rc")->result();
+
+            //get all report images
+            $result[$r]->report_images = $this->db->where('report_id',$l->report_id)->get('report_images')->result();
+            $result[$r]->update_images = $this->db->where('report_id',$l->report_id)->get('report_update_images')->result();
+
+
+            foreach($result[$r]->report_checklist as $key => $row){
+                if($row->updated_timestamp != ''){
+                    $result[$r]->report_checklist[$key]->updated_timestamp = convert_timezone($row->updated_timestamp,true);
+                }
+
+                foreach($result[$r]->report_images as $k => $z){
+                    if($row->id == $z->report_checklist_id){
+
+                        $result[$r]->report_checklist[$key]->fullpath[] = ($z->image_name == '') ? '' : $this->config->site_url("public/upload/report/".$z->image_path.$z->image_name);
+                    }
+                }
+                if($row->updated_ischeck != ''){
+                    foreach ($result[$r]->update_images as $u => $i) {
+                        if($row->id == $i->report_checklist_id){
+
+                        $result[$r]->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
+                        }
+                    }
+                }                
+            }
+           
         }
+
         
         return $result;
     }

@@ -75,7 +75,7 @@
             <div class="container ">
                 <div class="row no-margin-bottom">
                     <div class="col-xs-12 col-lg-8 no-margin-bottom">
-                        <span></span>
+                        <span><a href="<?php echo $this->config->site_url('app/report/pdf_all');?>" class="btn btn-link btn-print" style="padding: 3px 6px;margin:0;" title="Download PDF" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
                     <!--   <?php //if($plan_type == "Standard" || $plan_type == "Trial" || $plan_type == "Premium") : ?>

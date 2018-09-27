@@ -174,4 +174,30 @@ class Report extends MY_Controller {
 		download_send_headers('report_' . date("Y-m-d") . ".csv");
 		echo array2csv($export);
 	}
+
+	public function pdf_all(){
+
+		//$report_id = $this->hash->decrypt($report_id);
+		$reports = $this->reports->get_reports_list();
+
+		$pdf = $this->pdf->create_multiple_report($reports);
+
+		// $update = $this->db->where("report_id" , $report->report_id)->update("report" , [
+		// 	"pdf_path"			=> $pdf['path'],
+		// 	"pdf_file" 			=> $pdf['filename']
+		// ]);
+		
+		// if($update){
+		// 	$this->session->set_flashdata('status' , 'success');	
+		// 	$this->session->set_flashdata('message' , 'Successfully Generated PDF!');
+
+		// 	redirect("app/report/daily" , 'refresh');
+		// }else{
+		// 	$this->session->set_flashdata('status' , 'error');	
+		// 	$this->session->set_flashdata('message' , 'Something went wrong.');
+
+		// 	redirect("app/report/daily" , 'refresh');
+		// }
+	
+	}
 }

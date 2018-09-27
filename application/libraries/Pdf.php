@@ -2,6 +2,7 @@
 
 //Load the DOMPDF libary
 require(APPPATH.'third_party/pdf/vendor/autoload.php');
+ini_set('max_execution_time', 300);
 
 use Spipu\Html2Pdf\Html2Pdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
@@ -91,6 +92,33 @@ class Pdf {
 			return	[
 				"attachment" => FCPATH.$this->folder.'/'.$filename ,
 				"file"		 => $this->folder.'/'.$filename
+			];
+
+		}catch (Html2PdfException $e) {
+			$formatter = new ExceptionFormatter($e);
+			echo $formatter->getHtmlMessage();
+		}
+	}
+
+	public function create_multiple_report($data = array() , $output = "D"){
+		//print_r_die($data);
+		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(10, 10, 10, 10));
+		$reports = array();
+		$reports = ["data" => $data];
+
+
+		try{
+			$filename = "report_multiple_".time().'.pdf';
+			$path = FCPATH.$this->folder.'/'.$filename;
+
+			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/multiple_report" , $reports , TRUE));
+			$this->html2pdf->Output($path , $output);
+
+			return [
+				"attachment" => FCPATH.$this->folder.'/'.$filename ,
+				"file"		 => $this->folder.'/'.$filename,
+				"filename"	 => $filename,
+				"path" 		 => $this->folder.'/'
 			];
 
 		}catch (Html2PdfException $e) {

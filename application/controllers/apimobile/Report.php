@@ -35,7 +35,7 @@ class Report extends CI_Controller {
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 		$this->db->join("store s","s.store_id = u.store_id");
-
+		$this->db->where("r.end_mileage !=", NULL);
 		$this->db->where("r.report_by" , $report_by);
 		$this->db->where("u.store_id" , $store_id);
 
@@ -139,6 +139,7 @@ class Report extends CI_Controller {
 		$this->db->where("r.vehicle_registration_number",$vehicle_registration_number);
 		$this->db->where("r.created >=",$start);
 		$this->db->where("r.created <=",$end);
+		$this->db->where("r.end_mileage !=", NULL);
 
 		$this->db->where("u.store_id" , $store_id);
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
@@ -258,41 +259,41 @@ class Report extends CI_Controller {
 		}
 	}
 
-	private function save_signature($report_number){
-		$image = $this->post->signature;
+	// private function save_signature($report_number){
+	// 	$image = $this->post->signature;
 
-		$name = $report_number.'_'.time().'.PNG';
-        $year = date("Y");
-        $month = date("m");
+	// 	$name = $report_number.'_'.time().'.PNG';
+ //        $year = date("Y");
+ //        $month = date("m");
         
-        $folder = "./public/upload/signature/".$year."/".$month;
+ //        $folder = "./public/upload/signature/".$year."/".$month;
         
-        $date = time();
+ //        $date = time();
 
-        if (!file_exists($folder)) {
-            mkdir($folder, 0777, true);
-            create_index_html($folder);
-        }
+ //        if (!file_exists($folder)) {
+ //            mkdir($folder, 0777, true);
+ //            create_index_html($folder);
+ //        }
 
-        $path = $folder.'/'.$name;
+ //        $path = $folder.'/'.$name;
 
-        $encoded = $image;
+ //        $encoded = $image;
 
-	    //explode at ',' - the last part should be the encoded image now
-	    $exp = explode(',', $encoded);
+	//     //explode at ',' - the last part should be the encoded image now
+	//     $exp = explode(',', $encoded);
 
-	    //we just get the last element with array_pop
-	    $base64 = array_pop($exp);
+	//     //we just get the last element with array_pop
+	//     $base64 = array_pop($exp);
 
-	    //decode the image and finally save it
-	    $data = base64_decode($base64);
+	//     //decode the image and finally save it
+	//     $data = base64_decode($base64);
 
 
-	    //make sure you are the owner and have the rights to write content
-	    file_put_contents($path, $data);
+	//     //make sure you are the owner and have the rights to write content
+	//     file_put_contents($path, $data);
 
-        return $year."/".$month.'/'.$name;
-	}
+ //        return $year."/".$month.'/'.$name;
+	// }
 
 	public function allreports(){
 
@@ -308,7 +309,7 @@ class Report extends CI_Controller {
 		$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 		$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 		$this->db->join("store s","s.store_id = u.store_id");
-
+		$this->db->where("r.end_mileage !=", NULL);
 		$this->db->where("u.store_id" , $store_id);
 
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
@@ -463,6 +464,7 @@ class Report extends CI_Controller {
 				}
 				$result->signature = ($status[0]->signature == '') ? '' : $status[0]->signature;
 				$result->status_list = $status;
+
 				echo json_encode(["status" => false , "message" => "Incomplete Report", "data" => $result, "action" => "check_end_mileage"]);				
 			}else{
 				echo json_encode(["status" => true , "message" => "No incomplete report", "action" => "check_end_mileage"]);	
@@ -498,7 +500,7 @@ class Report extends CI_Controller {
 					"end_mileage" => $data->end_mileage
 				]);	
 				$signature_path = $this->save_signature($data->report_number);
-				
+
 				$this->db->where("status_id",$data->status_id);
 				$this->db->update("report_status",[
 					"longitude" => $data->longitude,
