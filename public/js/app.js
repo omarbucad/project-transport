@@ -48,7 +48,8 @@ $(function() {
         showDropdowns: true,
         locale: {
             format: 'D MMM YYYY'
-        }
+        },
+        maxDate: new Date()
     });
 });
 

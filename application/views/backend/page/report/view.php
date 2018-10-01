@@ -48,6 +48,7 @@
 
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();   
+
     });
 
     $(document).on("click" , ".update-status" , function(){
@@ -64,6 +65,43 @@
         }
       }
     });
+
+    $(document).on("change", ".datepicker", function(){      
+
+      var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"];
+
+      var selected = $(this).val();
+      var d = new Date(selected);
+
+      d.setDate(d.getDate() +parseInt(2));
+      var enddate = d.getDate() + ' ' + months[d.getMonth()]+ ' ' + d.getFullYear();   
+
+
+      if($('div.selectedDate').length){
+        $("div.selectedDate").html('<span>'+selected+ ' - ' +enddate+ '</span>');
+        $("#date-range").text(selected+ ' - ' +enddate);
+      }else{
+        $("div.daterangepicker_input").before('<div class="selectedDate text-center"><span>'+selected+'</span></div>');
+        $("#date-range").text(selected+ ' - ' +enddate);
+      }
+      
+    });
+
+    $(document).on("click" , ".btn-generate" , function(){
+        $('#gen-form').submit();
+        // var url = $(this).data("href");        
+        
+        // $.ajax({
+        //     url : url ,
+        //     method : "POST" ,
+        //     success : function(response){
+        //       // var json = jQuery.parseJSON(response);
+             
+        //     }
+        // });
+      
+        
+    });
     
 </script>
 <div class="container-fluid margin-bottom">
@@ -74,13 +112,24 @@
         <div class="grey-bg ">
             <div class="container ">
                 <div class="row no-margin-bottom">
-                    <div class="col-xs-12 col-lg-8 no-margin-bottom">
-                        <span><a href="<?php echo $this->config->site_url('app/report/pdf_all');?>" class="btn btn-link btn-print" style="padding: 3px 6px;margin:0;" title="Download PDF" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a></span>
-                    </div>
-                    <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                    <!--   <?php //if($plan_type == "Standard" || $plan_type == "Trial" || $plan_type == "Premium") : ?>
-                        <a href="<?php //echo my_current_url("&export=true"); ?>" class="btn btn-primary ">Export</a>
-                      <?php //endif; ?> -->
+                    <div class="col-xs-12 col-lg-12 no-margin-bottom">
+                      <div class="row">
+                        <form action="<?php echo site_url('app/report/pdf_all');?>" method="POST" id="gen-form"  target="_blank">
+                          <div class="col-xs-12 col-lg-12"><h4>Generate 3 day reports to PDF  ( <small class="text-right" id="date-range"></small> )</h4> </div>
+                            
+                          <div class="col-xs-12 col-lg-3">
+                            <div class="form-group no-margin-bottom" >
+                                <label for="s_name">Select Start Date</label>
+                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="" placeholder="Select Report Start Date" required="true">
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-lg-2">
+                            <div class="form-group no-margin-bottom">
+                              <a href="javascript:void(0);" data-href="<?php echo site_url('app/report/pdf_all');?>" class="btn btn-primary btn-generate" style="margin-top: 23px;">Generate PDF</a>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
                     </div>
                 </div>
             </div>

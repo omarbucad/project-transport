@@ -58,7 +58,7 @@ class Login extends MY_Controller {
 	
 	public function logout(){
 		$this->session->set_flashdata('status' , 'success');
-		$this->session->set_flashdata('message' , 'You have been Logout');
+		$this->session->set_flashdata('message' , 'You have been Logged out');
 
 		redirect('/login', 'refresh');
 	}

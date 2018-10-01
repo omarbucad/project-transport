@@ -178,9 +178,29 @@ class Report extends MY_Controller {
 	public function pdf_all(){
 
 		//$report_id = $this->hash->decrypt($report_id);
-		$reports = $this->reports->get_reports_list();
+		$date = $this->input->post('date');
+		$start = strtotime(trim($date.' 00:00'));
+        $today = strtotime(trim(date("d-M-Y 00:00", time())));
+        if($start == $today){
+              $end = date("dMY",$start);
+        }else{
+            $end = strtotime(trim($date.' 23:59 + 2 days'));
 
-		$pdf = $this->pdf->create_multiple_report($reports);
+           	$end = date("dMY",$end);
+        }
+		$reports = $this->reports->get_reports_to_pdf();
+		if($reports){
+			$start = date("dMY",$start);
+			$pdf = $this->pdf->create_multiple_report($reports,"D", $start, $end);	
+			die();
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'No reports available.');
+
+			redirect("app/report/daily" , 'refresh');
+		}
+
+		
 
 		// $update = $this->db->where("report_id" , $report->report_id)->update("report" , [
 		// 	"pdf_path"			=> $pdf['path'],
