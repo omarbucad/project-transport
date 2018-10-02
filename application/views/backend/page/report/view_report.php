@@ -4,41 +4,76 @@
 		$('[data-toggle="tooltip"]').tooltip(); 
 
         var locations = jQuery.parseJSON('<?php echo $result->locations;?>');
-
-
-        $.getScript("https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY; ?>")
+        if(locations.length != 0){
+             $.getScript("https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY; ?>")
           .done(function( script, textStatus ) {
 
 
-            var map = new google.maps.Map(document.getElementById('_map'), {
-              zoom: 10,
-              center: new google.maps.LatLng(locations[0][1], locations[0][2]),
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
+                var map = new google.maps.Map(document.getElementById('_map'), {
+                  zoom: 10,
+                  center: new google.maps.LatLng(locations[0][1], locations[0][2]),
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
 
-            var infowindow = new google.maps.InfoWindow();
+                var infowindow = new google.maps.InfoWindow();
 
 
-            var marker, i;
+                var marker, i;
 
-            for (i = 0; i < locations.length; i++) {  
-              marker = new google.maps.Marker({
-                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                map: map,
-                label : locations[i][0]
-              });
+                for (i = 0; i < locations.length; i++) {  
+                  marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                    map: map,
+                    label : locations[i][0]
+                  });
 
-              google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                  infowindow.setContent(locations[i][0]);
-                  infowindow.open(map, marker);
+                  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                      infowindow.setContent(locations[i][0]);
+                      infowindow.open(map, marker);
+                    }
+                  })(marker, i));
+
                 }
-              })(marker, i));
+            }).fail(function( jqxhr, settings, exception ) {
+               
+            });
+        }else{
+            $.getScript("https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY; ?>")
+          .done(function( script, textStatus ) {
 
-            }
-        }).fail(function( jqxhr, settings, exception ) {
-           
-        });
+
+                var map = new google.maps.Map(document.getElementById('_map'), {
+                  zoom: 5,
+                  center: new google.maps.LatLng(0, 0),
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+
+                // var infowindow = new google.maps.InfoWindow();
+
+
+                // var marker, i;
+
+                // for (i = 0; i < locations.length; i++) {  
+                //   marker = new google.maps.Marker({
+                //     position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                //     map: map,
+                //     label : locations[i][0]
+                //   });
+
+                //   google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                //     return function() {
+                //       infowindow.setContent(locations[i][0]);
+                //       infowindow.open(map, marker);
+                //     }
+                //   })(marker, i));
+
+                // }
+            }).fail(function( jqxhr, settings, exception ) {
+               
+            });
+        }
+       
 	});
 
 	$(document).on("click" , ".btn-delete" , function(){

@@ -35,7 +35,7 @@
 				<td style="width:20%"></td>
 			</tr>
 			<tr>
-				<td><h3><?php echo $store_name; ?></h3></td>
+				<td colspan="5"><img src="<?php echo $company_logo;?>" style="height:90px;margin-bottom: 10px;padding-left: 25px; display: inline-block;"><strong style="display: inline-block;"><span style="margin-top: -25px; font-size: 30px;margin-left: 10px;"><?php echo $store_name; ?></span></strong></td>				
 			</tr>		
 			<tr>
 				<th>Report #</th>
@@ -94,8 +94,8 @@
 							<?php echo "Good"; ?>
 						<?php endif; ?>
 					</td>
-					<td><?php echo $checklist->checklist_value; ?></td>
-					<td>
+					<td style="width:100px;padding-right: 10px;"><?php echo $checklist->checklist_value; ?></td>
+					<td style="width:100px;padding-right: 10px;">
 						<?php if(isset($checklist->updated_ischeck)) : ?>
                             <?php if($checklist->updated_ischeck == 1) : ?>
                                 <?php echo "Defect"; ?>

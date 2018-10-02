@@ -78,6 +78,21 @@ class Account extends CI_Controller {
 			]);
 		}
 
+		if(isset($data->logo)){
+			$logo = $this->save_logo($store_id);
+			$this->db->where("store_id",$store_id);
+			$this->db->update("store",[
+				"logo_image_name" => $logo['logo_image_name'],
+				"logo_image_path" => $logo['logo_image_path']
+			]);
+		}else{
+			$this->db->where("store_id",$store_id);
+			$this->db->update("store",[
+				"logo_image_name" => 'public/img/',
+				"logo_image_path" => 'company_logo.png'
+			]);
+		}
+
 		$this->login_trail($userid);
 
 		$this->db->trans_complete();
@@ -256,6 +271,16 @@ class Account extends CI_Controller {
 				"country" => $data->country,
 				"timezone" => NULL
 			]);
+
+			if(isset($data->logo)){
+				$logo = $this->save_logo($data->store_id);
+
+				$this->db->where("store_id",$data->store_id);
+				$this->db->update("store",[
+					"logo_image_path" => $img['logo_image_path'],
+					"logo_image_name" => $img['logo_image_name']
+				]);
+			}
 		}
 		
 		$this->db->trans_complete();
@@ -332,6 +357,48 @@ class Account extends CI_Controller {
 	    $img = array(
 	    	"image_path"			=> $year."/".$month.'/' ,
 	    	"image_name"			=> $name
+	    );
+
+        return $img;
+	}
+
+	 private function save_logo($store_id){
+		$image = $this->post->logo;
+
+		$name = md5($store_id).'_'.time().'.PNG';
+        $year = date("Y");
+        $month = date("m");
+        
+        $folder = "./public/upload/company/".$year."/".$month;
+        
+        $date = time();
+
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+            mkdir($folder.'/thumbnail', 0777, true);
+
+            create_index_html($folder);
+        }
+
+        $path = $folder.'/'.$name;
+
+      //  $encoded = $image;
+
+	    //explode at ',' - the last part should be the encoded image now
+	   // $exp = explode(',', $encoded);
+
+	    //we just get the last element with array_pop
+	   // $base64 = array_pop($exp);
+
+	    //decode the image and finally save it
+	    $data = base64_decode($image);
+
+	    //make sure you are the owner and have the rights to write content
+	    file_put_contents($path, $data);
+
+	    $img = array(
+	    	"logo_image_path"			=> $year."/".$month.'/' ,
+	    	"logo_image_name"			=> $name
 	    );
 
         return $img;

@@ -36,8 +36,8 @@
 				<td style="width:20%"></td>
 			</tr>
 			<tr>
-				<td><h3><?php echo $val->store_name; ?></h3></td>
-			</tr>		
+				<td colspan="5"><img src="<?php echo $val->company_logo;?>" style="height:90px;margin-bottom: 10px;padding-left: 25px; display: inline-block;"><strong style="display: inline-block;"><span style="margin-top: -25px; font-size: 30px;margin-left: 10px;"><?php echo $val->store_name; ?></span></strong></td>				
+			</tr>	
 			<tr>
 				<th>Report #</th>
 				<td><?php echo $val->report_number; ?></td>

@@ -25,7 +25,7 @@ class Report extends CI_Controller {
 		$report_by = $this->post->user_id;
 		$store_id = $this->post->store_id;
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_name, s.logo_image_path");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -43,6 +43,12 @@ class Report extends CI_Controller {
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 		if($result){
 			foreach($result as $key => $row){
+
+				if($result[$key]->logo_image_path == 'public/img/'){
+	                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }else{
+	                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }
 				
 				$result[$key]->created   = convert_timezone($row->created , true );
 				$result[$key]->status_raw = report_type($row->status , true);
@@ -67,7 +73,7 @@ class Report extends CI_Controller {
 					$result[$key]->checklist[$k]->images = $images;
 
 					if($r->updated_ischeck != ''){
-						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_updated_images")->result();
+						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
 
 						foreach($images as $ui => $u){
 							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
@@ -125,7 +131,7 @@ class Report extends CI_Controller {
         $start = strtotime(trim($today.' 00:00'));
         $end   = strtotime(trim($today.' 23:59'));
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_path, s.logo_image_name");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -145,6 +151,12 @@ class Report extends CI_Controller {
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 		if($result){
 			foreach($result as $key => $row){
+
+				if($result[$key]->logo_image_path == 'public/img/'){
+	                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }else{
+	                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }
 
 				$result[$key]->created   = convert_timezone($row->created , true );
 				$result[$key]->status_raw = report_type($row->status , true);
@@ -167,7 +179,7 @@ class Report extends CI_Controller {
 					$result[$key]->checklist[$k]->images = $images;
 
 					if($r->updated_ischeck != ''){
-						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_updated_images")->result();
+						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
 
 						foreach($images as $ui => $u){
 							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
@@ -299,7 +311,7 @@ class Report extends CI_Controller {
 
 		$store_id = $this->post->store_id;
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name,s.logo_image_name, s.logo_image_path");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -315,6 +327,11 @@ class Report extends CI_Controller {
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 		if($result){
 			foreach($result as $key => $row){
+				if($result[$key]->logo_image_path == 'public/img/'){
+	                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }else{
+	                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }
 
 				$result[$key]->created   = convert_timezone($row->created , true );
 				$result[$key]->status_raw = report_type($row->status , true);
@@ -337,7 +354,7 @@ class Report extends CI_Controller {
 					$result[$key]->checklist[$k]->images = $images;
 
 					if($r->updated_ischeck != ''){
-						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_updated_images")->result();
+						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
 
 						foreach($images as $ui => $u){
 							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
@@ -399,7 +416,7 @@ class Report extends CI_Controller {
 	public function check_end_mileage(){
 		$data = $this->post;
 		if($data){
-			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
+			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name,s.logo_image_name, s.logo_image_path");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
 			$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 			$this->db->select("c.checklist_name");
@@ -417,6 +434,12 @@ class Report extends CI_Controller {
 
 		
 			if($result){
+
+				if($result->logo_image_path == 'public/img/'){
+	                $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
+	            }else{
+	                $result->company_logo = $this->config->site_url("public/upload/company/".$result->logo_image_path.$result->logo_image_name);
+	            }
 				
 				$result->created   = convert_timezone($result->created , true );
 				$result->status_raw = report_type($result->status , true);
@@ -450,7 +473,7 @@ class Report extends CI_Controller {
 					$result->checklist[$k]->images = $images;
 
 					if($r->updated_ischeck != ''){
-						$updated_img = $this->db->where("report_id" , $result->report_id)->where("report_checklist_id" , $r->id)->get("report_updated_images")->result();
+						$updated_img = $this->db->where("report_id" , $result->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
 
 						foreach($images as $ui => $u){
 							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
@@ -461,7 +484,7 @@ class Report extends CI_Controller {
 
 				}
 
-				$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
+				$this->db->select("rs.status, rs.id as report_status_id, rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
 				$this->db->join("user u" , "u.user_id = rs.user_id");
 				$status = $this->db->where("rs.report_id" , $result->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
 				foreach($status as $k => $r){
@@ -486,7 +509,7 @@ class Report extends CI_Controller {
 
 	private function isDefect(){
 		$data = (object)$this->input->post();
-		$checklist = json_decode($data->checklist);
+		$checklist = json_decode($data->items);
 		$_isDefect = false;
 
 		foreach($checklist as $row){
@@ -500,17 +523,19 @@ class Report extends CI_Controller {
 
 	public function update_report(){
 		$data = $this->post;
+		//print_r_die($data);
 		if($data){
 			$this->db->trans_start();
 
 			if(isset($data->end_mileage)){
 				$this->db->where("report_id",$data->report_id);
 				$this->db->update("report",[
-					"end_mileage" => $data->end_mileage
+					"end_mileage" => $data->end_mileage,
+					"report_notes" => $data->report_notes
 				]);	
 				$signature_path = $this->save_signature($data->report_number);
 
-				$this->db->where("status_id",$data->status_id);
+				$this->db->where("id",$data->status_id);
 				$this->db->update("report_status",[
 					"longitude" => $data->longitude,
 					"latitude" => $data->latitude,
@@ -523,30 +548,30 @@ class Report extends CI_Controller {
 				$item = json_decode($data->items);
 				foreach($item as $key => $value){
 
-					$this->db->where("id",$item->id);
+					$this->db->where("id",$value->id);
 					$this->db->where("report_id",$data->report_id);
 					$this->db->update("report_checklist" , [
-						"updated_value"		=> ($item->update_note == '') ? NULL : $item->update_note,
-						"updated_ischeck"	=> $item->checkbox,
-						"updated_timestamp" => $item->updated_timestamp
+						"updated_value"		=> ($value->update_note == '') ? NULL : $value->update_note,
+						"updated_ischeck"	=> $value->checkbox,
+						"updated_timestamp" => $value->updated_timestamp
 					]);
 					
 
-					if(isset($item->images)){
-						$this->save_image($report_id , $item->id , $item->images);
+					if(isset($value->images)){
+						$this->save_image($data->report_id , $value->id , $value->images);
 					}
 				}
 
-				$this->db->where("status_id",$data->status_id);
+				$this->db->where("id",$data->status_id);
 				$this->db->update("report_status",[
 					"notes" => "Fixed",
 					"status" => ($this->isDefect()) ? 1 : 2 
 				]);
 			}
 
-			 $pdf = $this->pdf($report_id);
+			$pdf = $this->pdf($data->report_id);
 
-            $this->db->where("report_id" , $report_id)->update("report" , [
+            $this->db->where("report_id" , $data->report_id)->update("report" , [
 				"pdf_path"			=> $pdf['path'],
 				"pdf_file" 			=> $pdf['filename']
 			]);
@@ -652,7 +677,7 @@ class Report extends CI_Controller {
 
 	public function allreports_daterange($store_id, $start, $end){	
 
-		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name");
+		$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_path, s.logo_image_name");
 		$this->db->select("u.display_name , u2.display_name as updated_by");
 		$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 		$this->db->select("c.checklist_name");
@@ -671,6 +696,11 @@ class Report extends CI_Controller {
 		$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 		if($result){
 			foreach($result as $key => $row){
+				if($result[$key]->logo_image_path == 'public/img/'){
+	                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }else{
+	                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
+	            }
 
 				$result[$key]->created   = convert_timezone($row->created , true );
 				$result[$key]->status_raw = report_type($row->status , true);
@@ -693,7 +723,7 @@ class Report extends CI_Controller {
 					$result[$key]->checklist[$k]->images = $images;
 
 					if($r->updated_ischeck != ''){
-						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_updated_images")->result();
+						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
 
 						foreach($images as $ui => $u){
 							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);

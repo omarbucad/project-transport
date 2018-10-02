@@ -51,7 +51,7 @@ class Report_model extends CI_Model {
             $this->db->where("rs.status !=", 0);
         }
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by,vt.type, s.store_name');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by,vt.type, s.store_name,s.logo_image_path, s.logo_image_name');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
@@ -73,6 +73,12 @@ class Report_model extends CI_Model {
             $result[$r]->status = report_status($l->status);
             $result[$r]->raw_status = report_status($l->status,true);
             $result[$r]->created = convert_timezone($l->created,true);
+
+            if($result[$r]->logo_image_path == 'public/img/'){
+                $result[$r]->company_logo = $this->config->site_url($result[$r]->logo_image_path.$result[$r]->logo_image_name);
+            }else{
+                $result[$r]->company_logo = $this->config->site_url("public/upload/company/".$result[$r]->logo_image_path.$result[$r]->logo_image_name);
+            }
             //  $result[$r]->status = report_status($result[$r]->status);
             // $result[$r]->created = convert_timezone($result[$r]->created,true);
             
@@ -150,7 +156,7 @@ class Report_model extends CI_Model {
 
     public function get_report_by_id($id){
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name,vt.type,vt.vehicle_type_id, s.store_name');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name,vt.type,vt.vehicle_type_id, s.store_name,s.logo_image_name, s.logo_image_path');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
@@ -160,6 +166,12 @@ class Report_model extends CI_Model {
         $result = $this->db->where("r.report_id" , $id)->order_by("r.created" , "DESC")->get("report r")->row();
 
         if($result){
+
+            if($result->logo_image_path == 'public/img/'){
+                $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
+            }else{
+                $result->company_logo = $this->config->site_url("public/upload/company/".$result->logo_image_path.$result->logo_image_name);
+            }
 
             // Get All Status 
             $this->db->select("rs.* , u.display_name");
@@ -189,6 +201,7 @@ class Report_model extends CI_Model {
             }
 
             $result->locations = json_encode($marks);
+            //print_r_die($result->locations);
 
             //Get All Report Checklist
             $this->db->select("rc.* , ci.item_name");
@@ -285,7 +298,7 @@ class Report_model extends CI_Model {
 
         //$store_id = $this->data['session_data']->store_id;
 
-        $this->db->select('r.* , rs.status, rs.created as status_created,rs.signature, c.checklist_name, u.display_name, u2.display_name as updated_by, s.store_name, s.address_id,sa.*,vt.type');
+        $this->db->select('r.* , rs.status, rs.created as status_created,rs.signature, c.checklist_name, u.display_name, u2.display_name as updated_by, s.store_name, s.address_id, s.logo_image_name, s.logo_image_path,sa.*,vt.type');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
@@ -359,12 +372,13 @@ class Report_model extends CI_Model {
     public function get_today_reports(){
         $role = $this->session->userdata("user")->role;
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by,s.store_name, s.logo_image_path, s.logo_image_name');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
+        $this->db->join('store s','s.store_id = u.store_id');
 
         $this->db->where("r.created >=", strtotime("today midnight"));
         $this->db->where("r.created <=", strtotime("tomorrow midnight -1 second"));
@@ -383,6 +397,12 @@ class Report_model extends CI_Model {
             $result[$key]->status = report_status($row->status);
             $result[$key]->raw_status = report_status($row->status,true);
             $result[$key]->created = convert_timezone($row->created,true);
+
+            if($result[$key]->logo_image_path == 'public/img/'){
+                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
+            }else{
+                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
+            }
         }
         
         return $result;
@@ -473,7 +493,7 @@ class Report_model extends CI_Model {
         // $this->db->where("r.created >= " , $start);
         // $this->db->where("r.created <= " , $end);
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by,vt.type, s.store_name');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by,vt.type, s.store_name,s.logo_image_name, s.logo_image_path');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
@@ -487,6 +507,12 @@ class Report_model extends CI_Model {
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
         foreach($result as $r => $l){
             //print_r_die($result);
+            if($result[$r]->logo_image_path == 'public/img/'){
+                $result[$r]->company_logo = $this->config->site_url($result[$r]->logo_image_path.$result[$r]->logo_image_name);
+            }else{
+                $result[$r]->company_logo = $this->config->site_url("public/upload/company/".$result[$r]->logo_image_path.$result[$r]->logo_image_name);
+            }
+
             if($result[$r]->status == 0){
                 $result[$r]->status_created = 0;
             }else{
