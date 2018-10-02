@@ -531,7 +531,7 @@ class Report extends CI_Controller {
 				$this->db->where("report_id",$data->report_id);
 				$this->db->update("report",[
 					"end_mileage" => $data->end_mileage,
-					"report_notes" => $data->report_notes
+					"report_notes" => ($data->report_notes == '') ? NULL : $data->report_notes,
 				]);	
 				$signature_path = $this->save_signature($data->report_number);
 
