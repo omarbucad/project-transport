@@ -432,11 +432,11 @@ class Account extends CI_Controller {
 
 	public function multiple_delete(){
 		$data = $this->post;
+		// print_r_die($data);
 		$users = json_decode($data->users);
 		$this->db->trans_start();
 
 		foreach ($users as $key) {
-			$this->db->trans_start();
 			$this->db->where("store_id", $data->store_id);
 			$this->db->where("user_id", $key);
 			$this->db->update("user",[
