@@ -123,10 +123,6 @@ class Report_model extends CI_Model {
 
 
             foreach($result[$r]->report_checklist as $key => $row){
-                if($row->updated_timestamp != ''){
-                    $result[$r]->report_checklist[$key]->updated_timestamp = convert_timezone($row->updated_timestamp,true);
-                }
-
                 foreach($result[$r]->report_images as $k => $z){
                     if($row->id == $z->report_checklist_id){
 
@@ -140,7 +136,7 @@ class Report_model extends CI_Model {
                         $result[$r]->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
                         }
                     }
-                }                
+                }                 
             }
            
         }
@@ -214,9 +210,6 @@ class Report_model extends CI_Model {
 
 
             foreach($result->report_checklist as $key => $row){
-                if($row->updated_timestamp != ''){
-                    $result->report_checklist[$key]->updated_timestamp = convert_timezone($row->updated_timestamp,true);
-                }
 
                 foreach($result->report_images as $k => $r){
                     if($row->id == $r->report_checklist_id){
@@ -547,9 +540,6 @@ class Report_model extends CI_Model {
 
 
             foreach($result[$r]->report_checklist as $key => $row){
-                if($row->updated_timestamp != ''){
-                    $result[$r]->report_checklist[$key]->updated_timestamp = convert_timezone($row->updated_timestamp,true);
-                }
 
                 foreach($result[$r]->report_images as $k => $z){
                     if($row->id == $z->report_checklist_id){
@@ -558,17 +548,17 @@ class Report_model extends CI_Model {
                     }
                 }
                 if($row->updated_ischeck != ''){
-                    foreach ($result[$r]->update_images as $u => $i) {
-                        if($row->id == $i->report_checklist_id){
+                    if($result[$r]->update_images){
+                        foreach ($result[$r]->update_images as $u => $i) {
+                            if($row->id == $i->report_checklist_id){
 
-                        $result[$r]->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
+                            $result[$r]->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
+                            }
                         }
-                    }
+                    }                    
                 }                
-            }
-           
+            }           
         }
-
         
         return $result;
     }

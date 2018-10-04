@@ -67,22 +67,45 @@ class Vehicle extends CI_Controller {
         }
 	}
 
-	public function delete(){
-		$data = $this->post;
+	// public function delete(){
+	// 	$data = $this->post;
 		
+	// 	$this->db->trans_start();
+	// 	$this->db->where("store_id",$data->store_id);
+	// 	$this->db->where("vehicle_id", $data->vehicle_id);
+	// 	$this->db->update("vehicle",[
+	// 		"deleted" => time()
+	// 	]);
+
+	// 	$this->db->trans_complete();
+
+ //        if ($this->db->trans_status() === FALSE){
+ //            echo json_encode(["status" => false , "message" => "Failed", "action" => "delete"]);
+ //        }else{
+ //            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "delete"]);
+ //        }
+	// }
+
+	public function multiple_delete(){
+		$data = $this->post;
+		//print_r_die($data);
+		$vehicles = json_decode($data->vehicles);
 		$this->db->trans_start();
-		$this->db->where("store_id",$data->store_id);
-		$this->db->where("vehicle_id", $data->vehicle_id);
-		$this->db->update("vehicle",[
-			"deleted" => time()
-		]);
+
+		foreach ($vehicles as $key) {
+			$this->db->where("store_id",$data->store_id);
+			$this->db->where("vehicle_id", $key);
+			$this->db->update("vehicle",[
+				"deleted" => time()
+			]);
+		}			
 
 		$this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => false , "message" => "Failed", "action" => "edit"]);
+            echo json_encode(["status" => false , "message" => "Failed", "action" => "multiple_delete"]);
         }else{
-            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "edit"]);
+            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "multiple_delete"]);
         }
 	}
 }

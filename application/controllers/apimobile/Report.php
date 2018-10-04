@@ -59,9 +59,6 @@ class Report extends CI_Controller {
 				$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
 				foreach($result[$key]->checklist as $k => $r){
-					if($r->updated_timestamp != ''){
-						$result[$key]->checklist[$k]->updated_timestamp = convert_timezone($r->updated_timestamp,true);	
-					}
 					
 					$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
 
@@ -74,12 +71,13 @@ class Report extends CI_Controller {
 
 					if($r->updated_ischeck != ''){
 						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
-
-						foreach($images as $ui => $u){
-							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
-							$updated_img[$ui]->image = $this->config->site_url("thumbs/images/report/update/".$u->image_path."500/500/".$u->image_name);
+						if($updated_img){
+							foreach($updated_img as $ui => $u){
+								$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
+								$updated_img[$ui]->image = $this->config->site_url("thumbs/images/report/update/".$u->image_path."500/500/".$u->image_name);
+							}
+							$result[$key]->checklist[$k]->update_images = $updated_img;
 						}
-						$result[$key]->checklist[$k]->update_images = $updated_img;
 					}
 
 				}
@@ -90,7 +88,7 @@ class Report extends CI_Controller {
 
 				foreach($status as $k => $r){
 					$status[$k]->status = report_type($r->status );
-					$status[$k]->created   = convert_timezone($r->created , true );
+					$status[$k]->created   = convert_timezone($r->created , true);
 					$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
 				}
 				$result[$key]->signature = $status[0]->signature;
@@ -167,9 +165,7 @@ class Report extends CI_Controller {
 				$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
 				foreach($result[$key]->checklist as $k => $r){
-					if($r->updated_timestamp != ''){
-						$result[$key]->checklist[$k]->updated_timestamp = convert_timezone($r->updated_timestamp,true);	
-					}
+					
 					$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
 
 					foreach($images as $ki => $ro){
@@ -342,9 +338,7 @@ class Report extends CI_Controller {
 				$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
 				foreach($result[$key]->checklist as $k => $r){
-					if($r->updated_timestamp != ''){
-						$result[$key]->checklist[$k]->updated_timestamp = convert_timezone($r->updated_timestamp,true);	
-					}
+					
 					$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
 
 					foreach($images as $ki => $ro){
@@ -459,10 +453,6 @@ class Report extends CI_Controller {
 						$result->checklist[$k]->help_image = $this->config->site_url("thumbs/images/checklist/".$r->help_image_path."/250/250/".$r->help_image_name);
 					}
 
-					if($r->updated_timestamp != ''){
-						$result->checklist[$k]->updated_timestamp = convert_timezone($r->updated_timestamp,true);	
-					}
-					
 					$images = $this->db->where("report_id" , $result->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
 
 					foreach($images as $ki => $ro){
@@ -711,9 +701,6 @@ class Report extends CI_Controller {
 				$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
 				foreach($result[$key]->checklist as $k => $r){
-					if($r->updated_timestamp != ''){
-						$result[$key]->checklist[$k]->updated_timestamp = convert_timezone($r->updated_timestamp,true);	
-					}
 					$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
 
 					foreach($images as $ki => $ro){

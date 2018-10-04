@@ -292,24 +292,24 @@ class Account extends CI_Controller {
         }
 	}
 
-	public function delete(){
-		$data = $this->post;
+	// public function delete(){
+	// 	$data = $this->post;
 		
-		$this->db->trans_start();
-		$this->db->where("store_id", $data->store_id);
-		$this->db->where("user_id", $data->user_id);
-		$this->db->update("user",[
-			"deleted" => time()
-		]);
+	// 	$this->db->trans_start();
+	// 	$this->db->where("store_id", $data->store_id);
+	// 	$this->db->where("user_id", $data->user_id);
+	// 	$this->db->update("user",[
+	// 		"deleted" => time()
+	// 	]);
 
-		$this->db->trans_complete();
+	// 	$this->db->trans_complete();
 
-        if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => false , "message" => "Failed", "action" => "edit"]);
-        }else{
-            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "edit"]);
-        }
-	}
+ //        if ($this->db->trans_status() === FALSE){
+ //            echo json_encode(["status" => false , "message" => "Failed", "action" => "edit"]);
+ //        }else{
+ //            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "edit"]);
+ //        }
+	// }
 
 	private function login_trail($user_id){
         $result = $this->db->insert("login_trail" , [
@@ -428,7 +428,28 @@ class Account extends CI_Controller {
 		}else{
 			echo json_encode(["status" => true, "message" => "No store id", "action" => "get_all_emp"]);
 		}
-		
-		
+	}
+
+	public function multiple_delete(){
+		$data = $this->post;
+		$users = json_decode($data->users);
+		$this->db->trans_start();
+
+		foreach ($users as $key) {
+			$this->db->trans_start();
+			$this->db->where("store_id", $data->store_id);
+			$this->db->where("user_id", $key);
+			$this->db->update("user",[
+				"deleted" => time()
+			]);
+		}			
+
+		$this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            echo json_encode(["status" => false , "message" => "Failed", "action" => "multiple_delete"]);
+        }else{
+            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "multiple_delete"]);
+        }
 	}
 }
