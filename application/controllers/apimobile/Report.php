@@ -75,10 +75,13 @@ class Report extends CI_Controller {
 						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
 						if($updated_img){
 							foreach($updated_img as $ui => $u){
+								
 								// $updated_img[$ui]->thumbnail = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
 								$updated_img[$ui]->image = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
 							}
 							$result[$key]->checklist[$k]->update_images = $updated_img;
+						}else{
+							$result[$key]->checklist[$k]->update_images = [];
 						}
 					}
 
@@ -178,12 +181,17 @@ class Report extends CI_Controller {
 
 					if($r->updated_ischeck != ''){
 						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
-
-						foreach($images as $ui => $u){
-							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
-							$updated_img[$ui]->image = $this->config->site_url("thumbs/images/report/update/".$u->image_path."500/500/".$u->image_name);
+						if($updated_img){
+							foreach($updated_img as $ui => $u){
+								
+								// $updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
+								$updated_img[$ui]->image = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+							}
+							$result[$key]->checklist[$k]->update_images = $updated_img;
+						}else{
+							$result[$key]->checklist[$k]->update_images = [];
 						}
-						$result[$key]->checklist[$k]->update_images = $updated_img;
+						
 					}
 				}
 
@@ -214,7 +222,7 @@ class Report extends CI_Controller {
 
 		$pdf = $this->pdf->create_report_checklist($report , "F");
 
-		$pdf['file'] = $this->config->site_url($pdf['file']);
+		//$pdf = $this->config->site_url($pdf['file']);
 
 		//echo json_encode($pdf);
 		return $pdf;
@@ -351,12 +359,17 @@ class Report extends CI_Controller {
 
 					if($r->updated_ischeck != ''){
 						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
-
-						foreach($images as $ui => $u){
-							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
-							$updated_img[$ui]->image = $this->config->site_url("thumbs/images/report/update/".$u->image_path."500/500/".$u->image_name);
-						}
-						$result[$key]->checklist[$k]->update_images = $updated_img;
+						//print_r_die($updated_img);
+						if($updated_img){
+							foreach($updated_img as $ui => $u){
+								
+								// $updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
+								$updated_img[$ui]->image = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+							}
+							$result[$key]->checklist[$k]->update_images = $updated_img;
+						}else{
+							$result[$key]->checklist[$k]->update_images = [];
+						}					
 					}
 					
 				}
@@ -713,14 +726,17 @@ class Report extends CI_Controller {
 
 					if($r->updated_ischeck != ''){
 						$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
-
-						foreach($images as $ui => $u){
-							$updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
-							$updated_img[$ui]->image = $this->config->site_url("thumbs/images/report/update/".$u->image_path."500/500/".$u->image_name);
-						}
-						$result[$key]->checklist[$k]->update_images = $updated_img;
-					}
-					
+						if($updated_img){
+							foreach($updated_img as $ui => $u){
+								
+								// $updated_img[$ui]->thumbnail = $this->config->site_url("thumbs/images/report/update/".$u->image_path."250/250/".$u->image_name);
+								$updated_img[$ui]->image = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+							}
+							$result[$key]->checklist[$k]->update_images = $updated_img;
+						}else{
+							$result[$key]->checklist[$k]->update_images = [];
+						}						
+					}					
 				}
 
 				$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");

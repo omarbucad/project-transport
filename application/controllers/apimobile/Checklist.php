@@ -245,7 +245,7 @@ class Checklist extends CI_Controller {
 
 		$pdf = $this->pdf->create_report_checklist($report , "F");
 
-		$pdf['file'] = $this->config->site_url($pdf['file']);
+		//$pdf = $this->config->site_url($pdf);
 
 		return $pdf;
 	}

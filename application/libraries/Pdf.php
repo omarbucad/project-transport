@@ -49,7 +49,6 @@ class Pdf {
 				"filename"	 => $filename,
 				"path" 		 => $this->folder.'/'
 			];
-			die();
 
 		}catch (Html2PdfException $e) {
 			$formatter = new ExceptionFormatter($e);
