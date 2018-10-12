@@ -64,7 +64,7 @@
               if(json.status){
                 
                 form.trigger('reset');
-                //form.find("select[name='status']").val(json.data.status);  
+                form.find("select[name='availability']").val(json.data.availability);  
                 form.find("#type").val(json.data.vehicle_type_id);  
                 form.find("input[name='vehicle_registration_number']").val(json.data.vehicle_registration_number);  
                 
@@ -118,13 +118,13 @@
                 <div class="card-body no-padding-left no-padding-right">
                     <form action="<?php echo site_url('app/vehicle')?>" method="GET">
                         <div class="row">
-                            <div class="col-xs-12 col-lg-4 no-margin-bottom">
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
                                     <label for="s_name">Search by Registration number</label>
                                     <input type="text" name="registration_number" class="form-control" id="s_name" placeholder="Registration Number" value="<?php echo $this->input->get("registration_number"); ?>">
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-lg-4 no-margin-bottom">
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
                                     <label for="type">Search by Vehicle Type</label>
                                     <select class="form-control" name="type" id="type">
@@ -132,12 +132,45 @@
                                         <?php foreach($types as $key => $val) :?>
                                             <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
                                         <?php endforeach; ?>
-                                        
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
+                                <div class="form-group">
+                                    <label for="availability">Search by Availability</label>
+                                    <select class="form-control" name="availability">
+                                        <option value="">- Select Vehicle Availability -</option>
+                                        <option value="1">Available</option>
+                                        <option value="0">Unavailable</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-3 text-right">
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-link btn-vertical-center btn-same-size more-filter" data-value="hidden">More filter</button>
                                 <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row hide" id="view_advance_search">
+
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
+                                <div class="form-group">
+                                    <label for="status">Search by Status</label>
+                                    <select class="form-control" name="status">
+                                        <option value="">- Select Vehicle Status -</option>
+                                        <option value="0">Initial</option>
+                                        <option value="1">Checking</option>
+                                        <option value="2">Checked</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-lg-3">
+                                <div class="form-group">
+                                    <label for="last_checked">Search by Last Checked Date</label>
+                                    <input type="text" name="last_checked" class="form-control daterange" autocomplete="off" value="<?php echo $this->input->get("last_checked"); ?>" placeholder="Select Date">
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -148,8 +181,10 @@
             <table class="customer-table">
                 <thead>
                     <tr>
-                        <th width="40%">Registration Number</th>
-                        <th width="20%">Type</th>
+                        <th width="30%">Registration Number</th>
+                        <th width="10%">Type</th>
+                        <th width="20%">Availability</th>
+                        <th width="20%">Status</th>
                         <th width="20%"></th>
                     </tr>
                 </thead>
@@ -157,9 +192,17 @@
                      <?php foreach($result as $row) : ?>
                         <tr class="customer-row" style="cursor: default;">
                             <td>
-                                <span><strong><?php echo $row->vehicle_registration_number; ?></strong></span>
+                                <span><strong><?php echo $row->vehicle_registration_number; ?></strong><span></span></span>
                             </td>
                             <td><span><?php echo $row->type;?></span></td>
+                            <td><span><?php echo $row->availability;?></span></td>
+                            <td><span><?php echo $row->status;?></span> 
+                                <small class="help-block">Last checked: 
+                                <?php if($row->last_checked != '') : ?>
+                                    <?php echo $row->last_checked; ?>
+                                <?php endif; ?>
+                                </small>
+                            </td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/get_vehicle_info/").$this->hash->encrypt($row->vehicle_id); ?>" data-id="<?php echo $this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-edit" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
@@ -196,6 +239,13 @@
                     <?php endforeach; ?>                    
                 </select>
             </div>
+             <div class="form-group">
+                <label for="status">Availability</label>
+                <select class="form-control" name="availability">
+                    <option value="1">Available</option>
+                    <option value="0">Unavailable</option> 
+                </select>
+            </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -229,13 +279,13 @@
                     <?php endforeach; ?>                    
                 </select>
             </div>
-            <!-- <div class="form-group">
-                <label for="status">Status</label>
-                <select class="form-control" name="status">
-                    <option value="1" <?php //echo ($this->input->get("status") == "Active") ? "selected" : "" ; ?> >Active</option>
-                    <option value="0" <?php //echo ($this->input->get("status") == "inactive") ? "selected" : "" ; ?>>Inactive</option> 
+            <div class="form-group">
+                <label for="status">Availability</label>
+                <select class="form-control" name="availability">
+                    <option value="1">Available</option>
+                    <option value="0">Unavailable</option> 
                 </select>
-            </div> -->
+            </div>
         </form>
       </div>
       <div class="modal-footer">

@@ -96,21 +96,21 @@ class Register_model extends CI_Model {
         }
 
         $result = $this->db->where("up.active" , 1)->get("user u")->row();
-        if($result->logo_image_name != ''){
-            if($result->logo_image_path == 'public/img/'){
-                $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
-            }else{
-                $result->company_logo = $this->config->site_url("public/upload/company/".$result->logo_image_path.$result->logo_image_name);
-            }
-            
-        }
-    
         if($result){
+            if($result->logo_image_name != ''){
+                if($result->logo_image_path == 'public/img/'){
+                    $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
+                }else{
+                    $result->company_logo = $this->config->site_url("public/upload/company/".$result->logo_image_path.$result->logo_image_name);
+                }
+                
+            }
             $this->login_trail($result->user_id);
             return $result;
+        }else{
+            return false;
         }
-
-        return false;
+        
     }
 
     private function login_trail($user_id){

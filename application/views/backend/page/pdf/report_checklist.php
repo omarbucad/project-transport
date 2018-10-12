@@ -75,14 +75,14 @@
 			<tr >
 				<td colspan="2" class="tr_header"><?php echo $checklist_name; ?></td>
 				<td class="tr_header">Status</td>
-				<td class="tr_header">Remarks</td>
+				<td class="tr_header">Note</td>
 				<td class="tr_header">Update</td>
 			</tr>
 
 			<?php foreach($report_checklist as $key => $checklist) : ?>
 
 				<tr style="margin-bottom: 30px;">
-					<td colspan="2" style="width:300px;padding-right: 10px;"><?php echo ($key+1).". ".$checklist->item_name; ?></td>
+					<td colspan="2" style="width:280px;padding-right: 10px;"><?php echo ($key+1).". ".$checklist->item_name; ?></td>
 					<td>
 						<?php if($checklist->checklist_ischeck == 1) : ?>
 							<?php echo "Defect"; ?>
@@ -94,8 +94,8 @@
 							<?php echo "Good"; ?>
 						<?php endif; ?>
 					</td>
-					<td style="width:100px;padding-right: 10px;"><?php echo $checklist->checklist_value; ?></td>
-					<td style="width:100px;padding-right: 10px;">
+					<td style="width:100px;padding-right: 5px;"><?php echo $checklist->checklist_value; ?></td>
+					<td style="width:110px;padding-right: 5px;">
 						<?php if(isset($checklist->updated_ischeck)) : ?>
                             <?php if($checklist->updated_ischeck == 1) : ?>
                                 <?php echo "Defect"; ?>
@@ -106,7 +106,11 @@
                             <?php else : ?>
                                 <?php echo "Good"; ?>
                             <?php endif; ?>
-                            - <span><?php echo $checklist->updated_timestamp; ?></span>
+                            <?php if($checklist->updated_value != '') : ?>
+                            <br><small>Note: <?php echo $checklist->updated_value; ?></small><br>
+                        	<?php endif; ?>
+
+                            <small><?php echo $checklist->updated_timestamp; ?></small>
                         <?php else: ?>     
                             &nbsp;
                         <?php endif; ?>

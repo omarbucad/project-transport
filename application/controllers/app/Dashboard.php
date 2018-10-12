@@ -17,10 +17,9 @@ class Dashboard extends MY_Controller {
 		$this->data['page_name'] = "Dashboard";
 		$this->data['main_page'] = "backend/page/dashboard/dashboard";
 		$this->data['drivers'] = $this->accounts->get_driver();
-		$this->data['trailers'] = $this->vehicle->get_trailer_list();
-		$this->data['active_trailers'] = $this->vehicle->get_activetrailer();
 		$this->data['trucks'] = $this->vehicle->get_vehicle_list();
-		$this->data['active_trucks'] = $this->vehicle->get_activetruck();
+		$this->data['available_trucks'] = $this->vehicle->get_available_vehicle();
+		$this->data['unavailable_trucks'] = $this->vehicle->get_unavailable_vehicle();
 		$this->data['reports_today'] = $this->report->get_today_reports();
 		$this->data['defects_under_maintenance'] = $this->report->defect_undermaintenance_reports();
 		$this->data['fixed_today'] = $this->report->fixed_today_reports();

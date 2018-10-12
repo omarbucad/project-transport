@@ -488,11 +488,13 @@
   .flat-green .badge.danger {
     background-color: #FA2A00; }
   .flat-green .nav-tabs {
-    background-color: #EAEAEA; }
+    background-color: #3d4b56; }
     .flat-green .nav-tabs > li > a:hover {
-      background-color: #EAEAEA; }
+      color: #FFF;
+      background-color: #2196f3; }
     .flat-green .nav-tabs > li.active > a:hover {
-      background-color: #FFF; }
+      color: #FFF;
+      background-color: #2196f3; }
   .flat-green .tabs-below > .nav-tabs {
     border-top: 1px solid #E4E4E4; }
   .flat-green .tabs-below > .nav-tabs > li > a:hover,

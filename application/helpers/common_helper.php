@@ -414,3 +414,160 @@ if ( ! function_exists('get_timezone'))
     }   
 }
 
+if ( ! function_exists('crypto_rand_secure'))
+{
+    function crypto_rand_secure($min, $max)
+    {
+        $range = $max - $min;
+        if ($range < 1) {
+            return $min; // not so random...
+        }
+
+        $log = ceil(log($range, 2));
+        $bytes = (int) ($log / 8) + 1; // length in bytes
+        $bits = (int) $log + 1; // length in bits
+        $filter = (int) (1 << $bits) - 1; // set all lower bits to 1
+
+        do {
+            $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
+            $rnd = $rnd & $filter; // discard irrelevant bits
+        } while ($rnd > $range);
+
+        return $min + $rnd;
+    }
+}
+
+
+    function getToken($length)
+    {
+        $token = "";
+        $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $codeAlphabet .= "abcdefghijklmnopqrstuvwxyz";
+        $codeAlphabet .= "0123456789";
+        $max = strlen($codeAlphabet); // edited
+
+        for ($i=0; $i < $length; $i++) {
+            $token .= $codeAlphabet[crypto_rand_secure(0, $max-1)];
+        }
+
+        return $token;
+    }
+
+
+if ( ! function_exists('generate_app_token'))
+{
+
+    function generate_app_token($user_id, $device_id, $device_type)
+    {
+
+        $CI =& get_instance();
+
+        #Method start validation
+        if ($user_id == 0) {
+            return false;
+        }
+
+        if ($device_id == null) {
+            return false;
+        }
+
+        if ($device_type == null) {
+            return false;
+        }
+        #Method end validation
+
+        #Method check if data exist
+        $CI->db->where("device_id",$device_id);
+        $app_data = $CI->db->where("user_id",$user_id)->get("app_token")->row();
+
+        #Method insert / update record
+        if (!empty($app_data)) {
+            # UPDATE PARAMS
+            $params = array(
+                "token" => getToken(255),
+                "date_updated" => time()
+            );
+            # UPDATE RECORD
+            $CI->db->where("device_id",$device_id);
+            $bool = $CI->db->where("user_id",$user_id)->update("app_token",$params);
+        } else {            
+            # INSERT PARAMS
+            $params = array(
+                "user_id" => $user_id,
+                "device_id" => $device_id,
+                "device_type" => $device_type,
+                "token" => getToken(255),
+                "date_created" => time()
+            );
+
+            # INSERT NEW RECORD
+            $bool = $CI->db->insert("app_token",$params);
+        }
+
+        return ($bool) ? $params['token'] : false;
+    }
+}
+
+if ( ! function_exists('validate_app_token'))
+{
+
+    function validate_app_token($app_token)
+    {
+         $CI =& get_instance();
+
+        #Method check if token exist
+        $app_token = $CI->db->select("token")->where("token",$app_token)->get("app_token")->row();
+
+        return ($app_token) ? true : false;
+    }
+}
+
+if( ! function_exists('convert_availability')){
+    
+    function convert_availability($availability, $raw = false) {
+        if($raw){
+            return ($availability == 1) ? "Available" : "Unavailable";
+        }else{
+            if($availability == 1){
+                return "<span class='label label-success'>Available</span>";
+            }else{
+                return "<span class='label label-danger'>Unavailable</span>";
+            }
+        }
+    }
+}
+
+if( ! function_exists('convert_vehicle_status')){
+    
+    function convert_vehicle_status($status, $raw = false) {
+
+        if($raw){
+            switch ($status) {
+                case 0:
+                    return 'Initial';
+                break;
+                case 1:
+                    return 'Checking';
+                break;
+                case 2:
+                    return 'Checked';
+                break;
+            }
+        }else{
+            switch ($status) {
+                case 0:
+                    return '<span class="label label-primary">Initial</span>';
+                break;
+                case 1:
+                    return '<span class="label label-warning">Checking</span>';
+                break;
+                case 2:
+                    return '<span class="label label-success">Checked</span>';
+                break;
+            }
+        }
+    }
+}
+
+
+

@@ -28,6 +28,8 @@ class Login extends CI_Controller {
 
 		$username = $this->post->username;
 		$password = $this->post->password;
+		$device_id = $this->post->device_id;
+		$device_type = $this->post->device_type;
 
 		if($this->post){
 			if($data = $this->register->signin(["username" => $username , "password" => $password])){				
@@ -38,9 +40,9 @@ class Login extends CI_Controller {
 					$data->image = $this->config->site_url("thumbs/images/user/".$data->image_path."/80/80/".$data->image_name);
 				}
 				$data->servertime = time();
-				
+				$token = generate_app_token($data->user_id, $device_id, $device_type);
 
-				echo json_encode(["status" => true , "data" => $data, "action" => "signin"]);
+				echo json_encode(["status" => true , "data" => $data, "action" => "signin", "token" => $token]);
 			}else{
 				$this->return_false(1);
 			}

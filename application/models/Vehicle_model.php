@@ -4,19 +4,23 @@ class Vehicle_model extends CI_Model {
 
     public function get_vehicle_list(){
         $store_id = $this->data['session_data']->store_id;
-        $plan = $this->data['session_data']->title;
+        //$plan = $this->data['session_data']->title;
 
-        /*
-            TODO :: Searching logic here
-        */
-        // if($this->input->get("status") != ""){
-        //     $this->db->where("v.status", $this->input->get("status"));
-        // }
+        if($date = $this->input->get("last_checked")){
+            $date  = explode("-", $date);
+            $start = strtotime(trim($date[0].' 00:00'));
+            $end   = strtotime(trim($date[1].' 23:59'));
+
+            $this->db->where("v.last_checked >= " , $start);
+            $this->db->where("v.last_checked <= " , $end);
+        }   
 
         if($this->input->get("type") != ""){
             $this->db->where("v.vehicle_type_id", $this->input->get("type"));
         }
-
+        if($this->input->get("availability") != ""){
+            $this->db->where("v.availability", $this->input->get("availability"));
+        }
         if($reg_number = $this->input->get("registration_number")){
             $this->db->where("v.vehicle_registration_number", $reg_number);
         }
@@ -31,21 +35,24 @@ class Vehicle_model extends CI_Model {
         $this->db->where("v.deleted IS NULL");
 
 
-        if($plan == "Basic"){
-            $limit = 1;
-        }else if($plan == "Standard"){
-            $limit = 10;
-        }else{
+        // if($plan == "Basic"){
+        //     $limit = 1;
+        // }else if($plan == "Standard"){
+        //     $limit = 10;
+        // }else{
             $limit = 0;
-        }
+        //}
         $this->db->select("v.*,vt.type");
         $this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
         $result = $this->db->where("store_id" , $store_id)->order_by("v.vehicle_registration_number" , "ASC")->limit($limit)->get("vehicle v")->result();
 
-        // foreach($result as $key => $row){
-        //     $result[$key]->status = convert_status($row->status);
-        // }
-
+        foreach($result as $key => $row){
+            $result[$key]->status = convert_vehicle_status($row->status);
+            $result[$key]->availability = convert_availability($row->availability);
+            if($result[$key]->last_checked != ''){
+                $result[$key]->last_checked = convert_timezone($row->last_checked, true);
+            }
+        }
         return $result;
     }
 
@@ -57,10 +64,44 @@ class Vehicle_model extends CI_Model {
     }
 
     
-    public function get_activetruck(){
+    public function get_available_vehicle(){
         $store_id = $this->data['session_data']->store_id;
-       // $this->db->where("status",1);
-        return $result = $this->db->where("store_id" , $store_id)->get("vehicle")->result();
+        $this->db->select("v.*, vt.type");
+        $this->db->where("v.availability",1);
+        $this->db->where("v.deleted IS NULL");
+        $this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+        $result = $this->db->where("v.store_id" , $store_id)->get("vehicle v")->result();
+
+        if($result){
+            foreach ($result as $key => $row) {
+                if($result[$key]->last_checked != ''){
+                    $result[$key]->last_checked = convert_timezone($row->last_checked, true);
+                }
+            }
+            return $result;
+        }else{
+            return $result;
+        }
+    }
+
+    public function get_unavailable_vehicle(){
+        $store_id = $this->data['session_data']->store_id;
+        $this->db->select("v.*, vt.type");
+        $this->db->where("v.availability",0);
+        $this->db->where("v.deleted IS NULL");
+        $this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+        $result = $this->db->where("v.store_id" , $store_id)->get("vehicle v")->result();
+
+        if($result){
+            foreach ($result as $key => $row) {
+                if($result[$key]->last_checked != ''){
+                    $result[$key]->last_checked = convert_timezone($row->last_checked, true);
+                }
+            }
+            return $result;
+        }else{
+            return $result;
+        }
     }
     
     public function get_activetrailer(){
@@ -97,7 +138,9 @@ class Vehicle_model extends CI_Model {
             $this->db->insert("vehicle" , [
                 "vehicle_registration_number"   => $this->input->post("registration_number"),
                 "vehicle_type_id"               => $this->input->post("type"),
-                //"status"                        => 1 ,
+                "status"                        => 0,
+                "availability"                  => 1,
+                "last_checked"                  => NULL,
                 "store_id"                      => $store_id ,
                 "created"                       => time()
             ]);
@@ -116,7 +159,7 @@ class Vehicle_model extends CI_Model {
         $this->db->update("vehicle" , [
             "vehicle_registration_number"   => $this->input->post("vehicle_registration_number"),
             "vehicle_type_id"               => $this->input->post("type"),
-            //"status"                        => $this->input->post("status")
+            "availability"                  => 1
         ]);
         
         $this->db->trans_complete();
