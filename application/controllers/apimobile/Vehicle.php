@@ -127,53 +127,86 @@ class Vehicle extends CI_Controller {
 
 	public function vehicle_status(){
 		$data = $this->post;
-		if($data){
-			$this->db->trans_start();
-			if(isset($data->previous_status)){
-				$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
-				$this->db->update("vehicle",[
-					"status" => $data->previous_status
-				]);
-			}else{
-				$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
-				$this->db->update("vehicle",[
-					"status" => 1
-				]);
-			}
-			$this->db->trans_complete();
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+				if(isset($data->previous_status)){
+					$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
+					$this->db->update("vehicle",[
+						"status" => $data->previous_status
+					]);
+				}else{
+					$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
+					$this->db->update("vehicle",[
+						"status" => 1
+					]);
+				}
+				$this->db->trans_complete();
 
-			if ($this->db->trans_status() === FALSE){
-	            echo json_encode(["status" => false , "message" => "Failed", "action" => "vehicle_status"]);
-	        }else{
-	            echo json_encode(["status" => true , "message" => "Vehicle Status Updated Successfully", "action" => "vehicle_status"]);
-	        }
+				if ($this->db->trans_status() === FALSE){
+		            echo json_encode(["status" => false , "message" => "Failed", "action" => "vehicle_status"]);
+		        }else{
+		            echo json_encode(["status" => true , "message" => "Vehicle Status Updated Successfully", "action" => "vehicle_status"]);
+		        }
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "vehicle_status"]);
+			}			
 		}else{
-			echo json_encode(["status" => false , "message" => "No passed data", "action" => "vehicle_status"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "vehicle_status"]);
 		}
-		
 	}
 
 	public function vehicle_availability(){
 		$data = $this->post;
-		if($data){
-			$this->db->trans_start();
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
 
-			$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
-			$this->db->update("vehicle", [
-				"availability" => $data->availability
-			]);
+				$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
+				$this->db->update("vehicle", [
+					"availability" => $data->availability
+				]);
 
-			$this->db->trans_complete();
+				$this->db->trans_complete();
 
-			if ($this->db->trans_status() === FALSE){
-	            echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "vehicle_availability"]);
-	        }else{
-	            echo json_encode(["status" => true , "message" => "Vehicle Availability Updated Successfully", "action" => "vehicle_status"]);
-	        }
+				if ($this->db->trans_status() === FALSE){
+		            echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "vehicle_availability"]);
+		        }else{
+		            echo json_encode(["status" => true , "message" => "Vehicle Availability Updated Successfully", "action" => "vehicle_availability"]);
+		        }
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "vehicle_availability"]);
+			}
 		}else{
-			echo json_encode(["status" => false , "message" => "No passed data", "action" => "vehicle_availability"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "vehicle_availability"]);
 		}
-		
+	}
 
+	public function check_availability(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+				$this->db->select("availability");
+				$this->db->where("deleted IS NULL");
+				$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
+				$result = $this->db->get("vehicle")->row()->availability;
+
+				$this->db->trans_complete();
+
+				if ($this->db->trans_status() === FALSE){
+		            echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "check_availability"]);
+		        }else{
+		            echo json_encode(["status" => true , "data" => $result, "action" => "check_availability"]);
+		        }
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "check_availability"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "check_availability"]);
+		}
 	}
 }

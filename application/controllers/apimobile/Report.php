@@ -608,7 +608,8 @@ class Report extends CI_Controller {
 
 					$this->db->where("vehicle_registration_number",$data->vehicle_registration_number);
 					$this->db->update("vehicle",[
-						"last_checked" => time()
+						"last_checked" => time(),
+						"status" => 2
 					]);
 				}
 

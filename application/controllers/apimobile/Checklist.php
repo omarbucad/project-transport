@@ -232,7 +232,7 @@ class Checklist extends CI_Controller {
 				$this->db->where("vehicle_registration_number",$data->vehicle_registration_number);
 				$this->db->update("vehicle",[
 					"last_checked" => time(),
-					"status" => 2
+					"status" => 1
 				]);
 				$this->db->trans_complete();
 
