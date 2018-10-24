@@ -201,9 +201,12 @@ class Accounts_model extends CI_Model {
         if($name = $this->input->get("name")){
             $this->db->like("username",$name);
         }
+        if($roles = $this->input->get("roles")){
+            $this->db->where("role",$roles);
+        }
 
         if($count){
-            if($role == "ADMIN"){
+            if($role == "ADMIN PREMIUM"){
                 $this->db->where("role !=","SUPER ADMIN");
                 $this->db->where("deleted IS NULL");
                 return $result = $this->db->where("store_id" , $store_id)->get("user")->num_rows();
@@ -213,13 +216,13 @@ class Accounts_model extends CI_Model {
                 return $result = $this->db->where("role !=","ADMIN")->get("user")->num_rows();
             }
         }else{
-            if($role == "ADMIN"){
+            if($role == "ADMIN PREMIUM"){
                 $this->db->where("role !=","SUPER ADMIN");
                 $this->db->where("deleted IS NULL");
                 $result = $this->db->where("store_id" , $store_id)->order_by("display_name" , "ASC")->get("user")->result();
             }else{
                 $this->db->where("role !=","SUPER ADMIN");
-                $this->db->where("role !=","ADMIN");
+                $this->db->where("role !=","ADMIN PREMIUM");
                 $this->db->where("deleted IS NULL");
                 $result = $this->db->where("store_id" , $store_id)->order_by("display_name" , "ASC")->get("user")->result();
             }
@@ -314,6 +317,14 @@ class Accounts_model extends CI_Model {
         $session_role = $this->session->userdata('user')->role;
         $role = $this->input->post("role");
 
+        if($session_role == "ADMIN PREMIUM"){
+            $role .= " PREMIUM";
+        }else if($session_role == "ADMIN FREE"){
+            $role .= " FREE";
+        }else{
+            $role .= " PREMIUM";
+        }
+
        
         $this->db->insert("user" , [
             "email_address"=> $this->input->post("email") ,
@@ -351,8 +362,16 @@ class Accounts_model extends CI_Model {
     }
 
     public function edit_user($user_id){
+        $session_role = $this->session->userdata('user')->role;
         $role = $this->input->post("role");
-        
+
+        if($session_role == "ADMIN PREMIUM"){
+            $role .= " PREMIUM";
+        }else if($session_role == "ADMIN FREE"){
+            $role .= " FREE";
+        }else{
+            $role .= " PREMIUM";
+        }
         $this->db->trans_start();
 
         $this->db->where("user_id", $user_id)->update("user" , [

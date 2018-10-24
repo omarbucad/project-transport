@@ -116,7 +116,7 @@
                                     <li><a href="<?php echo site_url("app/accounts/edit/").$this->hash->encrypt($session_data->user_id); ?>">Profile</a></li>
                                     <?php endif; ?>
                                 <?php endif; ?>
-                                <?php if($this->session->userdata('user')->role == 'ADMIN') : ?>
+                                <?php if($this->session->userdata('user')->role == 'ADMIN PREMIUM') : ?>
                                     <?php if($session_data->expired  == false) : ?>
                                         <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
                                     <?php endif; ?>

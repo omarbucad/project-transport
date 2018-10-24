@@ -7,13 +7,15 @@ class Accounts extends MY_Controller {
        parent::__construct();
        $this->load->model('accounts_model', 'accounts');
        $this->load->model('checklist_model', 'checklist');
-       if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+       
+
+       if($this->session->userdata('user')->expired == 1){
 			redirect("app/dashboard");
 		}
 
     }
 	public function index(){
-		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+		if($this->session->userdata('user')->role != "ADMIN PREMIUM" && $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					
 		}
 		$this->data['role'] = $this->session->userdata('user')->role;
@@ -34,7 +36,7 @@ class Accounts extends MY_Controller {
 	}
 
 	public function add(){
-		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+		if($this->session->userdata('user')->role != "ADMIN PREMIUM" || $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					
 		}
 
@@ -116,7 +118,7 @@ class Accounts extends MY_Controller {
 	}
 
 	public function delete($user_id){
-		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+		if($this->session->userdata('user')->role != "ADMIN PREMIUM" || $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					
 		}
 		$id = $this->hash->decrypt($user_id);

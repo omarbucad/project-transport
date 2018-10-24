@@ -21,7 +21,7 @@ class Dashboard extends MY_Controller {
 		$this->data['available_trucks'] = $this->vehicle->get_available_vehicle();
 		$this->data['unavailable_trucks'] = $this->vehicle->get_unavailable_vehicle();
 		$this->data['reports_today'] = $this->report->get_today_reports();
-		$this->data['defects_under_maintenance'] = $this->report->defect_undermaintenance_reports();
+		$this->data['defects_under_maintenance'] = $this->report->defect_reports();
 		$this->data['fixed_today'] = $this->report->fixed_today_reports();
 
 		$this->load->view('backend/master' , $this->data);

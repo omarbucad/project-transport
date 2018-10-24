@@ -9,7 +9,7 @@ class Setup extends MY_Controller {
 	    $this->load->model('vehicle_model', 'vehicle');
 	    $this->load->model('profile_model', 'profile');
 	    $this->load->model('accounts_model', 'account');
-	    if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" && $this->session->userdata('user')->role != "SUPER ADMIN"){
+	    if($this->session->userdata('user')->role != "ADMIN PREMIUM" && $this->session->userdata('user')->role != "MANAGER" && $this->session->userdata('user')->role != "SUPER ADMIN"){
 			redirect("app/dashboard");					
 		}
 
@@ -181,10 +181,10 @@ class Setup extends MY_Controller {
 	// PROFILE SECTION
 	public function profile(){
 		
-		if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+		if($this->session->userdata('user')->expired == 1){
 			redirect("app/dashboard");
 		}
-		if($this->session->userdata('user')->role != 'ADMIN'){
+		if($this->session->userdata('user')->role != 'ADMIN PREMIUM'){
 			redirect('app/dashboard');
 		}
 		$user_id = $this->data['session_data']->user_id;
@@ -231,7 +231,7 @@ class Setup extends MY_Controller {
 
 	// ACCOUNT SECTION
 	public function account($type){
-		if($this->session->userdata('user')->role != "ADMIN"){
+		if($this->session->userdata('user')->role != "ADMIN PREMIUM"){
 			redirect("app/dashboard");					
 		}
 		$user_id = $this->data['session_data']->user_id;

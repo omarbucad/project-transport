@@ -156,7 +156,7 @@
         	<div class="container">
         		<div class="card">
         			<div class="card-body text-center">
-        				<h1>You're currently on the <?php echo $result->title; ?> PLAN</h1>
+        				<h1>You're currently on the <?php echo $result->title; ?> Plan</h1>
         				<p>Whether you need to add a store, a register, or our most advanced features, <br>Trackerteer is on hand to upgrade your business.</p>
         				<a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="btn btn-success btn-lg">View our Pricing plans</a>
         			</div>
@@ -219,7 +219,7 @@
                                     <th>Billing Type</th>
                                     <th>Created</th>
                                     <th>Expiration</th>
-                                    <th>Action</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                                 <?php foreach($user_data->subscription as $key => $value) : ?>
                                     <tr>
@@ -227,7 +227,7 @@
                                         <td><span><?php echo $value->billing_type; ?></span></td>
                                         <td><span><?php echo $value->plan_created; ?></span></td>
                                         <td><span><?php echo $value->plan_expiration; ?></span></td>
-                                        <td><a href="javascript:void(0);" data-pdf="<?php echo site_url().$value->invoice_pdf;?>" data-id="<?php echo $value->invoice_id; ?>" class="btn btn-link view_invoice_pdf" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i> View Invoice</a></td>
+                                        <!-- <td><a href="javascript:void(0);" data-pdf="<?php //echo site_url().$value->invoice_pdf;?>" data-id="<?php //echo $value->invoice_id; ?>" class="btn btn-link view_invoice_pdf" title="View Invoice"><i class="fa fa-search" aria-hidden="true"></i> View Invoice</a></td> -->
                                     </tr>                                    
                                 <?php endforeach; ?>  
                             </table>                         

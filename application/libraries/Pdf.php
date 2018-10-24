@@ -34,14 +34,14 @@ class Pdf {
 
 
 	public function create_report_checklist($data = array() , $output = "D"){
-		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(10, 10, 10, 10));
+		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(5, 5, 5, 5));
 
 		try{
 			$filename = "report_".$data->report_number.'_'.time().'.pdf';
 			$path = FCPATH.$this->folder.'/'.$filename;
 
-			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/report_checklist" , $data , TRUE));
-			$this->html2pdf->Output($path , $output);
+			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/report_checklist_styled" , $data , TRUE));
+			$this->html2pdf->Output($path , "F");
 
 			return [
 				"attachment" => FCPATH.$this->folder.'/'.$filename ,

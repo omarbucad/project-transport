@@ -59,31 +59,43 @@
     </div>
     <div class="container-fluid app-content-a">
         <div class="container">        
-            <div class="row text-center">
-                <div class="col-md-4 col-sm-6">
-                    <span class="fa-stack fa-lg fa-5x">
-                      <i class="fa fa-bolt fa-stack-1x"></i>
+            <div class="row text-left">
+                <div class="col-md-6 col-sm-6">
+                    <div class="col-lg-4">
+                        <span class="fa-stack fa-lg fa-4x">
+                      <i class="fa fa-ban fa-stack-1x"></i>
                     </span>
-                    <h2>Automated</h2>
-                    <p>Increase efficiency in checklist report  management and vehicle maintenance.</p>
+                    </div>
+                    <div class="col-lg-8">
+                        <h3> Paperless</h3>
+                    <p>Increase efficiency in checklist reports management.</p>
+                    </div>
+                    
                 </div>
                 <!-- /.col-lg-4 -->
-                <div class="col-md-4 col-sm-6">
-                    <span class="fa-stack fa-lg fa-5x">
-                      <i class="fa fa-cogs fa-stack-1x"></i>
+                <div class="col-md-3 col-sm-6">
+                    <span class="fa-stack fa-lg fa-4x">
+                      <i class="fa fa-pencil fa-stack-1x"></i>
                     </span>
-                    <h2>Customizable</h2>
-                    <p>Start with the default checklist or create your own checklist</p>
+                    <h2>Signature Capture</h2>
+                    <p>Requires a driver signature at the end of report.</p>
                 </div>
                 <!-- /.col-lg-4 -->
-                <div class="col-md-4 col-sm-6">
-                    <span class="fa-stack fa-lg fa-5x">
-                      <i class="fa fa-mobile fa-stack-1x"></i>
+                <div class="col-md-3 col-sm-6">
+                    <span class="fa-stack fa-lg fa-4x">
+                      <i class="fa fa-cloud fa-stack-1x"></i>
                     </span>
-                    <h2>Mobile App</h2>
-                    <p>Allow Drivers and Mechanic to create reports using the app.</p>
+                    <h2>Secured Data</h2>
+                    <p>Keep your data safe and secured with our cloud storage</p>
                 </div>
                 <!-- /.col-lg-4 -->
+                <div class="col-md-3 col-sm-6">
+                    <span class="fa-stack fa-lg fa-4x">
+                      <i class="fa fa-cloud fa-stack-1x"></i>
+                    </span>
+                    <h2>Secured Data</h2>
+                    <p>Keep your data safe and secured with our cloud storage</p>
+                </div>
             </div>
         </div>
     </div>
@@ -94,7 +106,7 @@
                 </div>
                 <div class="col-md-5 col-sm-6 text-right color-white">
                     <h2 class="featurette-heading">Vehicle Defect Report Management</h2>
-                    <p class="lead">Vehicle Checklist is a robust defect monitoring system with a fully traceable route from defect to report to repair available in your desktop.</p>
+                    <p class="lead">Vehicle Checklist is a robust vehicle defect monitoring system with a fully traceable route from defect to report to repair available in your desktop and smartphone.</p>
                 </div>
             </div>
         </div>
@@ -108,9 +120,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2">
                     <div class="row no-margin no-gap">
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-6 col-sm-6">
                             <div class="pricing-table dark-blue">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
@@ -121,19 +133,18 @@
                                 <div class="pt-body">
                                     <h4><?php echo $user_plans[0]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li><?php echo $user_plans[0]->no_accounts; ?> Account</li>
                                         <li><?php echo $user_plans[0]->no_vehicle; ?> Vehicle/Trailer</li>
                                         <li><?php echo $user_plans[0]->no_reports; ?> Reports / Month</li>
                                         <li><?php echo $user_plans[0]->description; ?></li>
                                         <li>No Export</li>
                                     </ul>
                                 </div>
-                                <div class="pt-footer">
+                                <!-- <div class="pt-footer">
                                     <button type="button" class="btn btn-primary">Buy Now</button>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-6 col-sm-6">
                             <div class="pricing-table dark-blue">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
@@ -144,33 +155,128 @@
                                 <div class="pt-body">
                                     <h4><?php echo $user_plans[1]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li><?php echo $user_plans[1]->no_accounts; ?> Accounts</li>
-                                        <li><?php echo $user_plans[1]->no_vehicle; ?> Vehicles & Trailers</li>
-                                        <li><?php echo $user_plans[1]->no_reports; ?> Reports / Month</li>
-                                        <li><?php echo $user_plans[1]->description; ?></li>
-                                        <li>With Export and Reporting</li>
+                                        <li>Unlimited Vehicles & Trailers</li>
+                                        <li>Unlimited Reports</li>
+                                        <li><?php echo $user_plans[2]->description; ?></li>
+                                        <li>1 month Free Trial</li>
                                     </ul>
                                 </div>
-                                <div class="pt-footer">
+<!--                                 <div class="pt-footer">
                                     <button type="button" class="btn btn-primary">Buy Now</button>
-                                </div>
+                                    <div id="paypal-button-container"></div>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+// Render the PayPal button
+paypal.Button.render({
+// Set your environment
+env: 'sandbox', // sandbox | production
+locale: 'en_US',
+
+// Specify the style of the button
+style: {
+  layout: 'horizontal',  // horizontal | vertical
+  size:   'small',    // medium | large | responsive
+  shape:  'pill',      // pill | rect
+  color:  'gold'       // gold | blue | silver | white | black
+},
+
+// Specify allowed and disallowed funding sources
+//
+// Options:
+// - paypal.FUNDING.CARD
+// - paypal.FUNDING.CREDIT
+// - paypal.FUNDING.ELV
+funding: {
+  allowed: [
+    paypal.FUNDING.CARD,
+    paypal.FUNDING.CREDIT
+  ],
+  disallowed: []
+},
+
+// PayPal Client IDs - replace with your own
+// Create a PayPal app: https://developer.paypal.com/developer/applications/create
+client: {
+  sandbox: 'AZSn55ni7EDdn8QF6MwtylirO5YxaS6qTbcxIMsLtgwKY8vttQwu3flnq2QlTZGjcEDzeFPBWaSf9PlN',
+  production: '<insert production client id>'
+},
+
+// Set up a payment
+payment: function(data, actions) {
+  return actions.payment.create({
+    transactions: [{
+      amount: {
+        total: '50.01',
+        currency: 'USD',
+        details: {
+          subtotal: '50.00',
+          tax: '0.01',
+          shipping: '0.00'
+          //handling_fee: '1.00',
+         //shipping_discount: '-1.00',
+          //insurance: '0.01'
+        }
+      },
+      description: 'The payment transaction description.',
+      custom: '90048630024435',
+      //invoice_number: '12345', Insert a unique invoice number
+      payment_options: {
+        allowed_payment_method: 'INSTANT_FUNDING_SOURCE'
+      },
+      soft_descriptor: 'ECHI5786786',
+      item_list: {
+        items: [
+        {
+          name: 'Standard Plan',
+          description: 'Plan',
+          quantity: '1',
+          price: '50',
+          tax: '0.01',
+          sku: '2',
+          currency: 'USD'
+        }
+        ]// ],
+        // shipping_address: {
+        //   recipient_name: 'Test',
+        //   line1: '4th Floor',
+        //   line2: 'Unit #34',
+        //   city: 'San Jose',
+        //   country_code: 'US',
+        //   postal_code: '95131',
+        //   phone: '011862212345678',
+        //   state: 'CA'
+        // }
+      }
+    }],
+    note_to_payer: 'Contact us for any questions on your subscription.'
+  });
+},
+onAuthorize: function (data, actions) {
+    console.log(actions);
+  return actions.payment.execute()
+    .then(function () {
+      window.alert('Payment Complete!');
+    });
+}
+}, '#paypal-button-container');
+</script> 
+                                </div>-->
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6">
+                        <!-- <div class="col-md-4 col-sm-6">
                             <div class="pricing-table  dark-blue">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
-                                        <div class="pricing"><?php echo "$".$user_plans[2]->plan_price; ?></div>
+                                        <div class="pricing"><?php //echo "$".$user_plans[2]->plan_price; ?></div>
                                         <div class="pricing-type">per month</div>
                                     </div>
                                 </div>
                                 <div class="pt-body">
-                                    <h4><?php echo $user_plans[2]->title ." Plan"; ?></h4>
+                                    <h4><?php //echo $user_plans[2]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li>Unlimited Accounts</li>
                                         <li>Unlimited Vehicles & Trailers</li>
                                         <li>Unlimited Reports</li>
-                                        <li><?php echo $user_plans[2]->description; ?></li>
+                                        <li><?php //echo $user_plans[2]->description; ?></li>
                                         <li>&nbsp;</li>
                                     </ul>
                                 </div>
@@ -178,7 +284,7 @@
                                     <button type="button" class="btn btn-primary">Buy Now</button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

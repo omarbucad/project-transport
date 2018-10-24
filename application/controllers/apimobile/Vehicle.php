@@ -193,20 +193,54 @@ class Vehicle extends CI_Controller {
 				$this->db->select("availability");
 				$this->db->where("deleted IS NULL");
 				$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
-				$result = $this->db->get("vehicle")->row()->availability;
+				$result = $this->db->get("vehicle")->row();
 
 				$this->db->trans_complete();
 
 				if ($this->db->trans_status() === FALSE){
 		            echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "check_availability"]);
 		        }else{
-		            echo json_encode(["status" => true , "data" => $result, "action" => "check_availability"]);
+		        	if($result->availability == 1){
+		        		echo json_encode(["status" => true , "message" => "Available", "action" => "check_availability"]);
+		        	}else{
+		        		echo json_encode(["status" => false , "message" => "Unavailable", "action" => "check_availability"]);
+		        	}		            
 		        }
 			}else{
 				echo json_encode(["status" => false , "message" => "No passed data", "action" => "check_availability"]);
 			}
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "check_availability"]);
+		}
+	}
+
+	public function view_vehicles_used(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+
+				$this->db->select("vu.vehicle_registration_number, vu.trailer_number, vu.vehicle_type, vu.date_used, vt.type");
+				$this->db->where("vu.user_id", $data->user_id);
+				$this->db->join("vehicle_type vt","vt.vehicle_type_id = vu.vehicle_type");
+				$result = $this->db->order_by("vu.date_used","DESC")->get("vehicles_used vu")->result();
+
+				foreach ($result as $key => $value) {
+					$result[$key]->date_used = convert_timezone($value->date_used, true);
+				}
+				$this->db->trans_complete();
+
+				if ($this->db->trans_status() === FALSE){
+					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "view_vehicles_used"]);
+				}else{
+					echo json_encode(["status" => true , "data" => $result, "action" => "view_vehicles_used"]);
+				}
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "view_vehicles_used"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "view_vehicles_used"]);
 		}
 	}
 }

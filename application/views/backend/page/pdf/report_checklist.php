@@ -3,6 +3,9 @@
 <head>
 	<title></title>
 	<style type="text/css">
+		body{
+			padding:0;
+		}
 		.invoice-box{
 			max-width:100%;
 			margin-top:5px;
@@ -15,7 +18,7 @@
 			padding:5px;
 			font-weight: bold;
 		}
-		td{
+		td,p{
 			word-wrap: break-word;
 			word-break: break-all;
 		}

@@ -29,7 +29,7 @@ class Account extends CI_Controller {
 
 
 		$this->db->insert("store",[
-			"store_name" => "Company Name",
+			"store_name" => "Vehicle Checklist",
 			"address_id" => $address_id,
 			"created" => time()
 		]);
@@ -40,7 +40,7 @@ class Account extends CI_Controller {
 			"display_name" => "Firstname Lastname",
 			"email_address" => $data->email,
 			"username" => $data->username,
-			"role" => "ADMIN",
+			"role" => "DRIVER",
 			"status" => 1,
 			"created" => time(),
 			"password" => md5($data->password),
@@ -89,7 +89,7 @@ class Account extends CI_Controller {
 			$this->db->where("store_id",$store_id);
 			$this->db->update("store",[
 				"logo_image_path" => 'public/img/',
-				"logo_image_name" => 'company_logo.png'
+				"logo_image_name" => 'vehicle-checklist.png'
 			]);
 		}
 

@@ -4,12 +4,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Report extends MY_Controller {
 
 	public function __construct() {
-       parent::__construct();
-       $this->load->model('report_model', 'reports');
-       $this->load->model('accounts_model', 'accounts');
-       $this->load->model('checklist_model', 'checklist');
-       $this->load->model('vehicle_model', 'vehicle');
-       if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+        parent::__construct();
+        $this->load->model('report_model', 'reports');
+        $this->load->model('accounts_model', 'accounts');
+        $this->load->model('checklist_model', 'checklist');
+        $this->load->model('vehicle_model', 'vehicle');
+        if($this->session->userdata('user')->expired == 1){
 			redirect("app/dashboard");
 		}
     }

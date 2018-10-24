@@ -134,6 +134,7 @@ class Checklist extends CI_Controller {
 
 			$user = json_decode($data->user);
 			if($data){
+				//print_r_die($data->trailer_number);
 				$remind_in = NULL;
 				$this->db->trans_start();
 
@@ -206,10 +207,11 @@ class Checklist extends CI_Controller {
 					}
 				}
 
-				if($data->trailer_number != ''){
+				if($data->trailer_number == ''){
 					$this->db->select("id");
 					$this->db->where("checklist_id", $data->checklist_id);
 					$this->db->where("item_position >=", 29);
+					$this->db->where("deleted IS NULL");
 					$c_items = $this->db->get("checklist_items")->result();
 
 					foreach ($c_items as $c => $c_v) {
@@ -234,6 +236,15 @@ class Checklist extends CI_Controller {
 					"last_checked" => time(),
 					"status" => 1
 				]);
+
+				$this->db->insert("vehicles_used",[
+					"user_id" => $user->user_id,
+					"vehicle_registration_number" => $data->vehicle_registration_number,
+					"trailer_number" => ($data->trailer_number != '') ? $data->trailer_number : NULL,
+					"vehicle_type" => $data->vehicle_type_id,
+					"date_used" => time()
+				]);
+				
 				$this->db->trans_complete();
 
 				if ($this->db->trans_status() === FALSE){

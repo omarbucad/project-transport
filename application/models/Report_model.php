@@ -47,9 +47,9 @@ class Report_model extends CI_Model {
             $this->db->where("r.created <= " , $end);
         }   
         // End of Search
-        if($role == 'MECHANIC'){
-            $this->db->where("rs.status !=", 0);
-        }
+        // if($role == 'MECHANIC'){
+        //     $this->db->where("rs.status !=", 0);
+        // }
 
         $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by,vt.type, s.store_name,s.logo_image_path, s.logo_image_name');
 
@@ -64,7 +64,6 @@ class Report_model extends CI_Model {
 
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
         foreach($result as $r => $l){
-            //print_r_die($result);
             if($result[$r]->status == 0){
                 $result[$r]->status_created = 0;
             }else{
@@ -152,7 +151,7 @@ class Report_model extends CI_Model {
 
     public function get_report_by_id($id){
 
-        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name,vt.type,vt.vehicle_type_id, s.store_name,s.logo_image_name, s.logo_image_path');
+        $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u.email_address, u.role, u.phone,vt.type,vt.vehicle_type_id, s.store_name,s.logo_image_name, s.logo_image_path,s.address_id');
 
         $this->db->join('report_status rs', 'rs.id = r.status_id');
         $this->db->join('checklist c', 'c.checklist_id = r.checklist_id');
@@ -160,8 +159,19 @@ class Report_model extends CI_Model {
         $this->db->join('vehicle_type vt',"vt.vehicle_type_id = c.vehicle_type_id");
         $this->db->join("store s","s.store_id = u.store_id");
         $result = $this->db->where("r.report_id" , $id)->order_by("r.created" , "DESC")->get("report r")->row();
+        
 
         if($result){
+            $this->db->where("store_address_id", $result->address_id);
+            $address = $this->db->get("store_address")->row();
+            $result->address = $address->street1;
+            $result->address .= ($address->street2 && $address->street1 != '') ? ", ".$address->street2 : $address->street2;
+            $result->address .= ($address->suburb && ($address->street1 != '' || $address->street2 != '')) ? ", ".$address->suburb : $address->suburb;
+            $result->address .= ($address->city) ? " , ".$address->city : "";            
+            $result->address .= ($address->postcode) ? " ".$address->postcode : "";
+
+            $result->address .= ($address->state) ? ", ".$address->state : "";
+            $result->address .= ($address->country) ? ", ".$address->country : "";
 
             if($result->logo_image_path == 'public/img/'){
                 $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
@@ -402,7 +412,7 @@ class Report_model extends CI_Model {
 
     }
 
-    public function defect_undermaintenance_reports(){
+    public function defect_reports(){
 
         $this->db->select('r.* , rs.status, rs.created as status_created, c.checklist_name, u.display_name, u2.display_name as updated_by');     
 
@@ -411,16 +421,16 @@ class Report_model extends CI_Model {
         $this->db->join('user u', 'u.user_id = r.report_by');
         $this->db->join('user u2','u2.user_id = rs.user_id');
         $this->db->where("u.store_id",$this->session->userdata('user')->store_id);
-        $this->db->where_in("rs.status", [1,2]);  
+        $this->db->where_in("rs.status", 1);  
 
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
         foreach($result as $key => $row){
-            if($result[$key]->status == 0){
-                $result[$key]->status_created = 0;
-            }else{
-                $result[$key]->status_created = convert_timezone($row->status_created,true);
-            }
+            // if($result[$key]->status == 0){
+            //     $result[$key]->status_created = 0;
+            // }else{
+            $result[$key]->status_created = convert_timezone($row->status_created,true);
+            // }
             $result[$key]->status = report_status($row->status);
             $result[$key]->raw_status = report_status($row->status,true);
             $result[$key]->created = convert_timezone($row->created,true);
@@ -442,17 +452,17 @@ class Report_model extends CI_Model {
         $this->db->where("rs.created >=", strtotime("today midnight"));
         $this->db->where("rs.created <=", strtotime("tomorrow midnight -1 second"));
 
-        $this->db->where("rs.status", 3);  
+        $this->db->where("rs.status", 2);  
         $this->db->where("u.store_id",$this->session->userdata('user')->store_id);
 
         $result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
         foreach($result as $key => $row){
-            if($result[$key]->status == 0){
-                $result[$key]->status_created = 0;
-            }else{
+            // if($result[$key]->status == 0){
+            //     $result[$key]->status_created = 0;
+            // }else{
                 $result[$key]->status_created = convert_timezone($row->status_created,true);
-            }
+            //}
             $result[$key]->status = report_status($row->status);
             $result[$key]->raw_status = report_status($row->status,true);
             $result[$key]->created = convert_timezone($row->created,true);

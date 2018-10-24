@@ -16,6 +16,7 @@ class Login extends CI_Controller {
         }
         
         $this->load->model('register_model', 'register');
+        $this->load->model('profile_model', 'profile');
 
         //kapag ionic ito ung gamitin
 		//$this->post = json_decode(file_get_contents("php://input"));
@@ -39,6 +40,17 @@ class Login extends CI_Controller {
 				}else{
 					$data->image = $this->config->site_url("thumbs/images/user/".$data->image_path."/80/80/".$data->image_name);
 				}
+				if($data->plan_expiration == ''){
+					$expired = 0;
+				}else{
+					if($data->plan_expiration > strtotime("now")){
+			    		$expired = 0;
+				    }else{
+						$expired = 1;
+					}
+				}
+				$data->expired = $expired;
+				//$data->expiring_in = $this->profile->get_userplan($data->user_id);
 				$data->servertime = time();
 				$token = generate_app_token($data->user_id, $device_id, $device_type);
 

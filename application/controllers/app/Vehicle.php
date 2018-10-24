@@ -8,10 +8,10 @@ class Vehicle extends MY_Controller {
 	    $this->load->model('vehicle_model', 'vehicle');
 	    
 	    $this->data['plan_type'] = $this->data['session_data']->title;
-	    if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+	    if($this->session->userdata('user')->role != "ADMIN PREMIUM" && $this->session->userdata('user')->role != "MANAGER" ){
 			redirect("app/dashboard");					
 		}
-		if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+		if($this->session->userdata('user')->expired == 1){
 			redirect("app/dashboard");
 		}
 

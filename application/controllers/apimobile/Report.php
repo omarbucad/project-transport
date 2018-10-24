@@ -486,6 +486,7 @@ class Report extends CI_Controller {
 					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.updated_ischeck, rc.updated_value,rc.updated_timestamp, ci.item_name ,ci.help_text, ci.image_path, ci.image_name, ci.help_image_path, ci.help_image_name, rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
 					$this->db->where("ci.deleted IS NULL");
+
 					$result->checklist = $this->db->where("report_id" , $result->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
 					foreach($result->checklist as $k => $r){

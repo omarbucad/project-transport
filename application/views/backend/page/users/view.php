@@ -2,7 +2,7 @@
     <div class="side-body padding-top">
 
         <div class="container">
-        	<h1>Accounts</h1>
+        	<h1>Manage Accounts</h1>
         </div>
         <div class="grey-bg">
             <div class="container ">
@@ -34,10 +34,10 @@
                                         <option value="">All Roles</option>
                                         <option value="MECHANIC" <?php echo ($this->input->get("roles") == "MECHANIC") ? "selected" : ""; ?>>Mechanic</option>
                                         <option value="DRIVER" <?php echo ($this->input->get("roles") == "DRIVER") ? "selected" : ""; ?>>Driver</option>
-                                        <option value="MANAGER" <?php echo ($this->input->get("roles") == "MANAGER") ? "selected" : ""; ?>>Manager</option>
-                                        <?php if($this->session->userdata('user')->role == "ADMIN") : ?>
-                                        <option value="ADMIN" <?php echo ($this->input->get("roles") == "ADMIN") ? "selected" : ""; ?>>Admin</option>
-                                        <?php endif; ?>
+                                       <!--  <option value="MANAGER" <?php //echo ($this->input->get("roles") == "MANAGER") ? "selected" : ""; ?>>Manager</option> -->
+                                        <!-- <?php //if($this->session->userdata('user')->role == "ADMIN") : ?>
+                                        <option value="ADMIN" <?php //echo ($this->input->get("roles") == "ADMIN") ? "selected" : ""; ?>>Admin</option>
+                                        <?php //endif; ?> -->
                                     </select>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                         <th width="45%">Name</th>
                         <th width="10%">Role</th>
                         <th width="10%">Status</th>
-                        <th width="35%"></th>
+                        <th width="25%"></th>
                     </tr>
                 </thead>
                 <tbody>
