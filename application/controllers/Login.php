@@ -25,7 +25,7 @@ class Login extends MY_Controller {
 		 //    $now = $dt->format('M d Y H:i:s');
 
 		    if($role == "ADMIN PREMIUM" || $role == "MECHANIC"){
-		    	if($this->session->userdata("user")->plan->expiration == ''){
+		    	if($this->session->userdata("user")->plan_expiration == ''){
 		    		$expired = 0;
 		    	}else{
 		    		if($this->session->userdata("user")->plan_expiration > strtotime("now")){
@@ -38,6 +38,7 @@ class Login extends MY_Controller {
 				$this->session->userdata('user')->expired = $expired;
 		    	
 		    }			
+
 
 			if($role == "SUPER ADMIN"){
 				$this->session->set_flashdata('status' , 'success');

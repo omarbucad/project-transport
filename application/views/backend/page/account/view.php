@@ -199,7 +199,7 @@
                             <?php if(!($result->trial_left < 0)) : ?>
                                 <span>Plan Expires in: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?></h4></span>
                             <?php else : ?>
-                                <span><h4 class='help-block text-danger'>Trial Already Expired</h4></span>
+                                <span><h4 class='help-block text-danger'>Already Expired</h4></span>
                             <?php endif;?>
                         <?php endif; ?>
                     </div>
@@ -246,7 +246,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="row no-margin no-gap">
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-6 col-sm-6">
                             <div class="pricing-table green" id="div-basic">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
@@ -268,7 +268,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-6 col-sm-6">
                             <div class="pricing-table dark-blue" id="div-standard">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
@@ -279,10 +279,10 @@
                                 <div class="pt-body">
                                     <h4><?php echo $user_plans[1]->title ." Plan"; ?></h4>
                                     <ul class="plan-detail">
-                                        <li><?php echo $user_plans[1]->no_vehicle; ?> Vehicles & Trailers</li>
-                                        <li><?php echo $user_plans[1]->no_reports; ?> Reports / Month</li>
-                                        <li><?php echo $user_plans[1]->description; ?></li>
-                                        <li>With Export and Reporting</li>
+                                        <li>Unlimited Vehicles & Trailers</li>
+                                        <li>Unlimited Reports</li>
+                                        <li><?php echo $user_plans[2]->description; ?></li>
+                                        <li>&nbsp;</li>
                                     </ul>
                                 </div>
                                 <div class="pt-footer">
@@ -290,7 +290,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6">
+                        <!-- <div class="col-md-4 col-sm-6">
                             <div class="pricing-table dark-blue" id="div-premium">
                                 <div class="pt-header">
                                     <div class="plan-pricing">
@@ -311,7 +311,7 @@
                                     <button type="button" class="btn btn-primary" id="btn-premium">Select Plan</button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

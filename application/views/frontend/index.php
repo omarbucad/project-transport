@@ -59,21 +59,16 @@
     </div>
     <div class="container-fluid app-content-a">
         <div class="container">        
-            <div class="row text-left">
-                <div class="col-md-6 col-sm-6">
-                    <div class="col-lg-4">
-                        <span class="fa-stack fa-lg fa-4x">
-                      <i class="fa fa-ban fa-stack-1x"></i>
+            <div class="row text-center">
+                <div class="col-md-4 col-sm-6">
+                    <span class="fa-stack fa-lg fa-4x">
+                      <i class="fa fa-bolt fa-stack-1x"></i>
                     </span>
-                    </div>
-                    <div class="col-lg-8">
-                        <h3> Paperless</h3>
-                    <p>Increase efficiency in checklist reports management.</p>
-                    </div>
-                    
+                    <h2>Go Digital</h2>
+                    <p>Increase efficiency in paperless checklist reports management.</p>
                 </div>
                 <!-- /.col-lg-4 -->
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-4 col-sm-6">
                     <span class="fa-stack fa-lg fa-4x">
                       <i class="fa fa-pencil fa-stack-1x"></i>
                     </span>
@@ -81,15 +76,15 @@
                     <p>Requires a driver signature at the end of report.</p>
                 </div>
                 <!-- /.col-lg-4 -->
-                <div class="col-md-3 col-sm-6">
+                <!-- <div class="col-md-3 col-sm-6">
                     <span class="fa-stack fa-lg fa-4x">
                       <i class="fa fa-cloud fa-stack-1x"></i>
                     </span>
                     <h2>Secured Data</h2>
                     <p>Keep your data safe and secured with our cloud storage</p>
-                </div>
+                </div> -->
                 <!-- /.col-lg-4 -->
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-4 col-sm-6">
                     <span class="fa-stack fa-lg fa-4x">
                       <i class="fa fa-cloud fa-stack-1x"></i>
                     </span>

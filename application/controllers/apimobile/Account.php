@@ -442,7 +442,7 @@ class Account extends CI_Controller {
 			if($data->store_id){
 				$this->db->where("deleted IS NULL");
 				$this->db->where("store_id",$data->store_id);
-				$result = $this->db->where_in("role", ["DRIVER","MANAGER"])->get("user")->result();
+				$result = $this->db->where_in("role", ["DRIVER PREMIUM","MANAGER"])->get("user")->result();
 
 				//print_r_die($this->db->last_query());
 				if($result){
