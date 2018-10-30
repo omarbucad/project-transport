@@ -234,16 +234,14 @@
     			<div class="row no-margin-bottom">
     				<div class="col-xs-12">
     						<table class="table">
-    						<tr>
-    							<td><strong>Item</strong></td>
-    							<td><strong>Status</strong></td>
-    							<td><strong>Notes</strong></td>
-    							<td><strong>Images</strong></td>
-                                <td><strong>Update</strong></td>
-                                <td><strong>Update Images</strong></td>
+    						<tr style="background-color: #454545;color: #fff;">
+    							<td width="25%"><strong>Item</strong></td>
+    							<td width="25%"><strong>Initial</strong></td>
+                                <td width="25%"><strong>Update</strong></td>
+                                <td width="25%"><strong>Final Update</strong></td>
     						</tr>
     						<?php foreach($result->report_checklist as $key => $row) :?>
-	    					<tr>
+	    					<tr style="background-color: <?php echo (($key+1) % 2 != 0) ? "#ddd": "#fff;";?>;">
 	    						<td><?php echo $row->item_name; ?></td>
 	    						<td>
 	    							<?php if($row->checklist_ischeck == 1) : ?>
@@ -255,51 +253,82 @@
                                     <?php else : ?>
                                         <?php echo "Good"; ?>
                                     <?php endif; ?>
-	    						</td>
-	    						<td><?php echo $row->checklist_value; ?></td>
-	    						<td>
-                                    <div class="animated-thumbnail">
+                                    <small><?php echo ($row->timestamp != '') ?  " - ".$row->timestamp : "";?></small>
+                                    <small class="help-block"><?php echo ($row->checklist_value != '') ?"Note: ".$row->checklist_value: ""; ?></small>
+
                                     <?php if(isset($row->fullpath)) : ?>
+                                    <div class="animated-thumbnail">
                                         <?php foreach($row->fullpath as $k) : ?> 
                                         <a href="<?php echo $k; ?>">
                                          <img src="<?php echo $k; ?>" height='40px'>
                                         </a>
                                         <?php endforeach; ?>
+                                    </div>                                    
                                     <?php endif;?>
-                                    </div>
-                                </td>
+	    						</td>
                                 
                                 <td>
-                                <?php if(isset($row->updated_ischeck)) : ?>
-                                    <?php if($row->updated_ischeck == 1) : ?>
-                                        <?php echo "Defect"; ?>
-                                    <?php elseif($row->updated_ischeck == 2) : ?>
-                                        <?php echo "Rechecked"; ?>
-                                    <?php elseif($row->updated_ischeck == 3) : ?>
-                                        <?php echo "N/A"; ?>
-                                    <?php else : ?>
-                                        <?php echo "Good"; ?>
+                                    <?php if(isset($row->updated_ischeck)) : ?>
+                                        <?php if($row->updated_ischeck == 1) : ?>
+                                            <?php echo "Defect"; ?>
+                                        <?php elseif($row->updated_ischeck == 2) : ?>
+                                            <?php echo "Rechecked"; ?>
+                                        <?php elseif($row->updated_ischeck == 3) : ?>
+                                            <?php echo "N/A"; ?>
+                                        <?php else : ?>
+                                            <?php echo "Good"; ?>
+                                        <?php endif; ?>
+                                        <small><?php echo " - ".$row->updated_timestamp;?></small>
+                                    <?php else: ?>     
+                                        &nbsp;
                                     <?php endif; ?>
-                                    - <span><?php echo $row->updated_timestamp;?></span>
-                                <?php else: ?>     
-                                    &nbsp;
-                                <?php endif; ?>
-                                </td>	
+                                    <small class="help-block"><?php echo ($row->updated_value != '') ?"Note: ".$row->updated_value: ""; ?></small>
+                                    <?php if(isset($row->updated_ischeck)) : ?>
+
+                                        <?php if(isset($row->update_img_fullpath)) : ?>
+                                        <div class="animated-thumbnail">
+                                            <?php foreach($row->update_img_fullpath as $k) : ?> 
+                                            <a href="<?php echo $k; ?>">
+                                             <img src="<?php echo $k; ?>" height='40px'>
+                                            </a>
+                                            <?php endforeach; ?>
+                                        </div>                                        
+                                        <?php endif;?>
+                                    <?php else: ?>     
+                                        &nbsp;
+                                    <?php endif; ?>
+                                </td>	 	
                                 <td>
-                                <?php if(isset($row->updated_ischeck)) : ?>
-                                    <div class="animated-thumbnail">
-                                    <?php if(isset($row->update_img_fullpath)) : ?>
-                                        <?php foreach($row->update_img_fullpath as $k) : ?> 
-                                        <a href="<?php echo $k; ?>">
-                                         <img src="<?php echo $k; ?>" height='40px'>
-                                        </a>
-                                        <?php endforeach; ?>
-                                    <?php endif;?>
-                                    </div>
-                                <?php else: ?>     
-                                    &nbsp;
-                                <?php endif; ?>
-                                </td>    				
+                                    <?php if(isset($row->final_update_ischeck)) : ?>
+                                        <?php if($row->final_update_ischeck == 1) : ?>
+                                            <?php echo "Defect"; ?>
+                                        <?php elseif($row->final_update_ischeck == 2) : ?>
+                                            <?php echo "Rechecked"; ?>
+                                        <?php elseif($row->final_update_ischeck == 3) : ?>
+                                            <?php echo "N/A"; ?>
+                                        <?php else : ?>
+                                            <?php echo "Good"; ?>
+                                        <?php endif; ?>
+                                        <small><?php echo " - ".$row->final_update_timestamp;?></small>
+                                    <?php else: ?>     
+                                        &nbsp;
+                                    <?php endif; ?>
+                                    <small class="help-block"><?php echo ($row->final_update_value != '') ?"Note: ".$row->final_update_value: ""; ?></small>
+                                    <?php if(isset($row->final_update_ischeck)) : ?>
+
+                                        <?php if(isset($row->final_img_fullpath)) : ?>
+                                        <div class="animated-thumbnail">
+                                            <?php foreach($row->final_img_fullpath as $k) : ?> 
+                                            <a href="<?php echo $k; ?>">
+                                             <img src="<?php echo $k; ?>" height='40px'>
+                                            </a>
+                                            <?php endforeach; ?>
+                                        </div>                                        
+                                        <?php endif;?>
+                                    <?php else: ?>     
+                                        &nbsp;
+                                    <?php endif; ?>
+                                </td>			
 	    					</tr>
 	    					<?php endforeach; ?>
 	    				</table>

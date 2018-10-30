@@ -40,7 +40,7 @@ class Pdf {
 			$filename = "report_".$data->report_number.'_'.time().'.pdf';
 			$path = FCPATH.$this->folder.'/'.$filename;
 
-			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/report_checklist_styled" , $data , TRUE));
+			$this->html2pdf->writeHTML($this->CI->load->view("backend/page/pdf/report_checklist_two" , $data , TRUE));
 			$this->html2pdf->Output($path , "F");
 
 			return [

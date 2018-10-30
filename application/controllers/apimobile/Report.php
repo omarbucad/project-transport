@@ -55,7 +55,7 @@ class Report extends CI_Controller {
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 
-					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.updated_ischeck, rc.updated_value,rc.updated_timestamp, ci.item_name, ci.image_path as item_path, ci.image_name as item_img_name, rc.id");
+					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.timestamp, rc.updated_ischeck, rc.updated_value,rc.updated_timestamp,rc.final_update_ischeck, rc.final_update_value, rc.final_update_timestamp, ci.item_name, ci.image_path as item_path, ci.image_name as item_img_name, rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
 					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
@@ -73,7 +73,7 @@ class Report extends CI_Controller {
 						$result[$key]->checklist[$k]->images = $images;
 
 						if($r->updated_ischeck != ''){
-							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
+							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
 							if($updated_img){
 								foreach($updated_img as $ui => $u){
 									
@@ -86,6 +86,19 @@ class Report extends CI_Controller {
 							}
 						}
 
+						if($r->final_update_ischeck != ''){
+							$final_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
+							if($final_img){
+								foreach($final_img as $ui => $u){
+									
+									// $updated_img[$ui]->thumbnail = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+									$final_img[$ui]->image = $this->config->site_url("public/upload/report/final_update/".$u->image_path.$u->image_name);
+								}
+								$result[$key]->checklist[$k]->final_images = $final_img;
+							}else{
+								$result[$key]->checklist[$k]->final_images = [];
+							}
+						}
 					}
 
 					$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
@@ -172,7 +185,7 @@ class Report extends CI_Controller {
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);			
 
-					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.updated_ischeck, rc.updated_value,rc.updated_timestamp, ci.item_name , rc.id");
+					$this->db->select("rc.checklist_ischeck , rc.checklist_value ,rc.timestamp, rc.updated_ischeck, rc.updated_value,rc.updated_timestamp,rc.final_update_ischeck, rc.final_update_value, rc.final_update_timestamp, ci.item_name , rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
 					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
@@ -188,7 +201,7 @@ class Report extends CI_Controller {
 						$result[$key]->checklist[$k]->images = $images;
 
 						if($r->updated_ischeck != ''){
-							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
+							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
 							if($updated_img){
 								foreach($updated_img as $ui => $u){
 									
@@ -198,6 +211,19 @@ class Report extends CI_Controller {
 								$result[$key]->checklist[$k]->update_images = $updated_img;
 							}else{
 								$result[$key]->checklist[$k]->update_images = [];
+							}
+						}
+						if($r->final_update_ischeck != ''){
+							$final_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
+							if($final_img){
+								foreach($final_img as $ui => $u){
+									
+									// $updated_img[$ui]->thumbnail = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+									$final_img[$ui]->image = $this->config->site_url("public/upload/report/final_update/".$u->image_path.$u->image_name);
+								}
+								$result[$key]->checklist[$k]->final_images = $final_img;
+							}else{
+								$result[$key]->checklist[$k]->final_images = [];
 							}
 						}
 					}
@@ -359,7 +385,7 @@ class Report extends CI_Controller {
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 
-					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.updated_ischeck, rc.updated_value,rc.updated_timestamp, ci.item_name , ci.image_path as item_path, ci.image_name as item_img_name, rc.id");
+					$this->db->select("rc.checklist_ischeck , rc.checklist_value ,rc.timestamp, rc.updated_ischeck, rc.updated_value,rc.updated_timestamp,rc.final_update_ischeck, rc.final_update_value, rc.final_update_timestamp, ci.item_name , ci.image_path as item_path, ci.image_name as item_img_name, rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
 					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
@@ -376,7 +402,7 @@ class Report extends CI_Controller {
 						$result[$key]->checklist[$k]->images = $images;
 
 						if($r->updated_ischeck != ''){
-							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
+							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
 							if($updated_img){
 								foreach($updated_img as $ui => $u){
 									
@@ -388,7 +414,19 @@ class Report extends CI_Controller {
 								$result[$key]->checklist[$k]->update_images = [];
 							}
 						}
-						
+						if($r->final_update_ischeck != ''){
+							$final_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
+							if($final_img){
+								foreach($final_img as $ui => $u){
+									
+									// $updated_img[$ui]->thumbnail = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+									$final_img[$ui]->image = $this->config->site_url("public/upload/report/final_update/".$u->image_path.$u->image_name);
+								}
+								$result[$key]->checklist[$k]->final_images = $final_img;
+							}else{
+								$result[$key]->checklist[$k]->final_images = [];
+							}
+						}						
 					}
 
 					$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
@@ -483,7 +521,7 @@ class Report extends CI_Controller {
 					$result->status_raw = report_type($result->status , true);
 					$result->status = report_type($result->status);
 
-					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.updated_ischeck, rc.updated_value,rc.updated_timestamp, ci.item_name ,ci.help_text, ci.image_path, ci.image_name, ci.help_image_path, ci.help_image_name, rc.id");
+					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.timestamp,rc.updated_ischeck, rc.updated_value,rc.updated_timestamp,rc.final_update_ischeck, rc.final_update_value, rc.final_update_timestamp, ci.item_name ,ci.help_text, ci.image_path, ci.image_name, ci.help_image_path, ci.help_image_name, rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
 					$this->db->where("ci.deleted IS NULL");
 
@@ -508,7 +546,7 @@ class Report extends CI_Controller {
 						$result->checklist[$k]->images = $images;
 
 						if($r->updated_ischeck != ''){
-							$updated_img = $this->db->where("report_id" , $result->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
+							$updated_img = $this->db->where("report_id" , $result->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
 							if($updated_img){
 								foreach($updated_img as $ui => $u){
 									
@@ -521,6 +559,19 @@ class Report extends CI_Controller {
 							}
 						}
 
+						if($r->final_update_ischeck != ''){
+							$final_img = $this->db->where("report_id" , $result->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
+							if($final_img){
+								foreach($final_img as $ui => $u){
+									
+									// $updated_img[$ui]->thumbnail = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+									$final_img[$ui]->image = $this->config->site_url("public/upload/report/final_update/".$u->image_path.$u->image_name);
+								}
+								$result->checklist[$k]->final_images = $final_img;
+							}else{
+								$result->checklist[$k]->final_images = [];
+							}
+						}
 					}
 
 					$this->db->select("rs.status, rs.id as report_status_id, rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
@@ -549,19 +600,19 @@ class Report extends CI_Controller {
 	}
 
 
-	private function isDefect(){
-		$data = (object)$this->input->post();
-		$checklist = json_decode($data->items);
-		$_isDefect = false;
+	// private function isDefect(){
+	// 	$data = (object)$this->input->post();
+	// 	$checklist = json_decode($data->items);
+	// 	$_isDefect = false;
 
-		foreach($checklist as $row){
-			if($row->checkbox == 1){
-				$_isDefect = true;
-			}
-		}
+	// 	foreach($checklist as $row){
+	// 		if($row->checkbox == 1){
+	// 			$_isDefect = true;
+	// 		}
+	// 	}
 
-		return $_isDefect;
-	}
+	// 	return $_isDefect;
+	// }
 
 	public function update_report(){
 
@@ -590,25 +641,41 @@ class Report extends CI_Controller {
 				if(isset($data->items)){
 
 					$item = json_decode($data->items);
+					//print_r_die($item);
+					$_isDefect = false;
 					foreach($item as $key => $value){
 
 						$this->db->where("id",$value->id);
 						$this->db->where("report_id",$data->report_id);
 						$this->db->update("report_checklist" , [
 							"updated_value"		=> ($value->update_note == '') ? NULL : $value->update_note,
-							"updated_ischeck"	=> $value->checkbox,
-							"updated_timestamp" => $value->updated_timestamp
+							"updated_ischeck"	=> $value->update_check,
+							"updated_timestamp" => $value->updated_timestamp,
+							"final_update_value" => ($value->final_update_value == '') ? NULL : $value->final_update_value,
+							"final_update_ischeck" => ($value->final_update_check == '') ? NULL : $value->final_update_check,
+							"final_update_timestamp" => ($value->final_update_timestamp  == '') ? NULL : $value->final_update_timestamp
 						]);
 
-						if(isset($value->images)){
-							$this->save_image($data->report_id , $value->id , $value->images);
+						if(isset($value->update_images)){
+							$this->save_image($data->report_id , $value->id , $value->update_images);
+						}
+						if(isset($value->final_images)){
+							$this->save_final_image($data->report_id , $value->id , $value->final_images);
+						}
+
+						if($value->update_check == 1){
+							$_isDefect = true;
+						}
+
+						if($value->final_update_check == 1){
+							$_isDefect = true;
 						}
 					}
 
 					$this->db->where("id",$data->status_id);
 					$this->db->update("report_status",[
 						"notes" => "Fixed",
-						"status" => ($this->isDefect()) ? 1 : 2 
+						"status" => ($_isDefect) ? 1 : 2 
 					]);
 
 					$this->db->where("vehicle_registration_number",$data->vehicle_registration_number);
@@ -675,7 +742,7 @@ class Report extends CI_Controller {
 			    //make sure you are the owner and have the rights to write content
 			    file_put_contents($path, $data);
 			    
-			    $this->db->insert('report_update_images', [
+			    $this->db->insert('report_final_images', [
 			    	"report_id"				=> $report_id ,
 			    	"report_checklist_id"	=> $report_checklist_id ,
 			    	"image_path"			=> $year."/".$month.'/' ,
@@ -689,6 +756,50 @@ class Report extends CI_Controller {
 		}	
 	}
 
+	private function save_final_image($report_id , $report_checklist_id , $images){
+
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+
+			$img_batch = array();
+			$ctr = 1;
+			foreach($images as $img){
+
+				$name = $report_id.'_'.$report_checklist_id.'_'.$ctr.'_'.time().'.PNG';
+		        $year = date("Y");
+		        $month = date("m");
+		        
+		        $folder = "./public/upload/report/finalupdate/".$year."/".$month;
+		        
+		        $date = time();
+
+		        if (!file_exists($folder)) {
+		            mkdir($folder, 0777, true);
+		            mkdir($folder.'/thumbnail', 0777, true);
+		            create_index_html($folder);
+		        }
+
+
+		        $path = $folder.'/'.$name;
+
+			    $data = base64_decode($img);
+
+			    //make sure you are the owner and have the rights to write content
+			    file_put_contents($path, $data);
+			    
+			    $this->db->insert('report_final_images', [
+			    	"report_id"				=> $report_id ,
+			    	"report_checklist_id"	=> $report_checklist_id ,
+			    	"image_path"			=> $year."/".$month.'/' ,
+			    	"image_name"			=> $name
+			    ]);
+
+			    $ctr++;
+			}	
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "save_image"]);
+		}	
+	}
 	private function save_signature($report_number){
 
 		$allowed = validate_app_token($this->post->token);
@@ -778,7 +889,7 @@ class Report extends CI_Controller {
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 
-					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.updated_ischeck, rc.updated_value,rc.updated_timestamp, ci.item_name , rc.id");
+					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.timestamp,rc.updated_ischeck, rc.updated_value,rc.updated_timestamp,rc.final_update_ischeck, rc.final_update_value, rc.final_update_timestamp, ci.item_name , rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
 					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
 
@@ -793,7 +904,7 @@ class Report extends CI_Controller {
 						$result[$key]->checklist[$k]->images = $images;
 
 						if($r->updated_ischeck != ''){
-							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
+							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
 							if($updated_img){
 								foreach($updated_img as $ui => $u){
 									
@@ -805,6 +916,19 @@ class Report extends CI_Controller {
 								$result[$key]->checklist[$k]->update_images = [];
 							}
 						}			
+						if($r->final_update_ischeck != ''){
+							$final_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
+							if($final_img){
+								foreach($final_img as $ui => $u){
+									
+									// $updated_img[$ui]->thumbnail = $this->config->site_url("public/upload/report/update/".$u->image_path.$u->image_name);
+									$final_img[$ui]->image = $this->config->site_url("public/upload/report/final_update/".$u->image_path.$u->image_name);
+								}
+								$result[$key]->checklist[$k]->final_images = $final_img;
+							}else{
+								$result[$key]->checklist[$k]->final_images = [];
+							}
+						}
 					}
 
 					$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");

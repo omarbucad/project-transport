@@ -196,7 +196,8 @@ class Checklist extends CI_Controller {
 						"report_id"				=> $report_id ,
 						"checklist_item_id"		=> $item->checklist_id ,
 						"checklist_value"		=> ($item->note == '') ? NULL : $item->note,
-						"checklist_ischeck"		=> $item->checkbox
+						"checklist_ischeck"		=> $item->checkbox,
+						"timestamp"				=> $item->timestamp
 					);
 
 					$this->db->insert("report_checklist" , $item_batch);

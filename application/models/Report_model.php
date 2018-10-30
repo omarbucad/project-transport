@@ -117,22 +117,31 @@ class Report_model extends CI_Model {
             $result[$r]->report_checklist = $this->db->where("rc.report_id", $l->report_id)->get("report_checklist rc")->result();
 
             //get all report images
-            $result[$r]->report_images = $this->db->where('report_id',$l->report_id)->get('report_images')->result();
-            $result[$r]->update_images = $this->db->where('report_id',$l->report_id)->get('report_update_images')->result();
+            $report_images = $this->db->where('report_id',$l->report_id)->get('report_images')->result();
+            $update_images = $this->db->where('report_id',$l->report_id)->get('report_update_images')->result();
+            $final_images = $this->db->where('report_id',$l->report_id)->get('report_final_images')->result();
 
 
             foreach($result[$r]->report_checklist as $key => $row){
-                foreach($result[$r]->report_images as $k => $z){
+                foreach($report_images as $k => $z){
                     if($row->id == $z->report_checklist_id){
 
                         $result[$r]->report_checklist[$key]->fullpath[] = ($z->image_name == '') ? '' : $this->config->site_url("public/upload/report/".$z->image_path.$z->image_name);
                     }
                 }
                 if($row->updated_ischeck != ''){
-                    foreach ($result[$r]->update_images as $u => $i) {
+                    foreach ($update_images as $u => $i) {
                         if($row->id == $i->report_checklist_id){
 
                         $result[$r]->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
+                        }
+                    }
+                }
+                if($row->final_update_ischeck != ''){
+                    foreach ($final_images as $u => $i) {
+                        if($row->id == $i->report_checklist_id){
+
+                        $result[$r]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/final_update/".$i->image_path.$i->image_name);
                         }
                     }
                 }                 
@@ -217,6 +226,7 @@ class Report_model extends CI_Model {
             //get all report images
             $result->report_images = $this->db->where('report_id',$id)->get('report_images')->result();
             $result->update_images = $this->db->where('report_id',$id)->get('report_update_images')->result();
+            $result->final_images = $this->db->where('report_id',$id)->get('report_final_images')->result();
 
 
             foreach($result->report_checklist as $key => $row){
@@ -234,7 +244,16 @@ class Report_model extends CI_Model {
                         $result->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
                         }
                     }
-                }                
+                }           
+
+                if($row->final_update_ischeck != ''){
+                    foreach ($result->final_images as $u => $i) {
+                        if($row->id == $i->report_checklist_id){
+
+                        $result->report_checklist[$key]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/final_update/".$i->image_path.$i->image_name);
+                        }
+                    }
+                }
             }
             $result->status = report_status($result->status);
             $result->created = convert_timezone($result->created,true);
@@ -545,27 +564,36 @@ class Report_model extends CI_Model {
             $result[$r]->report_checklist = $this->db->where("rc.report_id", $l->report_id)->get("report_checklist rc")->result();
 
             //get all report images
-            $result[$r]->report_images = $this->db->where('report_id',$l->report_id)->get('report_images')->result();
-            $result[$r]->update_images = $this->db->where('report_id',$l->report_id)->get('report_update_images')->result();
+            $report_images = $this->db->where('report_id',$l->report_id)->get('report_images')->result();
+            $update_images = $this->db->where('report_id',$l->report_id)->get('report_update_images')->result();
+            $final_images = $this->db->where('report_id',$l->report_id)->get('report_final_images')->result();
 
 
             foreach($result[$r]->report_checklist as $key => $row){
 
-                foreach($result[$r]->report_images as $k => $z){
+                foreach($report_images as $k => $z){
                     if($row->id == $z->report_checklist_id){
 
                         $result[$r]->report_checklist[$key]->fullpath[] = ($z->image_name == '') ? '' : $this->config->site_url("public/upload/report/".$z->image_path.$z->image_name);
                     }
                 }
                 if($row->updated_ischeck != ''){
-                    if($result[$r]->update_images){
-                        foreach ($result[$r]->update_images as $u => $i) {
+                    if($update_images){
+                        foreach ($update_images as $u => $i) {
                             if($row->id == $i->report_checklist_id){
 
                             $result[$r]->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
                             }
                         }
                     }                    
+                }
+                if($row->final_update_ischeck != ''){
+                    foreach ($final_images as $u => $i) {
+                        if($row->id == $i->report_checklist_id){
+
+                        $result->report_checklist[$key]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/final_update/".$i->image_path.$i->image_name);
+                        }
+                    }
                 }                
             }           
         }

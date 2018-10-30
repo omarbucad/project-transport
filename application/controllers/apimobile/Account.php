@@ -21,87 +21,92 @@ class Account extends CI_Controller {
 	}
 	public function register(){
 		$data = $this->post;
-
-		$this->db->trans_start();
-		$this->db->insert("store_address",[	"street1" => "Street"]);
-
-		$address_id = $this->db->insert_id();
-
-
-		$this->db->insert("store",[
-			"store_name" => "Vehicle Checklist",
-			"address_id" => $address_id,
-			"created" => time()
-		]);
-
-		$store_id = $this->db->insert_id();
-
-		$this->db->insert("user",[
-			"display_name" => "Firstname Lastname",
-			"email_address" => $data->email,
-			"username" => $data->username,
-			"role" => "DRIVER",
-			"status" => 1,
-			"created" => time(),
-			"password" => md5($data->password),
-			"phone" => ($data->phone == '') ? NULL : $data->phone,
-			"store_id" => $store_id,
-			"deleted" => NULL
-		]);
-
-		$userid = $this->db->insert_id();
-
-		$this->db->insert("user_plan",[
-			"store_id" => $store_id,
-			"plan_id" => 1,
-			"plan_created" => time(),
-			"plan_expiration" => strtotime("+1 month", time()),
-			"billing_type" => "NA",
-			"who_updated" => $userid,
-			// "ip_address" => $data->ip_address,
-			"active" => 1,
-			"updated" => NULL
-		]);
-
-		if(isset($data->image)){
-			$img = $this->save_profile_image($userid);
-			$this->db->where("user_id",$userid);
-			$this->db->update("user",[
-				"image_path" => $img['image_path'],
-				"image_name" => $img['image_name']
-			]);
+		$exists = $this->db->select("username")->where("username",$data->username)->get("user")->num_rows();
+		if($exists > 0){
+			 echo json_encode(["status" => false , "message" => "Username already exists", "action" => "register"]);
 		}else{
-			$this->db->where("user_id",$userid);
-			$this->db->update("user",[
-				"image_path" => 'public/img/' ,
-				"image_name" => 'person-placeholder.jpg'
+			$this->db->trans_start();
+
+			$this->db->insert("store_address",[	"street1" => "Street"]);
+
+			$address_id = $this->db->insert_id();
+
+
+			$this->db->insert("store",[
+				"store_name" => "Vehicle Checklist",
+				"address_id" => $address_id,
+				"created" => time()
 			]);
-		}
 
-		if(isset($data->logo)){
-			$logo = $this->save_logo($store_id);
-			$this->db->where("store_id",$store_id);
-			$this->db->update("store",[
-				"logo_image_name" => $logo['logo_image_name'],
-				"logo_image_path" => $logo['logo_image_path']
+			$store_id = $this->db->insert_id();
+
+			$this->db->insert("user",[
+				"display_name" => "Firstname Lastname",
+				"email_address" => $data->email,
+				"username" => $data->username,
+				"role" => "DRIVER",
+				"status" => 1,
+				"created" => time(),
+				"password" => md5($data->password),
+				"phone" => ($data->phone == '') ? NULL : $data->phone,
+				"store_id" => $store_id,
+				"deleted" => NULL
 			]);
-		}else{
-			$this->db->where("store_id",$store_id);
-			$this->db->update("store",[
-				"logo_image_path" => 'public/img/',
-				"logo_image_name" => 'vehicle-checklist.png'
+
+			$userid = $this->db->insert_id();
+
+			$this->db->insert("user_plan",[
+				"store_id" => $store_id,
+				"plan_id" => 1,
+				"plan_created" => time(),
+				"plan_expiration" => strtotime("+1 month", time()),
+				"billing_type" => "NA",
+				"who_updated" => $userid,
+				// "ip_address" => $data->ip_address,
+				"active" => 1,
+				"updated" => NULL
 			]);
-		}
 
-		$this->login_trail($userid);
+			if(isset($data->image)){
+				$img = $this->save_profile_image($userid);
+				$this->db->where("user_id",$userid);
+				$this->db->update("user",[
+					"image_path" => $img['image_path'],
+					"image_name" => $img['image_name']
+				]);
+			}else{
+				$this->db->where("user_id",$userid);
+				$this->db->update("user",[
+					"image_path" => 'public/img/' ,
+					"image_name" => 'person-placeholder.jpg'
+				]);
+			}
 
-		$this->db->trans_complete();
+			if(isset($data->logo)){
+				$logo = $this->save_logo($store_id);
+				$this->db->where("store_id",$store_id);
+				$this->db->update("store",[
+					"logo_image_name" => $logo['logo_image_name'],
+					"logo_image_path" => $logo['logo_image_path']
+				]);
+			}else{
+				$this->db->where("store_id",$store_id);
+				$this->db->update("store",[
+					"logo_image_path" => 'public/img/',
+					"logo_image_name" => 'vehicle-checklist.png'
+				]);
+			}
 
-        if ($this->db->trans_status() === FALSE){
-            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
-        }else{
-            echo json_encode(["status" => true , "message" => "Successfully Registered", "action" => "register"]);
-        }
+			$this->login_trail($userid);
+
+			$this->db->trans_complete();
+
+	        if ($this->db->trans_status() === FALSE){
+	            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
+	        }else{
+	            echo json_encode(["status" => true , "message" => "Successfully Registered", "action" => "register"]);
+	        }
+		}		
 	}
 
 	// public function register_driver(){
