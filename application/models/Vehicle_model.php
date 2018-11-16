@@ -52,6 +52,21 @@ class Vehicle_model extends CI_Model {
             if($result[$key]->last_checked != ''){
                 $result[$key]->last_checked = convert_timezone($row->last_checked, true);
             }
+
+            switch ($result[$key]->type) {
+                case 'Van':
+                    $result[$key]->type_img = site_url("public/img/vehicles/van.png");
+                    break;
+                case 'Truck':
+                    $result[$key]->type_img = site_url("public/img/vehicles/truck2.png");
+                    break;
+                case 'Forklift':
+                    $result[$key]->type_img = site_url("public/img/vehicles/forklift.png");
+                    break;
+                case 'Bus':
+                    $result[$key]->type_img = site_url("public/img/vehicles/bus.png");
+                    break;
+            }
         }
         return $result;
     }

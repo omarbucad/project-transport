@@ -225,16 +225,21 @@ class Vehicle extends CI_Controller {
 				$this->db->where("vu.user_id", $data->user_id);
 				$this->db->join("vehicle_type vt","vt.vehicle_type_id = vu.vehicle_type");
 				$result = $this->db->order_by("vu.date_used","DESC")->get("vehicles_used vu")->result();
-
-				foreach ($result as $key => $value) {
-					$result[$key]->date_used = convert_timezone($value->date_used, true);
-				}
+				
 				$this->db->trans_complete();
 
 				if ($this->db->trans_status() === FALSE){
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "view_vehicles_used"]);
 				}else{
-					echo json_encode(["status" => true , "data" => $result, "action" => "view_vehicles_used"]);
+					if(!empty($result)){
+						foreach ($result as $key => $value) {
+							$result[$key]->date_used = convert_timezone($value->date_used, true);
+						}
+						echo json_encode(["status" => true , "data" => $result, "action" => "view_vehicles_used"]);
+					}else{
+						echo json_encode(["status" => false , "message" => "No Vehicles Used", "action" => "view_vehicles_used"]);
+					}
+					
 				}
 			}else{
 				echo json_encode(["status" => false , "message" => "No passed data", "action" => "view_vehicles_used"]);

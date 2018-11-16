@@ -111,6 +111,21 @@
 								</td>
 								
 								<td style="width: 100px; padding-right: 5px; background-color: <?php echo (($key+1) % 2 != 0) ? "#DCDBDB": "#fff;";?>">
+									<?php if(isset($checklist->final_update_ischeck)) : ?>
+										<?php if($checklist->final_update_ischeck == 1) : ?>
+			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php elseif($checklist->final_update_ischeck == 2) : ?>
+			                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php elseif($checklist->final_update_ischeck == 3) : ?>
+			                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php else : ?>
+			                                <strong style="color: #04B04F;"><?php echo "Good "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php endif; ?>
+
+			                            <?php if($checklist->final_update_value != '') : ?>
+			                            	<br><span>Note: <?php echo $checklist->final_update_value; ?></span><br>
+			                        	<?php endif; ?>
+									<?php endif;?>
 									<?php if(isset($checklist->updated_ischeck)) : ?>
 			                            <?php if($checklist->updated_ischeck == 1) : ?>
 			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
@@ -160,6 +175,21 @@
 									<?php echo ($checklist->checklist_value != '') ? "<br><span>Note: ".$checklist->checklist_value."</span>" : ""; ?>
 								</td>
 								<td style="width: 100px; padding-right: 5px; background-color: <?php echo (($key+1) % 2 != 0) ? "#DCDBDB": "#fff;";?>">
+									<?php if(isset($checklist->final_update_ischeck)) : ?>
+										<?php if($checklist->final_update_ischeck == 1) : ?>
+			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php elseif($checklist->final_update_ischeck == 2) : ?>
+			                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php elseif($checklist->final_update_ischeck == 3) : ?>
+			                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php else : ?>
+			                                <strong style="color: #04B04F;"><?php echo "Good "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                            <?php endif; ?>
+
+			                            <?php if($checklist->final_update_value != '') : ?>
+			                            	<br><span>Note: <?php echo $checklist->final_update_value; ?></span><br>
+			                        	<?php endif; ?>
+									<?php endif;?>
 									<?php if(isset($checklist->updated_ischeck)) : ?>
 			                           <?php if($checklist->updated_ischeck == 1) : ?>
 			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
@@ -216,13 +246,13 @@
 					<td style="width: 208px; padding-right: 10px; background-color: <?php echo (($key+1) % 2 != 0) ? "#DCDBDB": "#fff;";?>">
 						<?php if(isset($checklist->final_update_ischeck)) : ?>
 							<?php if($checklist->final_update_ischeck == 1) : ?>
-                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?>
+                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
                             <?php elseif($checklist->final_update_ischeck == 2) : ?>
-                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->final_update_timestamp;?>
+                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
                             <?php elseif($checklist->final_update_ischeck == 3) : ?>
-                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->final_update_timestamp;?>
+                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
                             <?php else : ?>
-                                <strong style="color: #04B04F;"><?php echo "Good "; ?></strong> <?php echo $checklist->final_update_timestamp;?>
+                                <strong style="color: #04B04F;"><?php echo "Good "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
                             <?php endif; ?>
 
                             <?php if($checklist->final_update_value != '') : ?>

@@ -22,8 +22,14 @@ class Account extends CI_Controller {
 	public function register(){
 		$data = $this->post;
 		$exists = $this->db->select("username")->where("username",$data->username)->get("user")->num_rows();
+		$emailexists = $this->db->select("email_address")->where("email_address",$data->email)->get("user")->num_rows();
+		if($emailexists > 0){
+			 echo json_encode(["status" => false , "message" => "Email already exists", "action" => "register", "err_code" => "2001"]);
+			 return false;
+		}
 		if($exists > 0){
-			 echo json_encode(["status" => false , "message" => "Username already exists", "action" => "register"]);
+			 echo json_encode(["status" => false , "message" => "Username already exists", "action" => "register",  "err_code" => "2002"]);
+			 return false;
 		}else{
 			$this->db->trans_start();
 
@@ -185,46 +191,57 @@ class Account extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 			$data = $this->post;
+				$exists = $this->db->select("username")->where("username",$data->username)->get("user")->num_rows();
+				$emailexists = $this->db->select("email_address")->where("email_address",$data->email)->get("user")->num_rows();
+				if($emailexists > 0){
+					echo json_encode(["status" => false , "message" => "Email already exists", "action" => "add","err_code" => "2001"]);
+					return false;
+				}
+				if($exists > 0){
+					 echo json_encode(["status" => false , "message" => "Username already exists", "action" => "add", "err_code" => "2002"]);
+					 return false;
+				}else{
 
-			$this->db->trans_start();
+					$this->db->trans_start();
 
-			$this->db->insert("user",[
-				"display_name" => $data->display_name,
-				"email_address" => $data->email,
-				"username" => $data->username,
-				"role" => $data->role,
-				"status" => 1,
-				"created" => time(),
-				"password" => md5($data->password),
-				"phone" => ($data->phone == '') ? NULL : $data->phone,
-				"store_id" => $data->store_id,
-				"deleted" => NULL
-			]);
+					$this->db->insert("user",[
+						"display_name" => $data->display_name,
+						"email_address" => $data->email,
+						"username" => $data->username,
+						"role" => $data->role,
+						"status" => 1,
+						"created" => time(),
+						"password" => md5($data->password),
+						"phone" => ($data->phone == '') ? NULL : $data->phone,
+						"store_id" => $data->store_id,
+						"deleted" => NULL
+					]);
 
-			$user_id = $this->db->insert_id();
+					$user_id = $this->db->insert_id();
 
-			if(isset($data->image)){
-				$img = $this->save_profile_image($user_id);
-				$this->db->where("user_id",$user_id);
-				$this->db->update("user",[
-					"image_path" => $img['image_path'],
-					"image_name" => $img['image_name']
-				]);
-			}else{
-				$this->db->where("user_id",$user_id);
-				$this->db->update("user",[
-					"image_path" => 'public/img/' ,
-					"image_name" => 'person-placeholder.jpg'
-				]);
-			}
+					if(isset($data->image)){
+						$img = $this->save_profile_image($user_id);
+						$this->db->where("user_id",$user_id);
+						$this->db->update("user",[
+							"image_path" => $img['image_path'],
+							"image_name" => $img['image_name']
+						]);
+					}else{
+						$this->db->where("user_id",$user_id);
+						$this->db->update("user",[
+							"image_path" => 'public/img/' ,
+							"image_name" => 'person-placeholder.jpg'
+						]);
+					}
 
-			$this->db->trans_complete();
+					$this->db->trans_complete();
 
-	        if ($this->db->trans_status() === FALSE){
-	            echo json_encode(["status" => false , "message" => "Failed", "action" => "add"]);
-	        }else{
-	            echo json_encode(["status" => true , "message" => "Added Successfully", "action" => "add"]);
-	        }
+			        if ($this->db->trans_status() === FALSE){
+			            echo json_encode(["status" => false , "message" => "Failed", "action" => "add"]);
+			        }else{
+			            echo json_encode(["status" => true , "message" => "Added Successfully", "action" => "add"]);
+			        }
+			    }
 	    }else{
 	    	echo json_encode(["status" => true , "message" => "403: Access Forbidden", "action" => "add"]);
 	    }
@@ -241,8 +258,8 @@ class Account extends CI_Controller {
 			if(isset($data->password)){
 				$this->db->update("user",[
 					"display_name" => $data->display_name,
-					"email_address" => $data->email,
-					"username" => $data->username,
+					// "email_address" => $data->email,
+					// "username" => $data->username,
 					"role" => $data->role,
 					"status" => 1,
 					"password" => md5($data->password),
@@ -253,8 +270,8 @@ class Account extends CI_Controller {
 			}else{
 				$this->db->update("user",[
 					"display_name" => $data->display_name,
-					"email_address" => $data->email,
-					"username" => $data->username,
+					// "email_address" => $data->email,
+					// "username" => $data->username,
 					"role" => $data->role,
 					"phone" => ($data->phone == '') ? NULL : $data->phone,
 					"status" => 1,

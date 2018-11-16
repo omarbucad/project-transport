@@ -141,7 +141,7 @@ class Report_model extends CI_Model {
                     foreach ($final_images as $u => $i) {
                         if($row->id == $i->report_checklist_id){
 
-                        $result[$r]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/final_update/".$i->image_path.$i->image_name);
+                        $result[$r]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/finalupdate/".$i->image_path.$i->image_name);
                         }
                     }
                 }                 
@@ -224,21 +224,21 @@ class Report_model extends CI_Model {
             $result->report_checklist = $this->db->where("rc.report_id", $id)->get("report_checklist rc")->result();
 
             //get all report images
-            $result->report_images = $this->db->where('report_id',$id)->get('report_images')->result();
-            $result->update_images = $this->db->where('report_id',$id)->get('report_update_images')->result();
-            $result->final_images = $this->db->where('report_id',$id)->get('report_final_images')->result();
+            $report_images = $this->db->where('report_id',$id)->get('report_images')->result();
+            $update_images = $this->db->where('report_id',$id)->get('report_update_images')->result();
+            $final_images = $this->db->where('report_id',$id)->get('report_final_images')->result();
 
 
             foreach($result->report_checklist as $key => $row){
 
-                foreach($result->report_images as $k => $r){
+                foreach($report_images as $k => $r){
                     if($row->id == $r->report_checklist_id){
 
                         $result->report_checklist[$key]->fullpath[] = ($r->image_name == '') ? '' : $this->config->site_url("public/upload/report/".$r->image_path.$r->image_name);
                     }
                 }
                 if($row->updated_ischeck != ''){
-                    foreach ($result->update_images as $u => $i) {
+                    foreach ($update_images as $u => $i) {
                         if($row->id == $i->report_checklist_id){
 
                         $result->report_checklist[$key]->update_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/update/".$i->image_path.$i->image_name);
@@ -247,10 +247,10 @@ class Report_model extends CI_Model {
                 }           
 
                 if($row->final_update_ischeck != ''){
-                    foreach ($result->final_images as $u => $i) {
+                    foreach ($final_images as $u => $i) {
                         if($row->id == $i->report_checklist_id){
 
-                        $result->report_checklist[$key]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/final_update/".$i->image_path.$i->image_name);
+                        $result->report_checklist[$key]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/finalupdate/".$i->image_path.$i->image_name);
                         }
                     }
                 }
@@ -258,7 +258,6 @@ class Report_model extends CI_Model {
             $result->status = report_status($result->status);
             $result->created = convert_timezone($result->created,true);
         }
-
         return $result;
     }
 
@@ -491,7 +490,7 @@ class Report_model extends CI_Model {
 
     }
 
-     public function get_reports_to_pdf(){
+    public function get_reports_to_pdf(){
         //print_r_die($this->input->post());
 
         $role = $this->data['session_data']->role;
@@ -503,7 +502,7 @@ class Report_model extends CI_Model {
             if($start == $today){
                  $this->db->where("r.created" , $start);
             }else{
-                $end   = strtotime(trim($date.' 23:59 + 2 days'));
+                $end   = strtotime(trim($date.' 23:59 + 6 days'));
 
                 $this->db->where("r.created >= " , $start);
                 $this->db->where("r.created <= " , $end);
@@ -591,10 +590,10 @@ class Report_model extends CI_Model {
                     foreach ($final_images as $u => $i) {
                         if($row->id == $i->report_checklist_id){
 
-                        $result->report_checklist[$key]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/final_update/".$i->image_path.$i->image_name);
+                        $result[$r]->report_checklist[$key]->final_img_fullpath[] = ($i->image_name == '') ? '' : $this->config->site_url("public/upload/report/finalupdate/".$i->image_path.$i->image_name);
                         }
                     }
-                }                
+                }      
             }           
         }
         

@@ -54,7 +54,7 @@
         <div class="container">
             <h2 class="text-center"><img class="app-logo" src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="100px" width="auto"><div class="color-white"><?php echo $application_name; ?></div></h2>
             <p class="text-center color-white app-description">Complete your defect checklist in minutes.</p>
-            <p class="text-center"><a class="btn btn-primary btn-lg app-btn text-uppercase" href="<?php echo site_url("welcome/register"); ?>" role="button">TRY PREMIUM FOR FREE</a></p>
+            <!-- <p class="text-center"><a class="btn btn-primary btn-lg app-btn text-uppercase" href="<?php //echo site_url("welcome/register"); ?>" role="button">TRY PREMIUM FOR FREE</a></p> -->
         </div>
     </div>
     <div class="container-fluid app-content-a">

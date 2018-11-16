@@ -102,13 +102,13 @@
                         
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
-                        <?php if($plan_type == "Basic" && (count($result) < $this->session->userdata('user')->no_accounts)) : ?>
+                        <!-- <?php if($plan_type == "Basic" && (count($result) < $this->session->userdata('user')->no_accounts)) : ?>
                             <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success btn-add">Add Vehicle</a>
                         <?php elseif($plan_type == "Standard" &&  $totalvehicle < $this->session->userdata('user')->no_accounts) : ?>
                             <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success ">Add Vehicle</a>
-                        <?php elseif($plan_type == "Trial" || $plan_type == "Premium") : ?>
+                        <?php elseif($plan_type == "Trial" || $plan_type == "Premium") : ?> -->
                             <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/add"); ?>" class="btn btn-success btn-add">Add Vehicle</a>
-                        <?php endif; ?>
+                        <!-- <?php endif; ?> -->
                     </div>
                 </div>
             </div>
@@ -192,7 +192,14 @@
                      <?php foreach($result as $row) : ?>
                         <tr class="customer-row" style="cursor: default;">
                             <td>
-                                <span><strong><?php echo $row->vehicle_registration_number; ?></strong><span></span></span>
+                                <div class="row">
+                                    <div class="col-xs-6 col-lg-3 no-margin-bottom" style="padding-right: 0;">
+                                        <img src="<?php echo $row->type_img;?>" class="img img-responsive thumbnail no-margin-bottom" style="height:50px; width:55px;">
+                                    </div>
+                                    <div class="col-xs-6 col-lg-9 no-margin-bottom" style="padding-top: 15px;">
+                                        <span><strong><?php echo $row->vehicle_registration_number; ?></strong><span></span></span>
+                                    </div>
+                                </div>
                             </td>
                             <td><span><?php echo $row->type;?></span></td>
                             <td><span><?php echo $row->availability;?></span></td>

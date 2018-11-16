@@ -86,4 +86,40 @@ class Login extends CI_Controller {
 				"action" 	=> "signin"
 		]);
 	}
+
+	public function forgot_password(){
+		$email = $this->post->email;
+
+		if($email){
+
+			$info = $this->db->select("email_address")->where("email_address", $email)->get("user")->num_rows();
+
+			if($info > 0){
+
+				$code = $this->hash->encrypt($email . "&time=".time());
+				$link = site_url("/login/change_password/".$code);	
+
+				$data['link'] = $link;
+
+				$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
+				$this->email->to($email);
+				$this->email->set_mailtype("html");
+				$this->email->subject('Vehicle Checklist - Password Reset');
+				$this->email->message($this->load->view('email/change_password_email', $data , true));
+
+				if($this->email->send()){
+
+					echo json_encode(["status" => false , "message" => "Change Password email sent", "action" => "forgot_password"]);
+				}else{
+					echo json_encode(["status" => false , "message" => "Sending email failed", "action" => "forgot_password"]);
+				}				
+
+			}else{
+
+				echo json_encode(["status" => false , "message" => "Email doesn't exist", "action" => "forgot_password"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "Email is required", "action" => "forgot_password"]);
+		}				
+	}
 }

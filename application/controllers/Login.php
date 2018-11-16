@@ -86,18 +86,20 @@ class Login extends MY_Controller {
 
 			if($info){
 
-					$code = $this->hash->encrypt($email);
-					$link = site_url("/login/change_password/".$code);					
+					$code = $this->hash->encrypt($email . "&time=".time());
+
+					$link = site_url("/login/change_password/".$code);	
 
 					$data['link'] = $link;
 
 					$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
 					$this->email->to($email);
 					$this->email->set_mailtype("html");
-					$this->email->subject('Transport - Password Reset');
+					$this->email->subject('Vehicle Checklist - Password Reset');
 					$this->email->message($this->load->view('email/change_password_email', $data , true));
 
 					$this->email->send();
+
 
 					$this->session->set_flashdata('status' , 'success');	
 					$this->session->set_flashdata('message' , 'Change Password Email Sent. Please check your email.');
@@ -118,7 +120,11 @@ class Login extends MY_Controller {
 	public function change_password($code){
 
 		if($code){
-			$email = $this->hash->decrypt($code);
+				$set = $this->hash->decrypt($code);
+				$splitted = explode("&time", $set);
+				$email = $splitted[0]; 
+			// 	print_r_die($new);
+			// $email = $this->hash->decrypt($code);
 
 			$this->form_validation->set_rules('password'		, 'Password'	    , 'trim|required|min_length[5]');
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[password]');

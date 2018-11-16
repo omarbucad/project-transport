@@ -2,7 +2,7 @@
     <div class="side-body padding-top">
 
         <div class="container">
-        	<h1>Manage Accounts</h1>
+        	<h1>Manage Employees</h1>
         </div>
         <div class="grey-bg">
             <div class="container ">
@@ -66,9 +66,9 @@
             <table class="table my-table">
                 <thead>
                     <tr>
-                        <th width="45%">Name</th>
-                        <th width="10%">Role</th>
-                        <th width="10%">Status</th>
+                        <th width="35%">Name</th>
+                        <th width="25%">Role</th>
+                        <th width="15%">Status</th>
                         <th width="25%"></th>
                     </tr>
                 </thead>

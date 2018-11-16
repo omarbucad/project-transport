@@ -20,7 +20,7 @@ class Accounts extends MY_Controller {
 		}
 		$this->data['role'] = $this->session->userdata('user')->role;
 
-		$this->data['page_name'] = "Vehicle Checklist Accounts";
+		$this->data['page_name'] = "Vehicle Checklist - Employees";
 		$this->data['main_page'] = "backend/page/users/view";
 
 		//PAGINATION

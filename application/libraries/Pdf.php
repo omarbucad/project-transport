@@ -104,6 +104,7 @@ class Pdf {
 		$this->html2pdf = new HTML2PDF('P','A4','en' , true , 'UTF-8' , $marges = array(10, 10, 10, 10));
 		$reports = array();
 		$reports = ["data" => $data];
+		
 
 
 		try{
