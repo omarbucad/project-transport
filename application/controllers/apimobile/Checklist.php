@@ -34,6 +34,35 @@ class Checklist extends CI_Controller {
 		
 	}
 
+	public function get_checklists_by_type(){
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+
+			$types = $this->db->select("vehicle_type_id, type")->where("deleted IS NULL")->get("vehicle_type")->result();
+
+			foreach ($types as $key => $value) {
+				$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id");
+
+				$this->db->where("c.vehicle_type_id",$value->vehicle_type_id);
+				$types[$key]->checklist = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->row();
+
+				$types[$key]->checklist->items = $this->db->select("id,checklist_id,item_name,item_position,help_text")->where("checklist_id" , $types[$key]->checklist->checklist_id)->where("DELETED IS NULL")->order_by("item_position" , "ASC")->get("checklist_items")->result();
+
+				foreach($types[$key]->checklist->items as $item => $v){
+					$this->db->where("deleted IS NULL");
+					$images = $this->db->select("image_path,image_name,help_image_path,help_image_name")->where("id",$v->id)->get("checklist_items")->row();
+					$types[$key]->checklist->items[$item]->image = ($images->image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->image_path."/250/250/".$images->image_name) : "";
+					$types[$key]->checklist->items[$item]->help_image  = ($images->help_image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->help_image_path."/250/250/".$images->help_image_name) : "";
+				}
+			}
+
+			echo json_encode(["status" => true , "data" => $types, "action" => "get_checklists_by_type"]);
+			
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_checklists_by_type"]);
+		}
+	}
+
 	public function get_checklist_by_type(){
 		
 		$allowed = validate_app_token($this->post->token);

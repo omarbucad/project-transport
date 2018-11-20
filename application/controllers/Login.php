@@ -85,33 +85,39 @@ class Login extends MY_Controller {
 			$info = $this->db->select("email_address")->where("email_address", $email)->get("user")->row();
 
 			if($info){
+				$time = time();
+				$code = $this->hash->encrypt($email . "&time=".$time);
 
-					$code = $this->hash->encrypt($email . "&time=".time());
+				$link = site_url("/login/change_password/".$code);	
 
-					$link = site_url("/login/change_password/".$code);	
+				$this->db->where("email_address",$email);
+				$this->db->update("user",[
+					"link" => $link,
+					"link_created" => $time
+				]);
 
-					$data['link'] = $link;
+				$data['link'] = $link;
 
-					$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
-					$this->email->to($email);
-					$this->email->set_mailtype("html");
-					$this->email->subject('Vehicle Checklist - Password Reset');
-					$this->email->message($this->load->view('email/change_password_email', $data , true));
+				$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+				$this->email->to($email);
+				$this->email->set_mailtype("html");
+				$this->email->subject('Password Reset');
+				$this->email->message($this->load->view('email/change_password_email', $data , true));
 
-					$this->email->send();
+				$this->email->send();
 
 
-					$this->session->set_flashdata('status' , 'success');	
-					$this->session->set_flashdata('message' , 'Change Password Email Sent. Please check your email.');
+				$this->session->set_flashdata('status' , 'success');	
+				$this->session->set_flashdata('message' , 'Change Password Email Sent. Please check your email.');
 
-					redirect('/login/forgot_password/?status=emailsent', 'refresh');
+				redirect('/login/forgot_password/?status=emailsent', 'refresh');
 
 			}else{
 
-					$this->session->set_flashdata('status' , 'error');	
-					$this->session->set_flashdata('message' , 'The email doesn\'t exist.');
+				$this->session->set_flashdata('status' , 'error');	
+				$this->session->set_flashdata('message' , 'The email doesn\'t exist.');
 
-					redirect('/login/forgot_password/?error=email_not_registered', 'refresh');
+				redirect('/login/forgot_password/?error=email_not_registered', 'refresh');
 			}
 
 		}
@@ -120,41 +126,71 @@ class Login extends MY_Controller {
 	public function change_password($code){
 
 		if($code){
-				$set = $this->hash->decrypt($code);
-				$splitted = explode("&time", $set);
-				$email = $splitted[0]; 
-			// 	print_r_die($new);
-			// $email = $this->hash->decrypt($code);
+			$set = $this->hash->decrypt($code);
+			$splitted = explode("&time=", $set);
+			$email = $splitted[0]; 
+			$created = $splitted[1];
 
-			$this->form_validation->set_rules('password'		, 'Password'	    , 'trim|required|min_length[5]');
-			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[password]');
+			if($created < (time() - (30*60))){
+				$this->session->set_flashdata('status' , 'error');	
+				$this->session->set_flashdata('message' , 'Expired Link. Please request a new Change Password link.');
 
-			if ($this->form_validation->run() == FALSE){ 
-				$this->data['code'] = $code;
-				$this->data['customer_email'] = $email;
-				$this->data['title_page'] = "Change Password";
-
-				$this->load->view('frontend/change_password' , $this->data);
-
+				redirect("/login/forgot_password/?error=expired_link", "refresh");
 			}else{
+				$this->form_validation->set_rules('password'		, 'Password'	    , 'trim|required|min_length[6]');
+				$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[password]');
 
-				$result = $this->db->select("email_address")->where("email_address" , $email)->get("user")->row();
+				if ($this->form_validation->run() == FALSE){ 
+					$this->data['code'] = $code;
+					$this->data['customer_email'] = $email;
+					$this->data['title_page'] = "Change Password";
 
-				if($result){
-					$this->db->where("email_address" , $result->email_address)->update("user" , [
-						"password" => md5($this->input->post("password"))
-					]);
-					$this->session->set_flashdata('status' , 'success');	
-					$this->session->set_flashdata('message' , 'Successfully Changed Password');
+					$this->load->view('frontend/change_password' , $this->data);
 
-					redirect("/login/change_password/$code?success=change_password", "refresh");
-				}			
+				}else{
+					$this->db->where("deleted IS NULL");
+					$result = $this->db->select("email_address")->where("email_address" , $email)->get("user")->row();
+
+					if($result){
+						$update = $this->db->where("email_address" , $result->email_address)->update("user" , [
+							"password" => md5($this->input->post("password"))
+						]);
+
+						if($update){
+							$data['email'] = $email;
+
+							$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+							$this->email->to($email);
+							$this->email->set_mailtype("html");
+							$this->email->subject('Password Updated');
+							$this->email->message($this->load->view('email/password_updated', $data, true));
+
+							$this->email->send();
+
+							$this->session->set_flashdata('status' , 'success');	
+							$this->session->set_flashdata('message' , 'Successfully Changed Password');
+
+							redirect("/login/change_password/".$code."?success=change_password", "refresh");
+						}else{
+							$this->session->set_flashdata('status' , 'error');	
+							$this->session->set_flashdata('message' , 'An error occurred. Please try again.');
+
+							redirect("/login/change_password/".$code."?error=change_password", "refresh");
+						}
+						
+					}else{
+						$this->session->set_flashdata('status' , 'error');	
+						$this->session->set_flashdata('message' , 'The email doesn\'t exist.');
+
+						redirect('/login/forgot_password/?error=email_not_registered', 'refresh');
+					}	
+				}					
 			}
 		}else{
 			$this->session->set_flashdata('status' , 'error');	
-			$this->session->set_flashdata('message' , 'Expired Link. Please Enter Your Email Address to Receive a Change Password Email');
+			$this->session->set_flashdata('message' , 'Invalid Link');
 
-			redirect("/login/forgot_password/?error=expired_link", "refresh");
+			redirect("/login/forgot_password/?error=invalid_link", "refresh");
 		}
 	}
 }

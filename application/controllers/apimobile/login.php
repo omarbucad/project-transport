@@ -90,26 +90,36 @@ class Login extends CI_Controller {
 	public function forgot_password(){
 		$email = $this->post->email;
 
+
 		if($email){
 
 			$info = $this->db->select("email_address")->where("email_address", $email)->get("user")->num_rows();
 
 			if($info > 0){
+				$time = time();
+				$code = $this->hash->encrypt($email . "&time=".$time);
 
-				$code = $this->hash->encrypt($email . "&time=".time());
-				$link = site_url("/login/change_password/".$code);	
+				$link = site_url("/login/change_password/".$code);
+
+				$this->db->where("email_address",$email);
+				$this->db->update("user",[
+					"link" => $link,
+					"link_created" => $time
+				]);
 
 				$data['link'] = $link;
+				$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+				$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
 
-				$this->email->from('no-reply@trackerteer.com', 'Trackerteer Inc');
+				$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
 				$this->email->to($email);
 				$this->email->set_mailtype("html");
-				$this->email->subject('Vehicle Checklist - Password Reset');
+				$this->email->subject('Password Reset');
 				$this->email->message($this->load->view('email/change_password_email', $data , true));
 
 				if($this->email->send()){
 
-					echo json_encode(["status" => false , "message" => "Change Password email sent", "action" => "forgot_password"]);
+					echo json_encode(["status" => true , "message" => "Change Password email sent", "action" => "forgot_password"]);
 				}else{
 					echo json_encode(["status" => false , "message" => "Sending email failed", "action" => "forgot_password"]);
 				}				

@@ -11,27 +11,21 @@
 					<td style="text-align: center;"><img src="https://www.trackerteer.com/vehiclechecklist/public/img/vehicle-checklist.png" style="height: 65px; margin-bottom: -5px;"><br> <span style="font-size: 10px;">Vehicle Checklist</span></td>
 				</tr>
 				<tr>
-					<td style="text-align: center;color:#252327"><h1 style="margin-top: 5px;margin-bottom: 0;"><strong>Reset your password</strong></h1></td>
+					<td style="text-align: center;color:#252327"><h1 style="margin-top: 5px;margin-bottom: 0;"><strong>Password updated!</strong></h1></td>
 				</tr>
 				<tr>
 					<td style="color:#252327;">
 						<p>Hello,</p>
-						<p>You told us you forgot your password. Let's reset your password so you can get back using the Vehicle Checklist App.</p>
+						<p>We've changed your password, as you asked. If you made this change, then we're all set.</p>
+						<p>If you did not make this change,<br>please <strong>reset your password</strong> to secure your account.</p>
+						<p>Either way, feel free to reach out with any questions you might have. We're here to help.</p>
 					</td>
 				</tr>
 				<tr>
 					<td style="text-align: center;">
-						<a href="<?php echo $link; ?>" style="border-radius: 20px; width: 100%; height: auto; background: #2196f3;display:inline-block; line-height:40px; text-align:center; color:#fff; text-decoration: none; margin-top: 20px;font-family: sans-serif;">RESET PASSWORD</a>
+						<p style="text-align:center; color:#252327;">- Vehicle Checklist Team</a>
 					</td>
-				</tr>
-				<tr><td style="margin-bottom: 20px;">&nbsp;</td></tr>
-				<tr>
-					<td style="color:#252327;">
-						<p>If you did not ask to reset your password, then you can just ignore this email; your password will not change.</p>
-					</td>
-				</tr>
-				<tr><td style="margin-bottom: 30px;">&nbsp;</td></tr>
-				
+				</tr>				
 			</table>
 		</div>
 		<div class="row" style="background-color: #252327; color:#929193;">
