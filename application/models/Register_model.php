@@ -89,10 +89,17 @@ class Register_model extends CI_Model {
         $this->db->join("plan p","p.plan_id = up.plan_id");
 
         if(is_array($user)){
-            $this->db->where("u.username" , $user['username']);
+
             $this->db->where("u.password" , md5($user['password']));
+            $this->db->group_start();
+            $this->db->where("u.username" , $user['username']);
+            $this->db->or_where("u.email_address", $user['username']);
+            $this->db->group_end();
         }else{
+            $this->db->group_start();
             $this->db->where("u.user_id" , $user);
+            $this->db->or_where("u.email_address", $user['username']);
+            $this->db->group_end();
         }
 
         $result = $this->db->where("up.active" , 1)->get("user u")->row();
