@@ -49,26 +49,15 @@
                 <div class="login-body row">
                     <div class="col-xs-12 col-lg-5 no-margin-bottom">
                         <div class="row">
-                            <div class="container-fluid">
-                                <h6><!-- <a href="#" class="new_in">New in <?php //echo $application_name; ?> ? <i class="fa fa-external-link" aria-hidden="true"></i> </a>--></h6>
+                            <div class="col-xs-12 col-lg-8 no-margin-bottom text-center" style="width: 100%;">
+                                <a href="#"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" style="width: 65%; margin-left: 15%;margin-top:10px"></a>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12 col-lg-8 col-lg-offset-2 no-margin-bottom">
-                                <a href="#"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive"   height="30px" width="auto"></a>
+                            <div class="container-fluid text-center">
+                                <h4 >Vehicle Checklist</h4>                                
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="container-fluid">
-                                <h4 class="text-center">Vehicle Checklist</h4>
-                            </div>
-                        </div>
-                       <!--  <div class="row">
-                            <div class="container-fluid">
-                                <h6><a href="#" class="new_in">Advanced user permissions</a></h6>
-                            </div>
-                        </div>
-                        <p class="help-block">Get even more control over what your employees can see and do in <?php echo $application_name; ?>.</p> -->
                     </div>
                     <div class="col-xs-12 col-lg-7 no-margin-bottom">
 
@@ -91,28 +80,23 @@
                                 <input type="hidden" name="<?php echo $csrf_token_name; ?>" value="<?php echo $csrf_hash; ?>">
 
                                 <div class="form-group">
-                                    <input type="text" name="username" class="form-control" placeholder="username">
+                                    <input type="text" name="username" class="form-control" placeholder="Username or Email Address">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" class="form-control" placeholder="password">
+                                    <input type="password" name="password" class="form-control" placeholder="Password">
                                 </div>
                                 <input type="submit" class="btn btn-primary btn-block" value="Login">
    
-                            </form>
-
-                       
-                        <div class="pull-right">
-                            <a href="<?php echo site_url("login/forgot_password"); ?>">Having trouble signing in?</a>
-                        </div>
+                            </form>                       
                     </div>
                     <div class="login-footer">
-                            <span class="text-right"><a href="<?php echo site_url("login/forgot_password"); ?>" class="color-white">Forgotten Password?</a></span>
+                        <span class="text-right"><a href="<?php echo site_url("login/forgot_password"); ?>" style="color:#333;margin-right:15px;">Forgot password?</a></span>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-offset-5 col-lg-7">
-                     <div style="color:white;font-size: 13px;margin-top: 10px;">Don’t have an account? <a href="<?php echo site_url("welcome/register"); ?>" style="color:white;margin-left: 10px;"><span style="padding:2px 0px;border-bottom:1px solid white;">Try <?php echo $application_name; ?> for free</span></a></div>
+                     <div style="color:white;font-size: 13px;margin-top: 10px;"><a href="#" style="color:white;margin-left: 10px;"><span style="padding:2px 0px;border-bottom:1px solid white;"></span></a></div>
                 </div>
             </div>
         </div>
