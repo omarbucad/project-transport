@@ -15,7 +15,6 @@ class Dashboard extends MY_Controller {
 		//1533440433
 		//1541387511 - report 730
 		//1538582400
-
 		$this->data['page_name'] = "Dashboard";
 		$this->data['main_page'] = "backend/page/dashboard/dashboard";
 		$this->data['drivers'] = $this->accounts->get_driver();
@@ -25,7 +24,6 @@ class Dashboard extends MY_Controller {
 		$this->data['reports_today'] = $this->report->get_today_reports();
 		$this->data['defects_under_maintenance'] = $this->report->defect_reports();
 		$this->data['fixed_today'] = $this->report->fixed_today_reports();
-
 		$this->load->view('backend/master' , $this->data);
 	}
 }

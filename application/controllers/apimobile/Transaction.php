@@ -19,6 +19,19 @@ class Transaction extends CI_Controller {
 
 		$this->post = (object)$this->input->post();
 	}
+
+	public function braintree_token(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+			$btoken = $this->braintree->create_client_token();
+
+			echo json_encode(["status" => true , "data" => $btoken, "action" => "braintree_token"]);
+		}else{
+	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "braintree_token"]);
+		}
+
+	}
 	
 	public function update_subscription(){
 

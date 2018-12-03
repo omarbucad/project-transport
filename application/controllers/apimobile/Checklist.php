@@ -301,6 +301,7 @@ class Checklist extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 			$data = (object)$this->input->post();	
+			
 			$data = json_decode($data);
 
 			foreach ($data as $key => $value) {
@@ -313,7 +314,7 @@ class Checklist extends CI_Controller {
 
 					//Create report
 					if($user->role == "MECHANIC"){
-						$checklist_data = $this->db->select("reminder_every")->where("checklist_id" , $value->checklist_type)->get("checklist")->row();
+						$checklist_data = $this->db->select("reminder_every")->where("checklist_id" , $value->checklist_id)->get("checklist")->row();
 						$remind_in = remind_in($checklist_data->reminder_every);
 
 						//then update all the report of the vehicle into remind done
@@ -331,7 +332,7 @@ class Checklist extends CI_Controller {
 						"checklist_id"					=> $value->checklist_id,
 						"start_mileage"					=> $value->start_mileage ,
 						"end_mileage"					=> $value->end_mileage ,
-						"report_notes"					=> (isset($value->note)) ? $value->note : NULL ,
+						"report_notes"					=> (isset($value->report_notes)) ? $value->report_notes : NULL ,
 						"created"						=> $value->created,
 						"remind_in"						=> $remind_in,
 						"remind_done"					=> false
@@ -416,7 +417,7 @@ class Checklist extends CI_Controller {
 					$this->db->insert("report_status" , [
 						"report_id"			=> $report_id ,
 						"status"			=> $finalstat,
-						"notes"				=> $value->notes ,
+						"notes"				=> $value->report_notes ,
 						"user_id"			=> $user->user_id ,
 						"created"			=> $value->created,
 						"start_longitude"	=> $value->start_longitude,
@@ -442,7 +443,7 @@ class Checklist extends CI_Controller {
 						"vehicle_registration_number" => $value->vehicle_registration_number,
 						"trailer_number" => ($value->trailer_number != '') ? $value->trailer_number : NULL,
 						"vehicle_type" => $value->vehicle_type_id,
-						"date_used" => $value->date_used
+						"date_used" => $value->created
 					]);
 
 					if($value->trailer_number == ''){
@@ -475,11 +476,11 @@ class Checklist extends CI_Controller {
 							"pdf_path"			=> $pdf['path'],
 							"pdf_file" 			=> $pdf['filename']
 						]);
-			           
-			            echo json_encode(["status" => true , "message" => "Successfully Submitted","action" => "save_offline_checklist"]);
 			        }
 			    }
-			}	
+			}
+      
+			echo json_encode(["status" => true , "message" => "Successfully Submitted Offline Reports","action" => "save_offline_checklist"]);	
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "save_offline_checklist"]);
 		}
