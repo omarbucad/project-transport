@@ -71,7 +71,7 @@ class Report_model extends CI_Model {
             }
             $result[$r]->status = report_status($l->status);
             $result[$r]->raw_status = report_status($l->status,true);
-            $result[$r]->created = convert_timezone($l->created,true);
+            $result[$r]->created = convert_timezone($l->created,true, false);
 
             if($result[$r]->logo_image_path == 'public/img/'){
                 $result[$r]->company_logo = $this->config->site_url($result[$r]->logo_image_path.$result[$r]->logo_image_name);
@@ -256,7 +256,7 @@ class Report_model extends CI_Model {
                 }
             }
             $result->status = report_status($result->status);
-            $result->created = convert_timezone($result->created,true);
+            $result->created = convert_timezone($result->created,true,false);
         }
         return $result;
     }

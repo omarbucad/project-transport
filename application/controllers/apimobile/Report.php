@@ -47,6 +47,7 @@ class Report extends CI_Controller {
 
 
 			$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
+
 			if($result){
 				foreach($result as $key => $row){
 
@@ -66,7 +67,7 @@ class Report extends CI_Controller {
 		                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }
 					
-					$result[$key]->created   = convert_timezone($row->created , true );
+					$result[$key]->created   = convert_timezone($row->created , true, false );
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 
@@ -119,14 +120,15 @@ class Report extends CI_Controller {
 					$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
 					$this->db->join("user u" , "u.user_id = rs.user_id");
 					$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
-
+					
 					foreach($status as $k => $r){
 						$status[$k]->status = report_type($r->status );
 						$status[$k]->created   = convert_timezone($r->created , true);
 						$status[$k]->signature = $this->config->site_url("public/upload/signature/".$r->signature);
 					}
-					$result[$key]->signature = $status[0]->signature;
+
 					$result[$key]->status_list = $status;
+					$result[$key]->signature = $status[0]->signature;
 				}
 				echo json_encode(["status" => true, "data" => $result, "action" => "get_report"]);
 			}else{

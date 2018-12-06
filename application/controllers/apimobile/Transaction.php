@@ -20,17 +20,84 @@ class Transaction extends CI_Controller {
 		$this->post = (object)$this->input->post();
 	}
 
+	public function getPlans(){
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			$result = $this->braintree_lib->getAllPlan();
+			if($result){
+				echo json_encode(["status" => true , "data" => $result, "action" => "getPlans"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "getPlans"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "getPlans"]);
+		}
+	}
+
 	public function braintree_token(){
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
-			$btoken = $this->braintree->create_client_token();
+			$btoken = $this->braintree_lib->create_client_token();
 
 			echo json_encode(["status" => true , "data" => $btoken, "action" => "braintree_token"]);
 		}else{
 	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "braintree_token"]);
 		}
 
+	}
+
+	public function create_subscription_token(){
+		//print_r_die($this->post);
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$result = $this->braintree_lib->create_subscription_token($this->post);
+			if($result){
+				echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription"]);
+			}
+			
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription"]);
+		}
+	}
+
+	public function create_subscription_nonce(){
+		//print_r_die($this->post);
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$result = $this->braintree_lib->create_subscription_nonce($this->post);
+			if($result){
+				echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription"]);
+			}
+			
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription"]);
+		}
+	}
+
+	public function create_customerWithPayment(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$result = $this->braintree_lib->create_customerWithPayment($this->post);
+			if($result){
+				
+				echo json_encode(["status" => true , "data" => $result, "action" => "create_customerWithPayment"]);
+			}else{
+				echo json_encode(["status" => false , "error" => $result, "action" => "create_customerWithPayment"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_customerWithPayment"]);
+		}
 	}
 	
 	public function update_subscription(){

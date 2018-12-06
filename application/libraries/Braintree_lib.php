@@ -54,9 +54,102 @@ class Braintree_lib extends Braintree{
 		Braintree_Configuration::privateKey($braintree['braintree_private_key']);
     }
 
+    function getAllPlan(){
+        $plans = Braintree_Plan::all();
+
+        return $plans;
+    }
+
     // This function simply creates a client token for the javascript sdk
     function create_client_token(){
     	$clientToken = Braintree_ClientToken::generate();
     	return $clientToken;
+    }
+
+    // only create  customer
+    function create_customer($data){
+        if($data){
+            $result = Braintree_Customer::create([
+                'firstName' => $data->firstname,
+                'lastName' => $data->lastname,
+                'company' => $data->company,
+                'email' => $data->email,
+                'phone' => $data->phone,
+                'fax' => '',
+                'website' => ''
+            ]);
+
+            $result->success;
+            # true
+
+            $result->customer->id;
+            # Generated customer id
+        }else{
+
+        }        
+    }
+
+    // create customer with payment method
+
+    function create_customerWithPayment($data){
+        $result = Braintree_Customer::create([
+            'firstName' => $data->firstName,
+            'lastName' => $data->lastName,
+            'company' => $data->company,
+            'email' => $data->email,
+            'phone' => $data->phone,
+            'paymentMethodNonce' => $data->paymentMethodNonce
+        ]);
+        if ($result->success) {
+            // echo($result->customer->id);
+            // echo($result->customer->paymentMethods[0]->token);
+            // $subscription = [
+            //     "paymentMethodToken" => $result->customer->paymentMethods[0]->token,
+            //     "planId" => $data->planId
+            // ];
+            // $subscription = (object)$subscription;
+            // $this->create_subscription($subscription);
+            return $result;
+
+        } else {
+            $error = "";
+            foreach($result->errors->deepAll() AS $error) {
+                $error .= $error->code . ": " . $error->message . "\n";
+                //echo($error->code . ": " . $error->message . "\n");
+            }
+            return $error;
+        }
+    }
+
+    function create_subscription_token($data){
+        $result = Braintree_Subscription::create([
+          'paymentMethodToken' => $data->paymentMethodToken,
+          'planId' => $data->planId
+        ]);
+
+        return $result;
+    }
+
+    function create_subscription_nonce($data){
+        $result = Braintree_Subscription::create([
+          'paymentMethodNonce' => $data->paymentMethodNonce,
+          'planId' => $data->planId
+        ]);
+
+        return $result;
+    }
+
+    function cancel_subscription($subscription_id){
+        $result = Braintree_Subscription::cancel($subscription_id);
+    }
+
+
+    function update_subscription($data){
+        $result = Braintree_Subscription::update($data->subscription_id, [
+            'id' => $data->id,
+            'paymentMethodToken' => $data->newPaymentMethodToken,
+            'planId' => $data->planId,
+            'merchantAccountId' => $data->merchantAccountId
+        ]);
     }
 }

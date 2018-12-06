@@ -205,7 +205,6 @@ if ( ! function_exists('convert_timezone'))
             $tz = new DateTimeZone($timezone);
             $datetime = new DateTime($triggerOn);
             $datetime->setTimezone($tz);
-
             return $datetime->format( $date_format );
         }else{
             if($with_hours){
