@@ -311,8 +311,8 @@ class Checklist extends CI_Controller {
 				if($data){
 					$remind_in = NULL;
 					$this->db->trans_start();
-					$_isDefect = false;
-					$_isUpdated = false;
+					$defect = 0;
+					$fixed = 0;
 
 					//Create report
 					if($value->role == "MECHANIC"){
@@ -384,28 +384,94 @@ class Checklist extends CI_Controller {
 							}							
 						}
 
+						// switch ($item->checkbox) {
+
+						// 	case 0:
+						// 		# code...
+						// 		break;
+						// 	case 1:
+						// 		$_isDefect = true;
+
+						// 		if($item->update_check == 1){
+						// 			$_isDefect = true;
+						// 			if($item->final_update_check == 1){
+						// 				//$_isUpdated = true;
+						// 				$_isDefect = true;
+						// 			}
+						// 		}else if($item->update_check == 0){
+						// 			$_isUpdated = true;
+						// 		}else{
+						// 			$_isUpdated = true;
+						// 		}
+
+						// 		break;
+						// 	case 2:
+						// 		# code...
+						// 		break;
+						// 	case 3:
+						// 		# code...
+						// 		break;
+						// }
+
 						if($item->checkbox == 1){
-							$_isDefect = true;
+							$defect++;
+						}
+						if($item->checkbox == 2){
+							if($item->update_check == 1){
+								$defect++;
+								if($item->final_update_check == 0){
+									$fixed++;
+								}
+							}
+							if($item->update_check == 0){
+								if($item->final_update_check == 1){
+									$defect++;
+								}
+							}
+						}
+
+						if($item->update_check == 0){
+							$fixed++;
+							if($item->final_update_check == 1){
+								$defect++;
+							}
 						}
 
 						if($item->update_check == 1){
-							$_isUpdated = true;
+							$defect++;
+							if($item->final_update_check == 0){
+								$fixed++;
+							}
 						}
 
-						if($item->final_update_check == 1){
-							$_isUpdated = true;
+						if($item->checkbox == 0 && $item->update_check == 2){
+							if($item->final_update_check == 1){
+								$defect++;
+							}
 						}
+
+						
+
+						
 					}
 
-					$finalstat = '';
-					if($_isDefect == true && $_isUpdated == true){
-						$finalstat = 2;
-					}else if($_isDefect == true && $_isUpdated == false){
-						$finalstat = 1;
+					// $finalstat = '';
+					// if($_isDefect == true && $_isUpdated == true){
+					// 	$finalstat = 2;
+					// }else if($_isDefect == true && $_isUpdated == false){
+					// 	$finalstat = 1;
+					// }else{
+					// 	$finalstat = 0;
+					// }
+					if($defect != 0 && $fixed != 0){
+						if($defect > $fixed){
+							$finalstat = 1;
+						}else{
+							$finalstat = 2;
+						}
 					}else{
 						$finalstat = 0;
 					}
-
 					//Create status
 					$this->db->insert("report_status" , [
 						"report_id"			=> $report_id ,
