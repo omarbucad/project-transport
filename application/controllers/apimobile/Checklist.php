@@ -382,7 +382,9 @@ class Checklist extends CI_Controller {
 							if(!empty($item->final_update_images)){
 								$this->save_final_image($report_id , $report_checklist_id , $item->final_update_images);
 							}							
-						}if($item->checklist_ischeck == 1){
+						}
+
+						if($item->checkbox == 1){
 							$_isDefect = true;
 						}
 
