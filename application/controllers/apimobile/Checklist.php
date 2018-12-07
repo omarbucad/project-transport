@@ -311,6 +311,8 @@ class Checklist extends CI_Controller {
 				if($data){
 					$remind_in = NULL;
 					$this->db->trans_start();
+					$_isDefect = false;
+					$_isUpdated = false;
 
 					//Create report
 					if($value->role == "MECHANIC"){
@@ -380,13 +382,32 @@ class Checklist extends CI_Controller {
 							if(!empty($item->final_update_images)){
 								$this->save_final_image($report_id , $report_checklist_id , $item->final_update_images);
 							}							
+						}if($item->checklist_ischeck == 1){
+							$_isDefect = true;
 						}
+
+						if($item->update_check == 1){
+							$_isUpdated = true;
+						}
+
+						if($item->final_update_check == 1){
+							$_isUpdated = true;
+						}
+					}
+
+					$finalstat = '';
+					if($_isDefect == true && $_isUpdated == true){
+						$finalstat = 2;
+					}else if($_isDefect == true && $_isUpdated == false){
+						$finalstat = 1;
+					}else{
+						$finalstat = 0;
 					}
 
 					//Create status
 					$this->db->insert("report_status" , [
 						"report_id"			=> $report_id ,
-						"status"			=> ($this->finalStatus) ? 1 : 2,
+						"status"			=> $finalstat,
 						"notes"				=> $value->report_notes ,
 						"user_id"			=> $value->user_id ,
 						"created"			=> strtotime(convert_timezone(strtotime($value->created), true, false)),
@@ -462,46 +483,26 @@ class Checklist extends CI_Controller {
 		}
 	}
 
-	private function finalReportStatus(){
-		$data = (object)$this->input->post();
-		$checklist = json_decode($data->checklist);
-		$_isDefect = 0;
+	
+	// private function finalStatus(){
+	// 	$data = (object)$this->input->post();
+	// 	$checklist = json_decode($data->checklist);
+	// 	$_isDefect = false;
 
-		foreach($checklist as $row){
-			if($row->checkbox == 1){
-				$_isDefect = 1;
-			}
-			if($row->update_check == 1){
-				$_isDefect = 1;
-			}
-			if($row->final_update_check == 1){
-				$_isDefect = 1;
-			}
-		}
+	// 	foreach($checklist as $row){
+	// 		if($row->checkbox == 1){
+	// 			$_isDefect = true;
+	// 		}
+	// 		if($row->update_check == 1){
+	// 			$_isDefect = true;
+	// 		}
+	// 		if($row->final_update_check == 1){
+	// 			$_isDefect = true;
+	// 		}
+	// 	}
 
-		return $_isDefect;
-	}
-
-
-	private function finalStatus(){
-		$data = (object)$this->input->post();
-		$checklist = json_decode($data->checklist);
-		$_isDefect = false;
-
-		foreach($checklist as $row){
-			if($row->checkbox == 1){
-				$_isDefect = true;
-			}
-			if($row->update_check == 1){
-				$_isDefect = true;
-			}
-			if($row->final_update_check == 1){
-				$_isDefect = true;
-			}
-		}
-
-		return $_isDefect;
-	}
+	// 	return $_isDefect;
+	// }
 
 	private function save_update_image($report_id , $report_checklist_id , $images){
 
