@@ -55,13 +55,13 @@ class Transaction extends CI_Controller {
 
 			$result = $this->braintree_lib->create_subscription_token($this->post);
 			if($result){
-				echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription"]);
+				echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_token"]);
 			}else{
-				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription"]);
+				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription_token"]);
 			}
 			
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription_token"]);
 		}
 	}
 
@@ -73,30 +73,80 @@ class Transaction extends CI_Controller {
 
 			$result = $this->braintree_lib->create_subscription_nonce($this->post);
 			if($result){
-				echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription"]);
+				echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_nonce"]);
 			}else{
-				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription"]);
+				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription_nonce"]);
 			}
 			
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription_nonce"]);
 		}
 	}
 
-	public function create_customerWithPayment(){
+	public function cancel_subscription(){
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
 
-			$result = $this->braintree_lib->create_customerWithPayment($this->post);
+			$result = $this->braintree_lib->cancel_subscription($this->post);
+			if($result){
+				echo json_encode(["status" => true , "data" => $result, "action" => "cancel_subscription"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "cancel_subscription"]);
+			}
+			
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "cancel_subscription"]);
+		}
+	}
+
+	public function get_active_subscription(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$result = $this->braintree_lib->get_active_subscription($this->post);
+			if($result){
+				echo json_encode(["status" => true , "data" => $result, "action" => "get_active_subscription"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "get_active_subscription"]);
+			}			
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_active_subscription"]);
+		}
+	}
+
+	public function get_customer_data(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$result = $this->braintree_lib->get_customer_data($this->post);
 			if($result){
 				
-				echo json_encode(["status" => true , "data" => $result, "action" => "create_customerWithPayment"]);
+				echo json_encode(["status" => true , "data" => $result, "action" => "get_customer_data"]);
 			}else{
-				echo json_encode(["status" => false , "error" => $result, "action" => "create_customerWithPayment"]);
+				echo json_encode(["status" => false , "error" => $result, "action" => "get_customer_data"]);
 			}
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_customerWithPayment"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_customer_data"]);
+		}
+	}
+
+	public function create_payment_method(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$result = $this->braintree_lib->create_payment_method($this->post);
+			if($result){
+				
+				echo json_encode(["status" => true , "data" => $result, "action" => "createPaymentMethod"]);
+			}else{
+				echo json_encode(["status" => false , "error" => $result, "action" => "createPaymentMethod"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "createPaymentMethod"]);
 		}
 	}
 	

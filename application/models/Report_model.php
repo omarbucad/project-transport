@@ -258,6 +258,7 @@ class Report_model extends CI_Model {
             $result->status = report_status($result->status);
             $result->created = convert_timezone($result->created,true,false);
         }
+
         return $result;
     }
 

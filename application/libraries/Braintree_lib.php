@@ -89,26 +89,53 @@ class Braintree_lib extends Braintree{
         }        
     }
 
-    // create customer with payment method
+    // if not exist : create customer with payment method
+    // else : return customer data
+    function get_customer_data($data){
+        try{
+            $exist = Braintree_Customer::find($data->username);
+            
+            $customer = new stdClass;
+            $customer->customer = $exist;
+            return $customer;
+        } catch(Braintree_Exception_NotFound $e){
+            if($e){
+                 $result = Braintree_Customer::create([
+                    'id' => $data->username,
+                    'company' => $data->company,
+                    'email' => $data->email,
+                    'phone' => $data->phone,
+                    'paymentMethodNonce' => $data->paymentMethodNonce
+                ]);
+                if ($result->success) {
+                    // echo($result->customer->id);
+                    // echo($result->customer->paymentMethods[0]->token);
+                    // $subscription = [
+                    //     "paymentMethodToken" => $result->customer->paymentMethods[0]->token,
+                    //     "planId" => $data->planId
+                    // ];
+                    // $subscription = (object)$subscription;
+                    // $this->create_subscription($subscription);
+                    return $result;
 
-    function create_customerWithPayment($data){
-        $result = Braintree_Customer::create([
-            'firstName' => $data->firstName,
-            'lastName' => $data->lastName,
-            'company' => $data->company,
-            'email' => $data->email,
-            'phone' => $data->phone,
+                } else {
+                    $error = "";
+                    foreach($result->errors->deepAll() AS $error) {
+                        $error .= $error->code . ": " . $error->message . "\n";
+                        //echo($error->code . ": " . $error->message . "\n");
+                    }
+                    return $error;
+                }
+            }           
+        }
+    }
+
+    function create_payment_method($data){
+        $result = Braintree_PaymentMethod::create([
+            'id' => $data->username,
             'paymentMethodNonce' => $data->paymentMethodNonce
         ]);
         if ($result->success) {
-            // echo($result->customer->id);
-            // echo($result->customer->paymentMethods[0]->token);
-            // $subscription = [
-            //     "paymentMethodToken" => $result->customer->paymentMethods[0]->token,
-            //     "planId" => $data->planId
-            // ];
-            // $subscription = (object)$subscription;
-            // $this->create_subscription($subscription);
             return $result;
 
         } else {
@@ -119,7 +146,7 @@ class Braintree_lib extends Braintree{
             }
             return $error;
         }
-    }
+}
 
     function create_subscription_token($data){
         $result = Braintree_Subscription::create([
@@ -137,6 +164,23 @@ class Braintree_lib extends Braintree{
         ]);
 
         return $result;
+    }
+
+    function get_active_subscription($data){
+        $result = Braintree_Subscription::search([
+            Braintree_SubscriptionSearch::id()->is($data->username),
+            Braintree_SubscriptionSearch::status()->is("ACTIVE")
+        ]);
+        if($result){
+            return $result;
+        }else{
+            $error = "";
+            foreach($result->errors->deepAll() AS $error) {
+                $error .= $error->code . ": " . $error->message . "\n";
+                //echo($error->code . ": " . $error->message . "\n");
+            }
+            return $error;
+        }
     }
 
     function cancel_subscription($subscription_id){

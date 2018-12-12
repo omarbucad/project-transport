@@ -67,7 +67,7 @@ class Report extends CI_Controller {
 		                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }
 					
-					$result[$key]->created   = convert_timezone($row->created , true, false );
+					$result[$key]->created   = date("M d Y h:i:s A", $row->created);
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 
@@ -198,7 +198,7 @@ class Report extends CI_Controller {
 		                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }
 
-					$result[$key]->created   = convert_timezone($row->created , true );
+					$result[$key]->created   = convert_timezone($row->created , true , true);
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);			
 
@@ -398,7 +398,7 @@ class Report extends CI_Controller {
 		                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }
 
-					$result[$key]->created   = convert_timezone($row->created , true );
+					$result[$key]->created   = convert_timezone($row->created , true ,true);
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 
@@ -534,7 +534,7 @@ class Report extends CI_Controller {
 		                $result->company_logo = $this->config->site_url("public/upload/company/".$result->logo_image_path.$result->logo_image_name);
 		            }
 					
-					$result->created   = convert_timezone($result->created , true );
+					$result->created   = convert_timezone($result->created , true ,true);
 					$result->status_raw = report_type($result->status , true);
 					$result->status = report_type($result->status);
 
@@ -907,7 +907,7 @@ class Report extends CI_Controller {
 		                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }
 
-					$result[$key]->created   = convert_timezone($row->created , true );
+					$result[$key]->created   = convert_timezone($row->created , true ,true);
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 

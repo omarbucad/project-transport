@@ -9,6 +9,7 @@
     <link rel="icon" href="<?php echo site_url('public/img/vehicle-checklist.png') ?>" type="image/x-icon">
     <!-- Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
     <!-- CSS Libs -->
 
@@ -21,7 +22,40 @@
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/themes/flat-green.css?version='.$version) ?>">
 
 </head>
+<style type="text/css">
+    body{
+     font-family: 'Roboto' !important;
+    }
+    .container{
+        padding-right: 165px;
+        padding-left: 165px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .title{
+        color: #777;
+        font-size: 14px;
+    }
+    .landing-page .navbar .navbar-header .navbar-brand .icon{
+        width: 45px;
+    }
+    .jumbotron-content > img{
+        height: 215px;
+        width: auto;
+        position: absolute;
+        top: 57px;
+        right: -15px;
+    }
+    .app-title {
+        color: #FFF;
+        position: absolute;
+        top: 22%;
+        left: 44%;
+        /*transform: translate(-50%, -50%);*/
+        font-size: 40px;
+    }
 
+</style>
 <body class="flat-green landing-page">
     
     <nav class="navbar navbar-inverse navbar-fixed-top  navbar-affix" role="navigation" data-spy="affix" data-offset-top="60">
@@ -34,8 +68,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?php echo site_url("welcome"); ?>">
-                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="30px" width="auto"></div>
-                    <div class="title"><?php echo $application_name; ?></div>
+                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="25px" width="auto"></div>
+                    <div class="title" style="color:#777; "><?php echo $application_name; ?></div>
                 </a>
             </div>
             <div id="navbar" class="navbar-collapse collapse " aria-expanded="true">
@@ -52,244 +86,194 @@
 
     <div class="jumbotron app-header">
         <div class="container">
-            <h2 class="text-center"><img class="app-logo" src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="100px" width="auto"><div class="color-white"><?php echo $application_name; ?></div></h2>
-            <p class="text-center color-white app-description">Complete your defect checklist in minutes.</p>
+            <div class="jumbotron-content">
+                <img class="app-logo pull-right" src="<?php echo site_url('public/img/website-layout/transpo-04.png') ?>" >
+                <div class="color-white app-title"><?php echo $application_name; ?></div>
+                <p class="text-center color-white app-description">Manage your defect checklist hassle free.</p>
+            </div>
+
+            <div class="feature-box">
+                <div class="row">
+                    <div class="feature-items">
+                        <!-- <div class="col-lg-3 col-md-3 col-xs-6">
+                            <div class="row">
+                            </div>
+                        </div> -->
+                        <div class="col-lg-3 col-md-3 col-xs-6" style="margin-left: 25%;">
+                            <div class="row">
+                                <div class="col-lg-1 col-xs-2" style="padding: 0;">
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-07.png') ?>" >
+                                </div>  
+                                <div class="col-lg-11 col-xs-10 feature-description">
+                                    <span>Organized FIling</span>
+                                </div>                         
+                                 
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-1 col-xs-2"  style="padding: 0;">
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-06.png') ?>" >
+                                </div>  
+                                <div class="col-lg-11 col-xs-10 feature-description">
+                                    <span>Unlimited access to clouds</span>
+                                </div>   
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-6">
+                            <div class="row"> 
+                                <div class="col-lg-1 col-xs-2"  style="padding: 0;">
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-08.png') ?>" >
+                                </div>  
+                                <div class="col-lg-11 col-xs-10 feature-description">
+                                    <span>Timekeeping! know when your vehicles started working</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-1 col-xs-2"  style="padding: 0;">
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-09.png') ?>" >
+                                </div>  
+                                <div class="col-lg-11 col-xs-10 feature-description">
+                                    <span>Go Paperless</span>
+                                </div>                                 
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-6 no-padding-right">
+                            <div class="row">
+                                <div class="col-lg-1 col-xs-2"  style="padding: 0;">
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-10.png') ?>"  style="position: relative;left: -30px;">
+                                </div>  
+                                <div class="col-lg-11 col-xs-10 feature-description no-padding-right">
+                                    <span  style="position: relative;left: -30px;">Search by truck, drivers, dates; and defects</span>
+                                </div>                            
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+                
+            
+            
             <!-- <p class="text-center"><a class="btn btn-primary btn-lg app-btn text-uppercase" href="<?php //echo site_url("welcome/register"); ?>" role="button">TRY PREMIUM FOR FREE</a></p> -->
         </div>
     </div>
-    <div class="container-fluid app-content-a">
-        <div class="container">        
-            <div class="row text-center">
-                <div class="col-md-4 col-sm-6">
-                    <span class="fa-stack fa-lg fa-4x">
-                      <i class="fa fa-bolt fa-stack-1x"></i>
-                    </span>
-                    <h2>Go Digital</h2>
-                    <p>Increase efficiency in paperless checklist reports management.</p>
+    <div class="container-fluid app-content-a feature-1" style="padding-top: 0!important;padding-bottom: 0!important;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-6" style="padding-left: 48px;">
+                    <h2 class="featurrette-heading" style="font-weight: 300;color: #ffffffc7;padding-top:40px;">Vehicle Defect Report Management</h2>
+                    <p style="color: #ffffff8a;">Vehicle Checklist is a robust vehicle defect monitoring system with a fully traceable route from defect to report to repair available in your desktop and smartphone.</p>
                 </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-md-4 col-sm-6">
-                    <span class="fa-stack fa-lg fa-4x">
-                      <i class="fa fa-pencil fa-stack-1x"></i>
-                    </span>
-                    <h2>Signature Capture</h2>
-                    <p>Requires a driver signature at the end of report.</p>
-                </div>
-                <!-- /.col-lg-4 -->
-                <!-- <div class="col-md-3 col-sm-6">
-                    <span class="fa-stack fa-lg fa-4x">
-                      <i class="fa fa-cloud fa-stack-1x"></i>
-                    </span>
-                    <h2>Secured Data</h2>
-                    <p>Keep your data safe and secured with our cloud storage</p>
-                </div> -->
-                <!-- /.col-lg-4 -->
-                <div class="col-md-4 col-sm-6">
-                    <span class="fa-stack fa-lg fa-4x">
-                      <i class="fa fa-cloud fa-stack-1x"></i>
-                    </span>
-                    <h2>Secured Data</h2>
-                    <p>Keep your data safe and secured with our cloud storage</p>
+
+                <div class="col-md-6 col-sm-6" style="margin-bottom: 0;">
+                    <img class="feature-image" src="<?php echo site_url('public/img/website-layout/transpo-05.png') ?>">
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid app-content-b feature-1">
+    <div class="container-fluid app-content-b feature-1" >
         <div class="container">
-            <div class="row">
-                <div class="col-md-7 col-sm-6">
-                </div>
-                <div class="col-md-5 col-sm-6 text-right color-white">
-                    <h2 class="featurette-heading">Vehicle Defect Report Management</h2>
-                    <p class="lead">Vehicle Checklist is a robust vehicle defect monitoring system with a fully traceable route from defect to report to repair available in your desktop and smartphone.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid app-content-a">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="text-center app-content-header">Pricing</h2>
-                    <p class="text-center app-content-description"></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="row no-margin no-gap">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="pricing-table dark-blue">
-                                <div class="pt-header">
-                                    <div class="plan-pricing">
-                                        <div class="pricing">Free</div>
-                                        <div class="pricing-type">&nbsp;</div>
-                                    </div>
-                                </div>
-                                <div class="pt-body">
-                                    <h4><?php echo $user_plans[0]->title ." Plan"; ?></h4>
-                                    <ul class="plan-detail">
-                                        <li><?php echo $user_plans[0]->no_vehicle; ?> Vehicle/Trailer</li>
-                                        <li><?php echo $user_plans[0]->no_reports; ?> Reports / Month</li>
-                                        <li><?php echo $user_plans[0]->description; ?></li>
-                                        <li>No Export</li>
-                                    </ul>
-                                </div>
-                                <!-- <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary">Buy Now</button>
-                                </div> -->
-                            </div>
+            <div class="row">            
+                <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;">Subscription pricing</h2>
+                <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong>Upgrade your Plan now!</strong></h1>
+                <div class="col-md-4 col-sm-6" style="padding: 0;">
+                    <div class="card card-1">
+                      <div class="card-header card-1-header text-center">
+                          <h2><strong>Free Plan</strong></h2>
+                          <p>For fleets with 1-3 vehicles.</p>
+                          <p>with limited access.</p>
+                      </div>
+                      <div class="card-body card-1-body  text-center">
+                        <div class="card-1-arrow-selected"></div>
+                        <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 42px;">1 to 5 vehicles</h3>
+                        <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
+
+                        <h3 class="card-title">Free</h3>
+                        <div class="form-group text-center">
+                            <a href="#" class="btn btn-info">Proceed</a>
                         </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="pricing-table dark-blue">
-                                <div class="pt-header">
-                                    <div class="plan-pricing">
-                                        <div class="pricing"><?php echo "$".$user_plans[1]->plan_price; ?></div>
-                                        <div class="pricing-type">per month</div>
-                                    </div>
-                                </div>
-                                <div class="pt-body">
-                                    <h4><?php echo $user_plans[1]->title ." Plan"; ?></h4>
-                                    <ul class="plan-detail">
-                                        <li>Unlimited Vehicles & Trailers</li>
-                                        <li>Unlimited Reports</li>
-                                        <li><?php echo $user_plans[2]->description; ?></li>
-                                        <li>1 month Free Trial</li>
-                                    </ul>
-                                </div>
-<!--                                 <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary">Buy Now</button>
-                                    <div id="paypal-button-container"></div>
-<script src="https://www.paypalobjects.com/api/checkout.js"></script>
-<script>
-// Render the PayPal button
-paypal.Button.render({
-// Set your environment
-env: 'sandbox', // sandbox | production
-locale: 'en_US',
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">1 Driver</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">7 Reports Visible</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Mobile App Access</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Single Download Report</p>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6" style="padding: 0;">
+                    <div class="card card-2">
+                      <div class="card-header card-2-header text-center">
+                          <h2><strong>Premium Plan</strong></h2>
+                          <p>For fleets up to 250 vehicles.</p>
+                          <p style="margin-bottom: 10px;">Choose number of vehicles.</p>
+                      </div>
 
-// Specify the style of the button
-style: {
-  layout: 'horizontal',  // horizontal | vertical
-  size:   'small',    // medium | large | responsive
-  shape:  'pill',      // pill | rect
-  color:  'gold'       // gold | blue | silver | white | black
-},
+                      <div class="card-body card-2-body">                      
+                        <div class="card-2-arrow-selected"></div>
 
-// Specify allowed and disallowed funding sources
-//
-// Options:
-// - paypal.FUNDING.CARD
-// - paypal.FUNDING.CREDIT
-// - paypal.FUNDING.ELV
-funding: {
-  allowed: [
-    paypal.FUNDING.CARD,
-    paypal.FUNDING.CREDIT
-  ],
-  disallowed: []
-},
-
-// PayPal Client IDs - replace with your own
-// Create a PayPal app: https://developer.paypal.com/developer/applications/create
-client: {
-  sandbox: 'AZSn55ni7EDdn8QF6MwtylirO5YxaS6qTbcxIMsLtgwKY8vttQwu3flnq2QlTZGjcEDzeFPBWaSf9PlN',
-  production: '<insert production client id>'
-},
-
-// Set up a payment
-payment: function(data, actions) {
-  return actions.payment.create({
-    transactions: [{
-      amount: {
-        total: '50.01',
-        currency: 'USD',
-        details: {
-          subtotal: '50.00',
-          tax: '0.01',
-          shipping: '0.00'
-          //handling_fee: '1.00',
-         //shipping_discount: '-1.00',
-          //insurance: '0.01'
-        }
-      },
-      description: 'The payment transaction description.',
-      custom: '90048630024435',
-      //invoice_number: '12345', Insert a unique invoice number
-      payment_options: {
-        allowed_payment_method: 'INSTANT_FUNDING_SOURCE'
-      },
-      soft_descriptor: 'ECHI5786786',
-      item_list: {
-        items: [
-        {
-          name: 'Standard Plan',
-          description: 'Plan',
-          quantity: '1',
-          price: '50',
-          tax: '0.01',
-          sku: '2',
-          currency: 'USD'
-        }
-        ]// ],
-        // shipping_address: {
-        //   recipient_name: 'Test',
-        //   line1: '4th Floor',
-        //   line2: 'Unit #34',
-        //   city: 'San Jose',
-        //   country_code: 'US',
-        //   postal_code: '95131',
-        //   phone: '011862212345678',
-        //   state: 'CA'
-        // }
-      }
-    }],
-    note_to_payer: 'Contact us for any questions on your subscription.'
-  });
-},
-onAuthorize: function (data, actions) {
-    console.log(actions);
-  return actions.payment.execute()
-    .then(function () {
-      window.alert('Payment Complete!');
-    });
-}
-}, '#paypal-button-container');
-</script> 
-                                </div>-->
+                        <form action="<?php echo site_url();?>" method="POST" id="premium-form">
+                            <div class="form-group">
+                                <label>Numbers of Vehicle</label>
+                                <select class="form-control" name="no_vehicles" >
+                                    <option value="50">50 vehicles</option>
+                                </select>
                             </div>
+                            <div class="form-group">
+                                <label>Subscription</label>
+                                <select class="form-control" name="subscription">
+                                    <option value="Yearly">Yearly</option>
+                                    <option value="Monthly">Monthly</option>
+                                </select>
+                            </div>
+
+                            <h3 class="card-title">$220</h3>
+                            <p style="text-align: center!important;color: #989898;"><span style="text-decoration-line: line-through;">$320</span> 25% in a year </p>
+                            <div class="form-group text-center">
+                                <a href="#" class="btn btn-info">Proceed</a>
+                            </div>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Mobile App Access</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Multiple Download Report</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Search and Filter Functions</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;padding: 0 20px 0 20px;font-weight: bold;">Add Company Profile and Company name on Report</p>
+                        </form>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6" style="padding: 0;">
+                    <div class="card card-3">
+                      <div class="card-header card-3-header text-center">
+                          <h2><strong>Enterprise Plan</strong></h2>
+                          <p>For fleets of over 251+ vehicles.</p>
+                          <p style="margin-bottom: 18px;">All premium features and more.</p>
+                      </div>
+                      <div class="card-body card-3-body text-center">
+                        <div class="card-1-arrow-selected"></div>
+                        <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 0;">250+ vehicles</h3>
+                        <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
+
+                        <h3 class="card-title">POA</h3>
+
+                        <div class="form-group text-center">
+                            <a href="#" class="btn btn-info">Proceed</a>
                         </div>
-                        <!-- <div class="col-md-4 col-sm-6">
-                            <div class="pricing-table  dark-blue">
-                                <div class="pt-header">
-                                    <div class="plan-pricing">
-                                        <div class="pricing"><?php //echo "$".$user_plans[2]->plan_price; ?></div>
-                                        <div class="pricing-type">per month</div>
-                                    </div>
-                                </div>
-                                <div class="pt-body">
-                                    <h4><?php //echo $user_plans[2]->title ." Plan"; ?></h4>
-                                    <ul class="plan-detail">
-                                        <li>Unlimited Vehicles & Trailers</li>
-                                        <li>Unlimited Reports</li>
-                                        <li><?php //echo $user_plans[2]->description; ?></li>
-                                        <li>&nbsp;</li>
-                                    </ul>
-                                </div>
-                                <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary">Buy Now</button>
-                                </div>
-                            </div>
-                        </div> -->
+
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers 250+</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Mobile App Access</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Multiple Download Report</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Search and Filter Functions</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;padding: 0 20px 0 20px;font-weight: bold;">Add Company Profile and Company name on Report</p>
+                        <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Company reports</p>
+                      </div>
                     </div>
                 </div>
             </div>
-           <!--  <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <p class="text-center app-content-description">Plan offers doesn't fit your needs? Click <a href="#" class="text-danger">here</a> to request a Quote.</p>
-                </div>
-            </div> -->
         </div>
     </div>
+    
     <div class="container-fluid app-content-b contact-us">
         <div class="container">
             <div class="row featurette">

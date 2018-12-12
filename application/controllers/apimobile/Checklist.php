@@ -189,7 +189,7 @@ class Checklist extends CI_Controller {
 					"start_mileage"					=> $data->start_mileage ,
 					"end_mileage"					=> (isset($data->end_mileage)) ? $data->end_mileage : NULL ,
 					"report_notes"					=> (isset($data->note)) ? $data->note : NULL ,
-					"created"						=> time(),
+					"created"						=> strtotime(convert_timezone(strtotime(date("M d Y h:i:s A", time())), true, true)),
 					"remind_in"						=> $remind_in,
 					"remind_done"					=> false
 				]);
@@ -384,35 +384,6 @@ class Checklist extends CI_Controller {
 							}							
 						}
 
-						// switch ($item->checkbox) {
-
-						// 	case 0:
-						// 		# code...
-						// 		break;
-						// 	case 1:
-						// 		$_isDefect = true;
-
-						// 		if($item->update_check == 1){
-						// 			$_isDefect = true;
-						// 			if($item->final_update_check == 1){
-						// 				//$_isUpdated = true;
-						// 				$_isDefect = true;
-						// 			}
-						// 		}else if($item->update_check == 0){
-						// 			$_isUpdated = true;
-						// 		}else{
-						// 			$_isUpdated = true;
-						// 		}
-
-						// 		break;
-						// 	case 2:
-						// 		# code...
-						// 		break;
-						// 	case 3:
-						// 		# code...
-						// 		break;
-						// }
-
 						if($item->checkbox == 1){
 							$defect++;
 						}
@@ -448,22 +419,10 @@ class Checklist extends CI_Controller {
 							if($item->final_update_check == 1){
 								$defect++;
 							}
-						}
-
-						
-
-						
+						}								
 					}
-
-					// $finalstat = '';
-					// if($_isDefect == true && $_isUpdated == true){
-					// 	$finalstat = 2;
-					// }else if($_isDefect == true && $_isUpdated == false){
-					// 	$finalstat = 1;
-					// }else{
-					// 	$finalstat = 0;
-					// }
-					if($defect != 0 && $fixed != 0){
+					
+					if($defect != 0){
 						if($defect > $fixed){
 							$finalstat = 1;
 						}else{

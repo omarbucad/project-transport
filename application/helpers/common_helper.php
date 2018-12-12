@@ -183,7 +183,6 @@ if ( ! function_exists('convert_timezone'))
 {
     function convert_timezone($time , $with_hours = false , $with_timezone = true , $hour_only = false , $custom_format_date_with_hour = "M d Y h:i:s A" , $custom_format_date = "M d Y" , $custom_format_hour = "h:i:s A")
     {
-
         if(!$time OR $time == 0){
             return "NA";
         }
@@ -204,7 +203,10 @@ if ( ! function_exists('convert_timezone'))
 
             $tz = new DateTimeZone($timezone);
             $datetime = new DateTime($triggerOn);
+
             $datetime->setTimezone($tz);
+
+            
             return $datetime->format( $date_format );
         }else{
             if($with_hours){

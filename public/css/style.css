@@ -1012,14 +1012,17 @@ body.login-page {
     padding: 0 15px; }
   .landing-page .app-header {
     padding-top: 100px;
-    background-image: url("../img/banner3.jpg");
+    background-image: url("../img/website-layout/transpo-03.png");
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
     background-position: center;
-    margin-bottom: 0; }
+    margin-bottom: 0; 
+    height: 565px;
+    width: auto;
+  }
     .landing-page .app-header .app-logo {
       margin-bottom: 20px; }
     .landing-page .app-header .app-description {
@@ -1028,18 +1031,19 @@ body.login-page {
     padding-top: 50px;
     padding-bottom: 20px; }
   .landing-page .app-content-b.feature-1 {
-    background-image: url("../img/bg/picjumbo.com_HNCK3558.jpg");
+    background-image: url("../img/reset-pass.jpg");
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background-position: center;
-    margin-bottom: 0; }
+    background-position: bottom;
+    margin-bottom: 0; 
+    height: 190%;}
   .landing-page .app-content-b.contact-us {
-    padding-top: 60px;
-    padding-bottom: 60px;
-    background-image: url("../img/contact-us-bg.jpg");
+    padding-top: 0;
+    padding-bottom: 0;
+    background-image: url("../img/website-layout/website-transpo-11.png");
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -1235,3 +1239,207 @@ body.login-page {
   .featurette-heading {
     margin-top: 100px;
     margin-bottom: 20px; } }
+
+
+
+
+/*FRONTEND WEBSITE*/
+    .app-description {
+        color: #d4d4d4 !important;
+        position: absolute;
+        top: 31%;
+        left: 44%;
+        font-size: 18px !important;
+        /*transform: translate(-50%, -50%);*/
+   }
+   .feature-box{
+        position: absolute;
+        background-color: #00000038;
+        height: 38%;
+        width: 84%;
+        left: 0;
+        bottom: 54px;
+   }
+   .app-content-a {
+        border-top: 3px solid #fff;
+        background-color: #2196f3!important;
+   }
+   .feature-icon{
+        height: 40px !important;
+   }
+   .feature-items{
+        padding-left: 5%;
+        padding-top: 6%;
+        padding-right: 5%;
+   }
+   .feature-description{
+      color: #dedede80 !important;
+      font-size: 12px;
+      padding-left: 25px;
+      padding-top: 10px;
+      line-height: 13px;
+   }
+   .feature-image{
+        height: 275px;
+   }
+  .card-1{
+    background-color: #7d949c;
+    border-radius: 10px;
+    position: relative;
+    left: 30px;
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.28) !important;
+    font-family: 'Roboto' !important;
+  }
+  .card-1-header{    
+    border-bottom: none !important;
+  }
+  .card-1-header > h2{
+    margin-top: 15px;
+    color: #fff;
+    padding-right: 20px !important;
+    margin-bottom: 0;
+  }
+  .card-1-header > p{
+    color: #ffffffe8;
+    margin-bottom: 0;
+    padding-right: 20px !important;
+    font-family: 'Roboto' !important;
+  }
+  .card-1-body{
+    padding-top: 0!important;
+    background-color: #fff;
+    padding-right: 55px !important;
+    font-family: 'Roboto' !important;
+    height: 698px;
+  }
+  .card-1-body a{
+    width: 100%;
+    font-family: 'Roboto' !important;
+    font-size: 18px;
+    text-align: center;
+  }
+  .card-1-body h3{
+    color: #2196f3;
+    font-weight: 700;
+    font-size: 32px;
+    font-family: 'Roboto' !important;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  .card-2-body label{
+    font-family: 'Roboto' !important;
+    font-weight: 300;
+  }
+  .card-2{
+    position: relative;
+    bottom: 20px;
+    padding: 0;
+    z-index: 5;
+    position: relative;
+    background-color: #ff9800;
+    border-radius: 10px;
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.28) !important;
+    border: 0px solid #E4E4E4;
+    font-family: 'Roboto' !important;
+  }
+  .card-2-header{
+    height: 89px;    
+    border-bottom: none !important;
+    font-family: 'Roboto' !important;
+  }
+  .card-2-arrow-selected{
+    width: 0px;
+    height: 0px;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #ff9800;
+    background-color: #fff;
+    left: 44%;
+    position: relative;
+  }
+  .card-2-header > h2{
+    margin-top: 35px;
+    color: #fff;
+    margin-bottom: 0;
+    font-family: 'Roboto' !important;
+  }
+  .card-2-header > p{
+    color: #ffffffe8;
+    margin-bottom: 0;
+    font-family: 'Roboto' !important;
+  }
+  .card-2-body{
+    background-color: #fff;
+    height: 715px;
+    padding-top: 0!important;
+    font-family: 'Roboto' !important;
+  }
+  .card-2-body a{
+    width: 100%;
+    font-family: 'Roboto' !important;
+    font-size: 18px;
+  }
+  .card-2-body h3{
+    color: #2196f3;
+    font-weight: 700;
+    font-size: 32px;
+    text-align: center;
+    font-family: 'Roboto' !important;
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+  #premium-form select{
+    text-align: center;
+    text-align-last: center;
+    color: #2196f3;
+    font-weight: 700;
+    height: 40px;
+    font-size: 18px;
+    font-family: 'Roboto' !important;
+  }
+  .card-3{
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.28) !important;
+    position: relative;
+    right: 15px;
+    background-color: #2196f3;
+    border-radius: 10px;
+    font-family: 'Roboto' !important;
+  }
+  .card-3-header{    
+    border-bottom: none !important;
+    font-family: 'Roboto' !important;
+  }
+  .card-3-header > h2{
+    margin-top: 16px;
+    padding-left: 20px !important;
+    color: #fff;
+    margin-bottom: 0;
+  }
+
+  .card-3-header > p{
+    color: #ffffffe8;
+    margin-bottom: 0;
+    padding-left: 20px !important;
+  }
+
+  .card-3-body{
+    padding-left: 45px !important;
+    background-color: #fff;
+    height: 698px;
+  }
+  .card-3-body h3{
+    color: #2196f3;
+    font-weight: 700;
+    font-size: 32px;
+    text-align: center;
+    font-family: 'Roboto' !important;
+    margin-top: 20px;
+    margin-bottom: 29px;
+  }
+
+  .card-3-body a{
+    width: 100%;
+    font-family: 'Roboto' !important;
+    font-size: 18px;
+  }
+
