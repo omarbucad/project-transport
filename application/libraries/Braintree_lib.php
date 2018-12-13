@@ -102,11 +102,14 @@ class Braintree_lib extends Braintree{
             if($e){
                  $result = Braintree_Customer::create([
                     'id' => $data->username,
+                    'firstName' => $data->firstname,
+                    'lastName' => $data->lastname,
                     'company' => $data->company,
                     'email' => $data->email,
                     'phone' => $data->phone,
                     'paymentMethodNonce' => $data->paymentMethodNonce
                 ]);
+
                 if ($result->success) {
                     // echo($result->customer->id);
                     // echo($result->customer->paymentMethods[0]->token);
@@ -149,9 +152,16 @@ class Braintree_lib extends Braintree{
 }
 
     function create_subscription_token($data){
+       // $now = convert_timezone(strtotime("now"), true, true,false,"m/d/Y h:i:s A");
+        // $n = convert_timezone(strtotime("now"), true, true,false,"m/d/Y h:i:sP");
+        // $now = new DateTime($n);
+        // $now->format("m/d/Y h:i:sP");
+
         $result = Braintree_Subscription::create([
-          'paymentMethodToken' => $data->paymentMethodToken,
-          'planId' => $data->planId
+            'paymentMethodToken' => $data->paymentMethodToken,
+            'planId' => $data->planId,
+            // 'firstBillingDate' => $now,
+            // 'options' => ['startImmediately' => true]
         ]);
 
         return $result;

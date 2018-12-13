@@ -6,7 +6,7 @@
   .flat-green a:hover {
     color: #2196f3; }
   .flat-green .app-footer {
-    opacity: 0.7;
+    /*opacity: 0.7;*/
     color: #2C3E50; }
   .flat-green .navbar, .flat-green .navbar.navbar-default {
     border-bottom: 0px;

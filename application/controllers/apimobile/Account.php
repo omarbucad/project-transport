@@ -48,6 +48,8 @@ class Account extends CI_Controller {
 
 			$this->db->insert("user",[
 				"display_name" => "Firstname Lastname",
+				"firstname" => "Firstname",
+				"lastname" => "Lastname",
 				"email_address" => $data->email,
 				"username" => $data->username,
 				"role" => "DRIVER",

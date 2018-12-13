@@ -12,8 +12,11 @@ class Dashboard extends MY_Controller {
     }
 
 	public function index(){
-		// $a = strtotime(convert_timezone(strtotime("Dec 06 2018 02:35:04 PM"), true, false));
-		// print_r_die(convert_timezone($a, true, false));
+		// $n = convert_timezone(strtotime("now"), true, true,false,"m/d/Y h:i:sP");
+  //       $now = new DateTime($n);
+  //       $now->format("m/d/Y h:i:sP");
+  //       print_r_die($now);
+
 		$this->data['page_name'] = "Dashboard";
 		$this->data['main_page'] = "backend/page/dashboard/dashboard";
 		$this->data['drivers'] = $this->accounts->get_driver();

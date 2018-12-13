@@ -20,7 +20,6 @@
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/style.css?version='.$version) ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/my-style.css?version='.$version) ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/themes/flat-green.css?version='.$version) ?>">
-
 </head>
 <style type="text/css">
     body{
@@ -174,8 +173,8 @@
     <div class="container-fluid app-content-b feature-1" >
         <div class="container">
             <div class="row">            
-                <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;">Subscription pricing</h2>
-                <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong>Upgrade your Plan now!</strong></h1>
+                <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;font-family: 'Roboto' !important;">Subscription pricing</h2>
+                <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto' !important;">Upgrade your Plan now!</strong></h1>
                 <div class="col-md-4 col-sm-6" style="padding: 0;">
                     <div class="card card-1">
                       <div class="card-header card-1-header text-center">
@@ -277,20 +276,23 @@
     <div class="container-fluid app-content-b contact-us">
         <div class="container">
             <div class="row featurette">
-                <div class="col-md-6"><h2 class="color-white contact-us-header">Contact Us</h2>
-                <p class="color-white contact-us-description">Trackerteer is here to provide you with more information and answer any questions. Please don't hesitate to get in touch with us.</p></div>
-                <div class="col-md-6">
-                    <form>
-
+                <div class="col-md-6 col-xs-12" style="padding-right: 30px;padding-left: 25px;">
+                    <h2 class="color-white contact-us-header">Contact Us</h2>
+                    <p class="color-white contact-us-description">Trackerteer is here to provide you with more information and answer any questions. Please don't hesitate to get in touch with us.</p>
+                </div>
+                <div class="col-md-6 col-xs-12" style="padding:0!important;">
+                    <form action="<?php echo site_url(); ?>" method="POST" id="contactForm">
                         <div class="row">
-                            <div class="col-sm-6"><input id="name" name="name" type="text" class="form-control" placeholder="Full Name"> </div>
+                            <div class="col-sm-6"><input id="name" name="name" type="text" class="form-control" placeholder="Full Name"></div>
                             <div class="col-sm-6"><input id="email" name="email" type="email" class="form-control" placeholder="Email address"></div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12"><textarea id="message" name="message" class="form-control" placeholder="Your Message" rows="5"></textarea></div>
+                            <div class="col-sm-12" style="margin-bottom: 10px;"><textarea id="message" name="message" class="form-control" placeholder="Your Message" rows="3"></textarea></div>
                         </div>
-                        <div>
-                            <button id="contact-submit" type="submit" class="btn btn-success pull-right">Send</button>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button id="contact-submit" type="submit" class="btn btn-success pull-right" style="padding: 4px 55px;font-size: 12px;font-family: 'Roboto';">Submit</button>
+                            </div>
                         </div>
                     </form>
                 </div>
