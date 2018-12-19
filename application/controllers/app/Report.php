@@ -5,6 +5,8 @@ class Report extends MY_Controller {
 
 	public function __construct() {
         parent::__construct();
+        $this->load->helper('download');
+       	$this->load->library('zip');
         $this->load->model('report_model', 'reports');
         $this->load->model('accounts_model', 'accounts');
         $this->load->model('checklist_model', 'checklist');
@@ -184,14 +186,27 @@ class Report extends MY_Controller {
         if($start == $today){
               $end = date("dMY",$start);
         }else{
-            $end = strtotime(trim($date.' 23:59 + 2 days'));
+            $end = strtotime(trim($date.' 23:59 + 6 days'));
 
            	$end = date("dMY",$end);
         }
 		$reports = $this->reports->get_reports_to_pdf();
 		if($reports){
-			$start = date("dMY",$start);
-			$pdf = $this->pdf->create_multiple_report($reports,"D", $start, $end);	
+			$this->load->helper('file');
+
+			$data = array();
+			foreach ($reports as $key => $v) {				
+				array_push($data, $v->pdf_path . $v->pdf_file);
+			}
+
+			ob_start();
+			foreach ($data as $d) {
+				$this->zip->read_file($d);
+			}
+			$this->zip->archive("./public/upload/report/multiple/reports_".$start."_".$end.".zip");
+			$this->zip->download("reports_".$start."_".$end.".zip");
+			ob_clean();
+
 			die();
 		}else{
 			$this->session->set_flashdata('status' , 'error');	

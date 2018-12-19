@@ -49,9 +49,13 @@ class Vehicle extends MY_Controller {
 
 		if ($this->form_validation->run() == FALSE){ 
 
-			$this->data['page_name'] = "Add Vehicle Information";
-			$this->data['main_page'] = "backend/page/vehicle/truck/add";
+			$this->data['page_name'] = "Vehicles";
+			$this->data['result']    =  $this->vehicle->get_vehicle_list();
+			$this->data['main_page'] = "backend/page/vehicle/truck/view";
+			
+			$vehicle = count($this->vehicle->get_vehicle_list());
 			$this->data['types'] = $this->vehicle->vehicle_type_list();
+			$this->data['totalvehicle'] = $vehicle;
 			$this->load->view('backend/master' , $this->data);
 
 		}else{
@@ -65,7 +69,7 @@ class Vehicle extends MY_Controller {
 				$this->session->set_flashdata('status' , 'error');
 				$this->session->set_flashdata('message' , 'Something went wrong');	
 
-				redirect("app/vehicle/add" , 'refresh');
+				redirect("app/vehicle/" , 'refresh');
 			}
 		}
 	}

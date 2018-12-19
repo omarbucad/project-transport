@@ -96,7 +96,7 @@ class Braintree_lib extends Braintree{
             $exist = Braintree_Customer::find($data->username);
             
             $customer = new stdClass;
-            $customer->customer = $exist;
+            $customer->customer = $exist->paymentMethods;
             return $customer;
         } catch(Braintree_Exception_NotFound $e){
             if($e){
@@ -160,6 +160,10 @@ class Braintree_lib extends Braintree{
         $result = Braintree_Subscription::create([
             'paymentMethodToken' => $data->paymentMethodToken,
             'planId' => $data->planId,
+            'addOns' => [
+                'inheritedFromId' => $data->addOnId,
+                'quantity' => $data->quantity
+            ]
             // 'firstBillingDate' => $now,
             // 'options' => ['startImmediately' => true]
         ]);
@@ -170,7 +174,12 @@ class Braintree_lib extends Braintree{
     function create_subscription_nonce($data){
         $result = Braintree_Subscription::create([
           'paymentMethodNonce' => $data->paymentMethodNonce,
-          'planId' => $data->planId
+          'planId' => $data->planId,
+          'addOns' => [
+            'existingId' => $data->addOnId,
+            'never_expires' => true,
+            'quantity' => $data->quantity
+          ]
         ]);
 
         return $result;
@@ -179,8 +188,9 @@ class Braintree_lib extends Braintree{
     function get_active_subscription($data){
         $result = Braintree_Subscription::search([
             Braintree_SubscriptionSearch::id()->is($data->username),
-            Braintree_SubscriptionSearch::status()->is("ACTIVE")
+            Braintree_SubscriptionSearch::status()->in([Braintree_Subscription::ACTIVE])
         ]);
+
         if($result){
             return $result;
         }else{
@@ -205,5 +215,64 @@ class Braintree_lib extends Braintree{
             'planId' => $data->planId,
             'merchantAccountId' => $data->merchantAccountId
         ]);
+    }
+
+
+
+    //------------------ WEB -------------------------------------------
+    // if not exist : create customer with payment method
+    // else : return customer data
+    function web_customer_data($data){
+        try{
+            $exist = Braintree_Customer::find($data['username']);
+            
+            $customer = new stdClass;
+            $customer->customer = $exist->paymentMethods;
+            return $customer;
+        } catch(Braintree_Exception_NotFound $e){
+            if($e){
+                 $result = Braintree_Customer::create([
+                    'id' => $data['username'],
+                    'firstName' => $data['firstname'],
+                    'lastName' => $data['lastname'],
+                    'company' => $data['company'],
+                    'email' => $data['email'],
+                    'phone' => $data['phone'],
+                    'paymentMethodNonce' => $data['paymentMethodNonce']
+                ]);
+
+                if ($result->success) {
+                    // echo($result->customer->id);
+                    // echo($result->customer->paymentMethods[0]->token);
+                    // $subscription = [
+                    //     "paymentMethodToken" => $result->customer->paymentMethods[0]->token,
+                    //     "planId" => $data->planId
+                    // ];
+                    // $subscription = (object)$subscription;
+                    // $this->create_subscription($subscription);
+                    return $result;
+
+                } else {
+                    $error = "";
+                    foreach($result->errors->deepAll() AS $error) {
+                        $error .= $error->code . ": " . $error->message . "\n";
+                        //echo($error->code . ": " . $error->message . "\n");
+                    }
+                    return $error;
+                }
+            }           
+        }
+    }
+
+    function create_websubscription_token($data){
+
+        $result = Braintree_Subscription::create([
+            'paymentMethodToken' => $data['paymentMethodToken'],
+            'planId' => $data['planId']
+            // 'firstBillingDate' => $now,
+            // 'options' => ['startImmediately' => true]
+        ]);
+
+        return $result;
     }
 }

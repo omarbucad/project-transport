@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/themes/flat-blue.css?version='.$version) ?>">
     <style type="text/css">
         body.login-page {
-            background: url("http://192.168.1.117/project-transport/public/img/website-layout/transpo-03.png") no-repeat center center fixed;
+            background: url("<?php echo site_url('public/img/website-layout/transpo-03.png') ?>") no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
@@ -50,13 +50,9 @@
                     <div class="col-xs-12 col-lg-6 no-margin-bottom color-white">
                         <div class="row">
                             <div class="col-xs-12 col-lg-6no-margin-bottom text-center">
-                                <h2 style="margin-bottom: 0;"><a href="<?php echo site_url();?>"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" style="width: 39%; position: relative;
-    left: 30%;margin-top:10px;margin-bottom: 10px;"></a>Vehicle Checklist</h2> 
+                                <h2 style="margin-bottom: 0;"><a href="<?php echo site_url();?>"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" style="width: 39%; position: relative;left: 30%;margin-top:10px;margin-bottom: 10px;"></a>Vehicle Checklist</h2> 
                                 <p style="color:#d4d4d4 !important;">Manage your defect checklist hassle free.</p>
                             </div>
-                            
-                                
-                                
                         </div>
                     </div>
                     <div class="col-xs-12 col-lg-6 no-margin-bottom">

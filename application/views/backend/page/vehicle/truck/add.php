@@ -1,7 +1,7 @@
 <div class="container margin-bottom">
     <div class="side-body padding-top">
     	<ol class="breadcrumb">
-    		<li><a href="<?php echo site_url('app/vehicle/truck'); ?>">Vehicle List</a></li>
+    		<li><a href="<?php echo site_url('app/vehicle/'); ?>">Vehicle List</a></li>
     		<li class="active">Add Vehicle</li>
     	</ol>	
     	<h3>Vehicle Information</h3>

@@ -16,11 +16,54 @@
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/bootstrap.min.css?version='.$version) ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/font-awesome.min.css?version='.$version) ?>">
 
+
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/animate.min.css?version='.$version) ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/sweetalert2.min.css?version='.$version) ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/bootstrap-switch.min.css?version='.$version) ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/select2.min.css?version='.$version) ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/bootstrap-tagsinput.css?version='.$version) ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/checkbox3.min.css?version='.$version) ?>">
+
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/multi-select.css?version='.$version) ?>">
+
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/lightgallery.min.css?version='.$version) ?>">
+
+
+<script type="text/javascript" src="<?php echo site_url('public/lib/js/jquery.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('public/lib/js/bootstrap.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('public/lib/js/sweetalert2.all.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('public/lib/js/bootstrap-switch.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('public/lib/js/select2.full.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('public/lib/js/bootstrap-tagsinput.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+
+<script type="text/javascript" src="<?php echo site_url('public/lib/tinymce/tinymce.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('public/lib/js/lightgallery-all.min.js?version='.$version) ?>"></script>
+
+
+<script type="text/javascript" src="<?php echo site_url('public/js/notify.min.js?version='.$version) ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('public/js/jquery.multi-select.js?version='.$version) ?>"></script>
+
+<script type="text/javascript" src="<?php echo site_url('public/js/app.js?version='.$version) ?>"></script>
+
+
+<!-- CSS App -->
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/style.css?version='.$version) ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/my-style.css?version='.$version) ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/themes/flat-green.css?version='.$version) ?>">
+
+
+
     <!-- CSS App -->
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/style.css?version='.$version) ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/my-style.css?version='.$version) ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/themes/flat-green.css?version='.$version) ?>">
+
+
 </head>
+
 <style type="text/css">
     body{
      font-family: 'Roboto' !important;
@@ -41,9 +84,10 @@
     .jumbotron-content > img{
         height: 215px;
         width: auto;
-        position: absolute;
-        top: 57px;
-        right: -15px;
+        position: relative;
+        top: -35px;
+        right: 0;
+        left: 32.5%;
     }
     .app-title {
         color: #FFF;
@@ -56,7 +100,13 @@
 
 </style>
 <body class="flat-green landing-page">
-    
+    <?php if($this->session->flashdata("status")) : ?>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $.notify("<?php echo $this->session->flashdata("message"); ?>" , { className:  "<?php echo $this->session->flashdata("status"); ?>" , position : "top center"});
+            });
+        </script>
+    <?php endif; ?>
     <nav class="navbar navbar-inverse navbar-fixed-top  navbar-affix" role="navigation" data-spy="affix" data-offset-top="60">
         <div class="container">
             <div class="navbar-header">
@@ -82,9 +132,28 @@
             <!--/.nav-collapse -->
         </div>
     </nav>
-
     <div class="jumbotron app-header">
         <div class="container">
+
+            <script type="text/javascript">
+                $(document).on("click" , "#contact-submit" , function(){
+                    var form = $("#contactForm");
+                    $.ajax({
+                        url : "<?php echo site_url('welcome/emailus'); ?>",
+                        method : "POST",
+                        data : form.serialize() ,
+                        success : function(response){
+                            var json = jQuery.parseJSON(response);
+                            $.notify(json.message , { className:  json.status , position : "top center"});
+                            setTimeout(function () { 
+                                  location.reload();
+                                }, 2000);
+                        }
+                        
+                    });
+                });
+            </script>
+            
             <div class="jumbotron-content">
                 <img class="app-logo pull-right" src="<?php echo site_url('public/img/website-layout/transpo-04.png') ?>" >
                 <div class="color-white app-title"><?php echo $application_name; ?></div>
@@ -278,20 +347,27 @@
             <div class="row featurette">
                 <div class="col-md-6 col-xs-12" style="padding-right: 30px;padding-left: 25px;">
                     <h2 class="color-white contact-us-header">Contact Us</h2>
-                    <p class="color-white contact-us-description">Trackerteer is here to provide you with more information and answer any questions. Please don't hesitate to get in touch with us.</p>
+                    <p class="color-white contact-us-description"><?php echo $application_name; ?> Team is here to provide you with more information and answer any questions. Please don't hesitate to get in touch with us.</p>
                 </div>
                 <div class="col-md-6 col-xs-12" style="padding:0!important;">
-                    <form action="<?php echo site_url(); ?>" method="POST" id="contactForm">
+                    <form action="" method="POST" id="contactForm">
+                            <?php if($this->session->flashdata("status")) : ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <p><?php echo $this->session->flashdata("message"); ?></p>
+                                </div>
+                            <?php endif;?>
+                            <?php $this->session->sess_destroy(); ?>
                         <div class="row">
-                            <div class="col-sm-6"><input id="name" name="name" type="text" class="form-control" placeholder="Full Name"></div>
-                            <div class="col-sm-6"><input id="email" name="email" type="email" class="form-control" placeholder="Email address"></div>
+                            <div class="col-sm-6"><input id="fullname" name="fullname" type="text" class="form-control" placeholder="Full Name" required="true"></div>
+                            <div class="col-sm-6"><input id="email" name="email" type="email" class="form-control" placeholder="Email address" required="true"></div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12" style="margin-bottom: 10px;"><textarea id="message" name="message" class="form-control" placeholder="Your Message" rows="3"></textarea></div>
+                            <div class="col-sm-12" style="margin-bottom: 10px;"><textarea id="message" name="message" class="form-control" placeholder="Your Message" rows="3" required="true"></textarea></div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <button id="contact-submit" type="submit" class="btn btn-success pull-right" style="padding: 4px 55px;font-size: 12px;font-family: 'Roboto';">Submit</button>
+                                <a id="contact-submit" class="btn btn-success pull-right" style="padding: 4px 55px;font-size: 12px;font-family: 'Roboto';">Submit</a>
                             </div>
                         </div>
                     </form>
@@ -304,8 +380,10 @@
     <?php $this->load->view("frontend/common/footer"); ?>
     <!-- Javascript Libs -->
 
-    <script type="text/javascript" src="<?php echo site_url('public/lib/js/jquery.min.js?version='.$version) ?>"></script>
-    <script type="text/javascript" src="<?php echo site_url('public/lib/js/bootstrap.min.js?version='.$version) ?>"></script>
+    <!-- 
+    <script type="text/javascript" src="<?php //echo site_url('public/lib/js/jquery.min.js?version='.$version) ?>"></script>
+    <script type="text/javascript" src="<?php// echo site_url('public/lib/js/bootstrap.min.js?version='.$version) ?>"></script> -->
+
 
 </body>
 

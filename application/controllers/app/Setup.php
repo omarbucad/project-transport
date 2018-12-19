@@ -244,6 +244,9 @@ class Setup extends MY_Controller {
 
 		$this->data['setup_page'] = $type;
 		$this->data['user_plans'] = $this->db->get("plan")->result();
+		$this->data['plan_ids'] = $this->braintree_lib->getAllPlan();
+
+		//print_r_die($this->data['plan_ids']);
 
 		if($type == ""){
 			redirect('/app/setup/account/manage', 'refresh');
@@ -251,5 +254,73 @@ class Setup extends MY_Controller {
 		$this->load->view('backend/master' , $this->data);
 	}
 
+	public function get_client_token(){
+		echo json_encode($this->braintree_lib->create_client_token());
+	}
+
+	public function pay(){
+		$data = $this->session->userdata("user");
+		if(empty($_POST['payment_method_nonce'])){
+			header('location: '.site_url('app/setup/account/pricing'));
+
+			$this->session->set_flashdata('status' , 'error');
+			$this->session->set_flashdata('message' , 'Something went wrong');	
+
+			redirect("app/setup/profile" , 'refresh');
+
+		}
+		$details = [
+			"username" => $data->username,
+			"firstname" => $data->firstname,
+			"lastname" => $data->lastname,
+			"email" => $data->email_address,
+			"company" => $data->store_name,
+			"phone" => $data->phone,
+			"paymentMethodNonce" => $_POST['payment_method_nonce']
+		];
+		$customer = $this->braintree_lib->web_customer_data($details);
+
+		if(!empty($customer)){
+			$result = $this->braintree_lib->create_websubscription_token([
+				"planId" => $_POST['planId'],
+				"paymentMethodToken" => $customer->customer[0]->token
+			]);
+
+			//print_r_die($result);
+			if($result->success){
+				$this->session->set_flashdata('status' , 'success');	
+				$this->session->set_flashdata('message' , 'Subscribed Successfully');
+
+				redirect("app/setup/account/pricing", 'refresh');
+			}else{
+				$this->session->set_flashdata('status' , 'error');	
+				$this->session->set_flashdata('message' , $result);
+
+				redirect("app/setup/profile/pricing", 'refresh');
+			}
+
+		}
+
+		// $result = Braintree_Transaction::sale([
+		//   'amount' => $_POST['amount'], 
+		//   'paymentMethodNonce' => $_POST['payment_method_nonce'],
+		//   'customer' => [
+		//     'firstName' => $data->firstname,
+		//     'lastName' => $data->lastname,    
+		//   ], 
+		//   'options' => [
+		//     'submitForSettlement' => true
+		//   ]
+		// ]);
+
+		if ($result->success === true) {
+		    redirect('/app/setup/account/manage', 'refresh');
+		}
+		else{
+			print_r($result->errors);
+		    die();
+		}
+
+	}
 	// END OF ACCOUNT SECTION
 }

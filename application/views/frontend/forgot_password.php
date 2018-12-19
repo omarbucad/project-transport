@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/css/themes/flat-blue.css?version='.$version) ?>">
     <style type="text/css">
         body.login-page {
-            background: url("<?php echo site_url('public/img/banner3.jpg') ?>") no-repeat center center fixed;
+            background: url("<?php echo site_url('public/img/website-layout/transpo-03.png') ?>") no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
@@ -47,23 +47,19 @@
         <div class="login-box">
             <div class="login-form ">
                 <div class="login-body row">
-                    <div class="col-xs-12 col-lg-5 no-margin-bottom">
+                    <div class="col-xs-12 col-lg-5 no-margin-bottom color-white">
                         <div class="row">
-                            <div class="col-xs-12 col-lg-8 no-margin-bottom text-center" style="width: 100%;">
-                                <a href="#"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" style="width: 65%; margin-left: 15%;margin-top:10px"></a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="container-fluid text-center">
-                                <h4 >Vehicle Checklist</h4>                                
+                            <div class="col-xs-12 col-lg-6no-margin-bottom text-center color-white>
+                                <h2 style="margin-bottom: 0;"><a href="<?php echo site_url();?>"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" style="width: 39%; position: relative;left: 30%;margin-top:10px;margin-bottom: 10px;"></a><span style="font-size: 26px;">Vehicle Checklist</span></h2> 
+                                <p style="color:#d4d4d4 !important;">Manage your defect checklist hassle free.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-xs-12 col-lg-7 no-margin-bottom">
 
                             <div class="row">
-                                <div class="container-fluid">
-                                    <h2 class="text-center">Forgotten Password</h2>
+                                <div class="container-fluid color-white">
+                                    <h2 class="text-center" style="margin-bottom: 20px; margin-top: 25px;">Forgotten Password</h2>
                                 </div>
                             </div>
   
@@ -87,7 +83,7 @@
                             </form>
                     </div>
                     <div class="login-footer">
-                            <span class="text-right"><a href="<?php echo site_url("login"); ?>" style="color:#333;margin-right:15px;">Back to Login</a></span>
+                            <span class="text-right"><a href="<?php echo site_url("login"); ?>" style="color:#d4d4d4 !important;margin-right:15px;">Back to Login</a></span>
                     </div>
                 </div>
             </div>

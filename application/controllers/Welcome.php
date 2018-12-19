@@ -68,4 +68,42 @@ class Welcome extends MY_Controller {
 		$this->load->view('frontend/register' , $this->data);
 	}
 
+	public function emailus(){
+		$this->form_validation->set_rules('fullname'		, 'Full Name'		, 'trim|required');
+		$this->form_validation->set_rules('email'			, 'Email address'	, 'trim|required');
+		$this->form_validation->set_rules('message'			, 'Message'			, 'trim|required');
+
+		if ($this->form_validation->run() == FALSE){
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , validation_errors());
+
+			redirect('/welcome#contactForm', 'refresh');
+		}else{
+			$email = $this->input->post("email");
+
+			$info = $this->db->select("email_address")->where("email_address", $email)->get("user")->row();
+
+			$data['fullname'] = $this->input->post("fullname");
+			$data['email'] = $this->input->post("email");
+			$data['message'] = $this->input->post("message");
+			$this->email->from($email, 'Trackerteer | Vehicle Checklist');
+			$this->email->to('cherlaj@trackerteer.com');
+			$this->email->set_mailtype("html");
+			$this->email->subject('Inquiry | Contact Us');
+			$this->email->message($this->load->view('email/contactus_email', $data , true));
+
+			if($this->email->send()){
+				// $this->session->set_flashdata('status' , 'success');	
+				// $this->session->set_flashdata('message' , 'Email has been sent.');
+
+				echo json_encode(["status" => "success","message" => "Your message has been sent."]);
+			}else{
+				// $this->session->set_flashdata('status' , 'error');	
+				// $this->session->set_flashdata('message' , 'Something went wrong. Please try again.');
+
+				// redirect('?status=failed', 'refresh');
+				echo json_encode(["status" => "error","message" => "Something went wrong. Please try again."]);
+			}
+		}
+	}
 }

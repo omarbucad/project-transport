@@ -1,5 +1,9 @@
+<script src="https://js.braintreegateway.com/js/braintree-2.32.1.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+
 <script type="text/javascript">
-    $(document).ready(function(){
+    
+    $(document).ready(function(){      
        
         var activediv = $('div.no-gap').find('div.green');
         var id = activediv.attr("id");
@@ -128,6 +132,37 @@
 
         $('#_pdfViewer').html(object);  
     });
+
+    // $.ajax({
+    //     url: "<?php //echo site_url("app/setup/get_client_token"); ?>",
+    //     type: "GET",
+    //     dataType: "json",
+    //     success: function(data){
+    //         braintree.setup(data, 'dropin', {container : 'dropin-container'});
+    //     }
+    //  });
+
+     $(document).on('click', '.btn-proceed', function(){
+        var modal = $('#payment_modal').modal("show");
+        var body = modal.find('.modal-body');
+        body.html("");
+        body.html("<form action='<?php echo site_url('app/setup/pay'); ?>' method='POST' class='payment-form text-center'><input type='hidden' name='planId' value=''><div id='dropin-container'></div><button type='submit' class='btn btn-info'>Checkout</button></form>");
+
+        $.ajax({
+            url: "<?php echo site_url("app/setup/get_client_token"); ?>",
+            type: "GET",
+            dataType: "json",
+            success: function(data){
+                braintree.setup(data, 'dropin', {container : 'dropin-container'});
+            }
+         });
+        
+        modal.find("input[type='hidden']").val($(this).data("desc"));          
+        
+     });
+
+
+     
 </script>
 <style type="text/css">
     th, td {
@@ -135,6 +170,27 @@
     }
     a.view_invoice_pdf{
         padding: 0;
+    }
+    .app-content-b.feature-1 {
+        background-image: url("<?php echo site_url('public/img/reset-pass.jpg');?>");
+        background-repeat: no-repeat;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-position: bottom;
+        margin-bottom: 0; 
+        height: 190%;
+    }
+    label.heading {
+        font-weight: 600;
+    }
+    .payment-form{
+        width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 10px;
+        border: 1px #333 solid;
     }
 </style>
 <div class="container-fluid margin-bottom">
@@ -146,6 +202,7 @@
         		<a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="<?php echo ($setup_page == "pricing") ? "active" : "" ;?>">View Pricing Plans</a>
         	</div>
         </div>
+        
         <?php if($setup_page == "manage") : ?>
         <div class="grey-bg margin-bottom">
         	<div class="container ">
@@ -243,75 +300,103 @@
             </div>
         </div>
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row no-margin no-gap">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="pricing-table green" id="div-basic">
-                                <div class="pt-header">
-                                    <div class="plan-pricing">
-                                        <div class="pricing">Free</div>
-                                        <div class="pricing-type">&nbsp;</div>
-                                    </div>
-                                </div>
-                                <div class="pt-body">
-                                    <h4><?php echo $user_plans[0]->title ." Plan"; ?></h4>
-                                    <ul class="plan-detail">
-                                        <li><?php echo $user_plans[0]->no_vehicle; ?> Vehicle/Trailer</li>
-                                        <li><?php echo $user_plans[0]->no_reports; ?> Reports / Month</li>
-                                        <li><?php echo $user_plans[0]->description; ?></li>
-                                        <li>No Export</li>
-                                    </ul>
-                                </div>
-                                <div class="pt-footer">
-                                    <button type="button" class="btn btn-success" id="btn-basic">Selected Plan</button>
-                                </div>
+            <div class="container-fluid app-content-b feature-1" >
+                <div class="row">            
+                    <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;font-family: 'Roboto',sans-serif !important;">Subscription pricing</h2>
+                    <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto',sans-serif !important;">Upgrade your Plan now!</strong></h1>
+                    <div class="col-md-4 col-sm-6" style="padding: 0;">
+                        <div class="card card-1">
+                          <div class="card-header card-1-header text-center">
+                              <h2><strong>Free Plan</strong></h2>
+                              <p>For fleets with 1-3 vehicles.</p>
+                              <p>with limited access.</p>
+                          </div>
+                          <div class="card-body card-1-body  text-center">
+                            <div class="card-1-arrow-selected"></div>
+                            <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 42px;">1 to 5 vehicles</h3>
+                            <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
+
+                            <h3 class="card-title">Free</h3>
+                            <div class="form-group text-center">
+                                <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_basic_plan_trial_3">Proceed</a>
                             </div>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">1 Driver</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">7 Reports Visible</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Mobile App Access</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Single Download Report</p>
+                          </div>
                         </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="pricing-table dark-blue" id="div-standard">
-                                <div class="pt-header">
-                                    <div class="plan-pricing">
-                                        <div class="pricing"><?php echo "$".$user_plans[1]->plan_price; ?></div>
-                                        <div class="pricing-type">per month</div>
-                                    </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6" style="padding: 0;">
+                        <div class="card card-2">
+                          <div class="card-header card-2-header text-center">
+                              <h2><strong>Premium Plan</strong></h2>
+                              <p>For fleets up to 250 vehicles.</p>
+                              <p style="margin-bottom: 10px;">Choose number of vehicles.</p>
+                          </div>
+
+                          <div class="card-body card-2-body">                      
+                            <div class="card-2-arrow-selected"></div>
+
+                            <form action="<?php echo site_url();?>" method="POST" id="premium-form">
+                                <div class="form-group">
+                                    <label>Numbers of Vehicle</label>
+                                    <select class="form-control" name="no_vehicles" >
+                                        <option value="50">50 vehicles</option>
+                                    </select>
                                 </div>
-                                <div class="pt-body">
-                                    <h4><?php echo $user_plans[1]->title ." Plan"; ?></h4>
-                                    <ul class="plan-detail">
-                                        <li>Unlimited Vehicles & Trailers</li>
-                                        <li>Unlimited Reports</li>
-                                        <li><?php echo $user_plans[2]->description; ?></li>
-                                        <li>&nbsp;</li>
-                                    </ul>
+                                <div class="form-group">
+                                    <label>Subscription</label>
+                                    <select class="form-control" name="subscription">
+                                        <option value="Yearly">Yearly</option>
+                                        <option value="Monthly">Monthly</option>
+                                    </select>
                                 </div>
-                                <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary" id="btn-standard">Select Plan</button>
+
+                                <h3 class="card-title">$220</h3>
+                                <p style="text-align: center!important;color: #989898;"><span style="text-decoration-line: line-through;">$320</span> 25% in a year </p>
+                                <div class="form-group text-center">
+                                    <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_basic_plan_trial_3">Proceed</a>
                                 </div>
-                            </div>
+                                <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers</p>
+                                <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
+                                <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>
+                                <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Mobile App Access</p>
+                                <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Multiple Download Report</p>
+                                <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Search and Filter Functions</p>
+                                <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;padding: 0 20px 0 20px;font-weight: bold;">Add Company Profile and Company name on Report</p>
+                            </form>
+                          </div>
                         </div>
-                        <!-- <div class="col-md-4 col-sm-6">
-                            <div class="pricing-table dark-blue" id="div-premium">
-                                <div class="pt-header">
-                                    <div class="plan-pricing">
-                                        <div class="pricing"><?php echo "$".$user_plans[2]->plan_price; ?></div>
-                                        <div class="pricing-type">per month</div>
-                                    </div>
-                                </div>
-                                <div class="pt-body">
-                                    <h4><?php echo $user_plans[2]->title ." Plan"; ?></h4>
-                                    <ul class="plan-detail">
-                                        <li>Unlimited Vehicles & Trailers</li>
-                                        <li>Unlimited Reports</li>
-                                        <li><?php echo $user_plans[2]->description; ?></li>
-                                        <li>&nbsp;</li>
-                                    </ul>
-                                </div>
-                                <div class="pt-footer">
-                                    <button type="button" class="btn btn-primary" id="btn-premium">Select Plan</button>
-                                </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6" style="padding: 0;">
+                        <div class="card card-3">
+                          <div class="card-header card-3-header text-center">
+                              <h2><strong>Enterprise Plan</strong></h2>
+                              <p>For fleets of over 251+ vehicles.</p>
+                              <p style="margin-bottom: 18px;">All premium features and more.</p>
+                          </div>
+                          <div class="card-body card-3-body text-center">
+                            <div class="card-1-arrow-selected"></div>
+                            <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 0;">250+ vehicles</h3>
+                            <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
+
+                            <h3 class="card-title">POA</h3>
+
+                            <div class="form-group text-center">
+                                <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_basic_plan_trial_3">Proceed</a>
                             </div>
-                        </div> -->
+
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers 250+</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Mobile App Access</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Multiple Download Report</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Search and Filter Functions</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;padding: 0 20px 0 20px;font-weight: bold;">Add Company Profile and Company name on Report</p>
+                            <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Company reports</p>
+                          </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -372,6 +457,23 @@
             </div>
             <div class="modal-body" id="_pdfViewer">
                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="payment_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="defaultModalLabel">Payment</h4>
+            </div>
+            <div class="modal-body">
+              
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>

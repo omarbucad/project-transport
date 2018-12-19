@@ -334,7 +334,7 @@ class Checklist extends CI_Controller {
 						"start_mileage"					=> $value->start_mileage ,
 						"end_mileage"					=> $value->end_mileage ,
 						"report_notes"					=> (isset($value->report_notes)) ? $value->report_notes : NULL ,
-						"created"						=> strtotime(convert_timezone(strtotime($value->created), true, false)),
+						"created"						=> strtotime($value->created),
 						"remind_in"						=> $remind_in,
 						"remind_done"					=> false
 					]);

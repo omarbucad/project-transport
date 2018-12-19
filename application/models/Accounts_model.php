@@ -208,6 +208,7 @@ class Accounts_model extends CI_Model {
         if($count){
             if($role == "ADMIN PREMIUM"){
                 $this->db->where("role !=","SUPER ADMIN");
+                $this->db->where("role !=","ADMIN PREMIUM");
                 $this->db->where("deleted IS NULL");
                 return $result = $this->db->where("store_id" , $store_id)->get("user")->num_rows();
             }else{
@@ -218,6 +219,7 @@ class Accounts_model extends CI_Model {
         }else{
             if($role == "ADMIN PREMIUM"){
                 $this->db->where("role !=","SUPER ADMIN");
+                $this->db->where("role !=","ADMIN PREMIUM");
                 $this->db->where("deleted IS NULL");
                 $result = $this->db->where("store_id" , $store_id)->order_by("display_name" , "ASC")->get("user")->result();
             }else{

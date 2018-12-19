@@ -115,7 +115,7 @@
                     <div class="col-xs-12 col-lg-12 no-margin-bottom">
                       <div class="row">
                         <form action="<?php echo site_url('app/report/pdf_all');?>" method="POST" id="gen-form"  target="_blank">
-                          <div class="col-xs-12 col-lg-12"><h4>Generate 3 day reports to PDF  ( <small class="text-right" id="date-range"></small> )</h4> </div>
+                          <div class="col-xs-12 col-lg-12"><h4>Generate 1 week reports to PDF  ( <small class="text-right" id="date-range"></small> )</h4> </div>
                             
                           <div class="col-xs-12 col-lg-3">
                             <div class="form-group no-margin-bottom" >
