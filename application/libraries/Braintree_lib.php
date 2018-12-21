@@ -107,7 +107,10 @@ class Braintree_lib extends Braintree{
                     'company' => $data->company,
                     'email' => $data->email,
                     'phone' => $data->phone,
-                    'paymentMethodNonce' => $data->paymentMethodNonce
+                    'paymentMethodNonce' => $data->paymentMethodNonce,
+                    'billingAddress' => [
+                        'countryCodeAlpha2' => $data->country
+                    ]
                 ]);
 
                 if ($result->success) {
@@ -161,7 +164,8 @@ class Braintree_lib extends Braintree{
             'paymentMethodToken' => $data->paymentMethodToken,
             'planId' => $data->planId,
             'addOns' => [
-                'inheritedFromId' => $data->addOnId,
+                'existingId' => $data->addOnId,
+                'never_expires' => true,
                 'quantity' => $data->quantity
             ]
             // 'firstBillingDate' => $now,
@@ -238,7 +242,10 @@ class Braintree_lib extends Braintree{
                     'company' => $data['company'],
                     'email' => $data['email'],
                     'phone' => $data['phone'],
-                    'paymentMethodNonce' => $data['paymentMethodNonce']
+                    'paymentMethodNonce' => $data['paymentMethodNonce'],
+                    'billingAddress' => [
+                        'countryCodeAlpha2' => $data->country
+                    ]
                 ]);
 
                 if ($result->success) {

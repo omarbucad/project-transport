@@ -304,11 +304,9 @@ class Checklist extends CI_Controller {
 		if($allowed){
 			$data = $this->input->post("data");	
 			
-			$data = json_decode($data);
-
-			foreach ($data as $key => $value) {
-				
-				if($data){
+			$new = json_decode($data);
+			if($new){
+				foreach ($new as $key => $value) {				
 					$remind_in = NULL;
 					$this->db->trans_start();
 					$defect = 0;
@@ -350,6 +348,7 @@ class Checklist extends CI_Controller {
 
 					//save checklist items
 					//$checklist = json_decode($value->checklist);
+				
 					foreach($value->checklist as $item){
 
 						$item_batch = array(
@@ -501,10 +500,12 @@ class Checklist extends CI_Controller {
 							"pdf_file" 			=> $pdf['filename']
 						]);
 			        }
-			    }
-			}
-      
-			echo json_encode(["status" => true , "message" => "Successfully Submitted Offline Reports","action" => "offline_save_checklist"]);	
+				}
+				echo json_encode(["status" => true , "message" => "Successfully Submitted Offline Reports","action" => "offline_save_checklist"]);	
+			}else{
+				echo json_encode(["status" => false , "message" => "Data is empty","action" => "offline_save_checklist"]);	
+			}     
+			
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "offline_save_checklist"]);
 		}
