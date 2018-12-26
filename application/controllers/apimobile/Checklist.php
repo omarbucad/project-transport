@@ -298,213 +298,315 @@ class Checklist extends CI_Controller {
 		}
 	}
 
+	// public function json_validate($string)
+	// {
+	//     // decode the JSON data
+	//     $result = json_decode($string);
+
+	//     // switch and check possible JSON errors
+	//     switch (json_last_error()) {
+	//         case JSON_ERROR_NONE:
+	//             $error = ''; // JSON is valid // No error has occurred
+	//             break;
+	//         case JSON_ERROR_DEPTH:
+	//             $error = 'The maximum stack depth has been exceeded.';
+	//             break;
+	//         case JSON_ERROR_STATE_MISMATCH:
+	//             $error = 'Invalid or malformed JSON.';
+	//             break;
+	//         case JSON_ERROR_CTRL_CHAR:
+	//             $error = 'Control character error, possibly incorrectly encoded.';
+	//             break;
+	//         case JSON_ERROR_SYNTAX:
+	//             $error = 'Syntax error, malformed JSON.';
+	//             break;
+	//         // PHP >= 5.3.3
+	//         case JSON_ERROR_UTF8:
+	//             $error = 'Malformed UTF-8 characters, possibly incorrectly encoded.';
+	//             break;
+	//         // PHP >= 5.5.0
+	//         case JSON_ERROR_RECURSION:
+	//             $error = 'One or more recursive references in the value to be encoded.';
+	//             break;
+	//         // PHP >= 5.5.0
+	//         case JSON_ERROR_INF_OR_NAN:
+	//             $error = 'One or more NAN or INF values in the value to be encoded.';
+	//             break;
+	//         case JSON_ERROR_UNSUPPORTED_TYPE:
+	//             $error = 'A value of a type that cannot be encoded was given.';
+	//             break;
+	//         default:
+	//             $error = 'Unknown JSON error occured.';
+	//             break;
+	//     }
+
+	//     if ($error !== '') {
+	//         // throw the Exception or exit // or whatever :)
+	//         exit($error);
+	//     }
+
+	//     // everything is OK
+	//     return $result;
+	// }
+
+	private function codeToMessage($code) 
+    { 
+        switch ($code) { 
+            case UPLOAD_ERR_INI_SIZE: 
+                $message = "The uploaded file exceeds the upload_max_filesize directive in php.ini"; 
+                break; 
+            case UPLOAD_ERR_FORM_SIZE: 
+                $message = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form"; 
+                break; 
+            case UPLOAD_ERR_PARTIAL: 
+                $message = "The uploaded file was only partially uploaded"; 
+                break; 
+            case UPLOAD_ERR_NO_FILE: 
+                $message = "No file was uploaded"; 
+                break; 
+            case UPLOAD_ERR_NO_TMP_DIR: 
+                $message = "Missing a temporary folder"; 
+                break; 
+            case UPLOAD_ERR_CANT_WRITE: 
+                $message = "Failed to write file to disk"; 
+                break; 
+            case UPLOAD_ERR_EXTENSION: 
+                $message = "File upload stopped by extension"; 
+                break; 
+
+            default: 
+                $message = "Unknown upload error"; 
+                break; 
+        } 
+        return $message; 
+    } 
+
 	public function offline_save_checklist(){
-		
-		$allowed = validate_app_token($this->post->token);
+
+		// print_r_die($this->post);
+
+		$allowed = validate_app_token($this->input->post("token"));
 		if($allowed){
-			$data = $this->input->post("data");	
-			
-			$new = json_decode($data);
-			if($new){
-				foreach ($new as $key => $value) {				
-					$remind_in = NULL;
-					$this->db->trans_start();
-					$defect = 0;
-					$fixed = 0;
+			$data = '';
 
-					//Create report
-					if($value->role == "MECHANIC"){
-						$checklist_data = $this->db->select("reminder_every")->where("checklist_id" , $value->checklist_id)->get("checklist")->row();
-						$remind_in = remind_in($checklist_data->reminder_every);
+			if(!empty($_FILES)){
+				if($_FILES['data']['error'] == 0){
+					$data = file_get_contents($_FILES['data']['tmp_name']);
+					$data = (object)json_decode($data);
 
-						//then update all the report of the vehicle into remind done
+					if($data){
 
-						$this->db->where("report_by" , $value->user_id)->where("vehicle_registration_number" , $value->vehicle_registration_number)->update("report" , [
-							"remind_done" => true
-						]);
-					}
+						foreach ($data as $key => $value) {				
+							$remind_in = NULL;
+							$this->db->trans_start();
+							$defect = 0;
+							$fixed = 0;
 
-					$this->db->insert("report" , [
-						"report_by"						=> $value->user_id ,
-						"vehicle_registration_number"	=> ($value->vehicle_registration_number != '') ? $value->vehicle_registration_number : NULL ,
-						"trailer_number"				=> ($value->trailer_number != '') ? $value->trailer_number : NULL ,
-						"checklist_id"					=> $value->checklist_id,
-						"start_mileage"					=> $value->start_mileage ,
-						"end_mileage"					=> $value->end_mileage ,
-						"report_notes"					=> (isset($value->report_notes)) ? $value->report_notes : NULL ,
-						"created"						=> strtotime($value->created),
-						"remind_in"						=> $remind_in,
-						"remind_done"					=> false
-					]);
+							//Create report
+							if($value->role == "MECHANIC"){
+								$checklist_data = $this->db->select("reminder_every")->where("checklist_id" , $value->checklist_id)->get("checklist")->row();
+								$remind_in = remind_in($checklist_data->reminder_every);
 
-					$report_id = $this->db->insert_id();
-					$report_number = date("dmY").'-'.sprintf('%05d', $report_id);
+								//then update all the report of the vehicle into remind done
 
-					$signature_path = '';
-					
-					if(isset($value->end_mileage)){
-						$signature_path = $this->offline_save_signature($report_id, $value->signature);
-					}
-
-					//save checklist items
-					//$checklist = json_decode($value->checklist);
-				
-					foreach($value->checklist as $item){
-
-						$item_batch = array(
-							"report_id"				=> $report_id ,
-							"checklist_item_id"		=> $item->checklist_id ,
-							"checklist_value"		=> ($item->note == '') ? NULL : $item->note,
-							"checklist_ischeck"		=> $item->checkbox,
-							"timestamp"				=> convert_timezone(strtotime($item->timestamp), true, false),
-							"updated_value"		=> ($item->update_note == '') ? NULL : $item->update_note,
-							"updated_ischeck"	=> ($item->update_check == 99) ? NULL : $item->update_check,
-							"updated_timestamp" => ($item->update_timestamp == '') ? NULL : convert_timezone(strtotime($item->update_timestamp), true, false),
-							"final_update_value" => ($item->final_update_note == '') ? NULL : $item->final_update_note,
-							"final_update_ischeck" => ($item->final_update_check == 99) ? NULL : $item->final_update_check,
-							"final_update_timestamp" => ($item->final_update_timestamp  == '') ? NULL : convert_timezone(strtotime($item->final_update_timestamp), true, false)
-						);
-
-						$this->db->insert("report_checklist" , $item_batch);
-						$report_checklist_id = $this->db->insert_id();
-
-						if(!empty($item->images)){
-							$this->offline_save_image($report_id , $report_checklist_id , $item->images);
-						}
-
-						if(isset($item->update_images)){
-							if(!empty($item->update_images)){
-								$this->save_update_image($report_id , $report_checklist_id , $item->update_images);
-							}							
-						}
-						if(isset($item->final_update_images)){
-							if(!empty($item->final_update_images)){
-								$this->save_final_image($report_id , $report_checklist_id , $item->final_update_images);
-							}							
-						}
-
-						if($item->checkbox == 1){
-							$defect++;
-						}
-						if($item->checkbox == 2){
-							if($item->update_check == 1){
-								$defect++;
-								if($item->final_update_check == 0){
-									$fixed++;
-								}
+								$this->db->where("report_by" , $value->user_id)->where("vehicle_registration_number" , $value->vehicle_registration_number)->update("report" , [
+									"remind_done" => true
+								]);
 							}
-							if($item->update_check == 0){
-								if($item->final_update_check == 1){
+
+							$this->db->insert("report" , [
+								"report_by"						=> $value->user_id ,
+								"vehicle_registration_number"	=> ($value->vehicle_registration_number != '') ? $value->vehicle_registration_number : NULL ,
+								"trailer_number"				=> ($value->trailer_number != '') ? $value->trailer_number : NULL ,
+								"checklist_id"					=> $value->checklist_id,
+								"start_mileage"					=> $value->start_mileage ,
+								"end_mileage"					=> $value->end_mileage ,
+								"report_notes"					=> (isset($value->report_notes)) ? $value->report_notes : NULL ,
+								"created"						=> strtotime($value->created),
+								"remind_in"						=> $remind_in,
+								"remind_done"					=> false
+							]);
+
+							$report_id = $this->db->insert_id();
+							$report_number = date("dmY").'-'.sprintf('%05d', $report_id);
+
+							$signature_path = '';
+							
+							if(isset($value->end_mileage)){
+								$signature_path = $this->offline_save_signature($report_id, $value->signature);
+							}
+
+							//save checklist items
+							//$checklist = json_decode($value->checklist);
+						
+							foreach($value->checklist as $item){
+
+								$item_batch = array(
+									"report_id"				=> $report_id ,
+									"checklist_item_id"		=> $item->checklist_id ,
+									"checklist_value"		=> ($item->note == '') ? NULL : $item->note,
+									"checklist_ischeck"		=> $item->checkbox,
+									"timestamp"				=> convert_timezone(strtotime($item->timestamp), true, false),
+									"updated_value"		=> ($item->update_note == '') ? NULL : $item->update_note,
+									"updated_ischeck"	=> ($item->update_check == 99) ? NULL : $item->update_check,
+									"updated_timestamp" => ($item->update_timestamp == '') ? NULL : convert_timezone(strtotime($item->update_timestamp), true, false),
+									"final_update_value" => ($item->final_update_note == '') ? NULL : $item->final_update_note,
+									"final_update_ischeck" => ($item->final_update_check == 99) ? NULL : $item->final_update_check,
+									"final_update_timestamp" => ($item->final_update_timestamp  == '') ? NULL : convert_timezone(strtotime($item->final_update_timestamp), true, false)
+								);
+
+								$this->db->insert("report_checklist" , $item_batch);
+								$report_checklist_id = $this->db->insert_id();
+
+								if(!empty($item->images)){
+									$this->offline_save_image($report_id , $report_checklist_id , $item->images);
+								}
+
+								if(isset($item->update_images)){
+									if(!empty($item->update_images)){
+										$this->save_update_image($report_id , $report_checklist_id , $item->update_images);
+									}							
+								}
+								if(isset($item->final_update_images)){
+									if(!empty($item->final_update_images)){
+										$this->save_final_image($report_id , $report_checklist_id , $item->final_update_images);
+									}							
+								}
+
+								if($item->checkbox == 1){
 									$defect++;
 								}
+								if($item->checkbox == 2){
+									if($item->update_check == 1){
+										$defect++;
+										if($item->final_update_check == 0){
+											$fixed++;
+										}
+									}
+									if($item->update_check == 0){
+										if($item->final_update_check == 1){
+											$defect++;
+										}
+									}
+								}
+
+								if($item->update_check == 0){
+									$fixed++;
+									if($item->final_update_check == 1){
+										$defect++;
+									}
+								}
+
+								if($item->update_check == 1){
+									$defect++;
+									if($item->final_update_check == 0){
+										$fixed++;
+									}
+								}
+
+								if($item->checkbox == 0 && $item->update_check == 2){
+									if($item->final_update_check == 1){
+										$defect++;
+									}
+								}								
 							}
-						}
-
-						if($item->update_check == 0){
-							$fixed++;
-							if($item->final_update_check == 1){
-								$defect++;
+							
+							if($defect != 0){
+								if($defect > $fixed){
+									$finalstat = 1;
+								}else{
+									$finalstat = 2;
+								}
+							}else{
+								$finalstat = 0;
 							}
-						}
-
-						if($item->update_check == 1){
-							$defect++;
-							if($item->final_update_check == 0){
-								$fixed++;
-							}
-						}
-
-						if($item->checkbox == 0 && $item->update_check == 2){
-							if($item->final_update_check == 1){
-								$defect++;
-							}
-						}								
-					}
-					
-					if($defect != 0){
-						if($defect > $fixed){
-							$finalstat = 1;
-						}else{
-							$finalstat = 2;
-						}
-					}else{
-						$finalstat = 0;
-					}
-					//Create status
-					$this->db->insert("report_status" , [
-						"report_id"			=> $report_id ,
-						"status"			=> $finalstat,
-						"notes"				=> $value->report_notes ,
-						"user_id"			=> $value->user_id ,
-						"created"			=> strtotime(convert_timezone(strtotime($value->created), true, false)),
-						"start_longitude"	=> $value->start_longitude,
-						"start_latitude"	=> $value->start_latitude,
-						"longitude"			=> $value->longitude,
-						"latitude"			=> $value->latitude,
-						"signature"			=> ($signature_path == '')? NULL : $signature_path
-					]);
-					$status_id = $this->db->insert_id();
-
-					// $this->db->where("report_id" , $report_id)->update("report" , [
-					// 	"status_id"			=> $status_id
-					// ]);
-
-					$this->db->where("report_id" , $report_id)->update("report" , [
-						"report_number"		=> $report_number,
-						"status_id"			=> $status_id ,
-					]);
-					
-
-					// $this->db->where("vehicle_registration_number",$value->vehicle_registration_number);
-					// $this->db->update("vehicle",[
-					// 	"last_checked" => $value->last_checked,
-					// 	"status" => 2
-					// ]);
-
-					$this->db->insert("vehicles_used",[
-						"user_id" => $value->user_id,
-						"vehicle_registration_number" => $value->vehicle_registration_number,
-						"trailer_number" => ($value->trailer_number != '') ? $value->trailer_number : NULL,
-						"vehicle_type" => $value->vehicle_type_id,
-						"date_used" => strtotime(convert_timezone(strtotime($value->created), true, false))
-					]);
-
-					if($value->trailer_number == ''){
-						$this->db->select("id");
-						$this->db->where("checklist_id", $value->checklist_id);
-						$this->db->where("item_position >=", 29);
-						$this->db->where("deleted IS NULL");
-						$c_items = $this->db->get("checklist_items")->result();
-
-						foreach ($c_items as $c => $c_v) {
-							$this->db->insert("report_checklist",[
-								"report_id"				=> $report_id ,
-								"checklist_item_id"		=> $c_v->id ,
-								"checklist_value"		=> NULL,
-								"checklist_ischeck"		=> 3
+							//Create status
+							$this->db->insert("report_status" , [
+								"report_id"			=> $report_id ,
+								"status"			=> $finalstat,
+								"notes"				=> $value->report_notes ,
+								"user_id"			=> $value->user_id ,
+								"created"			=> strtotime(convert_timezone(strtotime($value->created), true, false)),
+								"start_longitude"	=> $value->start_longitude,
+								"start_latitude"	=> $value->start_latitude,
+								"longitude"			=> $value->longitude,
+								"latitude"			=> $value->latitude,
+								"signature"			=> ($signature_path == '')? NULL : $signature_path
 							]);
+							$status_id = $this->db->insert_id();
+
+							// $this->db->where("report_id" , $report_id)->update("report" , [
+							// 	"status_id"			=> $status_id
+							// ]);
+
+							$this->db->where("report_id" , $report_id)->update("report" , [
+								"report_number"		=> $report_number,
+								"status_id"			=> $status_id ,
+							]);
+							
+
+							// $this->db->where("vehicle_registration_number",$value->vehicle_registration_number);
+							// $this->db->update("vehicle",[
+							// 	"last_checked" => $value->last_checked,
+							// 	"status" => 2
+							// ]);
+
+							$this->db->insert("vehicles_used",[
+								"user_id" => $value->user_id,
+								"vehicle_registration_number" => $value->vehicle_registration_number,
+								"trailer_number" => ($value->trailer_number != '') ? $value->trailer_number : NULL,
+								"vehicle_type" => $value->vehicle_type_id,
+								"date_used" => strtotime(convert_timezone(strtotime($value->created), true, false))
+							]);
+
+							if($value->trailer_number == ''){
+								$this->db->select("id");
+								$this->db->where("checklist_id", $value->checklist_id);
+								$this->db->where("item_position >=", 29);
+								$this->db->where("deleted IS NULL");
+								$c_items = $this->db->get("checklist_items")->result();
+
+								foreach ($c_items as $c => $c_v) {
+									$this->db->insert("report_checklist",[
+										"report_id"				=> $report_id ,
+										"checklist_item_id"		=> $c_v->id ,
+										"checklist_value"		=> NULL,
+										"checklist_ischeck"		=> 3
+									]);
+								}
+							}
+							
+							$this->db->trans_complete();
+
+							if ($this->db->trans_status() === FALSE){
+
+					            echo json_encode(["status" => false , "message" => "Something went wrong","action" => "offline_save_checklist"]);
+
+					        }else{
+					            $pdf = $this->pdf($report_id);
+
+					            $this->db->where("report_id" , $report_id)->update("report" , [
+									"pdf_path"			=> $pdf['path'],
+									"pdf_file" 			=> $pdf['filename']
+								]);
+					        }
 						}
-					}
-					
-					$this->db->trans_complete();
+						echo json_encode(["status" => true , "message" => "Successfully Submitted Offline Reports","action" => "offline_save_checklist"]);	
+					}else{
+						echo json_encode(["status" => false , "message" => "Data is empty","action" => "offline_save_checklist"]);
+					}     
+				}else{
 
-					if ($this->db->trans_status() === FALSE){
-
-			            echo json_encode(["status" => false , "message" => "Something went wrong","action" => "offline_save_checklist"]);
-
-			        }else{
-			            $pdf = $this->pdf($report_id);
-
-			            $this->db->where("report_id" , $report_id)->update("report" , [
-							"pdf_path"			=> $pdf['path'],
-							"pdf_file" 			=> $pdf['filename']
-						]);
-			        }
+					echo json_encode(["status" => false , "message" => $this->codeToMessage($_FILES['data']['error']),"action" => "offline_save_checklist"]);
 				}
-				echo json_encode(["status" => true , "message" => "Successfully Submitted Offline Reports","action" => "offline_save_checklist"]);	
+				
 			}else{
-				echo json_encode(["status" => false , "message" => "Data is empty","action" => "offline_save_checklist"]);	
-			}     
+				echo json_encode(["status" => false , "message" => "No file","action" => "offline_save_checklist"]);
+			}
+			
+
+			
+			
 			
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "offline_save_checklist"]);
@@ -537,7 +639,6 @@ class Checklist extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 
-			$img_batch = array();
 			$ctr = 1;
 			foreach($images as $img){
 
@@ -582,7 +683,6 @@ class Checklist extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 
-			$img_batch = array();
 			$ctr = 1;
 			foreach($images as $img){
 
@@ -653,7 +753,6 @@ class Checklist extends CI_Controller {
 		
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
-			$img_batch = array();
 			$ctr = 1;
 			foreach($images as $img){
 

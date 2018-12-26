@@ -89,6 +89,20 @@ class Braintree_lib extends Braintree{
         }        
     }
 
+    function check_customer($data){
+        try{
+            $exist = Braintree_Customer::find($data->username);
+            $customer = new stdClass;
+            $customer->customer = $exist->paymentMethods;
+            return $customer;
+        }
+        catch(Braintree_Exception_NotFound $e){
+            if($e){
+                return false;
+            }
+        }
+    }
+
     // if not exist : create customer with payment method
     // else : return customer data
     function get_customer_data($data){
@@ -152,13 +166,29 @@ class Braintree_lib extends Braintree{
             }
             return $error;
         }
-}
+    }
+
+    function get_plan_name($id){
+        $name = $this->getAllPlan();
+        $data = array();
+        foreach ($name as $key => $value) {
+            if($id == $value->id){
+                $data = [
+                    "plan" => $value->name,
+                    "description" => $value->description
+                ];
+
+                return $data; 
+            }
+        }
+    }
 
     function create_subscription_token($data){
        // $now = convert_timezone(strtotime("now"), true, true,false,"m/d/Y h:i:s A");
         // $n = convert_timezone(strtotime("now"), true, true,false,"m/d/Y h:i:sP");
         // $now = new DateTime($n);
         // $now->format("m/d/Y h:i:sP");
+        $plandata = $this->get_plan_name($data->planId);
 
         $result = Braintree_Subscription::create([
             'paymentMethodToken' => $data->paymentMethodToken,
@@ -167,6 +197,10 @@ class Braintree_lib extends Braintree{
                 'existingId' => $data->addOnId,
                 'never_expires' => true,
                 'quantity' => $data->quantity
+            ],
+            'descriptor' => [
+                'plan' => "Vehicle Checklist ".$plandata['plan'],
+                'description' => $plandata['description']
             ]
             // 'firstBillingDate' => $now,
             // 'options' => ['startImmediately' => true]
@@ -176,14 +210,20 @@ class Braintree_lib extends Braintree{
     }
 
     function create_subscription_nonce($data){
+        $plandata = $this->get_plan_name($data->planId);
+
         $result = Braintree_Subscription::create([
-          'paymentMethodNonce' => $data->paymentMethodNonce,
-          'planId' => $data->planId,
-          'addOns' => [
-            'existingId' => $data->addOnId,
-            'never_expires' => true,
-            'quantity' => $data->quantity
-          ]
+            'paymentMethodNonce' => $data->paymentMethodNonce,
+            'planId' => $data->planId,
+            'addOns' => [
+                'existingId' => $data->addOnId,
+                'never_expires' => true,
+                'quantity' => $data->quantity
+            ],
+            'descriptor' => [
+                'plan' => $plandata['plan'],
+                'description' => $plandata['description']
+            ]
         ]);
 
         return $result;
@@ -272,10 +312,20 @@ class Braintree_lib extends Braintree{
     }
 
     function create_websubscription_token($data){
+        $plandata = $this->get_plan_name($data->planId);
 
         $result = Braintree_Subscription::create([
             'paymentMethodToken' => $data['paymentMethodToken'],
-            'planId' => $data['planId']
+            'planId' => $data['planId'],
+            'addOns' => [
+                'existingId' => $data->addOnId,
+                'never_expires' => true,
+                'quantity' => $data->quantity
+            ],
+            'descriptor' => [
+                'plan' => $plandata['plan'],
+                'description' => $plandata['description']
+            ]
             // 'firstBillingDate' => $now,
             // 'options' => ['startImmediately' => true]
         ]);

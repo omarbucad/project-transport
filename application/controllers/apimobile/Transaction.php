@@ -47,6 +47,23 @@ class Transaction extends CI_Controller {
 
 	}
 
+	public function check_customer(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+			$data = $this->braintree_lib->check_customer($this->post);
+			if($data){
+
+				echo json_encode(["status" => true , "data" => $data, "action" => "check_customer"]);
+			}else{
+
+				echo json_encode(["status" => false , "message" => "Not exist", "action" => "check_customer"]);
+			}
+
+		}else{
+	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "check_customer"]);
+		}
+	}
 	public function create_subscription_token(){
 		//print_r_die($this->post);
 		$allowed = validate_app_token($this->post->token);
