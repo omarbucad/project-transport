@@ -189,22 +189,35 @@ class Braintree_lib extends Braintree{
         // $now = new DateTime($n);
         // $now->format("m/d/Y h:i:sP");
         $plandata = $this->get_plan_name($data->planId);
-
-        $result = Braintree_Subscription::create([
-            'paymentMethodToken' => $data->paymentMethodToken,
-            'planId' => $data->planId,
-            'addOns' => [
-                'existingId' => $data->addOnId,
-                'never_expires' => true,
-                'quantity' => $data->quantity
-            ],
-            'descriptor' => [
-                'plan' => "Vehicle Checklist ".$plandata['plan'],
-                'description' => $plandata['description']
-            ]
-            // 'firstBillingDate' => $now,
-            // 'options' => ['startImmediately' => true]
-        ]);
+        if($data->addOnId != ''){
+            $result = Braintree_Subscription::create([
+                'paymentMethodToken' => $data->paymentMethodToken,
+                'planId' => $data->planId,
+                'addOns' => [
+                    'existingId' => $data->addOnId,
+                    'never_expires' => true,
+                    'quantity' => $data->quantity
+                ],
+                'descriptor' => [
+                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                    'description' => $plandata['description']
+                ]
+                // 'firstBillingDate' => $now,
+                // 'options' => ['startImmediately' => true]
+            ]);
+        }else{
+            $result = Braintree_Subscription::create([
+                'paymentMethodToken' => $data->paymentMethodToken,
+                'planId' => $data->planId,
+                'descriptor' => [
+                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                    'description' => $plandata['description']
+                ]
+                // 'firstBillingDate' => $now,
+                // 'options' => ['startImmediately' => true]
+            ]);
+        }
+        
 
         return $result;
     }
@@ -212,19 +225,34 @@ class Braintree_lib extends Braintree{
     function create_subscription_nonce($data){
         $plandata = $this->get_plan_name($data->planId);
 
-        $result = Braintree_Subscription::create([
-            'paymentMethodNonce' => $data->paymentMethodNonce,
-            'planId' => $data->planId,
-            'addOns' => [
-                'existingId' => $data->addOnId,
-                'never_expires' => true,
-                'quantity' => $data->quantity
-            ],
-            'descriptor' => [
-                'plan' => $plandata['plan'],
-                'description' => $plandata['description']
-            ]
-        ]);
+        if($data->addOnId != ''){
+            $result = Braintree_Subscription::create([
+                'paymentMethodToken' => $data->paymentMethodNonce,
+                'planId' => $data->planId,
+                'addOns' => [
+                    'existingId' => $data->addOnId,
+                    'never_expires' => true,
+                    'quantity' => $data->quantity
+                ],
+                'descriptor' => [
+                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                    'description' => $plandata['description']
+                ]
+                // 'firstBillingDate' => $now,
+                // 'options' => ['startImmediately' => true]
+            ]);
+        }else{
+            $result = Braintree_Subscription::create([
+                'paymentMethodToken' => $data->paymentMethodNonce,
+                'planId' => $data->planId,
+                'descriptor' => [
+                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                    'description' => $plandata['description']
+                ]
+                // 'firstBillingDate' => $now,
+                // 'options' => ['startImmediately' => true]
+            ]);
+        }
 
         return $result;
     }
