@@ -10,7 +10,7 @@ class Invoice_model extends CI_Model {
         $this->db->join("user u","u.user_id = i.user_id");
         $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
         $this->db->join("user u2","u2.user_id = up.who_updated");    
-        $this->db->join("plan p","p.plan_id = up.plan_id");
+        $this->db->join("plan p","p.planId = up.plan_id");
         $this->db->where("i.deleted IS NULL");    
 
         if($count){
@@ -39,7 +39,7 @@ class Invoice_model extends CI_Model {
         $this->db->join("user u","u.user_id = i.user_id");
         $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
         $this->db->join("user u2","u2.user_id = up.who_updated");        
-        $this->db->join("plan p","p.plan_id = up.plan_id");
+        $this->db->join("plan p","p.planId = up.plan_id");
         $this->db->join("store s","s.store_id = u.store_id");
         $this->db->join("store_address sa","sa.store_address_id = s.address_id");
         $this->db->join("store_contact sc","sc.contact_id = s.contact_id");
@@ -71,7 +71,7 @@ class Invoice_model extends CI_Model {
         $this->db->join("user u","u.user_id = i.user_id");
         $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
         $this->db->join("user u2","u2.user_id = up.who_updated");        
-        $this->db->join("plan p","p.plan_id = up.plan_id");
+        $this->db->join("plan p","p.planId = up.plan_id");
         $this->db->join("store s","s.store_id = u.store_id");
         $this->db->join("store_address sa","sa.store_address_id = s.address_id");
         $this->db->join("store_contact sc","sc.contact_id = s.contact_id");

@@ -111,9 +111,14 @@ class Braintree_lib extends Braintree{
             
             $customer = new stdClass;
             $customer->customer = $exist->paymentMethods;
+            // Status
+            // 1 - created
+            // 2 - exist
+            $customer->exist = 2;
             return $customer;
         } catch(Braintree_Exception_NotFound $e){
             if($e){
+
                  $result = Braintree_Customer::create([
                     'id' => $data->username,
                     'firstName' => $data->firstname,
@@ -121,13 +126,26 @@ class Braintree_lib extends Braintree{
                     'company' => $data->company,
                     'email' => $data->email,
                     'phone' => $data->phone,
-                    'paymentMethodNonce' => $data->paymentMethodNonce,
-                    'billingAddress' => [
-                        'countryCodeAlpha2' => $data->country
-                    ]
+                    'paymentMethodNonce' => $data->paymentMethodNonce
+                    // ,
+                    // 'billing' => [
+                    //     'countryCodeAlpha2' => $data->country
+                    // ]
                 ]);
 
                 if ($result->success) {
+                    try{
+                        $address = Braintree_Address::create([
+                            'customerId' => $data->username,
+                            'countryCodeAlpha2' => $data->country
+                        ]);
+                    }catch(Braintree_Exception_NotFound $n){
+                       
+                    }
+                    // 1 - created
+                    // 2 - exist
+                    $result->exist = 1;
+
                     // echo($result->customer->id);
                     // echo($result->customer->paymentMethods[0]->token);
                     // $subscription = [
@@ -194,33 +212,48 @@ class Braintree_lib extends Braintree{
                 'paymentMethodToken' => $data->paymentMethodToken,
                 'planId' => $data->planId,
                 'addOns' => [
-                    'existingId' => $data->addOnId,
-                    'never_expires' => true,
-                    'quantity' => $data->quantity
+                    'add' => [
+                        [
+                            'inheritedFromId' => $data->addOnId,
+                            'neverExpires' => true,
+                            'quantity' => $data->quantity
+                        ]                       
+                    ]                    
                 ],
                 'descriptor' => [
-                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
-                    'description' => $plandata['description']
+                    //'name' => "TRACKER*".$plandata['description']
+                    'name' => "TRCKRTR*PLAN"
                 ]
                 // 'firstBillingDate' => $now,
                 // 'options' => ['startImmediately' => true]
             ]);
+            // if($result){
+            //     return $result;
+            // }else{
+            //     // $error = "";
+            //     // // foreach($result->errors->deepAll() AS $error) {
+            //     // //     $error .= $error->code . ": " . $error->message . "\n";
+            //     // //     //echo($error->code . ": " . $error->message . "\n");
+            //     // // }
+            //     return $error;
+            // }
         }else{
             $result = Braintree_Subscription::create([
                 'paymentMethodToken' => $data->paymentMethodToken,
                 'planId' => $data->planId,
-                'descriptor' => [
-                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
-                    'description' => $plandata['description']
+                 'descriptor' => [
+                    //'name' => "TRACKER*".$plandata['description']
+
+                    'name' => "TRCKRTR*PLAN"
                 ]
                 // 'firstBillingDate' => $now,
                 // 'options' => ['startImmediately' => true]
             ]);
         }
-        
 
         return $result;
     }
+
 
     function create_subscription_nonce($data){
         $plandata = $this->get_plan_name($data->planId);
@@ -235,8 +268,9 @@ class Braintree_lib extends Braintree{
                     'quantity' => $data->quantity
                 ],
                 'descriptor' => [
-                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
-                    'description' => $plandata['description']
+                     'name' => "TRCKRTR*PLAN"
+                    // 'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                    // 'description' => $plandata['description']
                 ]
                 // 'firstBillingDate' => $now,
                 // 'options' => ['startImmediately' => true]
@@ -246,8 +280,9 @@ class Braintree_lib extends Braintree{
                 'paymentMethodToken' => $data->paymentMethodNonce,
                 'planId' => $data->planId,
                 'descriptor' => [
-                    'plan' => "Vehicle Checklist - ".$plandata['plan'],
-                    'description' => $plandata['description']
+                     'name' => "TRCKRTR*PLAN"
+                    // 'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                    // 'description' => $plandata['description']
                 ]
                 // 'firstBillingDate' => $now,
                 // 'options' => ['startImmediately' => true]
@@ -281,12 +316,36 @@ class Braintree_lib extends Braintree{
 
 
     function update_subscription($data){
-        $result = Braintree_Subscription::update($data->subscription_id, [
-            'id' => $data->id,
-            'paymentMethodToken' => $data->newPaymentMethodToken,
-            'planId' => $data->planId,
-            'merchantAccountId' => $data->merchantAccountId
-        ]);
+        if($data->addOnId != ''){
+            $result = Braintree_Subscription::update($data->subscription_id, [
+                //'id' => $data->id,
+                'paymentMethodToken' => $data->newPaymentMethodToken,
+                'planId' => $data->planId,
+                //'merchantAccountId' => $data->merchantAccountId,
+                'addOns' => [
+                    'add' => [
+                        [
+                            'inheritedFromId' => $data->addOnId,
+                            'neverExpires' => true,
+                            'quantity' => $data->quantity
+                        ]                       
+                    ]                    
+                ]
+            ]);
+            if($result->success){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            $result = Braintree_Subscription::update($data->subscription_id, [
+                //'id' => $data->id,
+                'paymentMethodToken' => $data->newPaymentMethodToken,
+                'planId' => $data->planId,
+                //'merchantAccountId' => $data->merchantAccountId
+            ]);
+        }
+        
     }
 
 
@@ -310,10 +369,11 @@ class Braintree_lib extends Braintree{
                     'company' => $data['company'],
                     'email' => $data['email'],
                     'phone' => $data['phone'],
-                    'paymentMethodNonce' => $data['paymentMethodNonce'],
-                    'billingAddress' => [
-                        'countryCodeAlpha2' => $data->country
-                    ]
+                    'paymentMethodNonce' => $data['paymentMethodNonce']
+                    //,
+                    // 'billing' => [
+                    //     'countryCodeAlpha2' => $data->country
+                    // ]
                 ]);
 
                 if ($result->success) {

@@ -106,7 +106,7 @@ class Report_model extends CI_Model {
                 // array_push($marks, $loc_start);
                 $result[$r]->report_statuses[$key]->status = report_status($row->status);
                 $result[$r]->report_statuses[$key]->signature = ($result[$r]->report_statuses[$key]->signature == '') ? '' : $this->config->site_url("public/upload/signature/".$row->signature);
-                $result[$r]->report_statuses[$key]->created = convert_timezone($row->created,true);
+                $result[$r]->report_statuses[$key]->created = convert_timezone($row->created,true,false);
             }
 
            // $result[$r]->locations = json_encode($marks);

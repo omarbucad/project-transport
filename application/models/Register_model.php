@@ -80,13 +80,13 @@ class Register_model extends CI_Model {
     }
 
     public function signin($user){
-        $this->db->select("u.user_id , u.username, u.display_name ,u.firstname, u.lastname, u.email_address , u.role , u.store_id , u.image_path , u.image_name, u.phone, p.plan_id, p.title, p.no_vehicle,up.plan_expiration,up.user_plan_id, a1.*,s.store_name,s.logo_image_path,s.logo_image_name");
+        $this->db->select("u.user_id , u.username, u.display_name ,u.firstname, u.lastname, u.email_address , u.role , u.store_id , u.image_path , u.image_name, u.phone,  a1.*,s.store_name,s.logo_image_path,s.logo_image_name, up.plan_expiration,up.user_plan_id,up.vehicle_limit, p.planId, p.title");
         $this->db->select("a1.country");
 
         $this->db->join("store s" , "s.store_id = u.store_id");
         $this->db->join("store_address a1" , "a1.store_address_id = s.address_id");
         $this->db->join("user_plan up" , "up.store_id = u.store_id");
-        $this->db->join("plan p","p.plan_id = up.plan_id");
+        $this->db->join("plan p","p.planId = up.plan_id");
 
         if(is_array($user)){
 
@@ -101,7 +101,6 @@ class Register_model extends CI_Model {
             $this->db->or_where("u.email_address", $user['username']);
             $this->db->group_end();
         }
-
         $result = $this->db->where("up.active" , 1)->get("user u")->row();
         if($result){
             if($result->logo_image_name != ''){

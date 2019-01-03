@@ -126,7 +126,7 @@ class Profile_model extends CI_Model {
         $this->db->where("u.user_id",$user_id);
         $this->db->where("up.active",1);
         $this->db->join("user u","u.store_id = up.store_id");
-        $this->db->join("plan p","p.plan_id = up.plan_id");
+        $this->db->join("plan p","p.planId = up.plan_id");
         $result = $this->db->get("user_plan up")->row();
 
         $today = date("M d Y 00:00:00");

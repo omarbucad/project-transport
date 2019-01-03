@@ -526,7 +526,7 @@ class Checklist extends CI_Controller {
 								"status"			=> $finalstat,
 								"notes"				=> $value->report_notes ,
 								"user_id"			=> $value->user_id ,
-								"created"			=> strtotime(convert_timezone(strtotime($value->created), true, false)),
+								"created"			=> strtotime(convert_timezone(strtotime($value->created), true, true)),
 								"start_longitude"	=> $value->start_longitude,
 								"start_latitude"	=> $value->start_latitude,
 								"longitude"			=> $value->longitude,
@@ -556,7 +556,7 @@ class Checklist extends CI_Controller {
 								"vehicle_registration_number" => $value->vehicle_registration_number,
 								"trailer_number" => ($value->trailer_number != '') ? $value->trailer_number : NULL,
 								"vehicle_type" => $value->vehicle_type_id,
-								"date_used" => strtotime(convert_timezone(strtotime($value->created), true, false))
+								"date_used" => strtotime(convert_timezone(strtotime($value->created), true, true))
 							]);
 
 							if($value->trailer_number == ''){

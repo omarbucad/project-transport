@@ -137,7 +137,7 @@ class Vehicle_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
 
         $plan = $this->data['session_data']->title;
-        $count = $this->data['session_data']->no_vehicle;
+        $count = $this->data['session_data']->vehicle_limit;
         $vehicle = $this->db->where("store_id",$this->data['session_data']->title)->get("vehicle")->num_rows();
 
         if($plan == "Basic" && $vehicle < $count){
@@ -260,7 +260,7 @@ class Vehicle_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
 
         $plan = $this->data['session_data']->title;
-        $count = $this->data['session_data']->no_vehicle;
+        $count = $this->data['session_data']->vehicle_limit;
         $trailer = $this->db->where("store_id",$this->data['session_data']->title)->get("trailer")->num_rows();
 
         if($plan == "Basic" && $trailer < $count){

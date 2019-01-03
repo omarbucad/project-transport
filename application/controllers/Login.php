@@ -43,7 +43,7 @@ class Login extends MY_Controller {
 			if($role == "SUPER ADMIN"){
 				$this->session->set_flashdata('status' , 'success');
 				redirect('/admin/dashboard', 'refresh');
-			}elseif($role == "DRIVER PREMIUM" || $role == "DRIVER FREE" ){
+			}elseif($role == "DRIVER PREMIUM" || $role == "DRIVER" ){
 				$this->session->set_flashdata('status' , 'failed');
 				$this->session->set_flashdata('message' , 'Driver account is not allowed.');
 

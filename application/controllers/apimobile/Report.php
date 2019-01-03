@@ -46,7 +46,7 @@ class Report extends CI_Controller {
 			$this->db->where("u.store_id" , $store_id);
 
 
-			$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
+			$result = $this->db->order_by("r.report_id" , "DESC")->get("report r")->result();
 
 			if($result){
 				foreach($result as $key => $row){
@@ -67,7 +67,7 @@ class Report extends CI_Controller {
 		                $result[$key]->company_logo = $this->config->site_url("public/upload/company/".$result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }
 					
-					$result[$key]->created   =  convert_timezone($result->created,true,false);
+					$result[$key]->created   =  convert_timezone($result[$key]->created,true,false);
 
 					//$result[$key]->created = convert_timezone($row->created,true, true);
 					//$result[$key]->convert_timezone($r->created , true);
