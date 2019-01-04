@@ -54,6 +54,40 @@ class Braintree_lib extends Braintree{
 		Braintree_Configuration::privateKey($braintree['braintree_private_key']);
     }
 
+    function webhook_subscription(){
+        $webhookNotification = Braintree_webhookTesting::sampleNotification(
+           Braintree_WebhookNotification::SUBSCRIPTION_TRIAL_ENDED,
+           123
+        );
+
+        $webhookNotification = Braintree_WebhookNotification::parse(
+            $webhookNotification["bt_signature"], $webhookNotification["bt_payload"]
+        );
+
+        return json_encode($webhookNotification);
+       //Braintree_WebhookNotification::SUBSCRIPTION_TRIAL_ENDED
+        // if ( isset($_POST["bt_signature"]) && isset($_POST["bt_payload"]) ) 
+        // {
+        //     // $webhookNotification = Braintree_WebhookNotification::parse(
+        //     //     $_POST["bt_signature"], $_POST["bt_payload"]
+        //     // );
+        //     $webhookNotification = Braintree_webhookTesting::sampleNotification(
+        //         $_POST["bt_signature"], $_POST["bt_payload"]
+        //     );
+
+        //     // Example values for webhook notification properties
+        //     $message = $webhookNotification->kind; // "subscription_went_past_due"
+        //     $message = $webhookNotification->timestamp->format('D M j G:i:s T Y'); // "Sun Jan 1 00:00:00 UTC 2012"
+        //     return $webhookNotification;
+
+        //     // file_put_contents("/tmp/webhook.log", $message, FILE_APPEND);
+
+        //     // header("HTTP/1.1 200 OK");
+        // }else{
+        //     return false;
+        // }
+    }
+
     function getAllPlan(){
         $plans = Braintree_Plan::all();
 

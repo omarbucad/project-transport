@@ -65,7 +65,8 @@ class Account extends CI_Controller {
 
 			$this->db->insert("user_plan",[
 				"store_id" => $store_id,
-				"plan_id" => 'sandbox_free_trial',
+				"plan_id" => 'N/A',
+				"vehicle_limit" => 5,
 				"plan_created" => time(),
 				"plan_expiration" => strtotime("+1 month", time()),
 				"billing_type" => "NA",

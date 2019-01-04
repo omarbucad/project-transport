@@ -20,6 +20,20 @@ class Transaction extends CI_Controller {
 		$this->post = (object)$this->input->post();
 	}
 
+	public function webhooks(){
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			$result = $this->braintree_lib->getAllPlan();
+			if($result){
+				echo json_encode(["status" => true , "data" => $result, "action" => "webhooks"]);
+			}else{
+				echo json_encode(["status"=> true, "message" => "No notification available", "action" => "webhooks"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "webhooks"]);
+		}
+	}
+
 	public function getPlans(){
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){

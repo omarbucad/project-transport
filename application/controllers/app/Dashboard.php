@@ -16,6 +16,8 @@ class Dashboard extends MY_Controller {
   //       $now = new DateTime($n);
   //       $now->format("m/d/Y h:i:sP");
   //       print_r_die($now);
+		$bt = $this->braintree_lib->webhook_subscription();
+		print_r_die($bt);
 
 		$this->data['page_name'] = "Dashboard";
 		$this->data['main_page'] = "backend/page/dashboard/dashboard";

@@ -51,7 +51,7 @@ class Report extends CI_Controller {
 			if($result){
 				foreach($result as $key => $row){
 
-					if($plan == 'Free'){
+					if($plan == 'N/A'){
 						if($result[$key]->created <= $end && $result[$key]->created >= $start){
 							$result[$key]->displayed = true;
 						}else{
