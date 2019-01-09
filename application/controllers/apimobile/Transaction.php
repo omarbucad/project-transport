@@ -465,6 +465,18 @@ class Transaction extends CI_Controller {
 	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
 	                        //     continue;
 	                    }
+	                }elseif($data->planId == 'sandbox_basic_plan_trial_3'){
+	                	switch ($value->role) {
+	                        case 'DRIVER':
+	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN FREE"]);
+	                            continue;
+	                        // case 'DRIVER FREE':
+	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER PREMIUM"]);
+	                        //     continue;
+	                        // case 'MANAGER FREE':
+	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
+	                        //     continue;
+	                    }
 	                }else{
 	                    switch ($value->role) {
 	                        case 'ADMIN PREMIUM':

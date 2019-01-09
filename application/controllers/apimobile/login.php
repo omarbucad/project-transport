@@ -33,6 +33,26 @@ class Login extends CI_Controller {
 		$device_type = $this->post->device_type;
 
 		if($this->post){
+			if($username == ''){
+				$this->return_false(5);
+			}
+
+			if($password == ''){
+				$this->return_false(6);
+			}
+
+			if($device_id == '' && $device_type == ''){
+				$this->return_false(2);
+			}
+
+			if($device_id == ''){
+				$this->return_false(3);
+			}
+
+			if($device_type == ''){
+				$this->return_false(4);
+			}
+
 			if($data = $this->register->signin(["username" => $username , "password" => $password])){				
 
 				if($data->image_name == "person-placeholder.jpg"){
@@ -56,7 +76,7 @@ class Login extends CI_Controller {
 
 				echo json_encode(["status" => true , "data" => $data, "action" => "signin", "token" => $token]);
 			}else{
-				$this->return_false(1);
+				$this->return_false(7);
 			}
 
 		}else{
@@ -71,10 +91,40 @@ class Login extends CI_Controller {
 		switch ($rules) {
 			case 1:
 				
-				$msg = "Invalid Username & Password";
+				$msg = "No passed data";
 
 				break;
-			
+			case 2:
+				
+				$msg = "No device_id and device_type";
+
+				break;
+			case 3:
+				
+				$msg = "No device_id";
+
+				break;
+			case 4:
+				
+				$msg = "No device_type";
+
+				break;
+			case 5:
+				
+				$msg = "No username/email";
+
+				break;
+			case 6:
+				
+				$msg = "No password";
+
+				break;
+			case 7:
+				
+				$msg = "invalid username/password";
+
+				break;
+
 			default:
 				# code...
 				break;

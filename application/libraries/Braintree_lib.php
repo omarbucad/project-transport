@@ -59,12 +59,20 @@ class Braintree_lib extends Braintree{
            Braintree_WebhookNotification::SUBSCRIPTION_TRIAL_ENDED,
            123
         );
-
+        $signature = $webhookNotification["bt_signature"];
+        $payload = $webhookNotification["bt_payload"];
         $webhookNotification = Braintree_WebhookNotification::parse(
             $webhookNotification["bt_signature"], $webhookNotification["bt_payload"]
         );
 
-        return json_encode($webhookNotification);
+            $data = [
+                "bt_signature" => $signature,
+                "bt_payload" => $payload,
+                "kind" => $webhookNotification->kind,
+                "received" => time(),
+                "bt_created" => strtotime($webhookNotification->timestamp->format('D M j G:i:s T Y'))
+            ];
+        return $data;
        //Braintree_WebhookNotification::SUBSCRIPTION_TRIAL_ENDED
         // if ( isset($_POST["bt_signature"]) && isset($_POST["bt_payload"]) ) 
         // {
