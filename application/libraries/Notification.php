@@ -35,7 +35,7 @@ class Notification {
 			$this->CI->db->limit(10);
 		}
 		
-		$result =  $this->CI->db->order_by("created" , "DESC")->get("notification n")->result();
+		$result =  $this->CI->db->order_by("n.created" , "DESC")->get("notification n")->result();
 
 		foreach($result as $key => $row){
 			if($row->type == "REPORT"){

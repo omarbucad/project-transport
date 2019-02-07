@@ -59,6 +59,7 @@ class Transaction extends CI_Controller {
 	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "braintree_token"]);
 		}
 
+
 	}
 
 	public function check_customer(){
@@ -93,6 +94,7 @@ class Transaction extends CI_Controller {
 				if($result->role == ''){
 		           echo json_encode(["status" => false , "message" => "Subscription created. Failed to update database","action" => "create_subscription_token"]);
 				}else{
+					
 					$this->db->trans_start();
 
 					$this->db->insert("notification", [

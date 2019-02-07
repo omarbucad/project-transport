@@ -73,7 +73,7 @@ class Report extends CI_Controller {
 
 					//$result[$key]->created = convert_timezone($row->created,true, true);
 					//$result[$key]->convert_timezone($r->created , true);
-					$result[$key]->status_raw = report_type($row->status , true);
+					$result[$key]->status_raw = re port_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 					$this->db->trans_start();
 

@@ -36,6 +36,7 @@ class Accounts extends MY_Controller {
 		$this->load->view('backend/master' , $this->data);
 	}
 
+
 	public function add(){
 		$allowed = ($this->session->userdata('user')->role != "ADMIN PREMIUM") ? "true": "false";
 		if(!$allowed){

@@ -8,7 +8,7 @@ class Setup extends MY_Controller {
 
     	ini_set('max_execution_time',7000);
     	$this->data['notification_list'] = $this->notification->notify_list();
-    	
+
 	    $this->load->model('checklist_model', 'checklist');
 	    $this->load->model('vehicle_model', 'vehicle');
 	    $this->load->model('profile_model', 'profile');
@@ -361,4 +361,10 @@ class Setup extends MY_Controller {
 
 	}
 	// END OF ACCOUNT SECTION
+
+	// 	NOTIFICATION SECTION
+	public function notifications(){
+		
+	}
+	// END OF NOTIFICATION SECTION
 }

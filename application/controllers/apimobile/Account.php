@@ -151,11 +151,12 @@ class Account extends CI_Controller {
 				if($info > 0){
 					//$code = $this->hash->encrypt($email . "&time=".$time);
 					$data['code'] = $generated;
-					$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
-					$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+					// $data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+					// $data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+					$data['email'] = $info->email_address;
 
 					$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
-					$this->email->to($email);
+					$this->email->to($info->email_address);
 					$this->email->set_mailtype("html");
 					$this->email->subject('Email Verification');
 					$this->email->message($this->load->view('email/email_verification', $data , true));
@@ -195,11 +196,11 @@ class Account extends CI_Controller {
 
 				case 'valid':
 
-					$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
-					$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+					// $content['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+					// $content['background'] = $this->config->site_url("public/img/reset-pass.jpg");
 
 					$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
-					$this->email->to($email);
+					$this->email->to($data->email);
 					$this->email->set_mailtype("html");
 					$this->email->subject('Email Verification Successful');
 					$this->email->message($this->load->view('email/email_verification', $data , true));
