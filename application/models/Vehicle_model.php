@@ -66,6 +66,12 @@ class Vehicle_model extends CI_Model {
                 case 'Bus':
                     $result[$key]->type_img = site_url("public/img/vehicles/bus.png");
                     break;
+                case 'Trailer':
+                    $result[$key]->type_img = site_url("public/img/vehicles/trailer.png");
+                    break;
+                case 'Cement Mixer':
+                    $result[$key]->type_img = site_url("public/img/vehicles/cement_truck.png");
+                    break;
             }
         }
         return $result;

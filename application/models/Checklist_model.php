@@ -7,8 +7,8 @@ class Checklist_model extends CI_Model {
         /*
             TODO :: Searching logic here
         */
-        if($checklist_name = $this->input->get("checklist_name")){
-            $this->db->like("c.checklist_name", $checklist_name);
+        if($checklist_id = $this->input->get("checklist_name")){
+            $this->db->where("c.checklist_id", $checklist_id);
         }
         if($this->input->get("status") != ""){
             $this->db->where("c.status", $this->input->get("status"));
@@ -20,6 +20,10 @@ class Checklist_model extends CI_Model {
             $checklist_id = $this->hash->decrypt($checklist_id);
 
             $this->db->where("c.checklist_id" , $checklist_id);
+        }
+
+        if($this->session->userdata('user')->role != "SUPER ADMIN"){
+            $this->db->where("c.status !=", 0);
         }
         $this->db->select("c.*,vt.type");
         $this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
@@ -43,7 +47,8 @@ class Checklist_model extends CI_Model {
             "vehicle_type_id"  => $this->input->post("type"),
             "checklist_for"    => "DRIVER",
             "reminder_every"   => "",
-            "created"          => time()
+            "created"          => time(),
+            "checklistVersion" => 0
         ]);
 
         return $this->db->insert_id();
@@ -67,49 +72,49 @@ class Checklist_model extends CI_Model {
 
         foreach($items['name'] as $k => $name){
 
-            $file = [
-                'name'  => $images['name'][$k],
-                'type'  => $images['type'][$k],
-                'tmp_name'  => $images['tmp_name'][$k],
-                'error'  => $images['error'][$k],
-                'size'  => $images['size'][$k],
-            ];
+            // $file = [
+            //     'name'  => $images['name'][$k],
+            //     'type'  => $images['type'][$k],
+            //     'tmp_name'  => $images['tmp_name'][$k],
+            //     'error'  => $images['error'][$k],
+            //     'size'  => $images['size'][$k],
+            // ];
 
-            if($file['name']){
-                $img = $this->upload_image($file);
-            }else{
-                $img = array(
-                    "image_path" => NULL,
-                    "image_name" => NULL
-                );
-            }
+            // if($file['name']){
+            //     $img = $this->upload_image($file);
+            // }else{
+            //     $img = array(
+            //         "image_path" => NULL,
+            //         "image_name" => NULL
+            //     );
+            // }
 
-            $help_image = [
-                'name'  => $help_img['name'][$k],
-                'type'  => $help_img['type'][$k],
-                'tmp_name'  => $help_img['tmp_name'][$k],
-                'error'  => $help_img['error'][$k],
-                'size'  => $help_img['size'][$k],
-            ];
+            // $help_image = [
+            //     'name'  => $help_img['name'][$k],
+            //     'type'  => $help_img['type'][$k],
+            //     'tmp_name'  => $help_img['tmp_name'][$k],
+            //     'error'  => $help_img['error'][$k],
+            //     'size'  => $help_img['size'][$k],
+            // ];
 
-            if($help_image['name'] != ''){
-                $h_img = $this->upload_helpimage($help_image);
-            }else{
-                $h_img = array(
-                    "help_image_path" => NULL,
-                    "help_image_name" => NULL
-                );
-            }
+            // if($help_image['name'] != ''){
+            //     $h_img = $this->upload_helpimage($help_image);
+            // }else{
+            //     $h_img = array(
+            //         "help_image_path" => NULL,
+            //         "help_image_name" => NULL
+            //     );
+            // }
 
             $batch[] = array(
                 "checklist_id"  => $checklist_id ,
                 "item_name"     => $name ,
                 "help_text"     => $items['help'][$k],
-                "item_position" => $items['position'][$k] ,
-                "image_path"    => $img['image_path'],
-                "image_name"    => $img['image_name'],
-                "help_image_path"    => $h_img['help_image_path'],
-                "help_image_name"    => $h_img['help_image_name']
+                "item_position" => $items['position'][$k] 
+                // "image_path"    => $img['image_path'],
+                // "image_name"    => $img['image_name'],
+                // "help_image_path"    => $h_img['help_image_path'],
+                // "help_image_name"    => $h_img['help_image_name']
             );
         }
 
@@ -350,6 +355,7 @@ class Checklist_model extends CI_Model {
             "status"         => $this->input->post("status"),
             "checklist_for"  => "DRIVER",
             "reminder_every" => "",
+            "checklistVersion" => $this->input->post("checklistVersion") + 1
         ]);
 
         $items = $this->input->post("item");
@@ -357,49 +363,51 @@ class Checklist_model extends CI_Model {
         $help = array();
         $helpbatch = array();
         $imagebatch = array();
-        if(isset($_FILES['file'])){
-            $images = $_FILES['file'];
+        // if(isset($_FILES['file'])){
+        //     $images = $_FILES['file'];
+        //     //print_r_die($images);
 
-            foreach($images['name'] as $k => $value){
-                if($items['has_image'][$k] == $items['id'][$k]){
-                    $file = [
-                        'index'         => $k,
-                        'id'            => $items['id'][$k],
-                        'name'          => $images['name'][$k],
-                        'type'          => $images['type'][$k],
-                        'tmp_name'      => $images['tmp_name'][$k],
-                        'error'         => $images['error'][$k],
-                        'size'          => $images['size'][$k],
-                    ];
-                    if($file['name']){
-                        $imagebatch[] = $file;
-                    }       
-                }                       
-            }
-            $img = $this->upload_image($imagebatch);
-        }
+        //     foreach($images['name'] as $k => $value){
+        //         if($images['error'][$k] == '4')
+        //         if($items['has_image'][$k] == $items['id'][$k]){
+        //             $file = [
+        //                 'index'         => $k,
+        //                 'id'            => $items['id'][$k],
+        //                 'name'          => $images['name'][$k],
+        //                 'type'          => $images['type'][$k],
+        //                 'tmp_name'      => $images['tmp_name'][$k],
+        //                 'error'         => $images['error'][$k],
+        //                 'size'          => $images['size'][$k],
+        //             ];
+        //             if($file['name']){
+        //                 $imagebatch[] = $file;
+        //             }       
+        //         }                       
+        //     }
+        //     $img = $this->upload_image($imagebatch);
+        // }
 
-        if(isset($_FILES['help_img'])){
-            $helpimages = $_FILES['help_img'];
+        // if(isset($_FILES['help_img'])){
+        //     $helpimages = $_FILES['help_img'];
 
-            foreach($images['name'] as $k => $value){
-                if($items['has_help_image'][$k] == $items['id'][$k]){
-                    $file = [
-                        'index'         => $k,
-                        'id'            => $items['id'][$k],
-                        'name'          => $helpimages['name'][$k],
-                        'type'          => $helpimages['type'][$k],
-                        'tmp_name'      => $helpimages['tmp_name'][$k],
-                        'error'         => $helpimages['error'][$k],
-                        'size'          => $helpimages['size'][$k],
-                    ];
-                    if($file['name']){
-                        $helpbatch[] = $file;
-                    }       
-                }                       
-            }
-            $help = $this->upload_helpimage($helpbatch);
-        }
+        //     foreach($images['name'] as $k => $value){
+        //         if($items['has_help_image'][$k] == $items['id'][$k]){
+        //             $file = [
+        //                 'index'         => $k,
+        //                 'id'            => $items['id'][$k],
+        //                 'name'          => $helpimages['name'][$k],
+        //                 'type'          => $helpimages['type'][$k],
+        //                 'tmp_name'      => $helpimages['tmp_name'][$k],
+        //                 'error'         => $helpimages['error'][$k],
+        //                 'size'          => $helpimages['size'][$k],
+        //             ];
+        //             if($file['name']){
+        //                 $helpbatch[] = $file;
+        //             }       
+        //         }                       
+        //     }
+        //     $help = $this->upload_helpimage($helpbatch);
+        // }
         
         
         $batch = array();
@@ -411,10 +419,10 @@ class Checklist_model extends CI_Model {
                 "item_name"     => $items['name'][$k],
                 "item_position" => $items['position'][$k],
                 "help_text"     => $items['help_text'][$k]
-                // "image_path"    => (!empty($img_info)) ? $img_info[$k]['image_path'] : NULL,
-                // "image_name"    => (!empty($img_info)) ? $img_info[$k]['image_name'] : NULL,
-                // "help_image_path"    => (!empty($helpimg_info)) ? $helpimg_info[$k]['help_image_path'] : NULL,
-                // "help_image_name"    => (!empty($helpimg_info)) ? $helpimg_info[$k]['help_image_name'] : NULL 
+               /* "image_path"    => (!empty($img_info)) ? $img_info[$k]['image_path'] : NULL,
+                "image_name"    => (!empty($img_info)) ? $img_info[$k]['image_name'] : NULL,
+                "help_image_path"    => (!empty($helpimg_info)) ? $helpimg_info[$k]['help_image_path'] : NULL,
+                "help_image_name"    => (!empty($helpimg_info)) ? $helpimg_info[$k]['help_image_name'] : NULL */
             );             
         }     
 
@@ -427,8 +435,8 @@ class Checklist_model extends CI_Model {
                     "item_name"     => $value['item_name'],
                     "item_position" => $value['item_position'],
                     "help_text"     => $value['help_text']
-                    // "image_path"    => $value['image_path'],
-                    // "image_name"    => $value['image_name']
+                    /*"image_path"    => $value['image_path'],
+                    "image_name"    => $value['image_name']*/
                 ]);
             }elseif($value['has_image'] != 0 && $value['id'] == 0) {
 
@@ -437,8 +445,8 @@ class Checklist_model extends CI_Model {
                     "item_name"     => $value['item_name'],
                     "item_position" => $value['item_position'],
                     "help_text"     => $value['help_text']
-                    // "image_path"    => $value['image_path'],
-                    // "image_name"    => $value['image_name']
+                    /*"image_path"    => $value['image_path'],
+                    "image_name"    => $value['image_name']*/
                 ]);
             }
             else{
@@ -514,11 +522,19 @@ class Checklist_model extends CI_Model {
 
     public function delete_checklist_item($item_id){
         $this->db->trans_start();
+
+            $checklist = $this->db->select("checklist_id,checklistVersion")->where("checklist_id" , $this->hash->decrypt($this->input->post("checklistid")))->get("checklist")->row();
         
-        $this->db->where("id",$item_id);
-        $this->db->update("checklist_items",[
-            "deleted" => time()
-        ]);
+            $this->db->where("id",$item_id);
+            $update = $this->db->update("checklist_items",[
+                "deleted" => time()
+            ]);
+
+            if($update){
+                $this->db->where("checklist_id",$checklist->checklist_id)->update("checklist", [
+                    "checklistVersion" => $checklist->checklistVersion + 1
+                ]);
+            }
 
         $this->db->trans_complete();
 
@@ -531,12 +547,20 @@ class Checklist_model extends CI_Model {
 
     public function delete_item_image($item_id){
         $this->db->trans_start();
+
+            $checklist = $this->db->select("checklist_id,checklistVersion")->where("checklist_id" , $this->hash->decrypt($this->input->post("checklistid")))->get("checklist")->row();
         
-        $this->db->where("id",$item_id);
-        $this->db->update("checklist_items",[
-            "image_path" => NULL,
-            "image_name" => NULL,
-        ]);
+            $this->db->where("id",$item_id);
+            $update = $this->db->update("checklist_items",[
+                "image_path" => NULL,
+                "image_name" => NULL,
+            ]);
+
+            if($update){
+                $this->db->where("checklist_id",$checklist->checklist_id)->update("checklist", [
+                    "checklistVersion" => $checklist->checklistVersion + 1
+                ]);
+            }
 
         $this->db->trans_complete();
 
@@ -548,13 +572,19 @@ class Checklist_model extends CI_Model {
     }
     public function delete_help_image($item_id){
         $this->db->trans_start();
+            $checklist = $this->db->select("checklist_id,checklistVersion")->where("checklist_id" ,$this->hash->decrypt($this->input->post("checklistid")))->get("checklist")->row();
         
-        $this->db->where("id",$item_id);
-        $this->db->update("checklist_items",[
-            "help_image_path" => NULL,
-            "help_image_name" => NULL,
-        ]);
+            $this->db->where("id",$item_id);
+            $update = $this->db->update("checklist_items",[
+                "help_image_path" => NULL,
+                "help_image_name" => NULL,
+            ]);
 
+            if($update){
+                $this->db->where("checklist_id",$checklist->checklist_id)->update("checklist", [
+                    "checklistVersion" => $checklist->checklistVersion + 1
+                ]);
+            }
         $this->db->trans_complete();
 
         if($this->db->trans_status() === FALSE){
@@ -562,6 +592,79 @@ class Checklist_model extends CI_Model {
         }else{
            return true;
         }      
+    }
+
+     public function upload_item_help_image($item_id){
+
+        $file = $_FILES['help_img'];
+        
+        $this->db->trans_start();           
+            $checklist = $this->db->select("checklist_id,checklistVersion")->where("checklist_id" , $this->hash->decrypt($this->input->post("checklistid")))->get("checklist")->row();
+
+            if($file['name']){
+                $img = $this->upload_helpimage($file);
+            }else{
+                $img = array(
+                    "help_image_path" => NULL,
+                    "help_image_name" => NULL
+                );
+            }
+
+            $update = $this->db->where("id",$item_id)->update("checklist_items",[
+                "help_image_path" => $img['help_image_path'],
+                "help_image_name" => $img['help_image_name']
+            ]);
+
+            if($update){
+                $this->db->where("checklist_id",$checklist->checklist_id)->update("checklist", [
+                    "checklistVersion" => $checklist->checklistVersion + 1
+                ]);
+            }
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+     public function upload_item_image($item_id){
+        //print_r_die($_FILES);
+
+        $file = $_FILES['file'];
+        
+        $this->db->trans_start();           
+            $checklist = $this->db->select("checklist_id,checklistVersion")->where("checklist_id" , $this->hash->decrypt($this->input->post("checklistid")))->get("checklist")->row();
+
+            if($file['name']){
+                $img = $this->upload_image($file);
+            }else{
+                $img = array(
+                    "image_path" => NULL,
+                    "image_name" => NULL
+                );
+            }
+
+            $update = $this->db->where("id",$item_id)->update("checklist_items",[
+                "image_path"    => $img['image_path'],
+                "image_name"    => $img['image_name']
+            ]);
+
+            if($update){
+                $this->db->where("checklist_id",$checklist->checklist_id)->update("checklist", [
+                    "checklistVersion" => $checklist->checklistVersion + 1
+                ]);
+            }
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     public function get_checklist_dropdown(){

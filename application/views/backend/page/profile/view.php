@@ -65,7 +65,7 @@
 	    						<dt>Profile Image</dt>
 	    						<dd>
     								<div class="preview-image">
-	                                    <img src="<?php echo site_url("thumbs/images/user/$value->image_path/150/150/$value->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
+	                                    <img src="<?php echo site_url("thumbs/images/user/$value->image_path/150/150/$value->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom" alt="Profile image">
 	                                </div>
 	                                <input type="file" name="file" id="profile_image" class="btn btn-default">
 	    						</dd>
@@ -105,7 +105,7 @@
 	    					<dl class="dl-horizontal text-left">
 	    						<dt>Email</dt>
 	    						<dd>
-    								<input type="email" name="email" class="form-control" value="<?php echo $value->email; ?>">
+    								<input type="email" name="email" class="form-control" value="<?php echo $value->email_address; ?>" readonly="true">
 	    						</dd>
 	    					</dl>
 	    					<dl class="dl-horizontal text-left">

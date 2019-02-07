@@ -101,7 +101,7 @@ class Invoice_model extends CI_Model {
         $this->db->where("user_plan_id",$user_plan_id);
         $result = $this->db->get("user_plan")->row()->plan_expiration;
 
-        $today = date("M d Y 00:00:00");
+        $today = date("d/M/Y 00:00:00");
         $expiry = convert_timezone($result, true);
         $timeleft = strtotime($expiry) - strtotime($today);
         

@@ -3,9 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Vehicle extends MY_Controller {
 
-	public function __construct() {
+	function __construct() {
 	    parent::__construct();
 	    $this->load->model('vehicle_model', 'vehicle');
+	    $this->data['notification_list'] = $this->notification->notify_list();
 	    
 	    $this->data['plan_type'] = $this->data['session_data']->title;
 	    if($this->session->userdata('user')->role != "ADMIN PREMIUM" && $this->session->userdata('user')->role != "MANAGER" ){

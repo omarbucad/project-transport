@@ -50,7 +50,7 @@
                     <div class="col-xs-12 col-lg-5 no-margin-bottom color-white">
                         <div class="row">
                             <div class="col-xs-12 col-lg-6no-margin-bottom text-center color-white">
-                                <h2 style="margin-bottom: 0;"><a href="<?php echo site_url();?>"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" style="width: 65%;position: relative; left: 16%;margin-top:10px;margin-bottom: 10px;"></a>Vehicle Checklist</h2> 
+                                <h2 style="margin-bottom: 0;"><a href="<?php echo site_url();?>"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" alt="Vehicle Checklist Logo" style="width: 65%;position: relative; left: 16%;margin-top:10px;margin-bottom: 10px;"></a>Vehicle Checklist</h2> 
                                 <p style="color:#d4d4d4 !important;">Manage your defect checklist hassle free.</p>
                             </div>
                         </div>

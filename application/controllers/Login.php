@@ -82,9 +82,16 @@ class Login extends MY_Controller {
 		}else{
 			$email = $this->input->post("email");
 
-			$info = $this->db->select("email_address")->where("email_address", $email)->get("user")->row();
-
+			$info = $this->db->select("email_address,role")->where("email_address", $email)->get("user")->row();
+			
 			if($info){
+				if($info->role != 'ADMIN PREMIUM'){
+					$this->session->set_flashdata('status' , 'error');	
+					$this->session->set_flashdata('message' , '');
+
+					redirect('/login/forgot_password/?error=email_not_registered', 'refresh');
+				}
+
 				$time = time();
 				$code = $this->hash->encrypt($email . "&time=".$time);
 
@@ -130,6 +137,7 @@ class Login extends MY_Controller {
 			$splitted = explode("&time=", $set);
 			$email = $splitted[0]; 
 			$created = $splitted[1];
+
 
 			if($created < (time() - (30*60))){
 				$this->session->set_flashdata('status' , 'error');	

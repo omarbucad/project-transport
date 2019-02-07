@@ -30,6 +30,7 @@ class Report extends CI_Controller {
 			$today = convert_timezone(time());
 	        $start   = strtotime(trim($today.' 00:00 -6 days'));	        
 	        $end = strtotime(trim($today.' 23:59'));
+	        $this->db->trans_start();
 
 			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_name, s.logo_image_path");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
@@ -47,6 +48,7 @@ class Report extends CI_Controller {
 
 
 			$result = $this->db->order_by("r.report_id" , "DESC")->get("report r")->result();
+			$this->db->trans_complete();
 
 			if($result){
 				foreach($result as $key => $row){
@@ -73,16 +75,23 @@ class Report extends CI_Controller {
 					//$result[$key]->convert_timezone($r->created , true);
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
+					$this->db->trans_start();
 
 					$this->db->select("rc.checklist_ischeck , rc.checklist_value , rc.timestamp, rc.updated_ischeck, rc.updated_value,rc.updated_timestamp,rc.final_update_ischeck, rc.final_update_value, rc.final_update_timestamp, ci.item_name, ci.image_path as item_path, ci.image_name as item_img_name, rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
-					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
+					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->get("report_checklist rc")->result();
+
+					$this->db->trans_complete();
 
 					foreach($result[$key]->checklist as $k => $r){
 
 						$result[$key]->checklist[$k]->item_image = $this->config->site_url("public/upload/checklist/".$r->item_path."/".$r->item_img_name);
-						
+
+						$this->db->trans_start();
+
 						$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
+
+						$this->db->trans_complete();
 
 						foreach($images as $ki => $ro){
 							// $images[$ki]->thumbnail = $this->config->site_url("public/upload/report/".$ro->image_path.$ro->image_name);
@@ -92,7 +101,12 @@ class Report extends CI_Controller {
 						$result[$key]->checklist[$k]->images = $images;
 
 						if($r->updated_ischeck != ''){
+
+							$this->db->trans_start();
+
 							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
+
+							$this->db->trans_complete();
 							if($updated_img){
 								foreach($updated_img as $ui => $u){
 									
@@ -106,7 +120,11 @@ class Report extends CI_Controller {
 						}
 
 						if($r->final_update_ischeck != ''){
+							$this->db->trans_start(); 
+
 							$final_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
+
+							$this->db->trans_complete();
 							if($final_img){
 								foreach($final_img as $ui => $u){
 									
@@ -120,9 +138,13 @@ class Report extends CI_Controller {
 						}
 					}
 
+					$this->db->trans_start();
+
 					$this->db->select("rs.status , rs.notes  , u.display_name , u.role, rs.created , rs.start_longitude , rs.start_latitude ,rs.longitude , rs.latitude , rs.signature");
 					$this->db->join("user u" , "u.user_id = rs.user_id");
 					$status = $this->db->where("rs.report_id" , $row->report_id)->order_by("rs.created" , "DESC")->get("report_status rs")->result();
+
+					$this->db->trans_complete();
 					
 					foreach($status as $k => $r){
 						$status[$k]->status = report_type($r->status );
@@ -379,6 +401,11 @@ class Report extends CI_Controller {
 
 			$store_id = $this->post->store_id;
 
+			$offset = (isset($data->offset)) ? $data->offset : 0;
+            $limit = (isset($data->limit)) ? $data->limit : 4;
+
+			$this->db->trans_start();
+
 			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name,s.logo_image_name, s.logo_image_path");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
 			$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
@@ -392,7 +419,10 @@ class Report extends CI_Controller {
 			$this->db->where("r.end_mileage !=", NULL);
 			$this->db->where("u.store_id" , $store_id);
 
-			$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
+			$result = $this->db->order_by("r.created" , "DESC")->limit($limit, $offset)->get("report r")->result();
+
+			$this->db->trans_complete();
+
 			if($result){
 				foreach($result as $key => $row){
 					if($result[$key]->logo_image_path == 'public/img/'){
@@ -405,14 +435,22 @@ class Report extends CI_Controller {
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 
+					$this->db->trans_start(); 
+
 					$this->db->select("rc.checklist_ischeck , rc.checklist_value ,rc.timestamp, rc.updated_ischeck, rc.updated_value,rc.updated_timestamp,rc.final_update_ischeck, rc.final_update_value, rc.final_update_timestamp, ci.item_name , ci.image_path as item_path, ci.image_name as item_img_name, rc.id");
 					$this->db->join("checklist_items ci" , "ci.id = rc.checklist_item_id");
-					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->order_by("ci.item_position" , "ASC")->get("report_checklist rc")->result();
+					$result[$key]->checklist = $this->db->where("report_id" , $row->report_id)->get("report_checklist rc")->result();
+
+					$this->db->trans_complete();
 
 					foreach($result[$key]->checklist as $k => $r){
 						$result[$key]->checklist[$k]->item_image = $this->config->site_url("public/upload/checklist/".$r->item_path."/".$r->item_img_name);
 						
+						$this->db->trans_start();
+
 						$images = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_images")->result();
+
+						$this->db->trans_complete();
 
 						foreach($images as $ki => $ro){
 							// $images[$ki]->thumbnail = $this->config->site_url("public/upload/report/".$ro->image_path.$ro->image_name);
@@ -422,7 +460,12 @@ class Report extends CI_Controller {
 						$result[$key]->checklist[$k]->images = $images;
 
 						if($r->updated_ischeck != ''){
+							$this->db->trans_start();
+
 							$updated_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_update_images")->result();
+
+							$this->db->trans_complete();
+
 							if($updated_img){
 								foreach($updated_img as $ui => $u){
 									
@@ -435,7 +478,11 @@ class Report extends CI_Controller {
 							}
 						}
 						if($r->final_update_ischeck != ''){
+							$this->db->trans_start();
+
 							$final_img = $this->db->where("report_id" , $row->report_id)->where("report_checklist_id" , $r->id)->get("report_final_images")->result();
+
+							$this->db->trans_complete();
 							if($final_img){
 								foreach($final_img as $ui => $u){
 									
@@ -480,12 +527,12 @@ class Report extends CI_Controller {
 			$vehicle_registration_number = $data->vehicle_registration_number;
 			$user_id = $data->user_id;
 			$checklist_id = $data->checklist_id;
-			$today = date("M d Y", time());
+			$today = date("d/M/Y", time());
 
 			$this->db->where("vehicle_registration_number", $vehicle_registration_number);
 			$this->db->where("checklist_id", $checklist_id);
-			$this->db->where("created >=",strtotime($today . " 00:00"));
-			$this->db->where("created <=",strtotime($today . " 11:59"));
+			$this->db->where("created >=",strtotime(str_replace("/"," ",$today) . " 00:00"));
+			$this->db->where("created <=",strtotime(str_replace("/"," ",$today) . " 11:59"));
 
 			$result = $this->db->order_by("created","DESC")->limit(1)->get("report")->row();
 

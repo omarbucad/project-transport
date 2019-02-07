@@ -85,7 +85,7 @@
                             <div class="form-group">
                                 <label for="">Profile Image</label>
                                 <div class="image-preview">
-                                    <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom"  style="height: 100%;object-fit: cover;">
+                                    <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom"  style="height: 100%;object-fit: cover;" alt="Profile Image">
                                 </div>
                                 <input type="file" name="file" id="profile_image" class="btn btn-default">
                             </div>

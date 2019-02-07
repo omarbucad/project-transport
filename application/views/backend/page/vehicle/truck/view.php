@@ -1,4 +1,19 @@
 <script type="text/javascript">
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+        var filter = "<?php echo ($this->input->get('submit') != 'Search') ? 'hidden' : 'show'; ?>";
+        if(filter == 'hidden'){          
+          $('.more-filter').data("value" , "hidden");
+          $('#view_advance_search').addClass("hide");
+          $('.more-filter').text("More Filter");
+          $('#_advance_search_value').val("false");
+        }else{
+          $('.more-filter').data("value" , "show");
+          $('#view_advance_search').removeClass("hide");
+          $('.more-filter').text("Less Filter");
+          $('#_advance_search_value').val("true");
+        }
+    });
     $(document).on('click' , '.more-filter' , function(){
         var val = $(this).data('value');
 
@@ -194,7 +209,7 @@
                             <td>
                                 <div class="row">
                                     <div class="col-xs-6 col-lg-3 no-margin-bottom" style="padding-right: 0;">
-                                        <img src="<?php echo $row->type_img;?>" class="img img-responsive thumbnail no-margin-bottom" style="height:50px; width:55px;">
+                                        <img src="<?php echo $row->type_img;?>" class="img img-responsive thumbnail no-margin-bottom" style="height:50px; width:55px;" alt="Vehicle Type Image">
                                     </div>
                                     <div class="col-xs-6 col-lg-9 no-margin-bottom" style="padding-top: 15px;">
                                         <span><strong><?php echo $row->vehicle_registration_number; ?></strong><span></span></span>
@@ -275,7 +290,7 @@
         <form action="" method="POST" id="edit-form">
             <div class="form-group">
                 <label for="vehicle_registration_number">Registration Number</label>
-                <input type="text" name="vehicle_registration_number" class="form-control" placeholder="Registration Number" required="true">
+                <input type="text" name="vehicle_registration_number" class="form-control" placeholder="Registration Number" required="true" readonly="true">
             </div>
             <div class="form-group">
                 <label for="type">Vehicle Type</label>

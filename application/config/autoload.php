@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('session' , 'database' ,  'form_validation' , 'pagination' , 'Hash' , 'email', 'Pdf', 'Braintree_lib');
+$autoload['libraries'] = array('session' , 'database' ,  'form_validation' , 'pagination' , 'Hash' , 'email', 'Pdf', 'Braintree_lib', 'Notification');
 
 /*
 | -------------------------------------------------------------------

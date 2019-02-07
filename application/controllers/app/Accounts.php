@@ -3,10 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Accounts extends MY_Controller {
 
-	public function __construct() {
+	function __construct() {
        parent::__construct();
        $this->load->model('accounts_model', 'accounts');
        $this->load->model('checklist_model', 'checklist');
+       $this->data['notification_list'] = $this->notification->notify_list();
        
 
        if($this->session->userdata('user')->expired == 1){
@@ -36,13 +37,14 @@ class Accounts extends MY_Controller {
 	}
 
 	public function add(){
-		if($this->session->userdata('user')->role != "ADMIN PREMIUM" || $this->session->userdata('user')->role != "MANAGER" ){
+		$allowed = ($this->session->userdata('user')->role != "ADMIN PREMIUM") ? "true": "false";
+		if(!$allowed){
 			redirect("app/dashboard");					
 		}
 
 		$this->form_validation->set_rules('display_name'		, 'Name'			        , 'trim|required');
-		$this->form_validation->set_rules('email'				, 'Email Address'			, 'trim|required');
-		$this->form_validation->set_rules('username'		    , 'UserName'			    , 'trim|required|is_unique[user.username]');
+		$this->form_validation->set_rules('email'	, 'Email Address'		, 'trim|required|valid_email|is_unique[user.email_address]');
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[6]|max_length[15]|is_unique[user.username]');
 		$this->form_validation->set_rules('password'		    , 'Password'			    , 'trim|required|md5');
 		$this->form_validation->set_rules('confirm_password'    , 'Confirm Password'	    , 'trim|required|matches[password]|md5');
 

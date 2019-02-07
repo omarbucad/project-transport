@@ -3,10 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Report extends MY_Controller {
 
-	public function __construct() {
+	function __construct() {
         parent::__construct();
         $this->load->helper('download');
        	$this->load->library('zip');
+
+       	$this->data['notification_list'] = $this->notification->notify_list();
+       	
         $this->load->model('report_model', 'reports');
         $this->load->model('accounts_model', 'accounts');
         $this->load->model('checklist_model', 'checklist');
@@ -26,7 +29,7 @@ class Report extends MY_Controller {
 			$this->data['result'] = $this->reports->get_reports_list();
 			$this->download_csv($this->data['result']);
 		}else{
-
+			$this->data['checklist_list'] = $this->checklist->get_checklist_dropdown();
 			$this->data['result'] = $this->reports->get_reports_list();
 			$this->load->view('backend/master' , $this->data);
 		}

@@ -117,7 +117,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?php echo site_url("welcome"); ?>">
-                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="25px" width="auto"></div>
+                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="25px" width="auto" alt="Vehicle Checklist Logo"></div>
                     <div class="title" style="color:#777; "><?php echo $application_name; ?></div>
                 </a>
             </div>
@@ -155,7 +155,7 @@
             </script>
             
             <div class="jumbotron-content">
-                <img class="app-logo pull-right" src="<?php echo site_url('public/img/website-layout/transpo-04.png') ?>" >
+                <img class="app-logo pull-right" src="<?php echo site_url('public/img/website-layout/transpo-04.png') ?>" alt="Section 1 background">
                 <div class="color-white app-title"><?php echo $application_name; ?></div>
                 <p class="text-center color-white app-description">Manage your defect checklist hassle free.</p>
             </div>
@@ -170,16 +170,16 @@
                         <div class="col-lg-3 col-md-3 col-xs-6" style="margin-left: 25%;">
                             <div class="row">
                                 <div class="col-lg-1 col-xs-2" style="padding: 0;">
-                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-07.png') ?>" >
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-07.png') ?>" alt="Organized Filing icon">
                                 </div>  
                                 <div class="col-lg-11 col-xs-10 feature-description">
-                                    <span>Organized FIling</span>
+                                    <span>Organized Filing</span>
                                 </div>                         
                                  
                             </div>
                             <div class="row">
                                 <div class="col-lg-1 col-xs-2"  style="padding: 0;">
-                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-06.png') ?>" >
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-06.png') ?>" alt="Unlimited access to clouds icon">
                                 </div>  
                                 <div class="col-lg-11 col-xs-10 feature-description">
                                     <span>Unlimited access to clouds</span>
@@ -189,7 +189,7 @@
                         <div class="col-lg-3 col-md-3 col-xs-6">
                             <div class="row"> 
                                 <div class="col-lg-1 col-xs-2"  style="padding: 0;">
-                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-08.png') ?>" >
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-08.png') ?>" alt="Timekeeping icon>
                                 </div>  
                                 <div class="col-lg-11 col-xs-10 feature-description">
                                     <span>Timekeeping! know when your vehicles started working</span>
@@ -197,7 +197,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-1 col-xs-2"  style="padding: 0;">
-                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-09.png') ?>" >
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-09.png') ?>" alt="Paperless icon">
                                 </div>  
                                 <div class="col-lg-11 col-xs-10 feature-description">
                                     <span>Go Paperless</span>
@@ -207,7 +207,7 @@
                         <div class="col-lg-3 col-md-3 col-xs-6 no-padding-right">
                             <div class="row">
                                 <div class="col-lg-1 col-xs-2"  style="padding: 0;">
-                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-10.png') ?>"  style="position: relative;left: -30px;">
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-10.png') ?>"  style="position: relative;left: -30px;" alt="Search icon">
                                 </div>  
                                 <div class="col-lg-11 col-xs-10 feature-description no-padding-right">
                                     <span  style="position: relative;left: -30px;">Search by truck, drivers, dates; and defects</span>

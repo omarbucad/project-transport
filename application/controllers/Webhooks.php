@@ -34,27 +34,28 @@ class Webhooks extends CI_Controller {
 		        $_POST["bt_signature"], $_POST["bt_payload"]
 		    );
 
-		 //    $data = [
-			// 	"bt_signature" => $signature,
-			// 	"bt_payload" => $payload,
-			// 	"kind" => $webhookNotification->kind,
-			// 	"received" => time(),
-			// 	"bt_created" => strtotime($webhookNotification->timestamp->format('D M j G:i:s T Y'))
-			// ];
+		    $data = [
+				"subscription_id" => $webhookNotification->subscription->id,
+				"kind" => $webhookNotification->kind,
+				"received" => time(),
+				"bt_created" => strtotime($webhookNotification->timestamp->format('Y-m-d H:i:s'))
+			];
+
+			$insert = $this->save_webhook($data);
 
 			$message =
 		        "[Webhook Received " 
 		        . $webhookNotification->timestamp->format('Y-m-d H:i:s') . "] "
 		        . "Kind: " . $webhookNotification->kind . " | "
 		        . "Subscription: " . $webhookNotification->subscription->id . "\n";
-			// $insert = $this->save_webhook($data);
+			
 		    $filename = $webhookNotification->timestamp->format('Y-m-d').".log";
 			file_put_contents("./application/webhook_logs/".$filename, $message, FILE_APPEND);
 
 			// if($insert){
 			// 	file_put_contents("/tmp/webhook.log", $message, FILE_APPEND);
 
-		 //    	//header("HTTP/1.1 200 OK");
+			//header("HTTP/1.1 200 OK");
 			// }
 
 		    // Example values for webhook notification properties
@@ -70,8 +71,7 @@ class Webhooks extends CI_Controller {
 
 	public function save_webhook($data){
 		$insert = $this->db->insert("webhooks",[
-			"bt_signature" => $data['signature'],
-			"bt_payload" => $data['payload'],
+			"subscription_id" => $data['subscription_id'],
 			"kind" => $data['kind'],
 			"received" => $data['received'],
 			"bt_created" => $data['bt_created']
@@ -80,6 +80,32 @@ class Webhooks extends CI_Controller {
 			return true;
 		}else{
 			return false;
+		}
+	}
+
+	public function process_webhook($kind){
+		switch ($kind) {
+			case 'subscription_charged_successfully':
+				# code...
+				break;
+			case 'subscription_charged_unsuccessfully':
+				# code...
+				break;
+			case 'subscription_expired':
+				# code...
+				break;
+			case 'subscription_canceled':
+				# code...
+				break;
+			case 'subscription_trial_ended':
+				# code...
+				break;
+			case 'subscription_went_active':
+				# code...
+				break;
+			case 'subscription_went_past_due':
+				# code...
+				break;
 		}
 	}
 }

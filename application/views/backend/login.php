@@ -55,7 +55,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-lg-8 col-lg-offset-2 no-margin-bottom">
-                                <a href="#"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" height="30px" width="auto"></a>
+                                <a href="#"><img src="<?php echo site_url("public/img/vehicle-checklist.png"); ?>" class="img img-responsive" height="30px" width="auto" alt="Vehicle Checklist Logo"></a>
                             </div>
                         </div>
                         <div class="row">

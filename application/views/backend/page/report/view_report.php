@@ -207,7 +207,7 @@
                                 </td>	  
                                 <td>
                                     <?php if(isset($row->signature)) : ?>
-                                     <img src="<?php echo $row->signature; ?>" height="40px;">
+                                     <img src="<?php echo $row->signature; ?>" height="40px;" alt="Signature">
                                     <?php endif; ?>
                                 </td>  						
 	    					</tr>
@@ -247,7 +247,7 @@
 	    							<?php if($row->checklist_ischeck == 1) : ?>
                                         <?php echo "Defect"; ?>
                                     <?php elseif($row->checklist_ischeck == 2) : ?>
-                                        <?php echo "Rechecked"; ?>
+                                        <?php echo "Running Defect"; ?>
                                     <?php elseif($row->checklist_ischeck == 3) : ?>
                                         <?php echo "N/A"; ?>
                                     <?php else : ?>
@@ -260,7 +260,7 @@
                                     <div class="animated-thumbnail">
                                         <?php foreach($row->fullpath as $k) : ?> 
                                         <a href="<?php echo $k; ?>">
-                                         <img src="<?php echo $k; ?>" height='40px'>
+                                         <img src="<?php echo $k; ?>" height='40px' alt="report item image">
                                         </a>
                                         <?php endforeach; ?>
                                     </div>                                    
@@ -272,7 +272,7 @@
                                         <?php if($row->updated_ischeck == 1) : ?>
                                             <?php echo "Defect"; ?>
                                         <?php elseif($row->updated_ischeck == 2) : ?>
-                                            <?php echo "Rechecked"; ?>
+                                            <?php echo "Running Defect"; ?>
                                         <?php elseif($row->updated_ischeck == 3) : ?>
                                             <?php echo "N/A"; ?>
                                         <?php else : ?>
@@ -289,7 +289,7 @@
                                         <div class="animated-thumbnail">
                                             <?php foreach($row->update_img_fullpath as $k) : ?> 
                                             <a href="<?php echo $k; ?>">
-                                             <img src="<?php echo $k; ?>" height='40px'>
+                                             <img src="<?php echo $k; ?>" height='40px' alt="report item update image">
                                             </a>
                                             <?php endforeach; ?>
                                         </div>                                        
@@ -303,7 +303,7 @@
                                         <?php if($row->final_update_ischeck == 1) : ?>
                                             <?php echo "Defect"; ?>
                                         <?php elseif($row->final_update_ischeck == 2) : ?>
-                                            <?php echo "Rechecked"; ?>
+                                            <?php echo "Running Defect"; ?>
                                         <?php elseif($row->final_update_ischeck == 3) : ?>
                                             <?php echo "N/A"; ?>
                                         <?php else : ?>
@@ -320,7 +320,7 @@
                                         <div class="animated-thumbnail">
                                             <?php foreach($row->final_img_fullpath as $k) : ?> 
                                             <a href="<?php echo $k; ?>">
-                                             <img src="<?php echo $k; ?>" height='40px'>
+                                             <img src="<?php echo $k; ?>" height='40px' alt="report item final update image">
                                             </a>
                                             <?php endforeach; ?>
                                         </div>                                        

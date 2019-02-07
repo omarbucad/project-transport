@@ -72,7 +72,7 @@
                             <div class="form-group">
                                 <label for="">Profile Image</label>
                                 <div class="image-preview">
-                                    <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
+                                    <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom" alt="Profile image">
                                 </div>
                                 <input type="file" name="file" id="profile_image" class="btn btn-default">
                             </div>
@@ -138,13 +138,13 @@
                             <div class="row">
                                 <div class="col-xs-12 col-lg-6">
                                     <div class="form-group">
-                                        <label for="enter_password">Enter Password</label>
+                                        <label for="enter_password">New Password</label>
                                         <input type="password" name="password" class="form-control" id="enter_password">
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-lg-6">
                                     <div class="form-group">
-                                        <label for="confirm_password">Repeat Password</label>
+                                        <label for="confirm_password">Confirm Password</label>
                                         <input type="password" name="confirm_password" class="form-control" id="confirm_password">
                                     </div>
                                 </div>

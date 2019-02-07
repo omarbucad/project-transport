@@ -79,122 +79,32 @@ class Transaction extends CI_Controller {
 		}
 	}
 	public function create_subscription_token(){
-		//print_r_die($this->post);
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
 
 			$result = $this->braintree_lib->create_subscription_token($this->post);
 			if(empty($result->error)){
-				// $data = $this->post;
 
-				// $this->db->trans_start();
-                
-		  //       $this->db->where("store_id", $data->store_id);
-		  //       $this->db->where("active", 1);
-		  //       $deactivated = $this->db->update("user_plan",[
-		  //           "active" => 0,
-		  //           "updated" => time(),
-		  //           "who_updated" => NULL
-		  //       ]);
-
-		  //       if($deactivated){
-		  //           if($data->billing_type == 'MONTHLY'){
-		  //               $billing = " + 1 month";
-		  //           }else if($data->billing_type == 'YEARLY'){
-		  //               $billing = " + 1 year";
-		  //           }else{
-		  //               $billing = "N/A";
-		  //           }
-		  //           $expiration = 0;
-		  //           $created = date("M d Y H:i:s A", time());
-
-		  //           $new = $this->db->insert("user_plan",[
-		  //               "store_id" => $data->store_id,
-		  //               "plan_id" => $data->planId,
-		  //               "vehicle_limit" => (isset($data->quantity) != '') ? $data->quantity : 0,
-		  //               "plan_created" => strtotime($created),
-		  //               "plan_expiration" => ($billing == 'N/A') ? NULL : strtotime(trim($created . $billing)),
-		  //               "billing_type" => $data->billing_type,
-		  //               "who_updated" => NULL,
-		  //               "active" => 1,
-		  //               "updated" => NULL
-		  //           ]);
-
-		  //           if($new){
-		  //           	$users_list = $this->db->where("store_id",$data->store_id)->get("user")->result();
-
-			 //            foreach ($users_list as $key => $value) {
-			 //                if(($data->planId == 'sandbox_custom_monthly') || ($data->planId == 'sandbox_premium_monthly') || ($data->planId == 'sandbox_premium_yearly')){
-			 //                    switch ($value->role) {
-			 //                        case 'DRIVER':
-			 //                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN PREMIUM"]);
-			 //                            continue;
-			 //                        case 'ADMIN FREE':
-			 //                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN PREMIUM"]);
-			 //                            continue;
-			 //                        // case 'MANAGER FREE':
-			 //                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
-			 //                        //     continue;
-			 //                    }
-			 //                }elseif($data->planId == 3){
-			 //                    switch ($value->role) {
-			 //                        case 'DRIVER':
-			 //                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN FREE"]);
-			 //                            continue;
-			 //                        // case 'DRIVER FREE':
-			 //                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER PREMIUM"]);
-			 //                        //     continue;
-			 //                        // case 'MANAGER FREE':
-			 //                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
-			 //                        //     continue;
-			 //                    }
-			 //                }else{
-			 //                    switch ($value->role) {
-			 //                        case 'ADMIN PREMIUM':
-			 //                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER"]);
-			 //                            continue;
-			 //                        // case 'DRIVER PREMIUM':
-			 //                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER FREE"]);
-			 //                        //     continue;
-			 //                        // case 'MANAGER PREMIUM':
-			 //                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER FREE"]);
-			 //                        //     continue;
-			 //                    }
-			 //                }
-			 //            }
-		  //           }else{
-		  //           	  echo json_encode(["status" => false , "message" => "Failed to update database","action" => "create_subscription_token"]); 
-		  //           }
-
-		  //           $this->db->select("role");
-		  //           $this->db->where("user_id",$data->user_id);
-		  //           $role = $this->db->get("user")->row()->role;
-
-		  //           $result->role = $role;
-
-		  //       }else{
-
-		  //           echo json_encode(["status" => false , "message" => "Subscription created, Failed to update database","action" => "create_subscription_token"]);
-		  //       }
-
-
-		  //       $this->db->trans_complete();
-		  //       if ($this->db->trans_status() === FALSE){
-
-		  //           echo json_encode(["status" => false , "message" => "Subscription created, Failed to update database","action" => "create_subscription_token"]);
-
-		  //       }else{
-		  //           echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_token"]);
-		  //       }
-
-				$role = $this->update_subscription();
+				$role = $this->update_subscription($result->subscription->id);
 
 				$result->role = $role;
 		        // if ($this->db->trans_status() === FALSE){
 				if($result->role == ''){
 		           echo json_encode(["status" => false , "message" => "Subscription created. Failed to update database","action" => "create_subscription_token"]);
 				}else{
+					$this->db->trans_start();
+
+					$this->db->insert("notification", [
+						"description" => "Subscription ID: ".$result->subscription->id." | Status: Created",
+						"type" => 1,
+						"isread" => 0,
+						"ref_id" => $report_id,
+						"created" => time()
+					]);
+
+					$this->db->trans_complete();
+
 		            echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_token"]);
 		        }
 			}else{
@@ -224,101 +134,44 @@ class Transaction extends CI_Controller {
 	}
 
 	public function update_plan_subscription(){
-		//print_r_die($this->post);
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
 
 			$result = $this->braintree_lib->update_subscription($this->post);
 			if($result){
-				// $data = $this->post;
-
-				// $this->db->trans_start();
-                
-		  //       $this->db->where("store_id", $data->store_id);
-		  //       $this->db->where("active", 1);
-		  //       $deactivated = $this->db->update("user_plan",[
-		  //           "active" => 0,
-		  //           "updated" => time(),
-		  //           "who_updated" => NULL
-		  //       ]);
-
-		  //       if($deactivated){
-		  //           if($data->billing_type == 'MONTHLY'){
-		  //               $billing = " + 1 month";
-		  //           }else if($data->billing_type == 'YEARLY'){
-		  //               $billing = " + 1 year";
-		  //           }else{
-		  //               $billing = "N/A";
-		  //           }
-		  //           $expiration = 0;
-		  //           $created = date("M d Y H:i:s A", time());
-
-		  //           $this->db->insert("user_plan",[
-		  //               "store_id" => $data->store_id,
-		  //               "plan_id" => $data->planId,
-		  //               "plan_created" => strtotime($created),
-		  //               "plan_expiration" => ($billing == 'N/A') ? NULL : strtotime(trim($created . $billing)),
-		  //               "billing_type" => $data->billing_type,
-		  //               "who_updated" => NULL,
-		  //               "active" => 1,
-		  //               "updated" => NULL
-		  //           ]);
-
-		  //           $users_list = $this->db->where("store_id",$data->store_id)->get("user")->result();
-
-		  //           foreach ($users_list as $key => $value) {
-		  //               if(($data->planId == 'sandbox_custom_monthly') || ($data->planId == 'sandbox_premium_monthly') || ($data->planId == 'sandbox_premium_yearly')){
-		  //                   switch ($value->role) {
-		  //                       case 'DRIVER':
-		  //                           $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN PREMIUM"]);
-		  //                           continue;
-		  //                       case 'ADMIN FREE':
-		  //                           $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN PREMIUM"]);
-		  //                           continue;
-		  //                       // case 'MANAGER FREE':
-		  //                       //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
-		  //                       //     continue;
-		  //                   }
-		  //               }elseif($data->planId == 3){
-		  //                   switch ($value->role) {
-		  //                       case 'DRIVER':
-		  //                           $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN FREE"]);
-		  //                           continue;
-		  //                       // case 'DRIVER FREE':
-		  //                       //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER PREMIUM"]);
-		  //                       //     continue;
-		  //                       // case 'MANAGER FREE':
-		  //                       //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
-		  //                       //     continue;
-		  //                   }
-		  //               }else{
-		  //                   switch ($value->role) {
-		  //                       case 'ADMIN PREMIUM':
-		  //                           $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER"]);
-		  //                           continue;
-		  //                       // case 'DRIVER PREMIUM':
-		  //                       //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER FREE"]);
-		  //                       //     continue;
-		  //                       // case 'MANAGER PREMIUM':
-		  //                       //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER FREE"]);
-		  //                       //     continue;
-		  //                   }
-		  //               }
-		  //           }
-		  //       }
-		  //       $this->db->select("role");
-	   //          $this->db->where("user_id",$data->user_id);
-	   //          $role = $this->db->get("user")->row();
-
-	   //          $result->role = $role;
-				$role = $this->update_subscription();
+				
+				$role = $this->update_subscription($result->subscription->id);
 				$result->role = $role;
-		        // if ($this->db->trans_status() === FALSE){
 				if($result->role == ''){
 		            echo json_encode(["status" => false , "message" => "Subscription updated, Failed to update database","action" => "update_plan_subscription"]);
 				}else{
-		            echo json_encode(["status" => true , "data" => $result, "action" => "update_plan_subscription"]);
+					// $data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+					// $data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+
+					// $this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+					// $this->email->to($email);
+					// $this->email->set_mailtype("html");
+					// $this->email->subject('Subscription Update');
+					// $this->email->message($this->load->view('email/email_subscription_update', $data , true));
+
+					// if($this->email->send()){
+
+						$this->db->trans_start();
+
+						$this->db->insert("notification", [
+							"description" => "Subscription ID: ".$result->subscription->id." | Status: Updated",
+							"type" => 1,
+							"isread" => 0,
+							"ref_id" => $report_id,
+							"created" => time()
+						]);
+
+						$this->db->trans_complete();
+						echo json_encode(["status" => true , "data" => $result, "action" => "update_plan_subscription"]);
+					// }else{
+					// 	echo json_encode(["status" => true , "message" => "Failed to send email", "data" => $result, "action" => "update_plan_subscription"]);
+					// }		            
 		        }
 			}else{
 				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "update_plan_subscription"]);
@@ -336,7 +189,66 @@ class Transaction extends CI_Controller {
 
 			$result = $this->braintree_lib->cancel_subscription($this->post);
 			if($result){
-				echo json_encode(["status" => true , "data" => $result, "action" => "cancel_subscription"]);
+				$this->db->where("store_id", $data->store_id);
+		        $this->db->where("active", 1);
+		        $deactivated = $this->db->update("user_plan",[
+		            "active" => 0,
+		            "updated" => time(),
+		            "who_updated" => NULL
+		        ]);
+
+		        if($deactivated){
+		           
+		            $expiration = 0;
+		            $created = date("d/M/Y H:i:s A", time());
+
+		            $new = $this->db->insert("user_plan",[
+		                "store_id" => $data->store_id,
+		                "plan_id" => 'N/A',
+		                "subscription_id" => "N/A",
+		                "vehicle_limit" => 5,
+		                "plan_created" => strtotime(str_replace("/"," ",$created)),
+		                "plan_expiration" => NULL,
+		                "billing_type" => "N/A",
+		                "who_updated" => NULL,
+		                "active" => 1,
+		                "updated" => NULL
+		            ]);
+		            if($new){
+				        $this->db->where("user_id",$data->user_id);
+				        $role = $this->db->update("user",[
+				        	"role" => "DRIVER"
+				        ]);
+		            }else{
+		            	return false;
+		            }            
+		        }
+		        $this->db->trans_complete();
+
+		        $this->db->select("role");
+		        $this->db->where("user_id",$data->user_id);
+		        $role = $this->db->get("user")->row()->role;
+		        
+		        if ($this->db->trans_status() === FALSE){
+		           echo json_encode(["status" => false , "message" => "Failed to update database", "action" => "cancel_subscription"]);
+		        }else{
+		        	$result->role = $role;
+		   //      	$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+					// $data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+
+					// $this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+					// $this->email->to($email);
+					// $this->email->set_mailtype("html");
+					// $this->email->subject('Subscription Update');
+					// $this->email->message($this->load->view('email/email_subscription_update', $data , true));
+
+					// if($this->email->send()){
+						 echo json_encode(["status" => true , "data" => $result, "action" => "cancel_subscription"]);
+					// }else{
+					// 	echo json_encode(["status" => true , "message" => "Failed to send email", "data" => $result, "action" => "cancel_subscription"]);
+					// }		           
+		        }
+				
 			}else{
 				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "cancel_subscription"]);
 			}
@@ -400,8 +312,56 @@ class Transaction extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "createPaymentMethod"]);
 		}
 	}
+
+	public function update_addOn_subscription(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$result = $this->braintree_lib->update_addOn_subscription($this->post);
+			if($result){
+				$this->db->trans_start();
+				$this->db->where("store_id",$this->post->store_id);
+				$this->db->where("active",1);
+
+				$updated = $this->db->update("user_plan",[	               
+	                "vehicle_limit" => $this->post->quantity
+	            ]);
+		        $this->db->trans_complete();
+
+		        if($updated){
+		        	echo json_encode(["status" => true , "message" => "Successfully updated", "action" => "update_addOn_subscription"]);
+		        }else{
+		        	echo json_encode(["status" => false , "message" => "Updated. Failed to update database", "action" => "update_addOn_subscription"]);
+		        }
+			}else{
+				echo json_encode(["status" => false , "data" => $result, "action" => "update_addOn_subscription"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "update_addOn_subscription"]);
+		}
+	}
+
+	public function retry_charge(){
+		$data = $this->post;
+
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+			$result = $this->braintree_lib->retry_charge($this->post->subscription_id);
+			if($result){
+				
+			}else{
+				
+			}
+
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "retry_charge"]);
+		}
+	}
+
 	
-	public function update_subscription(){
+	public function update_subscription($subscription_id){
 
 		$data = $this->post;
 
@@ -424,14 +384,15 @@ class Transaction extends CI_Controller {
                 $billing = "N/A";
             }
             $expiration = 0;
-            $created = date("M d Y H:i:s A", time());
+            $created = date("d/M/Y H:i:s A", time());
 
             $new = $this->db->insert("user_plan",[
                 "store_id" => $data->store_id,
                 "plan_id" => $data->planId,
-                "vehicle_limit" => (isset($data->quantity) != '') ? $data->quantity : 0,
-                "plan_created" => strtotime($created),
-                "plan_expiration" => ($billing == 'N/A') ? NULL : strtotime(trim($created . $billing)),
+                "subscription_id" => $subscription_id,
+                "vehicle_limit" => $data->quantity,
+                "plan_created" => strtotime(str_replace("/"," ",$created)),
+                "plan_expiration" => ($billing == 'N/A') ? NULL : strtotime(trim(str_replace("/"," ",$created) . $billing)),
                 "billing_type" => $data->billing_type,
                 "who_updated" => NULL,
                 "active" => 1,
@@ -441,7 +402,7 @@ class Transaction extends CI_Controller {
             	$users_list = $this->db->where("store_id",$data->store_id)->get("user")->result();
 
 	            foreach ($users_list as $key => $value) {
-	                if(($data->planId == 'sandbox_custom_monthly') || ($data->planId == 'sandbox_premium_monthly') || ($data->planId == 'sandbox_premium_yearly')){
+	                if(($data->planId == 'sandbox_custom_monthly') || ($data->planId == 'sandbox_custom_yearly') || ($data->planId == 'sandbox_premium_monthly') || ($data->planId == 'sandbox_premium_yearly')){
 	                    switch ($value->role) {
 	                        case 'DRIVER':
 	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN PREMIUM"]);
@@ -453,7 +414,7 @@ class Transaction extends CI_Controller {
 	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
 	                        //     continue;
 	                    }
-	                }elseif($data->planId == 3){
+	                }elseif($data->planId == 'sandbox_free_trial'){
 	                    switch ($value->role) {
 	                        case 'DRIVER':
 	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN FREE"]);

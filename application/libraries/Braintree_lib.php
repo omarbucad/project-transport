@@ -212,8 +212,11 @@ class Braintree_lib extends Braintree{
 
     function create_payment_method($data){
         $result = Braintree_PaymentMethod::create([
-            'id' => $data->username,
-            'paymentMethodNonce' => $data->paymentMethodNonce
+            'customerId' => $data->username,
+            'paymentMethodToken' => $data->paymentMethodToken,
+            'options' => [
+              'makeDefault' => true
+            ]
         ]);
         if ($result->success) {
             return $result;
@@ -352,8 +355,10 @@ class Braintree_lib extends Braintree{
         }
     }
 
-    function cancel_subscription($subscription_id){
-        $result = Braintree_Subscription::cancel($subscription_id);
+    function cancel_subscription($data){
+        $result = Braintree_Subscription::cancel($data->subscription_id);
+
+        return ($result->success) ? $result:false;
     }
 
 
@@ -386,8 +391,35 @@ class Braintree_lib extends Braintree{
                 'planId' => $data->planId,
                 //'merchantAccountId' => $data->merchantAccountId
             ]);
+
+            return $result;
         }
         
+    }
+
+    function update_addOn_subscription($data){
+        $result = Braintree_Subscription::update($data->subscription_id, [
+            'id' => $data->subscription_id,
+            // 'paymentMethodToken' => $data->newPaymentMethodToken,
+            // 'planId' => $data->planId,
+            // //'merchantAccountId' => $data->merchantAccountId,
+            'addOns' => [
+                'update' => [
+                    [
+                        'existingId' => $data->addOnId,
+                        'neverExpires' => true,
+                        'quantity' => $data->quantity
+                    ]                       
+                ]                    
+            ]
+        ]);
+
+
+        if($result->success){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 

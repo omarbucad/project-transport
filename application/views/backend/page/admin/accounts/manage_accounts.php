@@ -170,7 +170,7 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-xs-6 col-lg-2 no-margin-bottom">
-                                            <img src="<?php echo site_url("thumbs/images/user/$row->image_path/80/80/$row->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom">
+                                            <img src="<?php echo site_url("thumbs/images/user/$row->image_path/80/80/$row->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom" alt="profile image">
                                         </div>
                                         <div class="col-xs-6 col-lg-10 no-margin-bottom">
                                             <a href="<?php echo site_url('admin/accounts/view/').$row->user_id; ?>"><?php echo $row->username; ?> ( <?php echo $row->display_name; ?> )</a><br>

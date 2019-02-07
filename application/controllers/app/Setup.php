@@ -3,8 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Setup extends MY_Controller {
 
-	public function __construct() {
+	function __construct() {
 	    parent::__construct();
+
+    	ini_set('max_execution_time',7000);
+    	$this->data['notification_list'] = $this->notification->notify_list();
+    	
 	    $this->load->model('checklist_model', 'checklist');
 	    $this->load->model('vehicle_model', 'vehicle');
 	    $this->load->model('profile_model', 'profile');
@@ -24,6 +28,7 @@ class Setup extends MY_Controller {
 
 		$this->data['page_name'] 		= "Checklist";
 		$this->data['result']    		=  $this->checklist->get_checklist_list();
+		$this->data['checklist_list']    		=  $this->checklist->get_checklist_dropdown();
 		$this->data['accounts_list']    =  $this->checklist->get_mech_and_driver_list();
 		$this->data['main_page'] 		= "backend/page/checklist/view";
 		$this->data['plan_type']		= $this->data['session_data']->title;
@@ -99,6 +104,7 @@ class Setup extends MY_Controller {
 	}
 
 	public function edit_checklist($checklist_id){
+
 			$this->form_validation->set_rules('checklist_name'	, 'Checklist Name'	, 'trim|required');
 			if($this->input->post('type') == ''){
 				$this->form_validation->set_rules('type'	, 'Vehicle Type'	, 'trim|required');	
@@ -114,8 +120,9 @@ class Setup extends MY_Controller {
 				$this->data['types'] = $this->vehicle->vehicle_type_list();
 
 				$this->load->view('backend/master' , $this->data);
-			}
-			else{
+			}else{
+
+       			//print_r_die($this->input->post());
 				if($result = $this->checklist->edit_checklist($checklist_id)){
 					$this->session->set_flashdata('status' , 'success');	
 					$this->session->set_flashdata('message' , 'Successfully Updated Checklist');	
@@ -165,6 +172,37 @@ class Setup extends MY_Controller {
 			echo json_encode(["status" => true , "message" => "Checklist Item Help Image Deleted"]);
 		}else{
 			echo json_encode(["status" => false , "message" => "Something went wrong. Please try again."]);
+		}
+	}
+
+
+	public function upload_helpimage($item_id){
+		$upload = $this->checklist->upload_item_help_image($item_id);
+		if($upload){
+			$this->session->set_flashdata('status' , 'success');	
+			$this->session->set_flashdata('message' , 'Successfully Uploaded');
+
+			redirect('app/setup/checklist/edit/'.$this->input->post('checklistid'));
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'Upload failed. Try again');
+
+			redirect('app/setup/checklist/edit/'.$this->input->post('checklistid'));
+		}
+	}
+
+	public function upload_item_image($item_id){
+		$upload = $this->checklist->upload_item_image($item_id);
+		if($upload){
+			$this->session->set_flashdata('status' , 'success');	
+			$this->session->set_flashdata('message' , 'Successfully Uploaded');
+			
+			redirect('app/setup/checklist/edit/'.$this->input->post('checklistid'));
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'Upload failed. Try again');
+
+			redirect('app/setup/checklist/edit/'.$this->input->post('checklistid'));
 		}
 	}
 
@@ -246,7 +284,7 @@ class Setup extends MY_Controller {
 		$this->data['user_plans'] = $this->db->get("plan")->result();
 		$this->data['plan_ids'] = $this->braintree_lib->getAllPlan();
 
-		//print_r_die($this->data['plan_ids']);
+		//print_r_die($this->session->userdata("user"));
 
 		if($type == ""){
 			redirect('/app/setup/account/manage', 'refresh');

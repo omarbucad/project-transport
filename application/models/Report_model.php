@@ -21,8 +21,8 @@ class Report_model extends CI_Model {
             $this->db->where("rs.status", $this->input->get("status"));
         }
 
-        if($this->input->get('checklist_name')){
-            $this->db->like('c.checklist_name' , $this->input->get('checklist_name'));
+        if($this->input->get('checklist_id') != ''){
+            $this->db->like('c.checklist_id' , $this->input->get('checklist_id'));
         }
 
         if($this->input->get('trailer_number')){
@@ -171,16 +171,18 @@ class Report_model extends CI_Model {
         
 
         if($result){
+            $this->db->select("address");
             $this->db->where("store_address_id", $result->address_id);
             $address = $this->db->get("store_address")->row();
-            $result->address = $address->street1;
-            $result->address .= ($address->street2 && $address->street1 != '') ? ", ".$address->street2 : $address->street2;
-            $result->address .= ($address->suburb && ($address->street1 != '' || $address->street2 != '')) ? ", ".$address->suburb : $address->suburb;
-            $result->address .= ($address->city) ? " , ".$address->city : "";            
-            $result->address .= ($address->postcode) ? " ".$address->postcode : "";
+            $result->address = $address->address;
+            //$result->address = $address->street1;
+            // $result->address .= ($address->street2 && $address->street1 != '') ? ", ".$address->street2 : $address->street2;
+            // $result->address .= ($address->suburb && ($address->street1 != '' || $address->street2 != '')) ? ", ".$address->suburb : $address->suburb;
+            // $result->address .= ($address->city) ? " , ".$address->city : "";            
+            // $result->address .= ($address->postcode) ? " ".$address->postcode : "";
 
-            $result->address .= ($address->state) ? ", ".$address->state : "";
-            $result->address .= ($address->country) ? ", ".$address->country : "";
+            // $result->address .= ($address->state) ? ", ".$address->state : "";
+            // $result->address .= ($address->country) ? ", ".$address->country : "";
 
             if($result->logo_image_path == 'public/img/'){
                 $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
@@ -340,13 +342,13 @@ class Report_model extends CI_Model {
                 $result['header'][$key]->status_created = convert_timezone($row->status_created,false);
             //}
             $result['header'][$key]->signature = ($row->signature == '') ? '' : $this->config->site_url("public/upload/signature/".$row->signature);
-
-            $result['header'][$key]->address = $row->street1.",";
-            $result['header'][$key]->address .= ($row->street2) ? $row->street2."," : "";
-            $result['header'][$key]->address .= ($row->suburb) ? $row->suburb."," : "";
-            $result['header'][$key]->address .= ($row->city) ? $row->city."," : "";
-            $result['header'][$key]->address .= ($row->state) ? $row->state."," : "";
-            $result['header'][$key]->address .= ($row->postcode) ? $row->postcode : "";
+            $result['header'][$key]->address = $row->address;
+            // $result['header'][$key]->address = $row->street1.",";
+            // $result['header'][$key]->address .= ($row->street2) ? $row->street2."," : "";
+            // $result['header'][$key]->address .= ($row->suburb) ? $row->suburb."," : "";
+            // $result['header'][$key]->address .= ($row->city) ? $row->city."," : "";
+            // $result['header'][$key]->address .= ($row->state) ? $row->state."," : "";
+            // $result['header'][$key]->address .= ($row->postcode) ? $row->postcode : "";
 
 
             $result['header'][$key]->status = report_status($row->status);
@@ -499,11 +501,11 @@ class Report_model extends CI_Model {
 
         if($date = $this->input->post("date")){
             $start = strtotime(trim($date.' 00:00'));
-            $today = strtotime("d M Y 00:00", time());
+            $today = strtotime("d/M/Y 00:00", time());
             if($start == $today){
                  $this->db->where("created" , $start);
             }else{
-                $end   = strtotime(trim($date.' 23:59 + 6 days'));
+                $end   = strtotime(trim($date.' 23:59 + 5 days'));
 
                 // $this->db->where("created >= " , $start);
                 // $this->db->where("created <= " , $end);

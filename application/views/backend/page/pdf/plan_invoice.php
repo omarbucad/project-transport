@@ -45,7 +45,7 @@
 			<tr>
 				<td colspan="2"></td>
 				<td><strong>DATE:</strong></td>
-				<td><?php echo date("d M Y"); ?></td>
+				<td><?php echo date("d/M/Y"); ?></td>
 			</tr>
 			<tr>
 				<td colspan="2"></td>

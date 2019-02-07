@@ -251,25 +251,25 @@
                         <tr class="customer-row" style="cursor: default;">
                           <td><span><?php echo $value['item_name'];?></span></td>
                           <?php if($value['day1'] != '') : ?>
-                          <td><span><?php if($value['day1'] == 1){ echo 'DEFECT'; } elseif($value['day1'] == 2){echo 'RECHECKED';} else{ echo 'RECHECKED'; }?></span></td>
+                          <td><span><?php if($value['day1'] == 1){ echo 'DEFECT'; } elseif($value['day1'] == 2){echo 'RUNNING DEFECT';} else{ echo 'RUNNING DEFECT'; }?></span></td>
                           <?php endif; ?>
                           <?php if($value['day2'] != '') : ?>
-                          <td><span><?php if($value['day2'] == 1){ echo 'DEFECT'; } elseif($value['day2'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <td><span><?php if($value['day2'] == 1){ echo 'DEFECT'; } elseif($value['day2'] == 2){echo 'RUNNING DEFECT';} else{ echo 'GOOD'; }?></span></td>
                           <?php endif; ?>
                           <?php if($value['day3'] != '') : ?>
-                          <td><span><?php if($value['day3'] == 1){ echo 'DEFECT'; } elseif($value['day3'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <td><span><?php if($value['day3'] == 1){ echo 'DEFECT'; } elseif($value['day3'] == 2){echo 'RUNNING DEFECT';} else{ echo 'GOOD'; }?></span></td>
                           <?php endif; ?>
                           <?php if($value['day4'] != '') : ?>
-                          <td><span><?php if($value['day4'] == 1){ echo 'DEFECT'; } elseif($value['day4'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <td><span><?php if($value['day4'] == 1){ echo 'DEFECT'; } elseif($value['day4'] == 2){echo 'RUNNING DEFECT';} else{ echo 'GOOD'; }?></span></td>
                           <?php endif; ?>
                           <?php if($value['day5'] != '') : ?>
-                          <td><span><?php if($value['day5'] == 1){ echo 'DEFECT'; } elseif($value['day5'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <td><span><?php if($value['day5'] == 1){ echo 'DEFECT'; } elseif($value['day5'] == 2){echo 'RUNNING DEFECT';} else{ echo 'GOOD'; }?></span></td>
                           <?php endif; ?>
                           <?php if($value['day6'] != '') : ?>
-                          <td><span><?php if($value['day6'] == 1){ echo 'DEFECT'; } elseif($value['day6'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <td><span><?php if($value['day6'] == 1){ echo 'DEFECT'; } elseif($value['day6'] == 2){echo 'RUNNING DEFECT';} else{ echo 'GOOD'; }?></span></td>
                           <?php endif; ?>
                           <?php if($value['day7'] != '') : ?>
-                          <td><span><?php if($value['day7'] == 1){ echo 'DEFECT'; } elseif($value['day7'] == 2){echo 'RECHECKED';} else{ echo 'GOOD'; }?></span></td>
+                          <td><span><?php if($value['day7'] == 1){ echo 'DEFECT'; } elseif($value['day7'] == 2){echo 'RUNNING DEFECT';} else{ echo 'GOOD'; }?></span></td>
                           <?php endif; ?>
                           
                         </tr>

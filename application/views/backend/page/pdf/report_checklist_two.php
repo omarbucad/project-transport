@@ -34,7 +34,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td style="width:350px;">
-					<img src="<?php echo $company_logo;?>" style="height:30px;margin-bottom: 5px;margin-left: 15px; display: inline-block;"><strong style="display: inline-block;"><span style="margin-top:-10px; font-size: 18px;margin-left: 8px;"><?php echo $store_name; ?></span></strong>
+					<img src="<?php echo $company_logo;?>" style="height:30px;margin-bottom: 5px;margin-left: 15px; display: inline-block;" alt="Company Logo"><strong style="display: inline-block;"><span style="margin-top:-10px; font-size: 18px;margin-left: 8px;"><?php echo $store_name; ?></span></strong>
 
 					<p style="width:100px; margin-left: 15px;margin-top:0;font-size: 10px; margin-bottom: 10px;">Address: <?php echo $address; ?></p>
 
@@ -101,7 +101,7 @@
 									<?php if($checklist->checklist_ischeck == 1) : ?>
 										<strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->timestamp; ?>
 									<?php elseif($checklist->checklist_ischeck == 2) : ?>
-										<strong  style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->timestamp; ?>
+										<strong  style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->timestamp; ?>
 									<?php elseif($checklist->checklist_ischeck == 3) : ?>
 										<strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->timestamp; ?>
 									<?php else : ?>
@@ -115,7 +115,7 @@
 										<?php if($checklist->final_update_ischeck == 1) : ?>
 			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
 			                            <?php elseif($checklist->final_update_ischeck == 2) : ?>
-			                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                                <strong style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
 			                            <?php elseif($checklist->final_update_ischeck == 3) : ?>
 			                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
 			                            <?php else : ?>
@@ -130,7 +130,7 @@
 			                            <?php if($checklist->updated_ischeck == 1) : ?>
 			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
 			                            <?php elseif($checklist->updated_ischeck == 2) : ?>
-			                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->updated_timestamp;?>
+			                                <strong style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
 			                            <?php elseif($checklist->updated_ischeck == 3) : ?>
 			                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->updated_timestamp;?>
 			                            <?php else : ?>
@@ -166,7 +166,7 @@
 									<?php if($checklist->checklist_ischeck == 1) : ?>
 										<strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->timestamp; ?>
 									<?php elseif($checklist->checklist_ischeck == 2) : ?>
-										<strong  style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->timestamp; ?>
+										<strong  style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->timestamp; ?>
 									<?php elseif($checklist->checklist_ischeck == 3) : ?>
 										<strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->timestamp; ?>
 									<?php else : ?>
@@ -179,7 +179,7 @@
 										<?php if($checklist->final_update_ischeck == 1) : ?>
 			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
 			                            <?php elseif($checklist->final_update_ischeck == 2) : ?>
-			                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+			                                <strong style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
 			                            <?php elseif($checklist->final_update_ischeck == 3) : ?>
 			                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
 			                            <?php else : ?>
@@ -194,7 +194,7 @@
 			                           <?php if($checklist->updated_ischeck == 1) : ?>
 			                                <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
 			                            <?php elseif($checklist->updated_ischeck == 2) : ?>
-			                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->updated_timestamp;?>
+			                                <strong style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
 			                            <?php elseif($checklist->updated_ischeck == 3) : ?>
 			                                <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->updated_timestamp;?>
 			                            <?php else : ?>
@@ -233,7 +233,7 @@
 						<?php if($checklist->checklist_ischeck == 1) : ?>
 							<strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->timestamp; ?>
 						<?php elseif($checklist->checklist_ischeck == 2) : ?>
-							<strong  style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->timestamp; ?>
+							<strong  style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->timestamp; ?>
 						<?php elseif($checklist->checklist_ischeck == 3) : ?>
 							<strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->timestamp; ?>
 						<?php else : ?>
@@ -248,7 +248,7 @@
 							<?php if($checklist->final_update_ischeck == 1) : ?>
                                 <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
                             <?php elseif($checklist->final_update_ischeck == 2) : ?>
-                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
+                                <strong style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
                             <?php elseif($checklist->final_update_ischeck == 3) : ?>
                                 <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->final_update_timestamp;?><br>
                             <?php else : ?>
@@ -263,7 +263,7 @@
                             <?php if($checklist->updated_ischeck == 1) : ?>
                                 <strong style="color: #ED2224;"><?php echo "Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
                             <?php elseif($checklist->updated_ischeck == 2) : ?>
-                                <strong style="color: #5D9BD3;"><?php echo "Recheck "; ?></strong> <?php echo $checklist->updated_timestamp;?>
+                                <strong style="color: #5D9BD3;"><?php echo "Running Defect "; ?></strong> <?php echo $checklist->updated_timestamp;?>
                             <?php elseif($checklist->updated_ischeck == 3) : ?>
                                 <strong style="color: #818181;"><?php echo "N/A "; ?></strong> <?php echo $checklist->updated_timestamp;?>
                             <?php else : ?>
@@ -297,7 +297,7 @@
 					<td colspan="2" style="width: 350px; padding-top: 10px;">Notes: <?php echo ($report_notes != '') ? $report_notes : ""; ?></td>
 					<td style="padding-top: -10px;padding-left: 220px;">
 						<?php if(!empty($report_statuses)) : ?>
-						<img src="<?php echo $report_statuses[0]->signature;?>" style="height:40px;"><br>
+						<img src="<?php echo $report_statuses[0]->signature;?>" alt="Signature" style="height:40px;"><br>
 						<?php echo $report_statuses[0]->display_name;?><br>
 						<?php else: ?>
 							<?php echo $display_name;?><br>

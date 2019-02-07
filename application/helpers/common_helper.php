@@ -181,7 +181,7 @@ if( ! function_exists('date_of_birth')){
 
 if ( ! function_exists('convert_timezone'))
 {
-    function convert_timezone($time , $with_hours = false , $with_timezone = true , $hour_only = false , $custom_format_date_with_hour = "M d Y h:i:s A" , $custom_format_date = "M d Y" , $custom_format_hour = "h:i:s A")
+    function convert_timezone($time , $with_hours = false , $with_timezone = true , $hour_only = false , $custom_format_date_with_hour = "d M Y h:i:s A" , $custom_format_date = "d M Y" , $custom_format_hour = "h:i:s A")
     {
         if(!$time OR $time == 0){
             return "NA";
@@ -193,28 +193,48 @@ if ( ! function_exists('convert_timezone'))
 
             if($with_hours){
                 $date_format = $custom_format_date_with_hour;
+
+                $triggerOn = date($date_format , $time);
+
+                $tz = new DateTimeZone($timezone);
+                $datetime = new DateTime($triggerOn);
+
+                $datetime->setTimezone($tz);
+                
+                return $datetime->format("d/M/Y H:i:s A");
+
             }else if($hour_only){
                 $date_format = $custom_format_hour;
+                $triggerOn = date($date_format , $time);
+
+                $tz = new DateTimeZone($timezone);
+                $datetime = new DateTime($triggerOn);
+
+                $datetime->setTimezone($tz);
+
+                
+                return $datetime->format( $date_format );
             }else{
                 $date_format = $custom_format_date;
+
+                $triggerOn = date($date_format , $time);
+
+                $tz = new DateTimeZone($timezone);
+                $datetime = new DateTime($triggerOn);
+
+                $datetime->setTimezone($tz);
+
+                return $datetime->format("d/M/Y");
             }
             
-            $triggerOn = date($date_format , $time);
 
-            $tz = new DateTimeZone($timezone);
-            $datetime = new DateTime($triggerOn);
-
-            $datetime->setTimezone($tz);
-
-            
-            return $datetime->format( $date_format );
         }else{
             if($with_hours){
-                $date_format = $custom_format_date_with_hour;
+                $date_format = "d/M/Y H:i:s A";
             }else if($hour_only){
                 $date_format = $custom_format_hour;
             }else{
-                $date_format = $custom_format_date;
+                $date_format = "d/M/Y";
             }
 
             return date($date_format , $time);
@@ -334,7 +354,7 @@ if ( ! function_exists('download_send_headers'))
     function download_send_headers($filename) 
     {
         // disable caching
-        $now = gmdate("D, d M Y H:i:s");
+        $now = gmdate("D, d/M/Y H:i:s");
         header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
         header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
         header("Last-Modified: {$now} GMT");
@@ -567,6 +587,80 @@ if( ! function_exists('convert_vehicle_status')){
                 break;
             }
         }
+    }
+}
+
+function getCode($length)
+{
+    $token = "";
+    // $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    // $codeAlphabet .= "abcdefghijklmnopqrstuvwxyz";
+    $codeAlphabet = "0123456789";
+    $max = strlen($codeAlphabet); // edited
+
+    for ($i=0; $i < $length; $i++) {
+        $token .= $codeAlphabet[crypto_rand_secure(0, $max-1)];
+    }
+
+    return $token;
+}
+
+if ( ! function_exists('generate_email_code'))
+{
+
+    function generate_email_code($user_id)
+    {
+
+        $CI =& get_instance();
+
+        if ($user_id == 0) {
+            return false;
+        }
+
+        $CI->db->select("code");
+        $app_data = $CI->db->where("user_id",$user_id)->get("user")->row()->code;
+
+        if (!empty($app_data)) {
+            $params = array(
+                "code" => getCode(6),
+                "code_created" => time()
+            );
+            $bool = $CI->db->where("user_id",$user_id)->update("user",$params);
+        }else{            
+            $params = array(
+                "code" => getCode(6),
+                "code_created" => time()
+            );
+
+            $CI->db->where("user_id",$user_id);
+            $bool = $CI->db->update("app_token",$params);
+        }
+
+        return ($bool) ? $params['code'] : false;
+    }
+}
+
+if ( ! function_exists('validate_email_code'))
+{
+
+    function validate_email_code($data)
+    {
+        $CI =& get_instance();
+
+        $CI->db->where("user_id",$data->user_id);
+        $code = $CI->db->select("code, code_created")->where("code",$data->code)->get("user")->row();
+        if($code){
+            if($code->code_created < (time() - (30*60))){
+                return "expired";
+            }else{
+                return "valid";
+            }
+        }else{
+            return "invalid";
+        }
+        
+
+        //return ($code) ? true : false;
     }
 }
 

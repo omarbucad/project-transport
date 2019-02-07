@@ -35,7 +35,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td style="width:350px;">
-					<img src="<?php echo $company_logo;?>" style="height:30px;margin-bottom: 5px;margin-left: 15px; display: inline-block;"><strong style="display: inline-block;"><span style="margin-top:-10px; font-size: 18px;margin-left: 8px;"><?php echo $val->store_name; ?></span></strong>
+					<img src="<?php echo $company_logo;?>" style="height:30px;margin-bottom: 5px;margin-left: 15px; display: inline-block;" alt="company logo"><strong style="display: inline-block;"><span style="margin-top:-10px; font-size: 18px;margin-left: 8px;"><?php echo $val->store_name; ?></span></strong>
 
 					<p style="width:100px; margin-left: 15px;margin-top:0;font-size: 10px; margin-bottom: 10px;">Address: <?php echo $val->address; ?></p>
 
@@ -298,7 +298,7 @@
 					<td colspan="2" style="width: 350px; padding-top: 10px;">Notes: <?php echo ($val->report_notes != '') ? $val->report_notes : ""; ?></td>
 					<td style="padding-top: -10px;padding-left: 220px;">
 						<?php if(!empty($val->report_statuses)) : ?>
-						<img src="<?php echo $val->report_statuses[0]->signature;?>" style="height:40px;"><br>
+						<img src="<?php echo $val->report_statuses[0]->signature;?>" style="height:40px;" alt="signature"><br>
 						<?php echo $val->report_statuses[0]->display_name;?><br>
 						<?php else: ?>
 							<?php echo $val->display_name;?><br>

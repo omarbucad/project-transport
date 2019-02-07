@@ -10,7 +10,7 @@
         }
     });
     $(document).on('change' , '#profile_image' , function(){
-        readURL(this , ".image-preview" , 'background');
+        readURL($(this) , ".image-preview" , 'background');
     });
     $(document).on('change', '#user_role', function(){
         var role = $(this).find(":selected").val();
@@ -88,8 +88,7 @@
                                 <label for="role">Role</label>
                                 <select class="form-control" name="role" id="user_role">
                                     <option value="DRIVER">Driver</option>
-                                    <option value="MECHANIC">Mechanic</option>                                  
-                                    <option value="MANAGER">Manager</option>
+                                    <option value="MECHANIC">Mechanic</option>
                                 </select>
                             </div>                            
                         </div>
@@ -137,7 +136,7 @@
                                 </div>
                                 <div class="col-xs-12 col-lg-6">
                                     <div class="form-group">
-                                        <label for="confirm_password">Repeat Password</label>
+                                        <label for="confirm_password">Confirm Password</label>
                                         <input type="password" name="confirm_password" class="form-control" id="confirm_password">
                                     </div>
                                 </div>

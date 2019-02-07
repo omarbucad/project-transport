@@ -48,7 +48,18 @@
 
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();   
-
+        var filter = "<?php echo ($this->input->get('submit') != 'Search') ? 'hidden' : 'show'; ?>";
+        if(filter == 'hidden'){          
+          $('.more-filter').data("value" , "hidden");
+          $('#view_advance_search').addClass("hide");
+          $('.more-filter').text("More Filter");
+          $('#_advance_search_value').val("false");
+        }else{
+          $('.more-filter').data("value" , "show");
+          $('#view_advance_search').removeClass("hide");
+          $('.more-filter').text("Less Filter");
+          $('#_advance_search_value').val("true");
+        }
     });
 
     $(document).on("click" , ".update-status" , function(){
@@ -73,7 +84,7 @@
       var selected = $(this).val();
       var d = new Date(selected);
 
-      d.setDate(d.getDate() +parseInt(2));
+      d.setDate(d.getDate() +parseInt(6));
       var enddate = d.getDate() + ' ' + months[d.getMonth()]+ ' ' + d.getFullYear();   
 
 
@@ -102,8 +113,20 @@
       
         
     });
+
+    $(document).on("click", ".input-group-addon",function(){
+      $(".datepicker").focus();
+    })
     
 </script>
+<style type="text/css">
+  .grey-bg span {
+    line-height: 20px !important;
+  }
+  .input-group-addon, .datepicker{
+    cursor: pointer;
+  }
+</style>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container" >
@@ -114,18 +137,23 @@
                 <div class="row no-margin-bottom">
                     <div class="col-xs-12 col-lg-12 no-margin-bottom">
                       <div class="row">
-                        <form action="<?php echo site_url('app/report/pdf_all');?>" method="POST" id="gen-form"  target="_blank">
-                          <div class="col-xs-12 col-lg-12"><h4>Generate 1 week reports to PDF  ( <small class="text-right" id="date-range"></small> )</h4> </div>
+                        <form action="<?php echo site_url('app/report/pdf_all');?>" method="POST" id="gen-form">
+                          <div class="col-xs-12 col-lg-12"><h4>Download 7 days PDF Reports  ( <small class="text-right" id="date-range"></small> )</h4> </div>
                             
                           <div class="col-xs-12 col-lg-3">
                             <div class="form-group no-margin-bottom" >
                                 <label for="s_name">Select Start Date</label>
-                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="" placeholder="Select Report Start Date" required="true">
+                                <div class='input-group'>
+                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="" placeholder="Select Report Start Date" required="true" onkeydown="return false">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
                             </div>
                           </div>
                           <div class="col-xs-12 col-lg-2">
                             <div class="form-group no-margin-bottom">
-                              <a href="javascript:void(0);" data-href="<?php echo site_url('app/report/pdf_all');?>" class="btn btn-primary btn-generate" style="margin-top: 23px;">Generate PDF</a>
+                              <a href="javascript:void(0);" data-href="<?php echo site_url('app/report/pdf_all');?>" class="btn btn-primary btn-generate" style="margin-top: 23px;">Download Reports</a>
                             </div>
                           </div>
                         </form>
@@ -149,7 +177,12 @@
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
                                     <label for="s_name">Checklist Type</label>
-                                    <input type="text" name="checklist_name" value="<?php echo $this->input->get("checklist_name"); ?>" class="form-control" placeholder="Search by Checklist Type">
+                                    <select class="form-control" name="checklist_id" value="<?php echo set_value('checklist_id');?>">
+                                        <option value="">- Select Type -</option>
+                                        <?php foreach($checklist_list as $key => $row) : ?>
+                                        <option value="<?php echo $row->checklist_id; ?>" <?php echo ($this->input->get("checklist_name") == $row->checklist_id) ? "selected" : "" ;?>><?php echo $row->checklist_name;?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3">
@@ -160,7 +193,7 @@
                                         <?php if($this->session->userdata("user")->role != "MECHANIC") : ?>
                                         <option value="0" <?php echo ($this->input->get("status") == "0") ? "selected" : "" ;?> >No Defect</option>
                                         <?php endif; ?>
-                                        <option value="1" <?php echo ($this->input->get("status") == "1") ? "selected" : "" ;?>>Open</option>
+                                        <option value="1" <?php echo ($this->input->get("status") == "1") ? "selected" : "" ;?>>Defect</option>
                                         <option value="2" <?php echo ($this->input->get("status") == "2") ? "selected" : "" ;?>>Fixed</option>
                                     </select>
                                 </div>
@@ -168,7 +201,7 @@
                            
                             <div class="col-xs-12 col-lg-3 text-right">
                               <div class="btn-group">
-                                <button type="button" class="btn btn-link btn-vertical-center btn-same-size more-filter" data-value="hidden">More filter</button>
+                                <button type="button" class="btn btn-link btn-vertical-center btn-same-size more-filter" data-value="">More filter</button>
                                 <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
                               </div>
                             </div>
@@ -199,7 +232,7 @@
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-line">
                                 <label for="report_by">Report By</label>
-                                <input type="text" class="form-control" name="report_by" list="user" placeholder="Report By">
+                                <input type="text" class="form-control" name="report_by" list="user" placeholder="Report By" value="<?php echo $this->input->get("report_by"); ?>">
                             </div>
                             </div>
                             
@@ -265,7 +298,7 @@
                             <td valign="top"><span><?php echo $row->created; ?></span></td>
                             <td valign="top">
                                 <?php if($row->status != '<span class="label label-success">No Defect</span>') : ?>
-                                  <a href="javascript:void(0);" data-id="<?php echo $row->report_number;?>" data-href="<?php echo site_url('app/report/report_status/').$row->report_id;?>" class="btn btn-link btn-update" style="padding: 3px 6px;margin:0;" title="Update Status"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                  <!-- <a href="javascript:void(0);" data-id="<?php //echo $row->report_number;?>" data-href="<?php //echo site_url('app/report/report_status/').$row->report_id;?>" class="btn btn-link btn-update" style="padding: 3px 6px;margin:0;" title="Update Status"><i class="fa fa-edit" aria-hidden="true"></i></a> -->
                                   <?php if($row->pdf_file != '') : ?>
                                   <a href="<?php echo $this->config->site_url().$row->pdf_path.$row->pdf_file;?>" class="btn btn-link btn-print" style="padding: 3px 6px;margin:0;" title="Download PDF" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a>
                                   <?php else: ?>

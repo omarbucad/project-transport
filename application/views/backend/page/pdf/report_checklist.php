@@ -38,7 +38,7 @@
 				<td style="width:20%"></td>
 			</tr>
 			<tr>
-				<td colspan="5"><img src="<?php echo $company_logo;?>" style="height:90px;margin-bottom: 10px;padding-left: 25px; display: inline-block;"><strong style="display: inline-block;"><span style="margin-top: -25px; font-size: 30px;margin-left: 10px;"><?php echo $store_name; ?></span></strong></td>				
+				<td colspan="5"><img src="<?php echo $company_logo;?>" style="height:90px;margin-bottom: 10px;padding-left: 25px; display: inline-block;" alt="Company Logo"><strong style="display: inline-block;"><span style="margin-top: -25px; font-size: 30px;margin-left: 10px;"><?php echo $store_name; ?></span></strong></td>				
 			</tr>		
 			<tr>
 				<th>Report #</th>
@@ -90,7 +90,7 @@
 						<?php if($checklist->checklist_ischeck == 1) : ?>
 							<?php echo "Defect"; ?>
 						<?php elseif($checklist->checklist_ischeck == 2) : ?>
-							<?php echo "Rechecked"; ?>
+							<?php echo "Running Defect"; ?>
 						<?php elseif($checklist->checklist_ischeck == 3) : ?>
 							<?php echo "N/A"; ?>
 						<?php else : ?>
@@ -103,7 +103,7 @@
                             <?php if($checklist->updated_ischeck == 1) : ?>
                                 <?php echo "Defect"; ?>
                             <?php elseif($checklist->updated_ischeck == 2) : ?>
-                                <?php echo "Rechecked"; ?>
+                                <?php echo "Running Defect"; ?>
                             <?php elseif($checklist->updated_ischeck == 3) : ?>
                                 <?php echo "N/A"; ?>
                             <?php else : ?>
@@ -128,7 +128,7 @@
 			<tr>
 				<td colspan="5" style="padding:5px;">
 					<?php if(!empty($report_statuses)) : ?>
-					<img src="<?php echo $report_statuses[0]->signature;?>" style="height:50px;"><br>
+					<img src="<?php echo $report_statuses[0]->signature;?>" style="height:50px;" alt="Signature"><br>
 					<?php echo $report_statuses[0]->display_name;?><br>
 					<?php else: ?>
 						<?php echo $display_name;?><br>

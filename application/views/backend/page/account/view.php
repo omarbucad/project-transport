@@ -318,7 +318,7 @@
 
                             <h3 class="card-title">Free</h3>
                             <div class="form-group text-center">
-                                <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_basic_plan_trial_3">Proceed</a>
+                                <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_free_trial">Proceed</a>
                             </div>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">1 Driver</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
@@ -342,9 +342,10 @@
                             <form action="<?php echo site_url();?>" method="POST" id="premium-form">
                                 <div class="form-group">
                                     <label>Numbers of Vehicle</label>
-                                    <select class="form-control" name="no_vehicles" >
+                                    <input type="number" name="no_vehicles" class="form-control">
+                                    <!-- <select class="form-control" name="" >
                                         <option value="50">50 vehicles</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Subscription</label>
@@ -471,8 +472,11 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="defaultModalLabel">Payment</h4>
+                <small><strong style="color: red;">**Note: This will replace your current subscription. Any changes made can't reverted.</strong></small>
             </div>
+             
             <div class="modal-body">
+
               
             </div>
             <div class="modal-footer">

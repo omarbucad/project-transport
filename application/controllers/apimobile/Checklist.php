@@ -24,12 +24,12 @@ class Checklist extends CI_Controller {
 
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
-			$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id");
+			$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id, c.checklistVersion");
 			$result = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
 
 			echo json_encode(["status" => 1 , "data" => $result, "action" => "get_my_checklist"]);
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_my_checklist"]);
+			echo json_encde(["status" => false , "message" => "403: Access Forbidden", "action" => "get_my_checklist"]);
 		}
 		
 	}
@@ -41,7 +41,7 @@ class Checklist extends CI_Controller {
 			$types = $this->db->select("vehicle_type_id, type")->where("deleted IS NULL")->get("vehicle_type")->result();
 
 			foreach ($types as $key => $value) {
-				$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id");
+				$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id, c.checklistVersion");
 
 				$this->db->where("c.vehicle_type_id",$value->vehicle_type_id);
 				$types[$key]->checklist = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->row();
@@ -55,6 +55,8 @@ class Checklist extends CI_Controller {
 					$types[$key]->checklist->items[$item]->help_image  = ($images->help_image_name) ? $this->config->site_url("thumbs/images/checklist/".$images->help_image_path."/250/250/".$images->help_image_name) : "";
 				}
 			}
+
+			//print_r_die($types);
 
 			echo json_encode(["status" => true , "data" => $types, "action" => "get_checklists_by_type"]);
 			
@@ -70,7 +72,7 @@ class Checklist extends CI_Controller {
 			$type = $this->post->vehicle_type_id;
 			
 
-			$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id");
+			$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id, c.checklistVersion");
 			//$this->db->join("user_checklist uc" , "uc.checklist_id = c.checklist_id");
 			$this->db->where("c.vehicle_type_id",$type);
 			$result = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->row();
@@ -84,6 +86,19 @@ class Checklist extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_checklist_by_type"]);
 		}
 
+	}
+
+	public function get_checklist_version(){
+			
+		$this->db->select("c.checklist_id, c.checklistVersion");
+		$versions = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->get("checklist c")->result();
+
+		if($versions){
+
+			echo json_encode(["status" => true , "data" => $versions, "action" => "get_checklist_version"]);
+		}else{
+			echo json_encode(["status" => false , "message" => "Something went wrong. Try again.", "action" => "get_checklist_version"]);
+		}
 	}
 
 	
@@ -109,11 +124,14 @@ class Checklist extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 			$store_id = $this->post->store_id;
+
+			$offset = (isset($data->offset)) ? $data->offset : 0;
+            $limit = (isset($data->limit)) ? $data->limit : 4;
 			
 			$this->db->select("v.vehicle_id , v.vehicle_registration_number, v.vehicle_type_id, v.status, v.availability,v.last_checked, vt.type");
 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
 			$this->db->where("vt.deleted IS NULL");
-			$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
+			$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->limit($limit, $offset)->get("vehicle v")->result();
 
 			if($data){
 				echo json_encode(["status" => true , "data" => $data, "action" => "get_all_vehicles"]);
@@ -189,7 +207,7 @@ class Checklist extends CI_Controller {
 					"start_mileage"					=> $data->start_mileage ,
 					"end_mileage"					=> (isset($data->end_mileage)) ? $data->end_mileage : NULL ,
 					"report_notes"					=> (isset($data->note)) ? $data->note : NULL ,
-					"created"						=> strtotime(convert_timezone(strtotime(date("M d Y h:i:s A", time())), true, true)),
+					"created"						=> strtotime(convert_timezone(strtotime(date("d/M/Y h:i:s A", time())), true, true)),
 					"remind_in"						=> $remind_in,
 					"remind_done"					=> false
 				]);
@@ -392,6 +410,7 @@ class Checklist extends CI_Controller {
 			if(!empty($_FILES)){
 				if($_FILES['data']['error'] == 0){
 					$data = file_get_contents($_FILES['data']['tmp_name']);
+
 					$data = (object)json_decode($data);
 
 					if($data){
@@ -422,7 +441,7 @@ class Checklist extends CI_Controller {
 								"start_mileage"					=> $value->start_mileage ,
 								"end_mileage"					=> $value->end_mileage ,
 								"report_notes"					=> (isset($value->report_notes)) ? $value->report_notes : NULL ,
-								"created"						=> strtotime($value->created),
+								"created"						=> strtotime(str_replace("/"," ",$value->created)),
 								"remind_in"						=> $remind_in,
 								"remind_done"					=> false
 							]);
@@ -446,13 +465,13 @@ class Checklist extends CI_Controller {
 									"checklist_item_id"		=> $item->checklist_id ,
 									"checklist_value"		=> ($item->note == '') ? NULL : $item->note,
 									"checklist_ischeck"		=> $item->checkbox,
-									"timestamp"				=> convert_timezone(strtotime($item->timestamp), true, false),
+									"timestamp"				=> convert_timezone(strtotime(str_replace("/"," ",$item->timestamp)), true, false),
 									"updated_value"		=> ($item->update_note == '') ? NULL : $item->update_note,
 									"updated_ischeck"	=> ($item->update_check == 99) ? NULL : $item->update_check,
-									"updated_timestamp" => ($item->update_timestamp == '') ? NULL : convert_timezone(strtotime($item->update_timestamp), true, false),
+									"updated_timestamp" => ($item->update_timestamp == '') ? NULL : convert_timezone(strtotime(str_replace("/"," ",$item->update_timestamp)), true, false),
 									"final_update_value" => ($item->final_update_note == '') ? NULL : $item->final_update_note,
 									"final_update_ischeck" => ($item->final_update_check == 99) ? NULL : $item->final_update_check,
-									"final_update_timestamp" => ($item->final_update_timestamp  == '') ? NULL : convert_timezone(strtotime($item->final_update_timestamp), true, false)
+									"final_update_timestamp" => ($item->final_update_timestamp  == '') ? NULL : convert_timezone(strtotime(str_replace("/"," ",$item->final_update_timestamp)), true, false)
 								);
 
 								$this->db->insert("report_checklist" , $item_batch);
@@ -526,7 +545,7 @@ class Checklist extends CI_Controller {
 								"status"			=> $finalstat,
 								"notes"				=> $value->report_notes ,
 								"user_id"			=> $value->user_id ,
-								"created"			=> strtotime(convert_timezone(strtotime($value->created), true, true)),
+								"created"			=> strtotime(convert_timezone(strtotime(str_replace("/"," ",$value->created)), true, true)),
 								"start_longitude"	=> $value->start_longitude,
 								"start_latitude"	=> $value->start_latitude,
 								"longitude"			=> $value->longitude,
@@ -556,7 +575,7 @@ class Checklist extends CI_Controller {
 								"vehicle_registration_number" => $value->vehicle_registration_number,
 								"trailer_number" => ($value->trailer_number != '') ? $value->trailer_number : NULL,
 								"vehicle_type" => $value->vehicle_type_id,
-								"date_used" => strtotime(convert_timezone(strtotime($value->created), true, true))
+								"date_used" => strtotime(convert_timezone(strtotime(str_replace("/"," ",$value->created)), true, true))
 							]);
 
 							if($value->trailer_number == ''){
@@ -589,6 +608,18 @@ class Checklist extends CI_Controller {
 									"pdf_path"			=> $pdf['path'],
 									"pdf_file" 			=> $pdf['filename']
 								]);
+								
+					            $this->db->trans_start();
+
+								$this->db->insert("notification", [
+									"description" => "Report #".$report_number." | Status: ".report_type($finalstat),
+									"type" => 1,
+									"isread" => 0,
+									"ref_id" => $report_id,
+									"created" => time()
+								]);
+
+								$this->db->trans_complete();
 					        }
 						}
 						echo json_encode(["status" => true , "message" => "Successfully Submitted Offline Reports","action" => "offline_save_checklist"]);	

@@ -35,7 +35,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?php echo site_url("welcome");?>">
-                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>"  height="30px" width="auto"></div>
+                    <div class="icon"><img src="<?php echo site_url('public/img/vehicle-checklist.png') ?>" height="30px" width="auto" alt="Vehicle Checklist Logo"></div>
                     <div class="title"><?php echo $application_name; ?></div>
                 </a>
             </div>

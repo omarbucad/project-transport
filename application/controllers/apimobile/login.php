@@ -73,6 +73,7 @@ class Login extends CI_Controller {
 				$data->expiring_in = $this->profile->get_userplan($data->user_id);
 				$data->servertime = time();
 				$token = generate_app_token($data->user_id, $device_id, $device_type);
+				$data->vehicle_free_trial = "10";
 
 				echo json_encode(["status" => true , "data" => $data, "action" => "signin", "token" => $token]);
 			}else{
@@ -129,6 +130,7 @@ class Login extends CI_Controller {
 				# code...
 				break;
 		}
+
 
 		echo json_encode([
 				"status" 	=> false ,

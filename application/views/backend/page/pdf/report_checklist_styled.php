@@ -34,7 +34,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td style="width:350px;">
-					<img src="<?php echo $company_logo;?>" style="height:30px;margin-bottom: 10px;margin-left: 15px; display: inline-block;margin-top: 10px;"><strong style="display: inline-block;"><span style="margin-top:-20px; font-size: 18px;margin-left: 8px;"><?php echo $store_name; ?></span></strong>
+					<img src="<?php echo $company_logo;?>" style="height:30px;margin-bottom: 10px;margin-left: 15px; display: inline-block;margin-top: 10px;" alt="Comopany Logo"><strong style="display: inline-block;"><span style="margin-top:-20px; font-size: 18px;margin-left: 8px;"><?php echo $store_name; ?></span></strong>
 
 					<p style="width:100px; margin-left: 15px;margin-top:0;font-size: 12px;">Address: <?php echo $address; ?></p>
 
@@ -88,7 +88,7 @@
 						<?php if($checklist->checklist_ischeck == 1) : ?>
 							<strong><?php echo "Defect"; ?></strong>
 						<?php elseif($checklist->checklist_ischeck == 2) : ?>
-							<strong><?php echo "Rechecked"; ?></strong>
+							<strong><?php echo "Running Defect"; ?></strong>
 						<?php elseif($checklist->checklist_ischeck == 3) : ?>
 							<strong><?php echo "N/A"; ?></strong>
 						<?php else : ?>
@@ -101,7 +101,7 @@
                             <?php if($checklist->updated_ischeck == 1) : ?>
                                 <strong><?php echo "Defect"; ?></strong>
                             <?php elseif($checklist->updated_ischeck == 2) : ?>
-                                <strong><?php echo "Rechecked"; ?></strong>
+                                <strong><?php echo "Running Defect"; ?></strong>
                             <?php elseif($checklist->updated_ischeck == 3) : ?>
                                 <strong><?php echo "N/A"; ?></strong>
                             <?php else : ?>
@@ -138,7 +138,7 @@
 			</table>
 			<div class="row" style="padding-left: 500px;padding-bottom: 30px;">				
 				<?php if(!empty($report_statuses)) : ?>
-				<img src="<?php echo $report_statuses[0]->signature;?>" style="height:50px;"><br>
+				<img src="<?php echo $report_statuses[0]->signature;?>" alt="Signature" style="height:50px;"><br>
 				<?php echo $report_statuses[0]->display_name;?><br>
 				<?php else: ?>
 					<?php echo $display_name;?><br>

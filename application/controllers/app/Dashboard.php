@@ -3,11 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dashboard extends MY_Controller {
 
-	public function __construct() {
+	function __construct() {
        parent::__construct();
        $this->load->model('vehicle_model', 'vehicle');
        $this->load->model('accounts_model', 'accounts');
        $this->load->model('report_model', 'report');
+       $this->data['notification_list'] = $this->notification->notify_list();
 
     }
 
@@ -18,7 +19,6 @@ class Dashboard extends MY_Controller {
   //       print_r_die($now);
 		// $bt = $this->braintree_lib->webhook_subscription();
 		// print_r_die($bt);
-
 		$this->data['page_name'] = "Dashboard";
 		$this->data['main_page'] = "backend/page/dashboard/dashboard";
 		$this->data['drivers'] = $this->accounts->get_driver();

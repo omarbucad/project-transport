@@ -46,6 +46,9 @@
                     
                     if(json.status){
                         $.notify("Successfully deleted image" , { className:  "success" , position : "top center"});
+                        setTimeout(function () { 
+                          location.reload();
+                        }, 2000);
 
                     }
                 }
@@ -139,39 +142,43 @@
         }
     });
 
-    $(document).on("click" , "input[type='submit']" , function(){
+    $(document).on("click" , "a.submit" , function(){
+
+        var c = confirm("Are you sure?");
+        if(c == true){
         
-        $(".has-image").each(function(index, item){
-            var id = $(item).closest("div.panel-body").find("input.item-id").val();
-            var v = $(item).closest("div.col-lg-6").find("input[type='file']").val();
-            if(v == ""){
-                $(item).val(0);
-            }else{
-                $(item).val(id);
-            }
+            $(".has-image").each(function(index, item){
+                var id = $(item).closest("div.panel-body").find("input.item-id").val();
+                var v = $(item).closest("div.col-lg-6").find("input[type='file']").val();
+                if(v == ""){
+                    $(item).val(0);
+                }else{
+                    $(item).val(id);
+                }
 
-        });
+            });
 
-        $(".has-helpimage").each(function(index, item){
-            var id = $(item).closest("div.panel-body").find("input.item-id").val();
-            var v = $(item).closest("div.col-lg-6").find("input[type='file']").val();
-            if(v == ""){
-                $(item).val(0);
-            }else{
-                $(item).val(id);
-            }
+            $(".has-helpimage").each(function(index, item){
+                var id = $(item).closest("div.panel-body").find("input.item-id").val();
+                var v = $(item).closest("div.col-lg-6").find("input[type='file']").val();
+                if(v == ""){
+                    $(item).val(0);
+                }else{
+                    $(item).val(id);
+                }
 
-        });
+            });
 
+            $("#form-edit").submit();
+        }
     });
-
 </script>
 
 <div class="container margin-bottom">
     <div class="side-body padding-top">
         <ol class="breadcrumb">
             <li><a href="<?php echo site_url('app/setup/checklist'); ?>">Checklist</a></li>
-            <li class="active">Add Checklist Item</li>
+            <li class="active">Edit Checklist Item</li>
         </ol>   
         <form class="form-horizontal" action="<?php echo site_url('app/setup/checklist/edit/').$this->hash->encrypt($result->checklist_id); ?>" method="POST" enctype="multipart/form-data" id="form-edit">
             <!-- STORE SETTINGS -->
@@ -189,6 +196,7 @@
                             <p></p>
                         </div>
                         <div class="col-xs-12 col-lg-4">
+                            <input type="hidden" name="checklistVersion" value="<?php echo $result->checklistVersion; ?>">
                             <div class="form-group">
                                 <label for="username">Checklist Name</label>
                                 <input type="text" name="checklist_name" class="form-control" value="<?php echo $result->checklist_name; ?>" required="true"  >
@@ -283,27 +291,38 @@
                         <div class="col-lg-6 no-margin-bottom">
                             <div class="div-image <?php echo (isset($row['image_path']) && $row['image_path'] != '') ? '':'hidden'; ?>">
                                 <div class="item-image">
-                                    <img src="<?php echo site_url("thumbs/images/checklist/").$row['image_path']."/150/150/".$row['image_name']; ?>" class="img img-responsive thumbnail no-margin-bottom">
+                                    <img src="<?php echo site_url("thumbs/images/checklist/").$row['image_path']."/150/150/".$row['image_name']; ?>" class="img img-responsive thumbnail no-margin-bottom" alt="Checklist Item Image">
                                 </div>
                                 <a href="javascript:void(0);" class="delete-image btn btn-xs btn-danger" data-href="<?php echo site_url('app/setup/checklist/item/delete_image/');?>" data-id="<?php echo $row['id']; ?>">Delete Image</a>
                             </div>
                             <div class="div-upload <?php echo (isset($row['image_path']) && $row['image_path'] != '') ? 'hidden':''; ?>">
-                                <input type="hidden" class="has-image" name="item[has_image][]" value="">
-                                <input type="file" name="file[]" class="item-file" value="">
-                                <p class="help-block">Image Only</p>
+                                <input type="hidden" class="has-image" name="item[has_image][]">
+                                <p class="help-block">Image</p>
+                                <form action="<?php echo site_url('app/setup/upload_item_image/').$row['id'];?>" class="uploader" method="POST" enctype="multipart/form-data" id="file_<?php echo $row['id']?>">
+                                    <input type="hidden" name="checklistid" value="<?php echo $this->hash->encrypt($result->checklist_id);?>">
+                                    <input type="file" name="file" class="item-file">
+                                    <button type="submit" class="upload-image btn btn-xs btn-primary" data-id="<?php echo $row['id'];?>">Upload</button>
+                                </form>
+                                
                             </div>
                         </div>
                         <div class="col-lg-6 no-margin-bottom">
                             <div class="div-help-image <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? '':'hidden'; ?>">
                                 <div class="item-image">
-                                    <img src="<?php echo site_url("thumbs/images/checklist/").$row['help_image_path']."/150/150/".$row['help_image_name']; ?>" class="img img-responsive thumbnail no-margin-bottom">
+                                    <img src="<?php echo site_url("thumbs/images/checklist/").$row['help_image_path']."/150/150/".$row['help_image_name']; ?>" class="img img-responsive thumbnail no-margin-bottom" alt="Checklist Item Help Image">
                                 </div>
                                 <a href="javascript:void(0);" class="delete-help-image btn btn-xs btn-danger" data-href="<?php echo site_url('app/setup/checklist/item/delete_helpimage/');?>" data-id="<?php echo $row['id']; ?>">Delete Help Image</a>
                             </div>
                             <div class="div-help-upload <?php echo (isset($row['help_image_path']) && $row['help_image_path'] != '') ? 'hidden':''; ?>">
-                                <input type="hidden" class="has-helpimage" name="item[has_help_image][]" value="">
-                                <input type="file" name="help_img[]" class="item-helpfile" value="">
+
                                 <p class="help-block">Help Image</p>
+                                <input type="hidden" class="has-helpimage" name="item[has_help_image][]">
+                                <form action="<?php echo site_url('app/setup/upload_helpimage/').$row['id'];?>" class="uploader" method="POST" enctype="multipart/form-data" id="help_<?php echo $row['id']?>">
+                                    <input type="hidden" name="checklistid" value="<?php echo $this->hash->encrypt($result->checklist_id);?>">
+                                    <input type="file" name="help_img" class="item-helpfile">
+                                    <button type="submit" class="upload-help-image btn btn-xs btn-primary">Upload</button>
+                                </form>
+                                
                             </div>
                         </div>
                         <div class="col-lg-12 text-right no-margin-bottom">
@@ -319,7 +338,7 @@
 
             <div class="text-right margin-bottom">
                 <a href="<?php echo site_url('app/setup/checklist');?>"  class="btn btn-default">Cancel</a>
-                <input type="submit" name="submit" value="Save" class="btn btn-success">
+                <a href="javascript:void(0);" name="submit" value="Save" class="btn btn-success submit">Submit</a>
             </div>
         </form>
     </div>

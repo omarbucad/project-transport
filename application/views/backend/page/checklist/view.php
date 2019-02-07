@@ -121,21 +121,26 @@
                     <form action="<?php echo site_url('app/setup/checklist')?>" method="GET">
                         <div class="row">
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
-                                <div class="form-group">
-                                    <label for="s_name">Checklist Name</label>
-                                    <input type="text" name="checklist_name" class="form-control" id="s_name" placeholder="Checklist Name" value="<?php echo $this->input->get("checklist_name"); ?>">
-                                </div>
+                              <div class="form-group">
+                                <label for="s_name">Checklist Name</label>
+                                <select class="form-control" name="checklist_name" id="checklist_name" value="<?php echo $this->input->get("checklist_name");?>">
+                                  <option value="">- Select Checklist -</option>
+                                  <?php foreach($checklist_list as $key => $val) :?>
+                                      <option value="<?php echo $val->checklist_id;?>" <?php echo ($this->input->get("checklist_name") == $val->checklist_id) ? "selected" : "" ; ?> ><?php echo $val->checklist_name;?></option>
+                                  <?php endforeach; ?>                                    
+                                </select>
+                              </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
-                                <div class="form-group">
-                                    <label for="s_product_type">Type</label>
-                                    <select class="form-control" name="type" id="type">
-                                    <option value="">- Select Vehicle Type -</option>
-                                    <?php foreach($types as $key => $val) :?>
-                                        <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
-                                    <?php endforeach; ?>                                    
+                              <div class="form-group">
+                                <label for="s_product_type">Type</label>
+                                <select class="form-control" name="type" id="type">
+                                  <option value="">- Select Vehicle Type -</option>
+                                  <?php foreach($types as $key => $val) :?>
+                                      <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == $val->vehicle_type_id) ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
+                                  <?php endforeach; ?>                                    
                                 </select>
-                                </div>
+                              </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
@@ -159,11 +164,13 @@
             <table class="customer-table">
                 <thead>
                     <tr>
-                        <th width="30%">Checklist Name</th>
+                        <th width="20%">Checklist Name</th>
                         <th width="20%">Description</th>
-                        <th width="20%">Vehicle Type</th>
-                        <th width="20%">Status</th>
+                        <th width="25%">Vehicle Type</th>
+                        <?php if($this->session->userdata('user')->role == "SUPER ADMIN") : ?>
+                        <th width="20%">Status</th>                        
                         <th width="10%"></th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -174,15 +181,16 @@
                             </td>
                             <td><span><?php echo $row->description; ?></span></td>
                             <td><span><?php echo $row->type; ?></span></td>
-                            <td><span><?php echo $row->status; ?></span></td>
-                            <td>
-                              <?php if ($this->session->userdata("user")->role == 'SUPER ADMIN') : ?>
-                                <div class="btn-group" role="group" aria-label="...">
-                                    <a href="<?php echo site_url("app/setup/checklist/edit/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/setup/checklist/delete/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link btn-delete" title="Remove Checklist"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                </div>
-                              <?php endif; ?>
-                            </td>
+                            <?php if ($this->session->userdata("user")->role == 'SUPER ADMIN') : ?>
+                              <td><span><?php echo $row->status; ?></span></td>
+                              <td>
+                                
+                                  <div class="btn-group" role="group" aria-label="...">
+                                      <a href="<?php echo site_url("app/setup/checklist/edit/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                      <a href="javascript:void(0);" data-href="<?php echo site_url("app/setup/checklist/delete/").$this->hash->encrypt($row->checklist_id); ?>" class="btn btn-link btn-delete" title="Remove Checklist"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                  </div>
+                              </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?> 
                 </tbody>

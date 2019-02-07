@@ -4,7 +4,7 @@
         <div class="side-menu-container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">
-                    <div class="icon"><img src="<?php echo site_url("public/img/vehicle-checklist.png");?>"   height="30px" width="auto"></div>
+                    <div class="icon"><img src="<?php echo site_url("public/img/vehicle-checklist.png");?>" height="30px" width="auto" alt="Vehicle Checklist Logo"></div>
                     <div class="title"><?php echo $application_name; ?></div>
                 </a>
                 <button type="button" class="navbar-expand-toggle pull-right visible-xs">
@@ -121,6 +121,7 @@
                                         <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
                                     <?php endif; ?>
                                     <li><a href="<?php echo site_url("app/setup/account/manage"); ?>">Account</a></li>
+                                    <li><a href="<?php echo site_url("app/setup/notifications"); ?>">Notifications</a></li>
                                 <?php endif;?>
                                 <?php if($session_data->expired == false) : ?>
                                     <?php if($session_data->role != "MECHANIC") : ?>
