@@ -6,7 +6,7 @@
 <div class="container margin-bottom">
     <div class="side-body padding-top">
     	<ol class="breadcrumb">
-    		<li><a href="<?php echo site_url('app/setup/'); ?>">Setup</a></li>
+    		<li><a href="<?php echo site_url('app/dashboard'); ?>">Dashboard</a></li>
     		<li class="active">Profile</li>
     	</ol>	
     	<h3>Profile Setup</h3>

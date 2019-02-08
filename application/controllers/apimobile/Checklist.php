@@ -616,6 +616,7 @@ class Checklist extends CI_Controller {
 									"type" => 1,
 									"isread" => 0,
 									"ref_id" => $report_id,
+									"user_id" => $value->user_id,
 									"created" => time()
 								]);
 

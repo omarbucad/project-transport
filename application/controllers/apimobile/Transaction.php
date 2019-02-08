@@ -101,7 +101,8 @@ class Transaction extends CI_Controller {
 						"description" => "Subscription ID: ".$result->subscription->id." | Status: Created",
 						"type" => 1,
 						"isread" => 0,
-						"ref_id" => $report_id,
+						"ref_id" => $result->subscription->id,
+						"user_id" => $this->post->user_id,
 						"created" => time()
 					]);
 
@@ -165,7 +166,8 @@ class Transaction extends CI_Controller {
 							"description" => "Subscription ID: ".$result->subscription->id." | Status: Updated",
 							"type" => 1,
 							"isread" => 0,
-							"ref_id" => $report_id,
+							"ref_id" => $result->subscription->id,
+							"user_id" => $this->post->user_id,
 							"created" => time()
 						]);
 

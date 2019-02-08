@@ -16,6 +16,7 @@ class Notification {
 			"type"	=> $data['type'],
 			"isread" => 0,
 			"ref_id" => $data['id'],
+			"user_id" => $data['user_id'],
 			"created"	=> time()
 		]);
 	}
@@ -25,6 +26,7 @@ class Notification {
 	}
 
 	public function notify_list($all = false , $count = false){
+		$this->CI->db->select('n.*, nt.name');
 		$this->CI->db->join("notification_type nt", "nt.type_id = n.type");
 		
 		if(!$all){

@@ -13,6 +13,7 @@ class Setup extends MY_Controller {
 	    $this->load->model('vehicle_model', 'vehicle');
 	    $this->load->model('profile_model', 'profile');
 	    $this->load->model('accounts_model', 'account');
+
 	    if($this->session->userdata('user')->role != "ADMIN PREMIUM" && $this->session->userdata('user')->role != "MANAGER" && $this->session->userdata('user')->role != "SUPER ADMIN"){
 			redirect("app/dashboard");					
 		}
@@ -364,7 +365,21 @@ class Setup extends MY_Controller {
 
 	// 	NOTIFICATION SECTION
 	public function notifications(){
-		
+
+		$this->data['page_name'] 		= "Notifications";
+		$this->data['result']    		=  $this->notification->notify_list();
+		$this->data['main_page'] 		= "backend/page/notification/view";
+
+		$this->load->view('backend/master' , $this->data);
+	
+	}
+
+	public function mark_all_read(){
+		$this->db->where("user_id", $this->session->userdata("user")->user_id);
+		$this->db->where("isread" , 0)->update("notification" , [ "isread" => true ]);
+
+		redirect('app/notifications', "refresh");
+
 	}
 	// END OF NOTIFICATION SECTION
 }
