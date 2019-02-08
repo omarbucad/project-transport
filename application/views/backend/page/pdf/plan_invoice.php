@@ -98,14 +98,14 @@
 				<td style="border-left:1px solid #e0e0e0;text-align: center;"><?php echo ($no_accounts == 0)? "Unlimited":$no_accounts; ?> Account(s) (Driver / Admin)</td>
 				<td colspan="3" style="border-left:1px solid #e0e0e0;padding: 5px;text-align: center;border-right:1px solid #e0e0e0;">Expiration: <?php echo $plan_expiration;?></td>
 			</tr>			
-			<tr>
-				<td style="border-left:1px solid #e0e0e0;text-align: center;"><?php echo ($no_vehicle == 0)? "Unlimited":$no_vehicle; ?> Vehicle(s)</td>
+			<!-- <tr>
+				<td style="border-left:1px solid #e0e0e0;text-align: center;"><?php //echo ($no_vehicle == 0)? "Unlimited":$no_vehicle; ?> Vehicle(s)</td>
 				<td colspan="3" style="border-left:1px solid #e0e0e0;padding: 5px;text-align: center;border-right:1px solid #e0e0e0;"></td>
 			</tr>		
 			<tr>
-				<td style="border-left:1px solid #e0e0e0;text-align: center;"><?php echo ($no_reports == 0)? "Unlimited" : $no_reports; ?> Reports / Month</td>
+				<td style="border-left:1px solid #e0e0e0;text-align: center;"><?php //echo ($no_reports == 0)? "Unlimited" : $no_reports; ?> Reports / Month</td>
 				<td colspan="3" style="border-left:1px solid #e0e0e0;padding: 5px;text-align: center;border-right:1px solid #e0e0e0;">&nbsp;</td>
-			</tr>
+			</tr> -->
 			<tr>
 				<td style="border-left:1px solid #e0e0e0;text-align: center;"><?php echo $description; ?></td>
 				<td colspan="3" style="border-left:1px solid #e0e0e0;padding: 5px;text-align: center;border-right:1px solid #e0e0e0;">&nbsp;</td>

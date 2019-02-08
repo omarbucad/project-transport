@@ -235,10 +235,10 @@
         					<nav>
         						<ul>
         							
-                                    <li><span><?php echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Vehicle / Trailer</span></li>
-                                    <!-- <li><span><?php //echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Trailer</span></li> -->
-                                    <li><span><?php echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> Report(s)<?php echo ($result->title == "Trial") ? "" : "/ Month"; ?></span></li>
-                                    <li><span><?php echo $result->description;?></span></li>
+                                    <!-- <li><span><?php //echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Vehicle / Trailer</span></li>
+                                    <li><span><?php //echo ($result->no_vehicle == 0) ? "Unlimited": $result->no_vehicle;?> Trailer</span></li> 
+                                    <li><span><?php //echo ($result->no_reports == 0) ? "Unlimited": $result->no_reports;?> Report(s)<?php //echo ($result->title == "Trial") ? "" : "/ Month"; ?></span></li>
+                                    <li><span><?php //echo $result->description;?></span></li> -->
         						</ul>
         					</nav>
         				</div>

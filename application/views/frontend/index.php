@@ -8,9 +8,9 @@
     <!-- Favicon-->
     <link rel="icon" href="<?php echo site_url('public/img/vehicle-checklist.png') ?>" type="image/x-icon">
     <!-- Fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
+   <!--  <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700,900' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'> -->
     <!-- CSS Libs -->
 
     <link rel="stylesheet" type="text/css" href="<?php echo site_url('public/lib/css/bootstrap.min.css?version='.$version) ?>">
@@ -189,7 +189,7 @@
                         <div class="col-lg-3 col-md-3 col-xs-6">
                             <div class="row"> 
                                 <div class="col-lg-1 col-xs-2"  style="padding: 0;">
-                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-08.png') ?>" alt="Timekeeping icon>
+                                    <img class="feature-icon" src="<?php echo site_url('public/img/website-layout/website-transpo-08.png') ?>" alt="Timekeeping icon">
                                 </div>  
                                 <div class="col-lg-11 col-xs-10 feature-description">
                                     <span>Timekeeping! know when your vehicles started working</span>
