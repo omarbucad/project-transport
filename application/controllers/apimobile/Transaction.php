@@ -325,7 +325,7 @@ class Transaction extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
-			$result = $this->braintree_lib->update_payment_method();
+			$result = $this->braintree_lib->update_payment_method($this->post);
 			if($result){
 				
 				echo json_encode(["status" => true , "data" => $result, "action" => "update_payment_method"]);

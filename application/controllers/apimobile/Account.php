@@ -336,7 +336,7 @@ class Account extends CI_Controller {
 				}            
 	        }
 	    }else{
-	    	echo json_encode(["status" => true , "message" => "403: Access Forbidden", "action" => "register"]);
+	    	echo json_encode(["status" => true , "message" => "403: Access Forbidden", "action" => "get_user"]);
 	    }
 	}
 
@@ -656,10 +656,10 @@ class Account extends CI_Controller {
 					echo json_encode(["status" => false, "message" => "No data available", "action" => "get_all_emp"]);
 				}
 			}else{
-				echo json_encode(["status" => true, "message" => "No store id", "action" => "get_all_emp"]);
+				echo json_encode(["status" => false, "message" => "No store id", "action" => "get_all_emp"]);
 			}
 		}else{
-	    	echo json_encode(["status" => true , "message" => "403: Access Forbidden", "action" => "get_all_emp"]);
+	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_all_emp"]);
 	    }
 	}
 
@@ -689,7 +689,7 @@ class Account extends CI_Controller {
 	            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "multiple_delete"]);
 	        }
 	    }else{
-	    	echo json_encode(["status" => true , "message" => "403: Access Forbidden", "action" => "multiple_delete"]);
+	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "multiple_delete"]);
 	    }
 	}
 }

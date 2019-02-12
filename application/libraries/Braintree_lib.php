@@ -233,7 +233,7 @@ class Braintree_lib extends Braintree{
 
     function update_payment_method($data){
         $result = Braintree_PaymentMethod::update($data->paymentMethodToken,[
-            'token' => $newToken,
+            'paymentMethodNonce' => $data->paymentMethodNonce,
             'options' => [
               'makeDefault' => true
             ]

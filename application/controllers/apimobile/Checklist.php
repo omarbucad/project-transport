@@ -27,7 +27,7 @@ class Checklist extends CI_Controller {
 			$this->db->select("c.checklist_id , c.checklist_name , c.vehicle_type_id, c.checklistVersion");
 			$result = $this->db->where("c.status" , 1)->where("c.deleted IS NULL")->order_by("c.checklist_name" , "ASC")->get("checklist c")->result();
 
-			echo json_encode(["status" => 1 , "data" => $result, "action" => "get_my_checklist"]);
+			echo json_encode(["status" => true , "data" => $result, "action" => "get_my_checklist"]);
 		}else{
 			echo json_encde(["status" => false , "message" => "403: Access Forbidden", "action" => "get_my_checklist"]);
 		}
@@ -636,10 +636,6 @@ class Checklist extends CI_Controller {
 			}else{
 				echo json_encode(["status" => false , "message" => "No file","action" => "offline_save_checklist"]);
 			}
-			
-
-			
-			
 			
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "offline_save_checklist"]);

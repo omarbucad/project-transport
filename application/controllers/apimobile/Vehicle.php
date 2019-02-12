@@ -203,7 +203,7 @@ class Vehicle extends CI_Controller {
 		        	if($result->availability == 1){
 		        		echo json_encode(["status" => true , "message" => "Available", "action" => "check_availability"]);
 		        	}else{
-		        		echo json_encode(["status" => false , "message" => "Unavailable", "action" => "check_availability"]);
+		        		echo json_encode(["status" => true , "message" => "Unavailable", "action" => "check_availability"]);
 		        	}		            
 		        }
 			}else{
@@ -237,7 +237,7 @@ class Vehicle extends CI_Controller {
 						}
 						echo json_encode(["status" => true , "data" => $result, "action" => "view_vehicles_used"]);
 					}else{
-						echo json_encode(["status" => false , "message" => "No Vehicles Used", "action" => "view_vehicles_used"]);
+						echo json_encode(["status" => true , "message" => "No Vehicles Used", "action" => "view_vehicles_used"]);
 					}
 					
 				}
