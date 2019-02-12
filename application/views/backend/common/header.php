@@ -27,7 +27,7 @@
                                 <?php foreach($notification_list as $row) : ?>
                                     <a href="javascript:void(0);" data-href="<?php echo $row->url; ?>" data-id="<?php echo $row->id; ?>" class="read-notif">
                                         <li class="list-group-item">
-                                            <?php echo $row->type_name; ?>
+                                            <?php echo $row->description; ?>
                                         </li>
                                     </a>
                                 <?php endforeach; ?>

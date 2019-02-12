@@ -16,45 +16,44 @@
 				<tr>
 					<td style="color:#252327;">
 						<p>Hello,</p>
-						<p>To make your <strong>Vehicle Checklist</strong> account more secure and to receive important messages and transaction history from Vehicle Checklist, please click the link below to verify your email address. A confirmation message will appear subsequently.</p>
+						<p>Your Vehicle Checklist verification code is: </p>
 					</td>
 				</tr>
 				<tr>
 					<td style="text-align: center;color:#252327;">
-						<p><strong><?php echo $code; ?></strong></p>
+						<p><h2><strong><?php echo $code; ?></strong></h2></p>
+						<p><small style="color: red;">* Please note that the code expires in 60 minutes.</small></p>
+					</td>
+				</tr>
+				<tr><td style="margin-bottom: 10px;">&nbsp;</td></tr>
+				<tr>
+					<td style="color:#252327;">
+						<p>We're here to help you if you need it. <strong>Contact us</strong> and let us know your concerns</p>
 					</td>
 				</tr>
 				<tr>
-					<td style="color:#252327;">
-						<p>*This verification email is valid for 1 hour only.</p>
+					<td style="text-align: center;">
+						<p style="text-align:center; color:#252327;">- The team at Vehicle Checklist</p>
 					</td>
-				</tr>
-				<tr><td style="margin-bottom: 20px;">&nbsp;</td></tr>
-				<tr>
-					<td style="color:#252327;">
-						<p>If you did not ask to reset your password, then you can just ignore this email; your password will not change.</p>
-					</td>
-				</tr>
-				<tr><td style="margin-bottom: 30px;">&nbsp;</td></tr>
-				
+				</tr>					
 			</table>
 		</div>
 		<div class="row" style="background-color: #252327; color:#929193;">
 			<table style="width: 100%, padding-top:20px;">
 				<tr>
-					<td>
+					<td style=" padding-left: 20px; padding-right: 20px;">
 						<p>By joining <strong>Vehicle Checklist</strong>, you've agreed to our Terms of Use and Privacy Policy.</p>
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td style=" padding-left: 20px; padding-right: 20px;">
 						<p>This email has been sent to you as part of your Vehicle Checklist subscription.<br>
 							Please do not reply to this email, as we are unable to respond from this email address. if you need help or would like to contact us, <a href="https://www.trackerteer.com" style="color:#2196f3;">click here</a>.
 						</p>
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td style=" padding-left: 20px; padding-right: 20px;">
 						<p>This message was mailed to <a href="mailto:<?php echo $email;?>"><?php echo $email; ?></a> by Vehicle Checklist. Use of the Vehicle Checklist service and website is subject to our Terms of Use and Privacy Policy.</p>
 					</td>
 				</tr>

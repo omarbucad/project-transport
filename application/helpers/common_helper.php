@@ -633,7 +633,7 @@ if ( ! function_exists('generate_email_code'))
             );
 
             $CI->db->where("user_id",$user_id);
-            $bool = $CI->db->update("app_token",$params);
+            $bool = $CI->db->update("user",$params);
         }
 
         return ($bool) ? $params['code'] : false;

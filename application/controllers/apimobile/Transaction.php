@@ -96,9 +96,10 @@ class Transaction extends CI_Controller {
 				}else{
 					
 					$this->db->trans_start();
+					$plan = $this->db->select("title")->where("planId",$this->post->planId)->get("plan")->row()->title;
 
 					$this->db->insert("notification", [
-						"description" => "Subscription ID: ".$result->subscription->id." | Status: Created",
+						"description" => "Subscription: ".$plan." - ".$result->subscription->id." | Status: Created",
 						"type" => 1,
 						"isread" => 0,
 						"ref_id" => $result->subscription->id,
@@ -159,11 +160,12 @@ class Transaction extends CI_Controller {
 					// $this->email->message($this->load->view('email/email_subscription_update', $data , true));
 
 					// if($this->email->send()){
-
 						$this->db->trans_start();
 
+						$plan = $this->db->select("title")->where("planId",$this->post->planId)->get("plan")->row()->title;
+
 						$this->db->insert("notification", [
-							"description" => "Subscription ID: ".$result->subscription->id." | Status: Updated",
+						"description" => "Subscription: ".$plan." - ".$result->subscription->id." | Status: Updated",
 							"type" => 1,
 							"isread" => 0,
 							"ref_id" => $result->subscription->id,
@@ -193,7 +195,9 @@ class Transaction extends CI_Controller {
 
 			$result = $this->braintree_lib->cancel_subscription($this->post);
 			if($result){
-				$this->db->where("store_id", $data->store_id);
+				$this->db->trans_start();
+
+				$this->db->where("store_id", $this->post->store_id);
 		        $this->db->where("active", 1);
 		        $deactivated = $this->db->update("user_plan",[
 		            "active" => 0,
@@ -207,7 +211,7 @@ class Transaction extends CI_Controller {
 		            $created = date("d/M/Y H:i:s A", time());
 
 		            $new = $this->db->insert("user_plan",[
-		                "store_id" => $data->store_id,
+		                "store_id" => $this->post->store_id,
 		                "plan_id" => 'N/A',
 		                "subscription_id" => "N/A",
 		                "vehicle_limit" => 5,
@@ -219,7 +223,7 @@ class Transaction extends CI_Controller {
 		                "updated" => NULL
 		            ]);
 		            if($new){
-				        $this->db->where("user_id",$data->user_id);
+				        $this->db->where("user_id",$this->post->user_id);
 				        $role = $this->db->update("user",[
 				        	"role" => "DRIVER"
 				        ]);
@@ -230,7 +234,7 @@ class Transaction extends CI_Controller {
 		        $this->db->trans_complete();
 
 		        $this->db->select("role");
-		        $this->db->where("user_id",$data->user_id);
+		        $this->db->where("user_id",$this->post->user_id);
 		        $role = $this->db->get("user")->row()->role;
 		        
 		        if ($this->db->trans_status() === FALSE){
@@ -308,12 +312,28 @@ class Transaction extends CI_Controller {
 			$result = $this->braintree_lib->create_payment_method($this->post);
 			if($result){
 				
-				echo json_encode(["status" => true , "data" => $result, "action" => "createPaymentMethod"]);
+				echo json_encode(["status" => true , "data" => $result, "action" => "create_payment_method"]);
 			}else{
-				echo json_encode(["status" => false , "error" => $result, "action" => "createPaymentMethod"]);
+				echo json_encode(["status" => false , "error" => $result, "action" => "create_payment_method"]);
 			}
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "createPaymentMethod"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_payment_method"]);
+		}
+	}
+
+	public function update_payment_method(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+			$result = $this->braintree_lib->update_payment_method();
+			if($result){
+				
+				echo json_encode(["status" => true , "data" => $result, "action" => "update_payment_method"]);
+			}else{
+				echo json_encode(["status" => false , "error" => $result, "action" => "update_payment_method"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "update_payment_method"]);
 		}
 	}
 

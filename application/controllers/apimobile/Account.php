@@ -133,7 +133,7 @@ class Account extends CI_Controller {
 	        	// 		echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
 	        	// 		break;
 	        	// }
-	        	echo json_encode(["status" => true , "message" => "Successfully registered", "action" => "register"]);
+	        	echo json_encode(["status" => true , "message" => "Successfully registered", "data" => $userid,"action" => "register"]);
 	           
 	        }
 		}		
@@ -146,9 +146,9 @@ class Account extends CI_Controller {
 			$generated = generate_email_code($user_id);
 
 			if($generated){
-				$info = $this->db->select("email_address")->where("user_id", $user_id)->get("user")->num_rows();
+				$info = $this->db->select("email_address")->where("user_id", $user_id)->get("user")->row();
 
-				if($info > 0){
+				if(count($info) > 0){
 					//$code = $this->hash->encrypt($email . "&time=".$time);
 					$data['code'] = $generated;
 					// $data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
@@ -189,6 +189,7 @@ class Account extends CI_Controller {
 		if($data){
 
 			$verified = validate_email_code($data);
+			$data->email = $this->db->select("email_address")->where("user_id", $data->user_id)->get("user")->row()->email_address;
 			switch ($verified) {
 				case 'expired':
 					echo json_encode(["status" => false , "message" => "Expired code", "action" => "verify_email"]);
@@ -196,35 +197,32 @@ class Account extends CI_Controller {
 
 				case 'valid':
 
-					// $content['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
-					// $content['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+					$this->db->where("user_id",$data->user_id);
+					$update = $this->db->update("user",[
+						"verified" => 1
+					]);
+					
+					if($update){
+						$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+						$this->email->to($data->email);
+						$this->email->set_mailtype("html");
+						$this->email->subject('Email Verification Successful');
+						$this->email->message($this->load->view('email/email_verification', $data , true));
 
-					$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
-					$this->email->to($data->email);
-					$this->email->set_mailtype("html");
-					$this->email->subject('Email Verification Successful');
-					$this->email->message($this->load->view('email/email_verification', $data , true));
-
-					if($this->email->send()){
-						
-						if($update){
-							$this->db->where("user_id",$data->user_id);
-							$update = $this->db->update("user",[
-								"verified" => 1
-							]);
-							
+						if($this->email->send()){
 							echo json_encode(["status" => true , "message" => "Email has been verified", "action" => "verify_email"]);
 						}else{
-							echo json_encode(["status" => false , "message" => "Something went wrong. Please try again", "action" => "verify_email"]);
-						}					
+							echo json_encode(["status" => true , "message" => "Verified Successful. Emmail notification failed to send.", "action" => "verify_email"]);
+						}													
+						
 					}else{
-						echo json_encode(["status" => false , "message" => "Sending verification successful email failed", "action" => "verify_email"]);
-					}
+						echo json_encode(["status" => false , "message" => "Something went wrong. Please try again", "action" => "verify_email"]);
+					}		
 					
 					break;
 
 				case 'invalid':
-					echo json_encode(["status" => true , "message" => "Invalid Code", "action" => "verify_email"]);
+					echo json_encode(["status" => false , "message" => "Invalid Code", "action" => "verify_email"]);
 					break;
 			}
 
@@ -233,43 +231,43 @@ class Account extends CI_Controller {
 		}
 	}
 
-	public function resend_email_code(){
-		$data = $this->post;
+	// public function resend_email_code(){
+	// 	$data = $this->post;
 
-		if($data){
-			$generated = generate_email_code($user_id);
+	// 	if($data){
+	// 		$generated = generate_email_code($user_id);
 
-			if($generated){
-				$info = $this->db->select("email_address")->where("user_id", $user_id)->get("user")->num_rows();
+	// 		if($generated){
+	// 			$info = $this->db->select("email_address")->where("user_id", $user_id)->get("user")->num_rows();
 
-				if($info > 0){
+	// 			if($info > 0){
 
-					$data['code'] = $generated;
-					$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
-					$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+	// 				$data['code'] = $generated;
+	// 				$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+	// 				$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
 
-					$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
-					$this->email->to($email);
-					$this->email->set_mailtype("html");
-					$this->email->subject('Email Verification');
-					$this->email->message($this->load->view('email/email_verification', $data , true));
+	// 				$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+	// 				$this->email->to($email);
+	// 				$this->email->set_mailtype("html");
+	// 				$this->email->subject('Email Verification');
+	// 				$this->email->message($this->load->view('email/email_verification', $data , true));
 
-					if($this->email->send()){
+	// 				if($this->email->send()){
 
-						echo json_encode(["status" => true , "message" => "Email verification code sent successfully", "action" => "resend_email_code"]);
-					}else{
-						echo json_encode(["status" => false , "message" => "Sending email failed", "action" => "resend_email_code"]);
-					}				
-				}else{
-					echo json_encode(["status" => false , "message" => "User not found", "action" => "resend_email_code"]);
-				}
-			}else{
-				echo json_encode(["status" => false , "message" => "Something went wrong. Please try again", "action" => "resend_email_code"]);
-			}
-		}else{
-			echo json_encode(["status" => false , "message" => "No data received", "action" => "resend_email_code"]);
-		}
-	}
+	// 					echo json_encode(["status" => true , "message" => "Email verification code sent successfully", "action" => "resend_email_code"]);
+	// 				}else{
+	// 					echo json_encode(["status" => false , "message" => "Sending email failed", "action" => "resend_email_code"]);
+	// 				}				
+	// 			}else{
+	// 				echo json_encode(["status" => false , "message" => "User not found", "action" => "resend_email_code"]);
+	// 			}
+	// 		}else{
+	// 			echo json_encode(["status" => false , "message" => "Something went wrong. Please try again", "action" => "resend_email_code"]);
+	// 		}
+	// 	}else{
+	// 		echo json_encode(["status" => false , "message" => "No data received", "action" => "resend_email_code"]);
+	// 	}
+	// }
 
 	// public function register_driver(){
 	// 	$data = $this->post;		
@@ -636,12 +634,13 @@ class Account extends CI_Controller {
 			$data = $this->post;
 			if($data->store_id){
 				
-				$offset = (isset($data->offset)) ? $data->offset : 0;
-	            $limit = (isset($data->limit)) ? $data->limit : 4;
+				// $offset = (isset($data->offset)) ? $data->offset : 0;
+	   //          $limit = (isset($data->limit)) ? $data->limit : 4;
 
 				$this->db->where("deleted IS NULL");
 				$this->db->where("store_id",$data->store_id);
-				$result = $this->db->where_in("role", ["DRIVER PREMIUM","MANAGER"])->limit($limit, $offset)->get("user")->result();
+				//$result = $this->db->where_in("role", ["DRIVER PREMIUM","MANAGER"])->limit($limit, $offset)->get("user")->result();
+				$result = $this->db->where_in("role", ["DRIVER PREMIUM","MANAGER"])->get("user")->result();
 
 				//print_r_die($this->db->last_query());
 				if($result){

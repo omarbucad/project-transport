@@ -125,13 +125,14 @@ class Checklist extends CI_Controller {
 		if($allowed){
 			$store_id = $this->post->store_id;
 
-			$offset = (isset($data->offset)) ? $data->offset : 0;
-            $limit = (isset($data->limit)) ? $data->limit : 4;
+			// $offset = (isset($data->offset)) ? $data->offset : 0;
+   //          $limit = (isset($data->limit)) ? $data->limit : 4;
 			
 			$this->db->select("v.vehicle_id , v.vehicle_registration_number, v.vehicle_type_id, v.status, v.availability,v.last_checked, vt.type");
 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
 			$this->db->where("vt.deleted IS NULL");
-			$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->limit($limit, $offset)->get("vehicle v")->result();
+			//$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->limit($limit, $offset)->get("vehicle v")->result();
+			$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
 
 			if($data){
 				echo json_encode(["status" => true , "data" => $data, "action" => "get_all_vehicles"]);

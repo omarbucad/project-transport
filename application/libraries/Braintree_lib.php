@@ -231,6 +231,27 @@ class Braintree_lib extends Braintree{
         }
     }
 
+    function update_payment_method($data){
+        $result = Braintree_PaymentMethod::update($data->paymentMethodToken,[
+            'token' => $newToken,
+            'options' => [
+              'makeDefault' => true
+            ]
+        ]);
+
+        if ($result->success) {
+            return $result;
+
+        } else {
+            $error = "";
+            foreach($result->errors->deepAll() AS $error) {
+                $error .= $error->code . ": " . $error->message . "\n";
+                //echo($error->code . ": " . $error->message . "\n");
+            }
+            return $error;
+        }
+    }
+
     function get_plan_name($id){
         $name = $this->getAllPlan();
         $data = array();
@@ -358,7 +379,11 @@ class Braintree_lib extends Braintree{
     function cancel_subscription($data){
         $result = Braintree_Subscription::cancel($data->subscription_id);
 
-        return ($result->success) ? $result:false;
+        if($result->success){
+            return $result;
+        }else{
+            return false;
+        }
     }
 
 
@@ -377,6 +402,11 @@ class Braintree_lib extends Braintree{
                             'quantity' => $data->quantity
                         ]                       
                     ]                    
+                ],
+                'descriptor' => [
+                     'name' => "TRCKRTR*PLAN"
+                    // 'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                    // 'description' => $plandata['description']
                 ]
             ]);
             if($result->success){

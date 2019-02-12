@@ -73,7 +73,7 @@ class Report extends CI_Controller {
 
 					//$result[$key]->created = convert_timezone($row->created,true, true);
 					//$result[$key]->convert_timezone($r->created , true);
-					$result[$key]->status_raw = re port_type($row->status , true);
+					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 					$this->db->trans_start();
 
@@ -401,8 +401,8 @@ class Report extends CI_Controller {
 
 			$store_id = $this->post->store_id;
 
-			$offset = (isset($data->offset)) ? $data->offset : 0;
-            $limit = (isset($data->limit)) ? $data->limit : 4;
+			// $offset = (isset($data->offset)) ? $data->offset : 0;
+   //          $limit = (isset($data->limit)) ? $data->limit : 4;
 
 			$this->db->trans_start();
 
@@ -419,7 +419,8 @@ class Report extends CI_Controller {
 			$this->db->where("r.end_mileage !=", NULL);
 			$this->db->where("u.store_id" , $store_id);
 
-			$result = $this->db->order_by("r.created" , "DESC")->limit($limit, $offset)->get("report r")->result();
+			//$result = $this->db->order_by("r.created" , "DESC")->limit($limit, $offset)->get("report r")->result();
+			$result = $this->db->order_by("r.created" , "DESC")->get("report r")->result();
 
 			$this->db->trans_complete();
 
