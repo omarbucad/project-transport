@@ -52,9 +52,9 @@ class Register_model extends CI_Model {
 
         $this->db->insert("user_plan" , [
             "store_id" => $store_id ,
-            "plan_id" =>  4,
+            "plan_id" =>  "N/A",
             "plan_created" => time() ,
-            "plan_expiration" => strtotime("+1 month") ,
+            "plan_expiration" => NULL,
             "billing_type"  => "NA",
             "who_updated" => $user_id ,
 //            "ip_address" => $this->input->ip_address() ,
@@ -101,6 +101,7 @@ class Register_model extends CI_Model {
             $this->db->or_where("u.email_address", $user['username']);
             $this->db->group_end();
         }
+        $this->db->where("u.deleted IS NULL");
         $result = $this->db->where("up.active" , 1)->get("user u")->row();
         if($result){
             if($result->logo_image_name != ''){

@@ -248,4 +248,98 @@ class Vehicle extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "view_vehicles_used"]);
 		}
 	}
+
+	public function get_recently_used(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$today = strtotime("tomorrow midnight -1 second");
+				$from = strtotime("today midnight - 6 days");
+				$this->db->trans_start();
+				$this->db->select("r.vehicle_registration_number");
+				$this->db->join("user u", "u.user_id = r.report_by");
+				$this->db->join("store s", "s.store_id = u.store_id");
+				$this->db->where("r.created >=",$from);
+				$this->db->where("r.created <=", $today);
+				$this->db->where("u.store_id", $data->store_id);
+				$list = $this->db->order_by("r.created", "DESC")->group_by("r.vehicle_registration_number")->get("report r")->result();
+
+				$this->db->trans_complete();
+				if ($this->db->trans_status() === FALSE){
+					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_recently_used"]);
+				}else{
+					echo json_encode(["status" => true , "data" => $list, "action" => "get_recently_used"]);
+				}
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "get_recently_used"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_recently_used"]);
+		}
+	}
+
+	public function get_least_used(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				// $today = strtotime("tomorrow midnight -13 days");
+				// $from = strtotime("today 23:59 - 6 days");
+
+
+				$now = strtotime("tomorrow midnight -1 second");
+				$start = strtotime("today midnight - 6 days");
+				$this->db->trans_start();
+				$this->db->select("r.vehicle_registration_number");
+				$this->db->join("user u", "u.user_id = r.report_by");
+				$this->db->join("store s", "s.store_id = u.store_id");
+				$this->db->where("r.created >=",$start);
+				$this->db->where("r.created <=", $now);
+				$this->db->where("u.store_id", $data->store_id);
+				$recent = $this->db->order_by("r.created", "DESC")->group_by("r.vehicle_registration_number")->get("report r")->result();
+
+
+				if(empty($recent)){
+					$this->db->trans_start();
+
+					$this->db->select("vehicle_registration_number");
+					$this->db->where("store_id", $data->store_id);
+					$list = $this->db->order_by("created", "DESC")->get("vehicle")->result();
+
+					$this->db->trans_complete();
+
+					if ($this->db->trans_status() === FALSE){
+						echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_least_used"]);
+					}else{
+						echo json_encode(["status" => true , "data" => $list, "action" => "get_least_used"]);
+					}
+				}else{
+					$recent_vehicles = array();
+					foreach ($recent as $key => $value) {
+						array_push($recent_vehicles, $value->vehicle_registration_number);
+					}
+					$this->db->trans_start();
+
+					$this->db->select("vehicle_registration_number");
+					$this->db->where("store_id", $data->store_id);
+					$this->db->where_not_in("vehicle_registration_number",$recent_vehicles);
+					$list = $this->db->order_by("created", "DESC")->get("vehicle")->result();		
+
+					$this->db->trans_complete();			
+
+					if ($this->db->trans_status() === FALSE){
+						echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_least_used"]);
+					}else{
+						echo json_encode(["status" => true , "data" => $list, "action" => "get_least_used"]);
+					}
+				}
+
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "get_least_used"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_least_used"]);
+		}
+	}
 }

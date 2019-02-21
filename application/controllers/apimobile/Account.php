@@ -70,7 +70,7 @@ class Account extends CI_Controller {
 				"subscription_id" => "N/A",
 				"vehicle_limit" => 5,
 				"plan_created" => time(),
-				"plan_expiration" => strtotime("+1 month", time()),
+				"plan_expiration" => 0,
 				"billing_type" => "NA",
 				"who_updated" => $userid,
 				// "ip_address" => $data->ip_address,
@@ -188,14 +188,14 @@ class Account extends CI_Controller {
 
 		if($data){
 
-			$verified = validate_email_code($data);
+			//$verified = validate_email_code($data);
 			$data->email = $this->db->select("email_address")->where("user_id", $data->user_id)->get("user")->row()->email_address;
-			switch ($verified) {
-				case 'expired':
-					echo json_encode(["status" => false , "message" => "Expired code", "action" => "verify_email"]);
-					break;
+			// switch ($verified) {
+			// 	case 'expired':
+			// 		echo json_encode(["status" => false , "message" => "Expired code", "action" => "verify_email"]);
+			// 		break;
 
-				case 'valid':
+			// 	case 'valid':
 
 					$this->db->where("user_id",$data->user_id);
 					$update = $this->db->update("user",[
@@ -203,28 +203,28 @@ class Account extends CI_Controller {
 					]);
 					
 					if($update){
-						$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
-						$this->email->to($data->email);
-						$this->email->set_mailtype("html");
-						$this->email->subject('Email Verification Successful');
-						$this->email->message($this->load->view('email/email_verification', $data , true));
+						// $this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+						// $this->email->to($data->email);
+						// $this->email->set_mailtype("html");
+						// $this->email->subject('Email Verification Successful');
+						// $this->email->message($this->load->view('email/email_verification', $data , true));
 
-						if($this->email->send()){
+						// if($this->email->send()){
 							echo json_encode(["status" => true , "message" => "Email has been verified", "action" => "verify_email"]);
-						}else{
-							echo json_encode(["status" => true , "message" => "Verified Successful. Emmail notification failed to send.", "action" => "verify_email"]);
-						}													
+						// }else{
+						// 	echo json_encode(["status" => true , "message" => "Verified Successful. Emmail notification failed to send.", "action" => "verify_email"]);
+			 		// 	}													
 						
 					}else{
 						echo json_encode(["status" => false , "message" => "Something went wrong. Please try again", "action" => "verify_email"]);
 					}		
 					
-					break;
+			// 		break;
 
-				case 'invalid':
-					echo json_encode(["status" => false , "message" => "Invalid Code", "action" => "verify_email"]);
-					break;
-			}
+			// 	case 'invalid':
+			// 		echo json_encode(["status" => false , "message" => "Invalid Code", "action" => "verify_email"]);
+			// 		break;
+			// }
 
 		}else{
 			echo json_encode(["status" => false , "message" => "No data received", "action" => "verify_email"]);
@@ -370,7 +370,8 @@ class Account extends CI_Controller {
 						"password" => md5($data->password),
 						"phone" => ($data->phone == '') ? NULL : $data->phone,
 						"store_id" => $data->store_id,
-						"deleted" => NULL
+						"deleted" => NULL,
+						"verified" => 1
 					]);
 
 					$user_id = $this->db->insert_id();
@@ -677,7 +678,8 @@ class Account extends CI_Controller {
 				$this->db->where("store_id", $data->store_id);
 				$this->db->where("user_id", $key);
 				$this->db->update("user",[
-					"deleted" => time()
+					"deleted" => time(),
+					"status" => 0
 				]);
 			}			
 

@@ -231,25 +231,66 @@ class Braintree_lib extends Braintree{
         }
     }
 
+   /* function update_payment_method($data){
+        if($data->isPayPalAccount){
+            $result = Braintree_PayPalAccount::update($data->paymentMethodToken, [
+                'token' => $data->newToken
+            ]);
+            //print_r_die($result);
+
+            if ($result->success) {
+                return $result;
+
+            } else {
+                $error = "";
+                foreach($result->errors->deepAll() AS $error) {
+                    $error .= $error->code . ": " . $error->message . "\n";
+                    //echo($error->code . ": " . $error->message . "\n");
+                }
+                return $error;
+            }
+        }else{
+            $result = Braintree_PaymentMethod::update($data->paymentMethodToken,[
+                'paymentMethodNonce' => $data->paymentMethodNonce,
+                'options' => [
+                  'makeDefault' => true
+                ]
+            ]);
+
+            if ($result->success) {
+                return $result;
+
+            } else {
+                $error = "";
+                foreach($result->errors->deepAll() AS $error) {
+                    $error .= $error->code . ": " . $error->message . "\n";
+                    //echo($error->code . ": " . $error->message . "\n");
+                }
+                return $error;
+            }
+        }
+    } */
+
     function update_payment_method($data){
         $result = Braintree_PaymentMethod::update($data->paymentMethodToken,[
-            'paymentMethodNonce' => $data->paymentMethodNonce,
-            'options' => [
-              'makeDefault' => true
-            ]
-        ]);
+                'paymentMethodNonce' => $data->paymentMethodNonce,
+                'options' => [
+                  'makeDefault' => true
+                ]
+            ]);
 
-        if ($result->success) {
-            return $result;
+            if ($result->success) {
+                return $result;
 
-        } else {
-            $error = "";
-            foreach($result->errors->deepAll() AS $error) {
-                $error .= $error->code . ": " . $error->message . "\n";
-                //echo($error->code . ": " . $error->message . "\n");
+            } else {
+                $error = "";
+                foreach($result->errors->deepAll() AS $error) {
+                    $error .= $error->code . ": " . $error->message . "\n";
+                    //echo($error->code . ": " . $error->message . "\n");
+                }
+                return $error;
             }
-            return $error;
-        }
+        
     }
 
     function get_plan_name($id){

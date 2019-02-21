@@ -11,6 +11,8 @@ class Notification {
 
 
 	public function notify_admin($data){
+		// 1 - REPORT
+		// 2 - SUBSCRIPTION
 		$this->CI->db->insert("notification" , [
 			"description"	=> $data['description'],
 			"type"	=> $data['type'],

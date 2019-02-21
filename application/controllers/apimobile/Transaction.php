@@ -87,9 +87,10 @@ class Transaction extends CI_Controller {
 			$result = $this->braintree_lib->create_subscription_token($this->post);
 			if(empty($result->error)){
 
-				$role = $this->update_subscription($result->subscription->id);
+				$info = $this->update_subscription($result->subscription->id);
 
-				$result->role = $role;
+				$result->role = $info->role;
+				$result->title = $info->title;
 		        // if ($this->db->trans_status() === FALSE){
 				if($result->role == ''){
 		           echo json_encode(["status" => false , "message" => "Subscription created. Failed to update database","action" => "create_subscription_token"]);
@@ -146,7 +147,8 @@ class Transaction extends CI_Controller {
 			if($result){
 				
 				$role = $this->update_subscription($result->subscription->id);
-				$result->role = $role;
+				$result->role = $info->role;
+				$result->title = $info->title;
 				if($result->role == ''){
 		            echo json_encode(["status" => false , "message" => "Subscription updated, Failed to update database","action" => "update_plan_subscription"]);
 				}else{
@@ -216,7 +218,7 @@ class Transaction extends CI_Controller {
 		                "subscription_id" => "N/A",
 		                "vehicle_limit" => 5,
 		                "plan_created" => strtotime(str_replace("/"," ",$created)),
-		                "plan_expiration" => NULL,
+		                "plan_expiration" => 0,
 		                "billing_type" => "N/A",
 		                "who_updated" => NULL,
 		                "active" => 1,
@@ -482,14 +484,40 @@ class Transaction extends CI_Controller {
         }
         $this->db->trans_complete();
 
-        $this->db->select("role");
+        $this->db->select("u.role, p.title");
+        $this->db->join("user_plan up", "up.store_id = u.store_id");
+        $this->db->join("plan p", "p.planId = up.plan_id");
+
         $this->db->where("user_id",$data->user_id);
-        $role = $this->db->get("user")->row()->role;
+        $this->db->where("up.active",1);
+        $info = $this->db->get("user u")->row();
         
         if ($this->db->trans_status() === FALSE){
             return false;
         }else{
-            return $role;
+            return $info;
         }
+	}
+
+	public function plan_inquiry(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+
+			$this->email->from($this->post->email, 'Vehicle Checklist Customer');
+			$this->email->to("trackerteer.sender@gmail.com");
+			$this->email->set_mailtype("html");
+			$this->email->subject('Enterprise Plan Inquiry');
+			$this->email->message($this->load->view('email/enterprise_plan_inquiry', $this->post->message , true));
+
+			if($this->email->send()){
+
+				echo json_encode(["status" => true , "message" => "Inquiry has been sent", "action" => "plan_inquiry"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "Inquiry sending failed", "action" => "plan_inquiry"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "plan_inquiry"]);
+		}
 	}
 }

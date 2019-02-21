@@ -128,23 +128,28 @@ class Profile_model extends CI_Model {
         $this->db->join("user u","u.store_id = up.store_id");
         $this->db->join("plan p","p.planId = up.plan_id");
         $result = $this->db->get("user_plan up")->row();
+        if($result->plan_expiration != 0){
+            $today = date("d/M/Y 00:00:00");
+            $expiry = convert_timezone($result->plan_expiration, true);
+            $timeleft = strtotime($expiry) - strtotime(str_replace("/"," ",$today));
+            
+            $days = floor($timeleft / 86400);
+            $timeleft %= 86400;
 
-        $today = date("d/M/Y 00:00:00");
-        $expiry = convert_timezone($result->plan_expiration, true);
-        $timeleft = strtotime($expiry) - strtotime($today);
+            $hours = floor($timeleft / 3600);
+            $timeleft %= 3600;
+
+            $minutes = floor($timeleft / 60);
+            $timeleft %= 60;
+
+            $left =  "$days days $hours hours $minutes minutes";
+            $result->trial_left = $left;
+
+            return $result;
+        }else{
+            return "No expiration";
+        }
+
         
-        $days = floor($timeleft / 86400);
-        $timeleft %= 86400;
-
-        $hours = floor($timeleft / 3600);
-        $timeleft %= 3600;
-
-        $minutes = floor($timeleft / 60);
-        $timeleft %= 60;
-
-        $left =  "$days days $hours hours $minutes minutes";
-        $result->trial_left = $left;
-
-        return $result;
     }
 }
