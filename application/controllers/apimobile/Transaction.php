@@ -503,12 +503,17 @@ class Transaction extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
-
+			//print_r_die($this->post);
+			$data['fullname'] = $this->post->fullname;
+			$data['phone'] = $this->post->phone;
+			$data['company'] = $this->post->company;
+			$data['message'] = $this->post->message;
+			$data['email'] = $this->post->email;
 			$this->email->from($this->post->email, 'Vehicle Checklist Customer');
 			$this->email->to("trackerteer.sender@gmail.com");
 			$this->email->set_mailtype("html");
 			$this->email->subject('Enterprise Plan Inquiry');
-			$this->email->message($this->load->view('email/enterprise_plan_inquiry', $this->post->message , true));
+			$this->email->message($this->load->view('email/enterprise_plan_inquiry', $data, true));
 
 			if($this->email->send()){
 
