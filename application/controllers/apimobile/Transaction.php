@@ -192,10 +192,12 @@ class Transaction extends CI_Controller {
 
 	public function cancel_subscription(){
 		$allowed = validate_app_token($this->post->token);
+		print_r_die($this->post->vehicles);
 
 		if($allowed){
 
 			$result = $this->braintree_lib->cancel_subscription($this->post);
+
 			if($result){
 				$this->db->trans_start();
 
@@ -229,6 +231,19 @@ class Transaction extends CI_Controller {
 				        $role = $this->db->update("user",[
 				        	"role" => "DRIVER"
 				        ]);
+
+				        if(!empty($data->vehicles)){
+				        	$this->db->where("store_id",$data->store_id);
+				        	$this->db->where_not_in("vehicle_id",$data->vehicles);
+				        	$vehicle = $this->db->update("vehicle",[
+				        		"is_active" => 0
+				        	]);
+				        	if($vehicle){
+				        		print_r_die("updated");
+				        	}else{
+				        		print_r_die($data->vehicles);
+				        	}
+				        }
 		            }else{
 		            	return false;
 		            }            

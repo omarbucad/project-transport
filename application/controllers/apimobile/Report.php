@@ -42,6 +42,11 @@ class Report extends CI_Controller {
 			$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 			$this->db->join("store s","s.store_id = u.store_id");
+
+			// select vehicle reports where vehicle is_active = 1
+			$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
+			$this->db->where("v.is_active", 1);
+
 			$this->db->where("r.end_mileage !=", NULL);
 			$this->db->where("r.report_by" , $report_by);
 			$this->db->where("u.store_id" , $store_id);
@@ -206,6 +211,9 @@ class Report extends CI_Controller {
 			$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 			$this->db->join("store s","s.store_id = u.store_id");
+			// select vehicle reports where vehicle is_active = 1
+			$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
+			$this->db->where("v.is_active", 1);
 
 			$this->db->where("r.vehicle_registration_number",$vehicle_registration_number);
 			// $this->db->where("r.created >=",$start);
@@ -416,6 +424,11 @@ class Report extends CI_Controller {
 			$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 			$this->db->join("store s","s.store_id = u.store_id");
+
+			// select vehicle reports where vehicle is_active = 1
+			$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
+			$this->db->where("v.is_active", 1);
+
 			$this->db->where("r.end_mileage !=", NULL);
 			$this->db->where("u.store_id" , $store_id);
 
@@ -570,6 +583,10 @@ class Report extends CI_Controller {
 				$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 				$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 				$this->db->join("store s","s.store_id = u.store_id");
+
+				// select vehicle reports where vehicle is_active = 1
+				$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
+				$this->db->where("v.is_active", 1);
 
 				$this->db->where("r.report_by",$data->user_id);
 				$this->db->where("r.end_mileage IS NULL");
@@ -943,6 +960,10 @@ class Report extends CI_Controller {
 			$this->db->join("checklist c" , "c.checklist_id = r.checklist_id");
 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = c.vehicle_type_id");
 			$this->db->join("store s","s.store_id = u.store_id");
+
+			// select vehicle reports where vehicle is_active = 1
+			$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
+			$this->db->where("v.is_active", 1);
 
 			$this->db->where("r.end_mileage !=", NULL);
 			$this->db->where("u.store_id" , $store_id);

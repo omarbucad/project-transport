@@ -412,6 +412,11 @@ class Account extends CI_Controller {
 			$data = $this->post;
 
 			$this->db->trans_start();
+			$deleted = $this->db->select("deleted")->where("user_id",$data->user_id)->get("user")->row()->deleted;
+			if($deleted != ''){
+				echo json_encode(["status" => false , "message" => "User doesn't exist", "action" => "edit"]);
+				return false;
+			}
 			$this->db->where("user_id", $data->user_id);
 			if(isset($data->password)){
 				$this->db->update("user",[

@@ -81,7 +81,7 @@ class Login extends MY_Controller {
 
 		}else{
 			$email = $this->input->post("email");
-
+			$this->db->where("deleted IS NULL");
 			$info = $this->db->select("email_address,role")->where("email_address", $email)->get("user")->row();
 			
 			if($info){

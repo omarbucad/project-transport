@@ -144,7 +144,7 @@ class Login extends CI_Controller {
 
 
 		if($email){
-
+			$this->db->where("deleted IS NULL");
 			$info = $this->db->select("email_address")->where("email_address", $email)->get("user")->num_rows();
 
 			if($info > 0){
