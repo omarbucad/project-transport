@@ -26,7 +26,7 @@ class Vehicle extends CI_Controller {
 
 			$this->db->trans_start();
 
-			$insert = $this->db->insert("vehicle",[
+			$this->db->insert("vehicle",[
 				"vehicle_registration_number" => $data->vehicle_registration_number,
 				"status"                        => 0,
                 "availability"                  => 1,
@@ -35,7 +35,7 @@ class Vehicle extends CI_Controller {
 				"created" => time(),
 				"store_id" => $data->store_id,
 				"deleted" => NULL,
-				"axle" => isset($data->axle) ? $data->axle : NULL
+				"axle" => NULL
 			]);
 			// if($insert){
 			// 	$vehicle_id = $this->db->insert_id();
