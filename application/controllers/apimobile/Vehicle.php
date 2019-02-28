@@ -400,7 +400,6 @@ class Vehicle extends CI_Controller {
     } 
 
 	public function save_tire_management(){
-		$data = $this->post;
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 			if(!empty($_FILES)){
@@ -516,7 +515,6 @@ class Vehicle extends CI_Controller {
 	}
 
 	public function update_tires(){
-		$data = $this->post;
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 			if(!empty($_FILES)){
@@ -565,7 +563,7 @@ class Vehicle extends CI_Controller {
 		}
 	}
 	public function add_tires(){
-		$data = $this->post;
+		//$data = $this->post;
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 			if(!empty($_FILES)){
@@ -610,6 +608,118 @@ class Vehicle extends CI_Controller {
 			
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "add_tires"]);
+		}
+	}
+
+	public function get_tires(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+
+				$this->db->select("vehicle_id, axle");
+				$this->db->where("v.vehicle_id", $data->vehicle_id);
+				$data = $this->db->get("vehicle")->result();
+
+				if($data){
+					$this->db->select('vt_id, axle_no, tire_count, position, created');
+					$this->db->where('deleted IS NULL');
+					$data->tires = $this->db->where("vehicle_id",$data->vehicle_id)->get("vehicle_tires")->result();
+				}else{
+					return false;
+				}
+
+				$this->db->trans_complete();
+				if ($this->db->trans_status() === FALSE){
+					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_tires"]);
+				}else{
+					echo json_encode(["status" => true , "data" => $data, "action" => "get_tires"]);
+				}
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data","action" => "get_tires"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_tires"]);
+		}
+	}
+
+	public function tire_management_list(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+
+				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id"):
+				$this->db->where("tr.deleted IS NULL");
+				$this->db->where("store_id",$data->store_id);
+				$data = $this->db->get("tire_report tr")->result();
+
+				$this->db->trans_complete();
+				if ($this->db->trans_status() === FALSE){
+					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
+				}else{
+					foreach ($data as $key => $value) {
+						$this->db->select('image_name,image_path');
+						$this->db->where('tire_report_id', $value->tire_report_id);
+						$this->db->where("tir_id", $value->tir_id);
+						$damage_images = $this->db->where("type",1)->get('tire_images')->result();
+						$data[$key]->damage_images = $damage_images;
+
+						$this->db->select('image_name,image_path');
+						$this->db->where('tire_report_id', $value->tire_report_id);
+						$this->db->where("tir_id", $value->tir_id);
+						$tread_images = $this->db->where("type",2)->get('tire_images')->result();
+						$data[$key]->tread_images = $tread_images;
+					}
+					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
+				}
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data","action" => "tire_management_list"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "tire_management_list"]);
+		}
+	}
+
+	public function tire_management(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+
+				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id"):
+				$this->db->where("tr.deleted IS NULL");
+				$this->db->where("tr.store_id",$data->store_id);
+				$this->db->where("tr.vehicle_id",$data->vehicle_id);
+				$data = $this->db->get("tire_report tr")->row();
+
+				$this->db->trans_complete();
+				if ($this->db->trans_status() === FALSE){
+					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
+				}else{
+					foreach ($data as $key => $value) {
+						$this->db->select('image_name,image_path');
+						$this->db->where('tire_report_id', $value->tire_report_id);
+						$this->db->where("tir_id", $value->tir_id);
+						$damage_images = $this->db->where("type",1)->get('tire_images')->result();
+						$data[$key]->damage_images = $damage_images;
+
+						$this->db->select('image_name,image_path');
+						$this->db->where('tire_report_id', $value->tire_report_id);
+						$this->db->where("tir_id", $value->tir_id);
+						$tread_images = $this->db->where("type",2)->get('tire_images')->result();
+						$data[$key]->tread_images = $tread_images;
+					}
+					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
+				}
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data","action" => "tire_management_list"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "tire_management_list"]);
 		}
 	}
 }

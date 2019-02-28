@@ -95,7 +95,7 @@ class Webhooks extends CI_Controller {
 				$this->db->trans_start();
 
 				$this->notification->notify_admin([
-					"description"	=> $data['description'],
+					"description"	=> "Subscription",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
