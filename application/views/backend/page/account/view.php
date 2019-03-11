@@ -256,7 +256,7 @@
                             <?php if(!($result->trial_left < 0)) : ?>
                                 <span>Plan Expires in: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?></h4></span>
                             <?php else : ?>
-                                <span><h4 class='help-block text-danger'>Already Expired</h4></span>
+                                <span><h4 class='help-block text-danger'>Plan Already Expired</h4></span>
                             <?php endif;?>
                         <?php endif; ?>
                     </div>

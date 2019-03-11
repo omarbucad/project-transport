@@ -63,11 +63,11 @@ class Login extends CI_Controller {
 				if($data->plan_expiration == ''){
 					$expired = 0;
 				}else{
-					if($data->plan_expiration > strtotime("now")){
-			    		$expired = 0;
-				    }else{
+					if(( strtotime("now") < $data->plan_expiration) == 1){
+				    	$expired = 0;
+					}else{
 						$expired = 1;
-					}
+					}					
 				}
 				$data->expired = $expired;
 				$data->expiring_in = $this->profile->get_userplan($data->user_id);

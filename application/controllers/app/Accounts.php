@@ -21,7 +21,7 @@ class Accounts extends MY_Controller {
 		}
 		$this->data['role'] = $this->session->userdata('user')->role;
 
-		$this->data['page_name'] = "Vehicle Checklist - Employees";
+		$this->data['page_name'] = "Vehicle Checklist - Drivers";
 		$this->data['main_page'] = "backend/page/users/view";
 
 		//PAGINATION
@@ -43,15 +43,16 @@ class Accounts extends MY_Controller {
 			redirect("app/dashboard");					
 		}
 
-		$this->form_validation->set_rules('display_name'		, 'Name'			        , 'trim|required');
+		$this->form_validation->set_rules('firstname'		, 'Firstname'			        , 'trim|required');
+		$this->form_validation->set_rules('lastname'		, 'Lastname'			        , 'trim|required');
 		$this->form_validation->set_rules('email'	, 'Email Address'		, 'trim|required|valid_email|is_unique[user.email_address]');
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[6]|max_length[15]|is_unique[user.username]');
 		$this->form_validation->set_rules('password'		    , 'Password'			    , 'trim|required|md5');
 		$this->form_validation->set_rules('confirm_password'    , 'Confirm Password'	    , 'trim|required|matches[password]|md5');
 
-		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER"){
-			$this->form_validation->set_rules('checklist[]'		, 'Checklist'			    , 'required');
-		}
+		// if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER"){
+		// 	$this->form_validation->set_rules('checklist[]'		, 'Checklist'			    , 'required');
+		// }
 
 		if ($this->form_validation->run() == FALSE){ 
 
@@ -77,16 +78,14 @@ class Accounts extends MY_Controller {
 
 	public function edit($user_id){
 		$id = $this->hash->decrypt($user_id);
-
-		$this->form_validation->set_rules('display_name'		, 'Name'			        , 'trim|required');
+		$this->form_validation->set_rules('firstname'		, 'Firstname'			      , 'trim|required');
+		$this->form_validation->set_rules('lastname'		, 'Lastname'			      , 'trim|required');
+		$this->form_validation->set_rules('display_name'	, 'Display Name'			  , 'trim|required');
 		
 		if($this->input->post("password") != ""){
 			$this->form_validation->set_rules('password'		    , 'Password'		  , 'trim|required|md5');
 			$this->form_validation->set_rules('confirm_password'    , 'Confirm Password'  , 'trim|required|matches[password]|md5');
 		}		
-		if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER"){
-			$this->form_validation->set_rules('checklist[]'		, 'Checklist'			    , 'required');
-		}
 
 		if ($this->form_validation->run() == FALSE){ 
 
@@ -102,7 +101,7 @@ class Accounts extends MY_Controller {
 			if($last_id = $this->accounts->edit_user($id)){
 				$this->session->set_flashdata('status' , 'success');	
 				$this->session->set_flashdata('message' , 'Successfully Updated User Information');	
-				if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+				if($this->session->userdata('user')->role != "ADMIN PREMIUM" && $this->session->userdata('user')->role != "MANAGER" ){
 					redirect("app/dashboard");					
 				}else{
 					redirect("app/accounts/?user_id=".$this->hash->encrypt($last_id).'?submit=submit' , 'refresh');
@@ -111,7 +110,7 @@ class Accounts extends MY_Controller {
 			}else{
 				$this->session->set_flashdata('status' , 'error');
 				$this->session->set_flashdata('message' , 'Something went wrong');	
-				if($this->session->userdata('user')->role != "ADMIN" && $this->session->userdata('user')->role != "MANAGER" ){
+				if($this->session->userdata('user')->role != "ADMIN PREMIUM" && $this->session->userdata('user')->role != "MANAGER" ){
 					redirect("app/dashboard");
 				}else{
 					redirect("app/accounts/edit/".$user_id , 'refresh');

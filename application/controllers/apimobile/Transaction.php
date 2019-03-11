@@ -100,8 +100,8 @@ class Transaction extends CI_Controller {
 					$plan = $this->db->select("title")->where("planId",$this->post->planId)->get("plan")->row()->title;
 
 					$this->db->insert("notification", [
-						"description" => "Subscription: ".$plan." - ".$result->subscription->id." | Status: Created",
-						"type" => 1,
+						"description" => "Subscription ".$plan." - Created",
+						"type" => 2,
 						"isread" => 0,
 						"ref_id" => $result->subscription->id,
 						"user_id" => $this->post->user_id,
@@ -167,8 +167,8 @@ class Transaction extends CI_Controller {
 						$plan = $this->db->select("title")->where("planId",$this->post->planId)->get("plan")->row()->title;
 
 						$this->db->insert("notification", [
-						"description" => "Subscription: ".$plan." - ".$result->subscription->id." | Status: Updated",
-							"type" => 1,
+						"description" => "Subscription: ".$plan." - Updated",
+							"type" => 2,
 							"isread" => 0,
 							"ref_id" => $result->subscription->id,
 							"user_id" => $this->post->user_id,
@@ -192,8 +192,8 @@ class Transaction extends CI_Controller {
 
 	public function cancel_subscription(){
 		$allowed = validate_app_token($this->post->token);
-		print_r_die($this->post->vehicles);
-
+		$data = $this->post;
+		$vehicles = json_decode($data->vehicles);
 		if($allowed){
 
 			$result = $this->braintree_lib->cancel_subscription($this->post);
@@ -232,17 +232,17 @@ class Transaction extends CI_Controller {
 				        	"role" => "DRIVER"
 				        ]);
 
-				        if(!empty($data->vehicles)){
+				        if($vehicles){
+				        	$this->db->trans_start();
 				        	$this->db->where("store_id",$data->store_id);
-				        	$this->db->where_not_in("vehicle_id",$data->vehicles);
-				        	$vehicle = $this->db->update("vehicle",[
+				        	$this->db->where_not_in("vehicle_id",$vehicles);
+				        	$this->db->update("vehicle",[
 				        		"is_active" => 0
 				        	]);
-				        	if($vehicle){
-				        		print_r_die("updated");
-				        	}else{
-				        		print_r_die($data->vehicles);
-				        	}
+				        	$this->db->trans_complete();
+				        	if ($this->db->trans_status() === FALSE){
+				        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
+				        	}			        	
 				        }
 		            }else{
 		            	return false;
@@ -258,6 +258,7 @@ class Transaction extends CI_Controller {
 		           echo json_encode(["status" => false , "message" => "Failed to update database", "action" => "cancel_subscription"]);
 		        }else{
 		        	$result->role = $role;
+		        	$result->plan_title = "Free";
 		   //      	$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
 					// $data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
 

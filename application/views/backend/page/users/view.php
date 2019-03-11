@@ -1,8 +1,19 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#status').val('<?php echo $this->input->get("status");?>');
+    });
+    $(document).on("click","#clear",function(){
+        $('input[name="created"]').val("");
+    });
+     $(document).on("click", ".input-group-addon",function(){
+      $(".daterange").focus();
+    });
+</script>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
 
         <div class="container">
-        	<h1>Manage Employees</h1>
+        	<h1>Manage Drivers</h1>
         </div>
         <div class="grey-bg">
             <div class="container ">
@@ -11,7 +22,7 @@
                         <span></span>
                     </div>
                     <div class="col-xs-4 col-lg-6 text-right no-margin-bottom">
-                        <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add User</a>
+                        <a href="<?php echo site_url("app/accounts/add"); ?>" class="btn btn-success ">Add Driver</a>
                     </div>
                 </div>
             </div>
@@ -23,40 +34,50 @@
                         <div class="row">
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
-                                    <label for="s_name">Name</label>
-                                    <input type="text" name="name" class="form-control" value="<?php echo $this->input->get("name")?>" id="s_name" placeholder="Search by username or name">
+                                    <label for="name">Name or Username</label>
+                                    <input type="text" name="name" class="form-control" value="<?php echo $this->input->get("name")?>" id="name">
+                                </div>
+                            </div>
+                            <!-- <div class="col-xs-12 col-lg-3">
+                                <div class="form-group">
+                                    <label for="roles">Roles</label>
+                                    <select class="form-control" id="roles" name="roles">
+                                        <option value="">All Roles</option>
+                                        <option value="MECHANIC" <?php //echo ($this->input->get("roles") == "MECHANIC") ? "selected" : ""; ?>>Mechanic</option>
+                                        <option value="DRIVER" <?php //echo ($this->input->get("roles") == "DRIVER") ? "selected" : ""; ?>>Driver</option>
+                                        <option value="MANAGER" <?php //echo ($this->input->get("roles") == "MANAGER") ? "selected" : ""; ?>>Manager</option> -->
+                                        <!-- <?php //if($this->session->userdata('user')->role == "ADMIN") : ?>
+                                        <option value="ADMIN" <?php //echo ($this->input->get("roles") == "ADMIN") ? "selected" : ""; ?>>Admin</option>
+                                        <?php //endif; ?>
+                                    </select>
+                                </div>
+                            </div> -->
+                             <div class="col-xs-12 col-lg-3">
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="">- Select Status-</option>
+                                        <option value="1" <?php echo ($this->input->get("status") == "1") ? "selected" : ""; ?>>Active</option>
+                                        <option value="0" <?php echo ($this->input->get("status") == "0") ? "selected" : ""; ?>>Inactive</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3">
-                                <div class="form-group">
-                                    <label for="s_roles">Roles</label>
-                                    <select class="form-control" id="s_roles" name="roles">
-                                        <option value="">All Roles</option>
-                                        <option value="MECHANIC" <?php echo ($this->input->get("roles") == "MECHANIC") ? "selected" : ""; ?>>Mechanic</option>
-                                        <option value="DRIVER" <?php echo ($this->input->get("roles") == "DRIVER") ? "selected" : ""; ?>>Driver</option>
-                                       <!--  <option value="MANAGER" <?php //echo ($this->input->get("roles") == "MANAGER") ? "selected" : ""; ?>>Manager</option> -->
-                                        <!-- <?php //if($this->session->userdata('user')->role == "ADMIN") : ?>
-                                        <option value="ADMIN" <?php //echo ($this->input->get("roles") == "ADMIN") ? "selected" : ""; ?>>Admin</option>
-                                        <?php //endif; ?> -->
-                                    </select>
+                                <div class="form-group" >
+                                    <label for="created">Created</label>
+                                    <div class='input-group'>
+                                        <input type="text" name="created" class="form-control daterange" autocomplete="off" value="<?php echo $this->input->get("created"); ?>" placeholder="Select Date" onkeydown="return false">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                             <div class="col-xs-12 col-lg-3">
-                                <div class="form-group">
-                                    <label for="s_roles">Status</label>
-                                    <select class="form-control" id="s_roles" name="status">
-                                        <option value="">- Select Status-</option>
-                                        <option value="ACTIVE" <?php echo ($this->input->get("status") == "ACTIVE") ? "selected" : ""; ?>>Active</option>
-                                        <option value="INACTIVE" <?php echo ($this->input->get("status") == "INACTIVE") ? "selected" : ""; ?>>Inactive</option>
-                                    </select>
-                                </div>
+                                <span id="clear"><a class="btn btn-xs btn-default" type="button" style="border-color:#cccccc;margin-top:0;" id="clear">clear</a></span>
                             </div>
                             <div class="col-xs-12 col-lg-3 text-right">
                                 <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">
                             </div>
                         </div>
-                        
-                        
                     </form>
                 </div>
             </div>
@@ -67,9 +88,9 @@
                 <thead>
                     <tr>
                         <th width="35%">Name</th>
-                        <th width="25%">Role</th>
-                        <th width="15%">Status</th>
-                        <th width="25%"></th>
+                        <th width="20%">Status</th>                        
+                        <th width="25%">Created</th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,8 +108,8 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><span ><?php echo $row->role; ?></span></td>
                                 <td><span ><?php echo $row->status; ?></span></td>
+                                <td><span ><?php echo $row->created; ?></span></td>
                                 <td>
                                     <?php if($row->role != 'SUPER ADMIN') : ?>
                                     <div class="btn-group" role="group" aria-label="...">

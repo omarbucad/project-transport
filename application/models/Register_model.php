@@ -80,8 +80,9 @@ class Register_model extends CI_Model {
     }
 
     public function signin($user){
-        $this->db->select("u.user_id , u.username, u.display_name ,u.firstname, u.lastname, u.email_address , u.role , u.store_id , u.image_path , u.image_name, u.phone, u.verified, a1.*,s.store_name,s.logo_image_path,s.logo_image_name, up.plan_expiration,up.user_plan_id,up.subscription_id,up.vehicle_limit, p.planId, p.title");
-        //$this->db->select("a1.country");
+        $this->db->select("u.user_id , u.username, u.display_name ,u.firstname, u.lastname, u.email_address , u.role , u.store_id , u.image_path , u.image_name, u.phone, u.verified");
+        $this->db->select("s.store_name, s.logo_image_path, s.logo_image_name, a1.*, up.plan_expiration, up.user_plan_id, up.subscription_id, up.vehicle_limit, p.planId, p.title");
+        // //$this->db->select("a1.country");
 
         $this->db->join("store s" , "s.store_id = u.store_id");
         $this->db->join("store_address a1" , "a1.store_address_id = s.address_id");
@@ -92,17 +93,18 @@ class Register_model extends CI_Model {
 
             $this->db->where("u.password" , md5($user['password']));
             $this->db->group_start();
-            $this->db->where("u.username" , $user['username']);
-            $this->db->or_where("u.email_address", $user['username']);
+            $this->db->where("u.username LIKE binary" , $user['username']);
+            $this->db->or_where("u.email_address LIKE binary", $user['username']);
             $this->db->group_end();
         }else{
             $this->db->group_start();
             $this->db->where("u.user_id" , $user);
-            $this->db->or_where("u.email_address", $user['username']);
+            $this->db->or_where("u.email_address LIKE binary", $user['username']);
             $this->db->group_end();
         }
+        $this->db->where("up.active" , 1);
         $this->db->where("u.deleted IS NULL");
-        $result = $this->db->where("up.active" , 1)->get("user u")->row();
+        $result = $this->db->get("user u")->row();
         if($result){
             if($result->logo_image_name != ''){
                 if($result->logo_image_path == 'public/img/'){

@@ -195,15 +195,24 @@ class Accounts_model extends CI_Model {
 
         $store_id = $this->data['session_data']->store_id;
         $role = $this->session->userdata('user')->role;
-
         
 
         if($name = $this->input->get("name")){
-            $this->db->like("username",$name);
+            $this->db->like("display_name",$name);
+            $this->db->or_like("username",$name);
         }
         if($roles = $this->input->get("roles")){
             $this->db->where("role",$roles);
         }
+        if($date = $this->input->get("created")){
+            $date  = explode("-", $date);
+            $start = strtotime(trim($date[0].' 00:00'));
+            $end   = strtotime(trim($date[1].' 23:59'));
+
+
+            $this->db->where("created >= " , $start);
+            $this->db->where("created <= " , $end);
+        }   
 
         if($count){
             if($role == "ADMIN PREMIUM"){
@@ -232,6 +241,7 @@ class Accounts_model extends CI_Model {
         
         foreach($result as $k => $row){
             $result[$k]->status = convert_status($row->status);
+            $result[$k]->created = convert_timezone($row->created);
         }
 
         return $result;
@@ -317,28 +327,33 @@ class Accounts_model extends CI_Model {
     public function add_users(){
         $store_id = $this->data['session_data']->store_id;
         $session_role = $this->session->userdata('user')->role;
-        $role = $this->input->post("role");
+        //$role = $this->input->post("role");
 
         if($session_role == "ADMIN PREMIUM"){
-            $role .= " PREMIUM";
+            $role .= "DRIVER PREMIUM";
         }else if($session_role == "ADMIN FREE"){
-            $role .= " FREE";
+            $role .= "DRIVER";
         }else{
-            $role .= " PREMIUM";
+            $role .= "DRIVER";
         }
+        $this->db->trans_start();
 
-       
         $this->db->insert("user" , [
-            "email_address"=> $this->input->post("email") ,
-            "username"     => $this->input->post("username") ,
-            "password"     => $this->input->post("password"),
-            "display_name" => $this->input->post("display_name") ,
-            "role"         => $role,
-            "store_id"     => $store_id,
-            "image_path"   => "public/img/",
-            "image_name"   => "person-placeholder.jpg",
-            "status"       => 1,
-            "created"      => time()
+            "email_address" => $this->input->post("email") ,
+            "username"      => $this->input->post("username") ,
+            "firstname"     => $this->input->post("firstname") ,
+            "lastname"      => $this->input->post("lastname") ,
+            "phone"         => ($this->input->post("phone") == '') ? NULL : $this->input->post("phone"),
+            "password"      => md5($this->input->post("password")),
+            "display_name"  => $this->input->post("firstname") ." ".$this->input->post("lastname") ,
+            "role"          => $role,
+            "store_id"      => $store_id,
+            "image_path"    => "public/img/",
+            "image_name"    => "person-placeholder.jpg",
+            "status"        => 1,
+            "created"       => time(),
+            "deleted"       => NULL,
+            "verified"      => 1
         ]);
 
         $last_id = $this->db->insert_id();
@@ -368,19 +383,20 @@ class Accounts_model extends CI_Model {
         $role = $this->input->post("role");
 
         if($session_role == "ADMIN PREMIUM"){
-            $role .= " PREMIUM";
+            $role .= "DRIVER PREMIUM";
         }else if($session_role == "ADMIN FREE"){
-            $role .= " FREE";
+            $role .= "DRIVER";
         }else{
-            $role .= " PREMIUM";
+            $role .= "DRIVER";
         }
         $this->db->trans_start();
 
         $this->db->where("user_id", $user_id)->update("user" , [
-            "email_address"=> $this->input->post("email") ,
-            "username"     => $this->input->post("username") ,
             "display_name" => $this->input->post("display_name") ,
-            "role"         => $this->input->post("role")
+            "firstname"    => $this->input->post("firstname") ,
+            "lastname"     => $this->input->post("lastname") ,
+            "phone"        => ($this->input->post("phone") == '') ? NULL : $this->input->post("phone"),
+            "role"         => $role
         ]);
 
         if($this->input->post("password") != ""){

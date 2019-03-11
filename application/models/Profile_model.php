@@ -9,13 +9,11 @@ class Profile_model extends CI_Model {
 
         
         $this->db->select("
-            u.user_id, u.display_name, u.email_address, u.username, u.image_path, u.image_name, u.role, u.status,
-            s.store_id, s.store_name, s.address_id,
-            sc.first_name, sc.last_name, sc.contact_id, sc.email, sc.phone,
-            sa.street1, sa.street2, sa.suburb, sa.city, sa.postcode, sa.state, sa.country
+            u.user_id, u.display_name, u.email_address, u.username, u.firstname, u.lastname, u.image_path, u.image_name, u.role, u.status,
+            s.store_id, s.store_name, s.address_id, s.logo_image_path, s.logo_image_name,
+            sa.street1, sa.street2, sa.suburb, sa.city, sa.postcode, sa.state, sa.country, sa.countryCode
         ");
         $this->db->join("store s","s.store_id = u.store_id");
-        $this->db->join("store_contact sc","sc.contact_id = s.contact_id");
         $this->db->join("store_address sa","sa.store_address_id = s.address_id");
 
         /*
@@ -32,13 +30,9 @@ class Profile_model extends CI_Model {
 
         $this->db->where("u.deleted IS NULL");
 
-        $result = $this->db->where("user_id" , $user_id)->get("user u")->result();
-
-
-
-        foreach($result as $key => $row){
-            $result[$key]->status = convert_status($row->status);
-        }
+        $result = $this->db->where("user_id" , $user_id)->get("user u")->row();
+        $result->status = convert_status($result->status);
+        $result->logo = ($result->logo_image_path != 'public/img/') ? $this->config->site_url("public/upload/company/".$result->logo_image_path."80/80/".$result->logo_image_name) : $this->config->site_url($result->logo_image_path.$result->logo_image_name);
 
         return $result;
     }
@@ -49,7 +43,9 @@ class Profile_model extends CI_Model {
 
         $this->db->where("user_id",$user_id);
         $this->db->update("user", [
-            "display_name"  => $post["display_name"]
+            "display_name"  => $post["display_name"],
+            "firstname"  => $post["firstname"],
+            "lastname"  => $post["lastname"]
         ]);
 
         if($post["password"] != ""){
@@ -59,14 +55,6 @@ class Profile_model extends CI_Model {
             ]);
         }
 
-        $this->db->where("contact_id", $post["contact_id"]);
-        $this->db->update("store_contact", [
-            "first_name"    => $post["first_name"],
-            "last_name"     => $post["last_name"],
-            "email"         => $post["email"],
-            "phone"         => $post["phone"]
-        ]);
-
         $this->db->where("store_address_id", $post["address_id"]);
         $this->db->update("store_address", [
             "street1"       => $post["physical"]["street1"],
@@ -75,7 +63,8 @@ class Profile_model extends CI_Model {
             "city"          => $post["physical"]["city"],
             "postcode"      => $post["physical"]["postcode"],
             "state"         => $post["physical"]["state"],
-            "country"       => $post["physical"]["country"]
+            "country"       => $post["physical"]["country"],
+            "countryCode"   => $post["physical"]["countryCode"]
         ]);
 
         
@@ -115,6 +104,36 @@ class Profile_model extends CI_Model {
 
         if ($this->upload->do_upload('file')){
             $this->db->where("user_id" , $user_id)->update("user" , [
+                "image_path" => $year."/".$month ,
+                "image_name" => $image_name
+            ]);
+        }
+    }
+
+    private function logo_upload($store_id){
+        $year = date("Y");
+        $month = date("m");
+        $folder =  $folder = "./public/upload/company/".$year."/".$month;
+
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+            mkdir($folder.'/thumbnail', 0777, true);
+
+            create_index_html($folder);
+        }
+    
+        $image_name = md5($store_id).'_'.time().'_'.$_FILES['file']['name'];
+        $image_name = str_replace("^", "_", $image_name);
+       
+        $config['upload_path']          = $folder;
+        $config['allowed_types']        = 'gif|jpg|png';
+        $config['file_name']            = $image_name;
+
+        $this->load->library('upload', $config);
+        $this->load->library('image_lib');
+
+        if ($this->upload->do_upload('file')){
+            $this->db->where("store_id" , $store_id)->update("store" , [
                 "image_path" => $year."/".$month ,
                 "image_name" => $image_name
             ]);

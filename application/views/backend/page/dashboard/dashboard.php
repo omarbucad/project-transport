@@ -465,8 +465,5 @@
 	    		</div>
 	    	<?php endif; ?>
         </div>
-        <div class="text-center">
-			<p class="help-block">For help with setting up <?php echo $application_name; ?>, check out the <a href="#" class="link-style"> Getting Started Guide</a></p>
-		</div>
     </div>
 </div>

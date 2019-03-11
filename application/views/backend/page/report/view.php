@@ -60,6 +60,8 @@
           $('.more-filter').text("Less Filter");
           $('#_advance_search_value').val("true");
         }
+        $('#status').val('<?php echo $this->input->get("status");?>');
+        $('#checklist').val('<?php echo $this->input->get("checklist_id");?>');
     });
 
     $(document).on("click" , ".update-status" , function(){
@@ -142,9 +144,9 @@
                             
                           <div class="col-xs-12 col-lg-3">
                             <div class="form-group no-margin-bottom" >
-                                <label for="s_name">Select Start Date</label>
+                                <label for="s_name">Select Report Start Date</label>
                                 <div class='input-group'>
-                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="" placeholder="Select Report Start Date" required="true" onkeydown="return false">
+                                    <input type="text" name="date" class="form-control datepicker" autocomplete="off" value="" placeholder="Select Date" required="true" onkeydown="return false">
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </span>
@@ -171,13 +173,13 @@
                                 <input type="hidden" id="limit" name="limit" value="<?php echo $this->input->get('rowlimit');?>">
                                 <div class="form-group">
                                     <label for="s_name">Report No.</label>
-                                    <input type="text" name="report_number" value="<?php echo $this->input->get("report_number"); ?>" class="form-control" placeholder="Search by Report No.">
+                                    <input type="text" name="report_number" value="<?php echo $this->input->get("report_number"); ?>" class="form-control">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
                                     <label for="s_name">Checklist Type</label>
-                                    <select class="form-control" name="checklist_id" value="<?php echo set_value('checklist_id');?>">
+                                    <select class="form-control" name="checklist_id" id="checklist">
                                         <option value="">- Select Type -</option>
                                         <?php foreach($checklist_list as $key => $row) : ?>
                                         <option value="<?php echo $row->checklist_id; ?>" <?php echo ($this->input->get("checklist_name") == $row->checklist_id) ? "selected" : "" ;?>><?php echo $row->checklist_name;?></option>
@@ -188,7 +190,7 @@
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
                                     <label for="s_roles">Status</label>
-                                    <select class="form-control" name="status" value="<?php echo set_value('status');?>">
+                                    <select class="form-control" name="status" id="status">
                                         <option value="">- Select Status -</option>
                                         <?php if($this->session->userdata("user")->role != "MECHANIC") : ?>
                                         <option value="0" <?php echo ($this->input->get("status") == "0") ? "selected" : "" ;?> >No Defect</option>
@@ -211,28 +213,28 @@
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
                                     <label for="s_name">Date Period</label>
-                                    <input type="text" name="date" class="form-control daterange" autocomplete="off" value="<?php echo $this->input->get("date"); ?>" placeholder="Search by Date">
+                                    <input type="text" name="date" class="form-control daterange" autocomplete="off" value="<?php echo $this->input->get("date"); ?>" placeholder="Select Date">
                                 </div>
                             </div>
 
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
                                     <label for="s_name">Vehicle Registration No.</label>
-                                    <input type="text" name="vehicle_registration_number" value="<?php echo $this->input->get("vehicle_registration_number"); ?>" class="form-control"  placeholder="Search by Vehicle Registration No.">
+                                    <input type="text" name="vehicle_registration_number" value="<?php echo $this->input->get("vehicle_registration_number"); ?>" class="form-control">
                                 </div>
                             </div>
 
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
                                     <label for="s_name">Trailer No.</label>
-                                    <input type="text" name="trailer_number" value="<?php echo $this->input->get("trailer_number"); ?>" class="form-control"  placeholder="Search by Trailer No.">
+                                    <input type="text" name="trailer_number" value="<?php echo $this->input->get("trailer_number"); ?>" class="form-control">
                                 </div>
                             </div>
 
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-line">
                                 <label for="report_by">Report By</label>
-                                <input type="text" class="form-control" name="report_by" list="user" placeholder="Report By" value="<?php echo $this->input->get("report_by"); ?>">
+                                <input type="text" class="form-control" name="report_by" list="user" value="<?php echo $this->input->get("report_by"); ?>">
                             </div>
                             </div>
                             

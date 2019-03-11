@@ -27,8 +27,8 @@
     <div class="side-body padding-top">
 
         <ol class="breadcrumb">
-            <li><a href="<?php echo site_url('app/accounts'); ?>">Accounts</a></li>
-            <li class="active">Create User</li>
+            <li><a href="<?php echo site_url('app/accounts'); ?>">Manage Drivers</a></li>
+            <li class="active">Create Driver</li>
         </ol>
         <div class="grey-bg ">
             <div class="container ">
@@ -37,6 +37,7 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
+                        <a href="<?php echo site_url('app/accounts');?>" class="btn btn-primary btn-same-size">Cancel</a>
                         <a href="javascript:void(0);" class="btn btn-success btn-same-size submit-form" data-form="#form_users">Save</a>
                     </div>
                 </div>
@@ -58,12 +59,20 @@
                                 <input type="text" name="username" id="username" value="<?php echo set_value("username"); ?>"  class="form-control" placeholder="Username">
                             </div>
                             <div class="form-group">
-                                <label for="display_name">Display Name</label>
-                                <input type="text" name="display_name" id="display_name" value="<?php echo set_value("display_name"); ?>"  class="form-control" placeholder="Display Name">
+                                <label for="display_name">First Name</label>
+                                <input type="text" name="firstname" id="firstname" value="<?php echo set_value("firstname"); ?>"  class="form-control" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="display_name">Last Name</label>
+                                <input type="text" name="lastname" id="lastname" value="<?php echo set_value("lastname"); ?>"  class="form-control" placeholder="Last Name">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email"  value="<?php echo set_value("email"); ?>"  class="form-control" placeholder="name@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" name="phone" id="phone"  value="<?php echo set_value("phone"); ?>"  class="form-control" placeholder="12345678">
                             </div>
                         </div>
                         <div class="col-xs-12 col-lg-4">
@@ -77,45 +86,6 @@
                         </div>
                     </div>
                 </section>
-                <section class="sec_border_bottom">
-                    <h3>Role</h3>
-                    <div class="row">
-                        <div class="col-xs-12 col-lg-4">
-                            <p>A role defines what this user can see and do.</p>
-                        </div>
-                        <div class="col-xs-12 col-lg-4">
-                            <div class="form-group">
-                                <label for="role">Role</label>
-                                <select class="form-control" name="role" id="user_role">
-                                    <option value="DRIVER">Driver</option>
-                                    <option value="MECHANIC">Mechanic</option>
-                                </select>
-                            </div>                            
-                        </div>
-                    </div>
-                </section>
-                <!-- <section class="sec_border_bottom" id="checklist_section">
-                    <h3>Checklist</h3>
-                    <div class="row">
-                        <div class="col-xs-12 col-lg-4">
-                            <p>List of checklist that can be used</p>
-                        </div>
-                        <div class="col-xs-12 col-lg-4">
-                            <div class="form-group">
-                                <?php //oreach($checklist_list as $key => $value) :?>
-
-                                    <div class="checkbox3 checkbox-check  checkbox-light">
-                                          <input type="checkbox" name="checklist[]" id="checkbox-<?php //echo $value->checklist_id; ?>" value="<?php //echo $value->checklist_id; ?>">
-                                          <label for="checkbox-<?php// echo $value->checklist_id; ?>">
-                                            <?php //cho $value->checklist_name?>
-                                          </label>
-                                    </div>
-                                <?php// endforeach; ?>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </section> -->
                 <section class="sec_border_bottom">
                     <h3>Security</h3>
                     <div class="row">
@@ -144,6 +114,7 @@
                         </div>
                     </div>
                     <div class="text-right margin-bottom">
+                        <a href="<?php echo site_url('app/accounts');?>" class="btn btn-primary btn-same-size">Cancel</a>
                         <a href="javascript:void(0);" class="btn btn-success btn-same-size submit-form" data-form="#form_users">Save</a>
                     </div>
                 </section>

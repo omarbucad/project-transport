@@ -22,7 +22,7 @@ class Vehicle_model extends CI_Model {
             $this->db->where("v.availability", $this->input->get("availability"));
         }
         if($reg_number = $this->input->get("registration_number")){
-            $this->db->where("v.vehicle_registration_number", $reg_number);
+            $this->db->like("v.vehicle_registration_number", $reg_number);
         }
 
         if($vehicle_id = $this->input->get("vehicle_id")){

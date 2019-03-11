@@ -34,28 +34,11 @@ class Vehicle extends CI_Controller {
 				"vehicle_type_id" => $data->vehicle_type_id,
 				"created" => time(),
 				"store_id" => $data->store_id,
+				"is_active" => 1,
 				"deleted" => NULL,
 				"axle" => NULL
 			]);
-			// if($insert){
-			// 	$vehicle_id = $this->db->insert_id();
-
-			// 	if(isset($data->tire)){
-			// 		foreach ($data->tire as $key => $value) {
-			// 			$this->db->insert("vehicle_tires",[
-			// 				"vehicle_id" => $vehicle_id,
-			// 				"axle_no" => $value->axle_no,
-			// 				"tire_count" => $value->tire_count,
-			// 				"position" => $value->position,
-			// 				"created" => time(),
-			// 				"deleted" => NULL
-			// 			]);
-			// 		}
-			// 	}
-			// }else{
-			// 	echo json_encode(["status" => false , "message" => "Failed", "action" => "add"])
-			// }			
-
+			
 			$this->db->trans_complete();
 
 	        if ($this->db->trans_status() === FALSE){
@@ -151,11 +134,13 @@ class Vehicle extends CI_Controller {
 			if($data){
 				$this->db->trans_start();
 				if(isset($data->previous_status)){
+					$this->db->where("is_active",1);
 					$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
 					$this->db->update("vehicle",[
 						"status" => $data->previous_status
 					]);
 				}else{
+					$this->db->where("is_active",1);
 					$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
 					$this->db->update("vehicle",[
 						"status" => 1
@@ -182,7 +167,7 @@ class Vehicle extends CI_Controller {
 		if($allowed){
 			if($data){
 				$this->db->trans_start();
-
+				$this->db->where("is_active",1);
 				$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
 				$this->db->update("vehicle", [
 					"availability" => $data->availability
@@ -211,6 +196,7 @@ class Vehicle extends CI_Controller {
 				$this->db->trans_start();
 				$this->db->select("availability");
 				$this->db->where("deleted IS NULL");
+				$this->db->where("is_active",1);
 				$this->db->where("vehicle_registration_number", $data->vehicle_registration_number);
 				$result = $this->db->get("vehicle")->row();
 
@@ -241,8 +227,10 @@ class Vehicle extends CI_Controller {
 				$this->db->trans_start();
 
 				$this->db->select("vu.vehicle_registration_number, vu.trailer_number, vu.vehicle_type, vu.date_used, vt.type");
-				$this->db->where("vu.user_id", $data->user_id);
+				$this->db->join("vehicle v","v.vehicle_registration_number = vu.vehicle_registration_number");
 				$this->db->join("vehicle_type vt","vt.vehicle_type_id = vu.vehicle_type");
+				$this->db->where("vu.user_id", $data->user_id);
+				$this->db->where("v.is_active",1);
 				$result = $this->db->order_by("vu.date_used","DESC")->get("vehicles_used vu")->result();
 				
 				$this->db->trans_complete();
@@ -267,41 +255,8 @@ class Vehicle extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "view_vehicles_used"]);
 		}
 	}
-
-	public function get_recently_used(){
-		$data = $this->post;
-		$allowed = validate_app_token($this->post->token);
-		if($allowed){
-			if($data){
-				$today = strtotime("tomorrow midnight -1 second");
-				$from = strtotime("today midnight - 6 days");
-				$this->db->trans_start();
-				$this->db->select("r.vehicle_registration_number, v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
-				$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
-				$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
-				$this->db->join("user u", "u.user_id = r.report_by");
-				$this->db->join("store s", "s.store_id = u.store_id");
-				$this->db->where("r.created >=",$from);
-				$this->db->where("r.created <=", $today);
-				$this->db->where("u.store_id", $data->store_id);
-				$this->db
-				$list = $this->db->order_by("r.created", "DESC")->group_by("r.vehicle_registration_number")->get("report r")->result();
-
-				$this->db->trans_complete();
-				if ($this->db->trans_status() === FALSE){
-					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_recently_used"]);
-				}else{
-					echo json_encode(["status" => true , "data" => $list, "action" => "get_recently_used"]);
-				}
-			}else{
-				echo json_encode(["status" => false , "message" => "No passed data", "action" => "get_recently_used"]);
-			}
-		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_recently_used"]);
-		}
-	}
-
-	public function get_least_used(){
+	public function plan_sorted_vehicles(){
+		$list = array();
 		$data = $this->post;
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
@@ -313,59 +268,188 @@ class Vehicle extends CI_Controller {
 				$now = strtotime("tomorrow midnight -1 second");
 				$start = strtotime("today midnight - 6 days");
 				$this->db->trans_start();
-				$this->db->select("r.vehicle_registration_number");
+				$this->db->select("r.vehicle_registration_number, v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+				$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
+				$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
 				$this->db->join("user u", "u.user_id = r.report_by");
 				$this->db->join("store s", "s.store_id = u.store_id");
+				$this->db->where("v.is_active",1);
 				$this->db->where("r.created >=",$start);
 				$this->db->where("r.created <=", $now);
 				$this->db->where("u.store_id", $data->store_id);
 				$recent = $this->db->order_by("r.created", "DESC")->group_by("r.vehicle_registration_number")->get("report r")->result();
-
-
-				if(empty($recent)){
-					$this->db->trans_start();
-
-					$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
-					$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
-					$this->db->where("v.store_id", $data->store_id);
-					$list = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
-
-					$this->db->trans_complete();
-
-					if ($this->db->trans_status() === FALSE){
-						echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_least_used"]);
-					}else{
-						echo json_encode(["status" => true , "data" => $list, "action" => "get_least_used"]);
-					}
+				$this->db->trans_complete();
+				if ($this->db->trans_status() === FALSE){
+					echo json_encode(["status" => false , "message" => "Failed to retrieve recently used.", "action" => "plan_sorted_vehicles"]);
 				}else{
-					$recent_vehicles = array();
-					foreach ($recent as $key => $value) {
-						array_push($recent_vehicles, $value->vehicle_registration_number);
-					}
-					$this->db->trans_start();
+					$list['recent'] = $recent;
 
-					$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
-					$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
-					$this->db->where("v.store_id", $data->store_id);
-					$this->db->where_not_in("v.vehicle_registration_number",$recent_vehicles);
-					$list = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();		
+					if(empty($recent)){
+						$this->db->trans_start();
 
-					$this->db->trans_complete();			
+						$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+						$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+						$this->db->where("v.store_id", $data->store_id);
+						$this->db->where("v.is_active",1);
+						$list['least'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
 
-					if ($this->db->trans_status() === FALSE){
-						echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_least_used"]);
+						$this->db->trans_complete();
+
+						if ($this->db->trans_status() === FALSE){
+							echo json_encode(["status" => false , "message" => "Failed to retrieve least used.", "action" => "plan_sorted_vehicles"]);
+						}else{
+							$this->db->trans_start();
+							$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+							$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+							$this->db->where("v.store_id", $data->store_id);
+							$this->db->where("v.is_active",0);
+							$list['removed'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
+							$this->db->trans_complete();
+
+							if ($this->db->trans_status() === FALSE){
+							echo json_encode(["status" => false , "message" => "Failed to retrieve removed.", "action" => "plan_sorted_vehicles"]);
+							}else{
+								echo json_encode(["status" => true , "data" => $list, "action" => "plan_sorted_vehicles"]);
+							}
+						}
 					}else{
-						echo json_encode(["status" => true , "data" => $list, "action" => "get_least_used"]);
+						$recent_vehicles = array();
+						foreach ($recent as $key => $value) {
+							array_push($recent_vehicles, $value->vehicle_registration_number);
+						}
+						$this->db->trans_start();
+
+						$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+						$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+						$this->db->where("v.store_id", $data->store_id);
+						$this->db->where_not_in("v.vehicle_registration_number",$recent_vehicles);
+						$list['least'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();		
+
+						$this->db->trans_complete();			
+
+						if ($this->db->trans_status() === FALSE){
+							echo json_encode(["status" => false , "message" => "Failed to retrieve least used.", "action" => "plan_sorted_vehicles"]);
+						}else{
+							$this->db->trans_start();
+							$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+							$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+							$this->db->where("v.store_id", $data->store_id);
+							$this->db->where("v.is_active",0);
+							$list['removed'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
+							$this->db->trans_complete();
+
+							if ($this->db->trans_status() === FALSE){
+								echo json_encode(["status" => false , "message" => "Failed to retrieve removed.", "action" => "plan_sorted_vehicles"]);
+							}else{
+								echo json_encode(["status" => true , "data" => $list, "action" => "plan_sorted_vehicles"]);
+							}
+						}
 					}
 				}
-
 			}else{
-				echo json_encode(["status" => false , "message" => "No passed data", "action" => "get_least_used"]);
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "plan_sorted_vehicles"]);
 			}
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_least_used"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "plan_sorted_vehicles"]);
 		}
 	}
+
+	// public function get_recently_used(){
+	// 	$data = $this->post;
+	// 	$allowed = validate_app_token($this->post->token);
+	// 	if($allowed){
+	// 		if($data){
+	// 			$today = strtotime("tomorrow midnight -1 second");
+	// 			$from = strtotime("today midnight - 6 days");
+	// 			$this->db->trans_start();
+	// 			$this->db->select("r.vehicle_registration_number, v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+	// 			$this->db->join("vehicle v","v.vehicle_registration_number = r.vehicle_registration_number");
+	// 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+	// 			$this->db->join("user u", "u.user_id = r.report_by");
+	// 			$this->db->join("store s", "s.store_id = u.store_id");
+	// 			$this->db->where("r.created >=",$from);
+	// 			$this->db->where("r.created <=", $today);
+	// 			$this->db->where("u.store_id", $data->store_id);
+	// 			$list = $this->db->order_by("r.created", "DESC")->group_by("r.vehicle_registration_number")->get("report r")->result();
+
+	// 			$this->db->trans_complete();
+	// 			if ($this->db->trans_status() === FALSE){
+	// 				echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_recently_used"]);
+	// 			}else{
+	// 				echo json_encode(["status" => true , "data" => $list, "action" => "get_recently_used"]);
+	// 			}
+	// 		}else{
+	// 			echo json_encode(["status" => false , "message" => "No passed data", "action" => "get_recently_used"]);
+	// 		}
+	// 	}else{
+	// 		echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_recently_used"]);
+	// 	}
+	// }
+
+	// public function get_least_used(){
+	// 	$data = $this->post;
+	// 	$allowed = validate_app_token($this->post->token);
+	// 	if($allowed){
+	// 		if($data){
+	// 			// $today = strtotime("tomorrow midnight -13 days");
+	// 			// $from = strtotime("today 23:59 - 6 days");
+
+
+	// 			$now = strtotime("tomorrow midnight -1 second");
+	// 			$start = strtotime("today midnight - 6 days");
+	// 			$this->db->trans_start();
+	// 			$this->db->select("r.vehicle_registration_number");
+	// 			$this->db->join("user u", "u.user_id = r.report_by");
+	// 			$this->db->join("store s", "s.store_id = u.store_id");
+	// 			$this->db->where("r.created >=",$start);
+	// 			$this->db->where("r.created <=", $now);
+	// 			$this->db->where("u.store_id", $data->store_id);
+	// 			$recent = $this->db->order_by("r.created", "DESC")->group_by("r.vehicle_registration_number")->get("report r")->result();
+
+
+	// 			if(empty($recent)){
+	// 				$this->db->trans_start();
+
+	// 				$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+	// 				$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+	// 				$this->db->where("v.store_id", $data->store_id);
+	// 				$list = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
+
+	// 				$this->db->trans_complete();
+
+	// 				if ($this->db->trans_status() === FALSE){
+	// 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_least_used"]);
+	// 				}else{
+	// 					echo json_encode(["status" => true , "data" => $list, "action" => "get_least_used"]);
+	// 				}
+	// 			}else{
+	// 				$recent_vehicles = array();
+	// 				foreach ($recent as $key => $value) {
+	// 					array_push($recent_vehicles, $value->vehicle_registration_number);
+	// 				}
+	// 				$this->db->trans_start();
+
+	// 				$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+	// 				$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+	// 				$this->db->where("v.store_id", $data->store_id);
+	// 				$this->db->where_not_in("v.vehicle_registration_number",$recent_vehicles);
+	// 				$list = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();		
+
+	// 				$this->db->trans_complete();			
+
+	// 				if ($this->db->trans_status() === FALSE){
+	// 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "get_least_used"]);
+	// 				}else{
+	// 					echo json_encode(["status" => true , "data" => $list, "action" => "get_least_used"]);
+	// 				}
+	// 			}
+
+	// 		}else{
+	// 			echo json_encode(["status" => false , "message" => "No passed data", "action" => "get_least_used"]);
+	// 		}
+	// 	}else{
+	// 		echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_least_used"]);
+	// 	}
 
 	private function codeToMessage($code) 
     { 
@@ -445,13 +529,13 @@ class Vehicle extends CI_Controller {
 										$this->tire_image($tire_info_report_id , $tire_report_id, 2,$value->images);
 									}
 								}else{
-									echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"])
+									echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"]);
 									return false;
 								}
 							}	
 
 						}else{
-							echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"])
+							echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"]);
 							return false;
 						}
 
@@ -562,7 +646,7 @@ class Vehicle extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "update_tires"]);
 		}
 	}
-	public function add_tires(){
+	public function add_tire_layout(){
 		//$data = $this->post;
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
@@ -576,13 +660,14 @@ class Vehicle extends CI_Controller {
 						$this->db->trans_start();
 							if(isset($data->axle)){
 								$this->db->where("vehicle_id", $data->vehicle_id)->update("vehicle",[
-									"axle" => $data->axle
+									"axle" => $data->axle,
+									"driver_seat_position" => $data->driver_seat_position
 								]);
 							}
 
 							foreach ($data->tire as $key => $value) {
 								$this->db->insert("vehicle_tires",[
-									"vehicle_id" => ,$data->vehicle_id,
+									"vehicle_id" => $data->vehicle_id,
 									"axle_no" => $value->axle_no,
 									"tire_count" => $value->tire_count,
 									"position" => $value->position,
@@ -618,13 +703,13 @@ class Vehicle extends CI_Controller {
 			if($data){
 				$this->db->trans_start();
 
-				$this->db->select("vehicle_id, axle");
+				$this->db->select("vehicle_id, axle, driver_seat_position");
 				$this->db->where("v.vehicle_id", $data->vehicle_id);
 				$data = $this->db->get("vehicle")->result();
 
 				if($data){
 					$this->db->select('vt_id, axle_no, tire_count, position, created');
-					$this->db->where('deleted IS NULL');
+					//$this->db->where('deleted IS NULL');
 					$data->tires = $this->db->where("vehicle_id",$data->vehicle_id)->get("vehicle_tires")->result();
 				}else{
 					return false;
@@ -650,10 +735,16 @@ class Vehicle extends CI_Controller {
 		if($allowed){
 			if($data){
 				$this->db->trans_start();
-
-				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id"):
+				$this->db->select("tir.*");
+				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id");
+				$this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
 				$this->db->where("tr.deleted IS NULL");
-				$this->db->where("store_id",$data->store_id);
+				$this->db->where("store_id",$data->store_id);				
+				$this->db->where("v.is_active",1);
+				if(isset($data->vehicle_id)){
+					$this->db->where("v.vehicle_id",$data->vehicle_id);
+				}
+				$this->db->order_by("tr.created","DESC");
 				$data = $this->db->get("tire_report tr")->result();
 
 				$this->db->trans_complete();
@@ -690,10 +781,13 @@ class Vehicle extends CI_Controller {
 			if($data){
 				$this->db->trans_start();
 
-				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id"):
+				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id");
+				$this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
+				$this->db->where("v.is_active",1);
 				$this->db->where("tr.deleted IS NULL");
 				$this->db->where("tr.store_id",$data->store_id);
 				$this->db->where("tr.vehicle_id",$data->vehicle_id);
+				$this->db->limit(1)->order_by("tr.created","DESC");
 				$data = $this->db->get("tire_report tr")->row();
 
 				$this->db->trans_complete();

@@ -1,3 +1,39 @@
+ <script type="text/javascript">
+    $(document).on('click' , '.notify-click' , function(){
+        var url = '<?php echo site_url("app/setup/mark_all_read"); ?>';
+        if($(this).hasClass("open")){
+            var $me = $(this);
+            $.ajax({
+                url : url ,
+                method : "GET",
+                success : function(response){
+
+                    var json = jQuery.parseJSON(response);
+                    $me.html("<i class='fa fa-comment'></i>"+json.data);
+                }
+            });
+        }
+    });
+
+    $(document).on('click' , 'a.read-notif' , function(){
+        var url = '<?php echo site_url("app/setup/read_notif"); ?>';
+        var href = $(this).data("href");
+        var id = $(this).data("id");
+        $.ajax({
+            url : url ,
+            data: {id: id},
+            method : "POST",
+            success : function(response){
+                window.location.href = href;
+            }
+        });
+    });
+ </script>
+<style type="text/css">
+    .unread{
+        background-color: lemonchiffon;
+    }
+</style>
  <nav class="navbar navbar-default navbar-fixed-top navbar-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -16,24 +52,24 @@
                 <i class="fa fa-times icon"></i>
             </button>
             <li class="dropdown danger">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" ><i class="fa fa-comment"></i> <?php echo count($notification_list); ?></a>
+                <a href="#" class="dropdown-toggle notify-click" data-toggle="dropdown" role="button" aria-expanded="false" ><i class="fa fa-comment"></i> <?php echo $notification_list->unread_count; ?></a>
                 <ul class="dropdown-menu danger animated fadeInDown" style="width: 450px;">
                     <li class="title">
                         Notifications
                     </li>
                     <li>
                         <ul class="list-group notifications">
-                            <?php if($notification_list) : ?>
-                                <?php foreach($notification_list as $row) : ?>
+                            <?php if($notification_list->notifications) : ?>
+                                <?php foreach($notification_list->notifications as $row) : ?>
                                     <a href="javascript:void(0);" data-href="<?php echo $row->url; ?>" data-id="<?php echo $row->id; ?>" class="read-notif">
-                                        <li class="list-group-item">
+                                        <li class="list-group-item  <?php echo ($row->isread == '1') ? '' : 'unread'; ?>">
                                             <?php echo $row->description; ?>
                                         </li>
                                     </a>
                                 <?php endforeach; ?>
                                 <a href="javascript:void(0);">
                                     <li class="list-group-item message">
-                                        <a href="<?php echo site_url('app/notifications/')?>">View All Notifications</a>
+                                        <a href="<?php echo site_url('app/setup/notifications')?>">View All Notifications</a>
                                     </li>
                                 </a>
                             <?php else : ?>

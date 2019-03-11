@@ -13,6 +13,9 @@
           $('.more-filter').text("Less Filter");
           $('#_advance_search_value').val("true");
         }
+        $('#type').val('<?php echo $this->input->get("type");?>');
+        $('#availability').val('<?php echo $this->input->get("availability");?>');
+        $('#status').val('<?php echo $this->input->get("status");?>');
     });
     $(document).on('click' , '.more-filter' , function(){
         var val = $(this).data('value');
@@ -104,7 +107,19 @@
         }
     });
 
+    $(document).on("click", ".input-group-addon",function(){
+      $(".daterange").focus();
+    });
+
+    $(document).on("click","#clear",function(){
+        $('input[name="created"]').val("");
+    });
 </script>
+<style type="text/css">
+  .input-group-addon, .datepicker{
+    cursor: pointer;
+  }
+</style>
 <div class="container-fluid margin-bottom">
     <div class="side-body padding-top">
         <div class="container" >
@@ -135,13 +150,13 @@
                         <div class="row">
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
-                                    <label for="s_name">Search by Registration number</label>
-                                    <input type="text" name="registration_number" class="form-control" id="s_name" placeholder="Registration Number" value="<?php echo $this->input->get("registration_number"); ?>">
+                                    <label for="s_name">Registration Number</label>
+                                    <input type="text" name="registration_number" class="form-control" id="s_name" value="<?php echo $this->input->get("registration_number"); ?>">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
-                                    <label for="type">Search by Vehicle Type</label>
+                                    <label for="type">Vehicle Type</label>
                                     <select class="form-control" name="type" id="type">
                                         <option value="">- Select Vehicle Type -</option>
                                         <?php foreach($types as $key => $val) :?>
@@ -152,11 +167,11 @@
                             </div>
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
-                                    <label for="availability">Search by Availability</label>
-                                    <select class="form-control" name="availability">
+                                    <label for="availability">Availability</label>
+                                    <select class="form-control" name="availability" id="availability">
                                         <option value="">- Select Vehicle Availability -</option>
-                                        <option value="1">Available</option>
-                                        <option value="0">Unavailable</option>
+                                        <option value="1" <?php echo ($this->input->get("availability") == "1") ? "selected" : "" ; ?>>Available</option>
+                                        <option value="0" <?php echo ($this->input->get("availability") == "0") ? "selected" : "" ; ?>>Unavailable</option>
                                     </select>
                                 </div>
                             </div>
@@ -171,8 +186,8 @@
 
                             <div class="col-xs-12 col-lg-3 no-margin-bottom">
                                 <div class="form-group">
-                                    <label for="status">Search by Status</label>
-                                    <select class="form-control" name="status">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" name="status" id="status">
                                         <option value="">- Select Vehicle Status -</option>
                                         <option value="0">Initial</option>
                                         <option value="1">Checking</option>
@@ -183,8 +198,14 @@
 
                             <div class="col-xs-12 col-lg-3">
                                 <div class="form-group">
-                                    <label for="last_checked">Search by Last Checked Date</label>
-                                    <input type="text" name="last_checked" class="form-control daterange" autocomplete="off" value="<?php echo $this->input->get("last_checked"); ?>" placeholder="Select Date">
+                                    <label for="last_checked">Last Checked Date</label>
+                                    <div class='input-group'>
+                                        <input type="text" name="last_checked" class="form-control daterange" autocomplete="off" value="<?php echo $this->input->get("last_checked"); ?>" placeholder="Select Date"  onkeydown="return false">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

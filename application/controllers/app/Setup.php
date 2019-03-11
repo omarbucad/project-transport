@@ -220,12 +220,12 @@ class Setup extends MY_Controller {
 	// PROFILE SECTION
 	public function profile(){
 		
-		if($this->session->userdata('user')->expired == 1){
-			redirect("app/dashboard");
-		}
-		if($this->session->userdata('user')->role != 'ADMIN PREMIUM'){
-			redirect('app/dashboard');
-		}
+		// if($this->session->userdata('user')->expired == 1){
+		// 	redirect("app/dashboard");
+		// }
+		// if($this->session->userdata('user')->role != 'ADMIN PREMIUM'){
+		// 	redirect('app/dashboard');
+		// }
 		$user_id = $this->data['session_data']->user_id;
 
 		$this->form_validation->set_rules('display_name'	, 'Display Name'	, 'trim|required');
@@ -247,6 +247,7 @@ class Setup extends MY_Controller {
 			$this->data['page_name'] = "Profile";
 			$this->data['result']    =  $this->profile->get_profile();
 			$this->data['main_page'] = "backend/page/profile/view";
+			$this->data['countries_list'] = $this->countries_list();
 
 			$this->load->view('backend/master' , $this->data);
 		}else{
@@ -367,7 +368,7 @@ class Setup extends MY_Controller {
 	public function notifications(){
 
 		$this->data['page_name'] 		= "Notifications";
-		$this->data['result']    		=  $this->notification->notify_list();
+		$this->data['result']    		=  $this->notification->notify_list(true);
 		$this->data['main_page'] 		= "backend/page/notification/view";
 
 		$this->load->view('backend/master' , $this->data);
@@ -376,9 +377,27 @@ class Setup extends MY_Controller {
 
 	public function mark_all_read(){
 		$this->db->where("user_id", $this->session->userdata("user")->user_id);
-		$this->db->where("isread" , 0)->update("notification" , [ "isread" => true ]);
+		$updated = $this->db->where("isread" , 0)->update("notification" , [ "isread" => 1 ]);
 
-		redirect('app/notifications', "refresh");
+		if($updated){
+
+			echo json_encode(["status" => true, "data" => "0", "message" => "OK"]);
+		}else{
+			echo json_encode(["status" => false, "message" => "Failed"]);
+		}
+
+	}
+
+	public function read_notif(){
+		$this->db->where("user_id", $this->session->userdata("user")->user_id);
+		$updated = $this->db->where("id" , $this->input->post("id"))->update("notification" , [ "isread" => 1 ]);
+
+		if($updated){
+
+			echo json_encode(["status" => true, "message" => "OK"]);
+		}else{
+			echo json_encode(["status" => false, "message" => "Failed"]);
+		}
 
 	}
 	// END OF NOTIFICATION SECTION

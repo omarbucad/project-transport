@@ -28,8 +28,8 @@
 
         <?php if($this->session->userdata('user')->role != "MECHANIC") : ?>
         <ol class="breadcrumb">
-            <li><a href="<?php echo site_url('app/accounts'); ?>">Accounts</a></li>
-            <li class="active">Edit User Information</li>
+            <li><a href="<?php echo site_url('app/accounts'); ?>">Manage Drivers</a></li>
+            <li class="active">Edit Driver Information</li>
         </ol>
         <?php endif; ?>
         <div class="grey-bg ">
@@ -39,6 +39,7 @@
                         <span></span>
                     </div>
                     <div class="col-xs-12 col-lg-4 text-right no-margin-bottom">
+                        <a href="<?php echo site_url('app/accounts');?>" class="btn btn-primary btn-same-size">Cancel</a>
                         <a href="javascript:void(0);" class="btn btn-success btn-same-size submit-form" data-form="#form_users">Save</a>
                     </div>
                 </div>
@@ -59,6 +60,14 @@
                                 <label for="username">Username</label>
                                 <input type="text" name="username" id="username" value="<?php echo $result->username; ?>"  class="form-control" placeholder="Username" readonly="true">
                             </div>
+                             <div class="form-group">
+                                <label for="display_name">First Name</label>
+                                <input type="text" name="firstname" id="firstname" value="<?php echo $result->firstname; ?>"  class="form-control" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="display_name">Last Name</label>
+                                <input type="text" name="lastname" id="lastname" value="<?php echo $result->lastname; ?>"  class="form-control" placeholder="Last Name">
+                            </div>
                             <div class="form-group">
                                 <label for="display_name">Display Name</label>
                                 <input type="text" name="display_name" id="display_name" value="<?php echo $result->display_name; ?>"  class="form-control" placeholder="Display Name">
@@ -71,7 +80,7 @@
                         <div class="col-xs-12 col-lg-4">
                             <div class="form-group">
                                 <label for="">Profile Image</label>
-                                <div class="image-preview">
+                                <div class="image">
                                     <img src="<?php echo site_url("thumbs/images/user/$result->image_path/150/150/$result->image_name"); ?>" class="img img-responsive thumbnail no-margin-bottom" alt="Profile image">
                                 </div>
                                 <input type="file" name="file" id="profile_image" class="btn btn-default">
@@ -79,51 +88,7 @@
                         </div>
                     </div>
                 </section>
-                <?php if($result->role != "ADMIN") : ?>
-                <section class="sec_border_bottom">
-                    <h3>Role</h3>
-                    <div class="row">
-                        <div class="col-xs-12 col-lg-4">
-                            <p>A role defines what this user can see and do.</p>
-                        </div>
-                        <div class="col-xs-12 col-lg-4">
-                            <div class="form-group">
-                                <label for="role">Role</label>
-                                <select class="form-control" name="role" id="user_role">
-                                    <?php if($this->session->userdata('user')->role != "MECHANIC") : ?>
-                                        <option value="DRIVER" <?php echo ($result->role == "DRIVER") ? "selected" : "" ;?>>Driver</option>
-                                    <?php endif; ?>
-                                    <option value="MECHANIC" <?php echo ($result->role == "MECHANIC") ? "selected" : "" ;?>>Mechanic</option>
-                                    <?php if($this->session->userdata('user')->role != "MECHANIC") : ?>
-                                        <option value="MANAGER" <?php echo ($result->role == "MANAGER") ? "selected" : "" ;?>>Manager</option>
-                                    <?php endif; ?>
-                                </select>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </section>
-                <?php endif; ?>
-                <!-- <?php// if($result->role != "ADMIN" && $result->role != "MANAGER") : ?>                    
-                <section class='sec_border_bottom <?php// echo ($result->role == "MECHANIC") ? "hidden": "" ?>' id="checklist_section">
-                    <h3>Checklist</h3>
-                    <div class="row">
-                        <div class="col-xs-12 col-lg-4">
-                            <p>List of checklist that can be used</p>
-                        </div>
-                        <div class="col-xs-12 col-lg-4">
-                            <?php //foreach($checklist_list as $key => $value) :?>
-                                <div class="checkbox3 checkbox-check  checkbox-light">
-                                      <input type="checkbox" name="checklist[]" id="checkbox-<?php// echo $value->checklist_id; ?>" value="<?php// echo $value->checklist_id; ?>" <?php// echo (isset($result->user_checklist[$value->checklist_id])) ? "checked" : "" ; ?>>
-                                      <label for="checkbox-<?php //echo $value->checklist_id; ?>">
-                                        <?php// echo $value->checklist_name?>
-                                      </label>
-                                </div>
-                            <?php //endforeach; ?>                            
-                        </div>
-                    </div>
-                </section>                
-                <?php// endif; ?> -->
+                
                 <section class="sec_border_bottom">
                     <h3>Security</h3>
                     <div class="row">
@@ -152,6 +117,7 @@
                         </div>
                     </div>
                     <div class="text-right margin-bottom">
+                        <a href="<?php echo site_url('app/accounts');?>" class="btn btn-primary btn-same-size">Cancel</a>
                         <a href="javascript:void(0);" class="btn btn-success btn-same-size submit-form" data-form="#form_users">Save</a>
                     </div>
                 </section>

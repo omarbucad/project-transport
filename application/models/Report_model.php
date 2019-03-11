@@ -15,7 +15,7 @@ class Report_model extends CI_Model {
 
         // SEARCH
         if($report_number = $this->input->get("report_number")){
-            $this->db->where("report_number", $report_number);
+            $this->db->like("report_number", $report_number);
         }
         if($this->input->get("status") != ""){
             $this->db->where("rs.status", $this->input->get("status"));
@@ -26,15 +26,15 @@ class Report_model extends CI_Model {
         }
 
         if($this->input->get('trailer_number')){
-            $this->db->where('r.trailer_number' , $this->input->get('trailer_number'));
+            $this->db->like('r.trailer_number' , $this->input->get('trailer_number'));
         }
 
         if($this->input->get('vehicle_registration_number')){
-            $this->db->where('r.vehicle_registration_number' , $this->input->get('vehicle_registration_number'));
+            $this->db->like('r.vehicle_registration_number' , $this->input->get('vehicle_registration_number'));
         }
 
         if($this->input->get('display_name')){
-            $this->db->where('u.display_name' , $this->input->get('name'));
+            $this->db->like('u.display_name' , $this->input->get('name'));
         }
 
         if($date = $this->input->get("date")){

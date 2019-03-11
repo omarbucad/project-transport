@@ -28,7 +28,7 @@ class Login extends MY_Controller {
 		    	if($this->session->userdata("user")->plan_expiration == ''){
 		    		$expired = 0;
 		    	}else{
-		    		if($this->session->userdata("user")->plan_expiration > strtotime("now")){
+		    		if(( strtotime("now") < $this->session->userdata("user")->plan_expiration) == 1){
 				    	$expired = 0;
 					}else{
 						$expired = 1;
@@ -36,7 +36,6 @@ class Login extends MY_Controller {
 		    	}
 	    		
 				$this->session->userdata('user')->expired = $expired;
-		    	
 		    }			
 
 

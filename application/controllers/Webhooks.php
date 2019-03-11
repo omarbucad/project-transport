@@ -84,175 +84,73 @@ class Webhooks extends CI_Controller {
 	}
 
 	public function process_webhook($kind,$data){
+		$this->db->select("u.user_id");
+		$this->db->join("user_plan up","up.store_id = u.store_id");
+		$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
+
 		switch ($kind) {
 			case 'subscription_charged_successfully':
-
-				$this->db->select("u.user_id");
-				$this->db->join("user_plan up","up.store_id = u.store_id");
-				$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
-
-
-				$this->db->trans_start();
-
 				$this->notification->notify_admin([
-					"description"	=> "Subscription",
+					"description"	=> "Subscription - Charged",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
 					"user_id" => $user->user_id
 				]);
-
-				$this->db->trans_complete();
-
-				if($this->db->trans_status() == FALSE){
-
-				}else{
-
-				}
 				break;
 			case 'subscription_charged_unsuccessfully':
-				$this->db->select("u.user_id");
-				$this->db->join("user_plan up","up.store_id = u.store_id");
-				$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
-
-
-				$this->db->trans_start();
-
 				$this->notification->notify_admin([
-					"description"	=> $data['description'],
+					"description"	=> "Subscription - Unsuccessful charge",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
 					"user_id" => $user->user_id
 				]);
-
-				$this->db->trans_complete();
-
-				if($this->db->trans_status() == FALSE){
-
-				}else{
-
-				}
 				break;
 			case 'subscription_expired':
-				$this->db->select("u.user_id");
-				$this->db->join("user_plan up","up.store_id = u.store_id");
-				$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
-
-
-				$this->db->trans_start();
-
 				$this->notification->notify_admin([
-					"description"	=> $data['description'],
+					"description"	=> "Subscription - Expired",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
 					"user_id" => $user->user_id
 				]);
-
-				$this->db->trans_complete();
-
-				if($this->db->trans_status() == FALSE){
-
-				}else{
-
-				}
 				break;
 			case 'subscription_canceled':
-				$this->db->select("u.user_id");
-				$this->db->join("user_plan up","up.store_id = u.store_id");
-				$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
-
-
-				$this->db->trans_start();
-
 				$this->notification->notify_admin([
-					"description"	=> $data['description'],
+					"description"	=> "Subscription - Cancelled",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
 					"user_id" => $user->user_id
 				]);
-
-				$this->db->trans_complete();
-
-				if($this->db->trans_status() == FALSE){
-
-				}else{
-
-				}
 				break;
 			case 'subscription_trial_ended':
-				$this->db->select("u.user_id");
-				$this->db->join("user_plan up","up.store_id = u.store_id");
-				$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
-
-
-				$this->db->trans_start();
-
 				$this->notification->notify_admin([
-					"description"	=> $data['description'],
+					"description"	=> "Subscription - Trial ended",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
 					"user_id" => $user->user_id
 				]);
-
-				$this->db->trans_complete();
-
-				if($this->db->trans_status() == FALSE){
-
-				}else{
-
-				}
 				break;
-			case 'subscription_went_active':
-				$this->db->select("u.user_id");
-				$this->db->join("user_plan up","up.store_id = u.store_id");
-				$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
-
-
-				$this->db->trans_start();
-
+			case 'subscription_went_active':				
 				$this->notification->notify_admin([
-					"description"	=> $data['description'],
+					"description"	=> "Subscription - Started",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
 					"user_id" => $user->user_id
 				]);
-
-				$this->db->trans_complete();
-
-				if($this->db->trans_status() == FALSE){
-
-				}else{
-
-				}
 				break;
 			case 'subscription_went_past_due':
-				$this->db->select("u.user_id");
-				$this->db->join("user_plan up","up.store_id = u.store_id");
-				$user = $this->db->limit(1)->order_by("u.created", "DESC")->get("user u")->row();
-
-
-				$this->db->trans_start();
-
 				$this->notification->notify_admin([
-					"description"	=> $data['description'],
+					"description"	=> "Subscription - Past due",
 					"type"	=> 2,
 					"isread" => 0,
 					"ref_id" => $data['id'],
 					"user_id" => $user->user_id
 				]);
-
-				$this->db->trans_complete();
-
-				if($this->db->trans_status() == FALSE){
-
-				}else{
-
-				}
 				break;
 		}
 	}

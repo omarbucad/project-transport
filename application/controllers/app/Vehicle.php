@@ -303,4 +303,22 @@ class Vehicle extends MY_Controller {
 	// 		}
 	// 	}
 	// }
+
+
+	// TIRE MANAGEMENT
+	public function tire_management($vehicle_id){
+		if($this->session->userdata('user')->role != "SUPER ADMIN"){
+				if(!(isset($this->session->userdata('user')->expired) && !$this->session->userdata('user')->expired)){
+				redirect("app/dashboard");
+			}
+		}
+
+		$this->data['page_name'] 		= "Tire Management";
+		$this->data['result']    		=  $this->vehicle->get_tire_management($vehicle_id);
+		$this->data['main_page'] 		= "backend/page/vehicle/tire_management";
+		$this->data['plan_type']		= $this->data['session_data']->title;
+		$this->data['types'] = $this->vehicle->vehicle_type_list();
+
+		$this->load->view('backend/master' , $this->data);
+	}
 }

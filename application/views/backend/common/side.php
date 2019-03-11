@@ -98,7 +98,7 @@
                     <?php if($session_data->role != "MECHANIC") : ?>
                     <li class="<?php echo ($this->uri->segment(2) == 'accounts') ? "active" : "" ;?>">
                         <a href="<?php echo site_url('app/accounts'); ?>">
-                            <span class="icon fa fa-users"></span><span class="title">Employees</span>
+                            <span class="icon fa fa-users"></span><span class="title">Drivers</span>
                         </a>
                     </li>
                     <?php endif; ?>
