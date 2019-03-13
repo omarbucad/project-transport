@@ -13,16 +13,6 @@ class Register_model extends CI_Model {
         ]);
         $address_id = $this->db->insert_id();
 
-         /* STORE CONTACT INFORMATION */
-
-        $this->db->insert("store_contact" , [
-            "first_name"    => $this->input->post("first_name"),
-            "last_name"     => $this->input->post("last_name"),
-            "email"         => $this->input->post("email"),
-            "phone"         => $this->input->post("phone") 
-        ]);
-        $contact_id = $this->db->insert_id();
-
         /*  USER INFORMATION  */
         $this->db->insert("user" ,[
             "display_name"  		=> $this->input->post("first_name").' '.$this->input->post("last_name") ,
@@ -43,7 +33,6 @@ class Register_model extends CI_Model {
         $this->db->insert("store" , [
             "store_name"            => $this->input->post("store_name") ,
             "address_id"            => $address_id ,
-            "contact_id"            => $contact_id ,
             "created"               => time()
         ]);
         $store_id = $this->db->insert_id();
@@ -111,15 +100,13 @@ class Register_model extends CI_Model {
                     $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
                 }else{
                     $result->company_logo = $this->config->site_url("public/upload/company/".$result->logo_image_path.$result->logo_image_name);
-                }
-                
+                }                
             }
             $this->login_trail($result->user_id);
             return $result;
         }else{
             return false;
-        }
-        
+        }        
     }
 
     private function login_trail($user_id){
@@ -180,7 +167,6 @@ class Register_model extends CI_Model {
             'Brakes(warning devices and instruments)'
         );
 
-
         $batch = array();
 
         foreach($items as $k => $v){
@@ -190,7 +176,6 @@ class Register_model extends CI_Model {
                 "item_position" => $k
             );
         }
-
 
         $this->db->insert_batch("checklist_items" , $batch);
 
@@ -237,7 +222,6 @@ class Register_model extends CI_Model {
             'Fridge Unit Operation*',
         );
 
-
         $batch = array();
 
         foreach($items as $k => $v){
@@ -247,7 +231,6 @@ class Register_model extends CI_Model {
                 "item_position" => $k
             );
         }
-
 
         $this->db->insert_batch("checklist_items" , $batch);
     }

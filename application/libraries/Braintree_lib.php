@@ -432,7 +432,7 @@ class Braintree_lib extends Braintree{
         if($data->addOnId != ''){
             $result = Braintree_Subscription::update($data->subscription_id, [
                 //'id' => $data->id,
-                'paymentMethodToken' => $data->newPaymentMethodToken,
+                //'paymentMethodToken' => $data->newPaymentMethodToken,
                 'planId' => $data->planId,
                 //'merchantAccountId' => $data->merchantAccountId,
                 'addOns' => [

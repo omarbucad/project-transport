@@ -55,14 +55,13 @@ class Accounts_model extends CI_Model {
         $result = $this->db->where("u.user_id",$user_id)->get("user u")->row();
         $result->created = convert_timezone($result->created,true);
 
-        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, s.store_name, sa.*, sc.phone ,p.*");
+        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, s.store_name, sa.* ,p.*");
 
         $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
         $this->db->join("user u2","u2.user_id = up.who_updated");        
         $this->db->join("plan p","p.planId = up.plan_id");
         $this->db->join("store s","s.store_id = i.store_id");
         $this->db->join("store_address sa","sa.store_address_id = s.address_id");
-        $this->db->join("store_contact sc","sc.contact_id = s.contact_id");
         $this->db->where("i.deleted IS NULL");
         $this->db->where("i.user_id",$user_id);
 
@@ -328,13 +327,12 @@ class Accounts_model extends CI_Model {
         $store_id = $this->data['session_data']->store_id;
         $session_role = $this->session->userdata('user')->role;
         //$role = $this->input->post("role");
-
         if($session_role == "ADMIN PREMIUM"){
-            $role .= "DRIVER PREMIUM";
+            $role = "DRIVER PREMIUM";
         }else if($session_role == "ADMIN FREE"){
-            $role .= "DRIVER";
+            $role = "DRIVER";
         }else{
-            $role .= "DRIVER";
+            $role = "DRIVER";
         }
         $this->db->trans_start();
 
@@ -383,11 +381,11 @@ class Accounts_model extends CI_Model {
         $role = $this->input->post("role");
 
         if($session_role == "ADMIN PREMIUM"){
-            $role .= "DRIVER PREMIUM";
+            $role = "DRIVER PREMIUM";
         }else if($session_role == "ADMIN FREE"){
-            $role .= "DRIVER";
+            $role = "DRIVER";
         }else{
-            $role .= "DRIVER";
+            $role = "DRIVER";
         }
         $this->db->trans_start();
 
@@ -519,7 +517,6 @@ class Accounts_model extends CI_Model {
                     "billing_type" => $billing,
                     "plan_created" => time(),
                     "plan_expiration"   => $expiration,
-                    //"ip_address" => $this->input->ip_address(),
                     "active" => 1,
                     "updated" => time(),
                     "who_updated" => $who_updated

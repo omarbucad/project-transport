@@ -9,7 +9,7 @@ class Profile_model extends CI_Model {
 
         
         $this->db->select("
-            u.user_id, u.display_name, u.email_address, u.username, u.firstname, u.lastname, u.image_path, u.image_name, u.role, u.status,
+            u.user_id, u.display_name, u.email_address, u.username, u.firstname, u.lastname, u.image_path, u.image_name, u.role, u.status, u.phone,
             s.store_id, s.store_name, s.address_id, s.logo_image_path, s.logo_image_name,
             sa.street1, sa.street2, sa.suburb, sa.city, sa.postcode, sa.state, sa.country, sa.countryCode
         ");
@@ -66,9 +66,13 @@ class Profile_model extends CI_Model {
             "country"       => $post["physical"]["country"],
             "countryCode"   => $post["physical"]["countryCode"]
         ]);
+        if(isset($_FILES['file'])){
+            $this->do_upload($user_id);    
+        }        
 
-        
-        $this->do_upload($user_id);
+        if(isset($_FILES['logo'])){
+            $this->logo_upload($this->session->userdata("user")->store_id);
+        }
         
 
         $this->db->trans_complete();
@@ -122,7 +126,7 @@ class Profile_model extends CI_Model {
             create_index_html($folder);
         }
     
-        $image_name = md5($store_id).'_'.time().'_'.$_FILES['file']['name'];
+        $image_name = md5($store_id).'_'.time().'_'.$_FILES['logo']['name'];
         $image_name = str_replace("^", "_", $image_name);
        
         $config['upload_path']          = $folder;
@@ -132,10 +136,10 @@ class Profile_model extends CI_Model {
         $this->load->library('upload', $config);
         $this->load->library('image_lib');
 
-        if ($this->upload->do_upload('file')){
+        if ($this->upload->do_upload('logo')){
             $this->db->where("store_id" , $store_id)->update("store" , [
-                "image_path" => $year."/".$month ,
-                "image_name" => $image_name
+                "logo_image_path" => $year."/".$month ,
+                "logo_image_name" => $image_name
             ]);
         }
     }

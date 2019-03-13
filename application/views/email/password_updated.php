@@ -25,12 +25,32 @@
 				</tr>
 				<tr>
 					<td style="text-align: center;">
-						<p style="text-align:center; color:#252327;">- Vehicle Checklist Team</a>
+						<p style="text-align:center; color:#252327;">- The team at Vehicle Checklist</a>
 					</td>
 				</tr>				
 			</table>
 		</div>
 		<div class="row" style="background-color: #252327; color:#929193;">
+			<table style="width: 100%, padding-top:20px;">
+				<tr>
+					<td style=" padding-left: 20px; padding-right: 20px;">
+						<p>By joining <strong>Vehicle Checklist</strong>, you've agreed to our Terms of Use and Privacy Policy.</p>
+					</td>
+				</tr>
+				<tr>
+					<td style=" padding-left: 20px; padding-right: 20px;">
+						<p>This email has been sent to you as part of your Vehicle Checklist subscription.<br>
+							Please do not reply to this email, as we are unable to respond from this email address. if you need help or would like to contact us, <a href="https://www.trackerteer.com" style="color:#2196f3;">click here</a>.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style=" padding-left: 20px; padding-right: 20px;">
+						<p>This message was mailed to <a href="mailto:<?php echo $email;?>"><?php echo $email; ?></a> by Vehicle Checklist. Use of the Vehicle Checklist service and website is subject to our Terms of Use and Privacy Policy.</p>
+					</td>
+				</tr>
+				<tr><td style="margin-bottom: 30px;">&nbsp;</td></tr>
+			</table>
 			<p style="text-align: center; height: 25px; padding-top: 5px; font-size: 12px;">&copy; <?php echo date("Y"); ?> Trackerteer Web Developer Inc.</p>
 		</div>
 	</div>

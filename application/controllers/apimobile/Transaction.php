@@ -345,8 +345,22 @@ class Transaction extends CI_Controller {
 		if($allowed){
 			$result = $this->braintree_lib->update_payment_method($this->post);
 			if($result){
-				
-				echo json_encode(["status" => true , "data" => $result, "action" => "update_payment_method"]);
+				// $data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+				// $data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+				// $data['card'] = $result->card;
+				// $data['card_expiration'] = $result->exp;
+
+				// $this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+				// $this->email->to($email);
+				// $this->email->set_mailtype("html");
+				// $this->email->subject('Your payment detail has been successfully updated');
+				// $this->email->message($this->load->view('email/email_payment_method_update', $data , true));
+
+				// if($this->email->send()){
+					echo json_encode(["status" => true , "data" => $result, "action" => "update_payment_method"]);
+				// }else{
+				// 	echo json_encode(["status" => true , "message" => "Failed to send email", "data" => $result, "action" => "update_payment_method"]);
+				// }		   
 			}else{
 				echo json_encode(["status" => false , "error" => $result, "action" => "update_payment_method"]);
 			}
@@ -357,6 +371,8 @@ class Transaction extends CI_Controller {
 
 	public function update_addOn_subscription(){
 		$allowed = validate_app_token($this->post->token);
+		$data = $this->post;
+		$vehicles = json_decode($data->vehicles);
 
 		if($allowed){
 
@@ -369,6 +385,22 @@ class Transaction extends CI_Controller {
 				$updated = $this->db->update("user_plan",[	               
 	                "vehicle_limit" => $this->post->quantity
 	            ]);
+	            
+				if($data->isUpgrade){
+					if($vehicles){
+			        	$this->db->trans_start();
+			        	$this->db->where("store_id",$data->store_id);
+			        	$this->db->where_not_in("vehicle_id",$vehicles);
+			        	$this->db->update("vehicle",[
+			        		"is_active" => 0
+			        	]);
+			        	$this->db->trans_complete();
+			        	if ($this->db->trans_status() === FALSE){
+			        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
+			        	}			        	
+			        }
+				}
+	            
 		        $this->db->trans_complete();
 
 		        if($updated){
@@ -444,6 +476,7 @@ class Transaction extends CI_Controller {
             	$users_list = $this->db->where("store_id",$data->store_id)->get("user")->result();
 
 	            foreach ($users_list as $key => $value) {
+	            	// if(($data->planId == 'custom_monthly') || ($data->planId == 'custom_yearly') || ($data->planId == 'premium_monthly') || ($data->planId == 'premium_yearly')){
 	                if(($data->planId == 'sandbox_custom_monthly') || ($data->planId == 'sandbox_custom_yearly') || ($data->planId == 'sandbox_premium_monthly') || ($data->planId == 'sandbox_premium_yearly')){
 	                    switch ($value->role) {
 	                        case 'DRIVER':
@@ -456,6 +489,7 @@ class Transaction extends CI_Controller {
 	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "MANAGER PREMIUM"]);
 	                        //     continue;
 	                    }
+	                // }elseif($data->planId == 'free_trial'){
 	                }elseif($data->planId == 'sandbox_free_trial'){
 	                    switch ($value->role) {
 	                        case 'DRIVER':

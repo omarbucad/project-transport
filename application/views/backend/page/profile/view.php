@@ -57,6 +57,12 @@
 	    						</dd>
 	    					</dl>
 	    					<dl class="dl-horizontal text-left">
+	    						<dt>Phone</dt>
+	    						<dd>
+    								<input type="text" name="phone" class="form-control" value="<?php echo $result->phone; ?>" required="true">
+	    						</dd>
+	    					</dl>
+	    					<dl class="dl-horizontal text-left">
 	    						<dt>Role</dt>
 	    						<dd>
 	    							<span><?php echo $result->role; ?></span>

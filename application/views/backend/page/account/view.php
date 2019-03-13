@@ -15,6 +15,14 @@
         }else{
             $('#plan-selected').text("Premium Plan");
         }
+
+        var selected = $('#custom_plan').val();
+        var btn = $('#custom_plan').parent().parent().find("a.btn-proceed");
+        if(selected == 'Monthly'){
+            btn.attr("data-desc","sandbox_custom_monthly");
+        }else{
+            btn.attr("data-desc","sandbox_custom_yearly");
+        }
     });
     $(document).on("click", "#btn-basic", function(){
         if(!$('#div-basic').hasClass("green")){
@@ -142,22 +150,33 @@
     //     }
     //  });
 
+    $(document).on("change","#custom_plan",function(){
+        var selected = $(this).val();
+        var btn = $(this).parent().parent().find("a.btn-proceed");
+        if(selected == 'Monthly'){
+            btn.attr("data-desc","sandbox_custom_monthly");
+        }else{
+            btn.attr("data-desc","sandbox_custom_yearly");
+        }
+        
+    });
+
      $(document).on('click', '.btn-proceed', function(){
         var modal = $('#payment_modal').modal("show");
         var body = modal.find('.modal-body');
         body.html("");
-        body.html("<form action='<?php echo site_url('app/setup/pay'); ?>' method='POST' class='payment-form text-center'><input type='hidden' name='planId' value=''><div id='dropin-container'></div><button type='submit' class='btn btn-info'>Checkout</button></form>");
+        body.html("<form action='<?php echo site_url('app/setup/pay'); ?>' method='POST' class='payment-form text-center'><input type='hidden' name='planId' value=''><input type='hidden' name='vehicle_count' ><div id='dropin-container'></div><button type='submit' class='btn btn-info'>Checkout</button></form>");
 
         $.ajax({
             url: "<?php echo site_url("app/setup/get_client_token"); ?>",
             type: "GET",
             dataType: "json",
             success: function(data){
-                braintree.setup(data, 'dropin', {container : 'dropin-container'});
+                braintree.setup(data.token, 'dropin', {container : 'dropin-container'});
             }
          });
-        
-        modal.find("input[type='hidden']").val($(this).data("desc"));          
+        modal.find("input[name='planId']").val($(this).data("desc"));    
+        modal.find("input[name='vehicle_count']").val($('#no_vehicles').val());
         
      });
 
@@ -342,14 +361,11 @@
                             <form action="<?php echo site_url();?>" method="POST" id="premium-form">
                                 <div class="form-group">
                                     <label>Numbers of Vehicle</label>
-                                    <input type="number" name="no_vehicles" class="form-control">
-                                    <!-- <select class="form-control" name="" >
-                                        <option value="50">50 vehicles</option>
-                                    </select> -->
+                                    <input type="number" name="no_vehicles" class="form-control" id="no_vehicles">
                                 </div>
                                 <div class="form-group">
                                     <label>Subscription</label>
-                                    <select class="form-control" name="subscription">
+                                    <select class="form-control" name="subscription" id="custom_plan">
                                         <option value="Yearly">Yearly</option>
                                         <option value="Monthly">Monthly</option>
                                     </select>
@@ -358,7 +374,7 @@
                                 <h3 class="card-title">$220</h3>
                                 <p style="text-align: center!important;color: #989898;"><span style="text-decoration-line: line-through;">$320</span> 25% in a year </p>
                                 <div class="form-group text-center">
-                                    <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_basic_plan_trial_3">Proceed</a>
+                                    <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="">Proceed</a>
                                 </div>
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers</p>
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>

@@ -158,7 +158,7 @@ class Account extends CI_Controller {
 					$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
 					$this->email->to($info->email_address);
 					$this->email->set_mailtype("html");
-					$this->email->subject('Email Verification');
+					$this->email->subject('Your verification code');
 					$this->email->message($this->load->view('email/email_verification', $data , true));
 					
 
@@ -206,7 +206,7 @@ class Account extends CI_Controller {
 						// $this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
 						// $this->email->to($data->email);
 						// $this->email->set_mailtype("html");
-						// $this->email->subject('Email Verification Successful');
+						// $this->email->subject('Email verification successful');
 						// $this->email->message($this->load->view('email/email_verification', $data , true));
 
 						// if($this->email->send()){
@@ -230,82 +230,6 @@ class Account extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "No data received", "action" => "verify_email"]);
 		}
 	}
-
-	// public function resend_email_code(){
-	// 	$data = $this->post;
-
-	// 	if($data){
-	// 		$generated = generate_email_code($user_id);
-
-	// 		if($generated){
-	// 			$info = $this->db->select("email_address")->where("user_id", $user_id)->get("user")->num_rows();
-
-	// 			if($info > 0){
-
-	// 				$data['code'] = $generated;
-	// 				$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
-	// 				$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
-
-	// 				$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
-	// 				$this->email->to($email);
-	// 				$this->email->set_mailtype("html");
-	// 				$this->email->subject('Email Verification');
-	// 				$this->email->message($this->load->view('email/email_verification', $data , true));
-
-	// 				if($this->email->send()){
-
-	// 					echo json_encode(["status" => true , "message" => "Email verification code sent successfully", "action" => "resend_email_code"]);
-	// 				}else{
-	// 					echo json_encode(["status" => false , "message" => "Sending email failed", "action" => "resend_email_code"]);
-	// 				}				
-	// 			}else{
-	// 				echo json_encode(["status" => false , "message" => "User not found", "action" => "resend_email_code"]);
-	// 			}
-	// 		}else{
-	// 			echo json_encode(["status" => false , "message" => "Something went wrong. Please try again", "action" => "resend_email_code"]);
-	// 		}
-	// 	}else{
-	// 		echo json_encode(["status" => false , "message" => "No data received", "action" => "resend_email_code"]);
-	// 	}
-	// }
-
-	// public function register_driver(){
-	// 	$data = $this->post;		
-
-	// 	$this->db->insert("user",[
-	// 		"display_name" => "Firstname Lastname",
-	// 		"email_address" => $data->email,
-	// 		"username" => $data->username,
-	// 		"role" => "DRIVER",
-	// 		"store_id" => $data->store_id,
-	// 		"status" => 1,
-	// 		"created" => time(),
-	// 		"password" => md5($data->password),
-	// 		"store_id" => $store_id
-	// 	]);
-
-	// 	$userid = $this->db->insert_id();
-
-	// 	if($data->image){
-	// 		$img = $this->save_profile_image($userid);
-	// 		$this->db->where("user_id",$userid);
-	// 		$this->db->update("user",[
-	// 			"image_path" => $img['image_path'],
-	// 			"image_name" => $img['image_name']
-	// 		]);
-	// 	}
-
-	// 	$this->login_trail($userid);
-
-	// 	$this->db->trans_complete();
-
- //        if ($this->db->trans_status() === FALSE){
- //            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
- //        }else{
- //            echo json_encode(["status" => true , "message" => "Successfully Registered", "action" => "register"]);
- //        }
-
-	// }
 
 	public function get_user(){
 
@@ -423,13 +347,10 @@ class Account extends CI_Controller {
 					"display_name" => $data->firstname ." ". $data->lastname,
 					"firstname" => $data->firstname,
 					"lastname" => $data->lastname,
-					// "email_address" => $data->email,
-					// "username" => $data->username,
 					"role" => $data->role,
 					"status" => 1,
 					"password" => md5($data->password),
 					"phone" => ($data->phone == '') ? NULL : $data->phone,
-					//"store_id" => $data->store_id,
 					"deleted" => NULL
 				]);
 			}else{
@@ -437,11 +358,8 @@ class Account extends CI_Controller {
 					"display_name" => $data->firstname ." ". $data->lastname,
 					"firstname" => $data->firstname,
 					"lastname" => $data->lastname,
-					// "email_address" => $data->email,
-					// "username" => $data->username,
 					"role" => $data->role,
 					"status" => 1,
-					//"store_id" => $data->store_id,
 					"deleted" => NULL
 				]);
 
@@ -450,8 +368,7 @@ class Account extends CI_Controller {
 						"phone" => $data->phone
 					]);
 				}
-			}
-			
+			}			
 
 			if(isset($data->image)){
 				$img = $this->save_profile_image($data->user_id);
@@ -461,15 +378,13 @@ class Account extends CI_Controller {
 					"image_name" => $img['image_name']
 				]);
 			}
-
 			
 			if($data->company_name != ''){
 				$this->db->where("store_id",$data->store_id);
 				$this->db->update("store",[
 					"store_name" => $data->company_name
 				]);
-			}
-			
+			}			
 
 			$this->db->where("store_address_id",$data->store_address_id);
 			$this->db->update("store_address",[
@@ -508,25 +423,6 @@ class Account extends CI_Controller {
 	    }
 	}
 
-	// public function delete(){
-	// 	$data = $this->post;
-		
-	// 	$this->db->trans_start();
-	// 	$this->db->where("store_id", $data->store_id);
-	// 	$this->db->where("user_id", $data->user_id);
-	// 	$this->db->update("user",[
-	// 		"deleted" => time()
-	// 	]);
-
-	// 	$this->db->trans_complete();
-
- //        if ($this->db->trans_status() === FALSE){
- //            echo json_encode(["status" => false , "message" => "Failed", "action" => "edit"]);
- //        }else{
- //            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "edit"]);
- //        }
-	// }
-
 	private function login_trail($user_id){
         $result = $this->db->insert("login_trail" , [
             "user_id"       => $user_id ,
@@ -537,9 +433,6 @@ class Account extends CI_Controller {
     }
 
     private function save_profile_image($user_id){
-
-		$allowed = validate_app_token($this->post->token);
-    	if($allowed){
 
 			$image = $this->post->image;
 
@@ -580,15 +473,11 @@ class Account extends CI_Controller {
 		    );
 
 	        return $img;
-	    }else{
-	    	echo json_encode(["status" => true , "message" => "403: Access Forbidden", "action" => "save_profile_image"]);
-	    }
 	}
 
 	private function save_logo($store_id){
 
-		$allowed = validate_app_token($this->post->token);
-		if($allowed){
+		
 			$image = $this->post->logo;
 
 			$name = md5($store_id).'_'.time().'.PNG';
@@ -628,9 +517,6 @@ class Account extends CI_Controller {
 		    );
 
 	        return $img;
-	    }else{
-	    	echo json_encode(["status" => true , "message" => "403: Access Forbidden", "action" => "save_logo"]);
-	    }
 	}
 
 	public function get_all_emp(){

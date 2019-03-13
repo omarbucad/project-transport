@@ -49,30 +49,21 @@
                 </li>
                 <?php endif; ?>
                 <?php if($session_data->role != "SUPER ADMIN") : ?>
-
-                    <?php if($session_data->expired == false) : ?>
-                        <?php if($session_data->role != "MECHANIC") : ?>
-                            <li class="<?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
-                                <a href="<?php echo site_url('app/vehicle/'); ?>">
-                                    <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
-                                </a>
-                            </li>
-                        <!-- <li class="panel panel-default dropdown <?php //echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
-                            <a data-toggle="collapse" href="#dropdown-element-vechile">
-                                <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
-                            </a> -->
-                            <!-- Dropdown level 1 -->
-                            <!-- div id="dropdown-element-vechile" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <ul class="nav navbar-nav">
-                                        <li><a href="<?php //echo site_url("app/vehicle/truck"); ?>">Vehicle</a></li>
-                                        <li><a href="<?php //echo site_url("app/vehicle/trailer"); ?>">Trailer</a></li>
-                                    </ul>
-                                </div>
+                    <li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'vehicle') ? "active" : "" ;?>">
+                        <a data-toggle="collapse" href="#dropdown-element-vehicle">
+                            <span class="icon fa fa-truck"></span><span class="title">Vehicle</span>
+                        </a>
+                        <!-- Dropdown level 1 -->
+                        <div id="dropdown-element-vehicle" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul class="nav navbar-nav">
+                                    
+                                    <li><a href="<?php echo site_url("app/vehicle/"); ?>">Manage Vehicles</a></li>
+                                    <li><a href="<?php echo site_url("app/vehicle/tire_reports"); ?>">Tyre Reports</a></li>
+                                </ul>
                             </div>
-                        </li> -->
-                        <?php endif; ?>
-                    <?php endif; ?>
+                        </div>
+                    </li>
                 <?php if($session_data->expired == false) : ?>
                     <!-- li class="panel panel-default dropdown <?php echo ($this->uri->segment(2) == 'report') ? "active" : "" ;?>">
                         <a data-toggle="collapse" href="#dropdown-element-report" id="reports-menu-header">

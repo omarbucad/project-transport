@@ -166,7 +166,6 @@ class Checklist_model extends CI_Model {
             create_index_html($folder);
         }
 
-
         $config['upload_path']      = $folder;
         $config['allowed_types']    = 'jpg|jpeg|png';
         if(isset($file[0])){
@@ -176,7 +175,6 @@ class Checklist_model extends CI_Model {
             $this->load->library('image_lib');
 
             foreach($file as $k =>$val){
-
 
                 $_FILES['file']['name'] = $data[$k]['name'];
                 $_FILES['file']['type'] = $data[$k]['type'];
@@ -255,7 +253,6 @@ class Checklist_model extends CI_Model {
             create_index_html($folder);
         }
 
-
         $config['upload_path']      = $folder;
         $config['allowed_types']    = 'jpg|jpeg|png';
         if(isset($file[0])){
@@ -265,7 +262,6 @@ class Checklist_model extends CI_Model {
             $this->load->library('image_lib');
 
             foreach($file as $k =>$val){
-
 
                 $_FILES['help_img']['name'] = $data[$k]['name'];
                 $_FILES['help_img']['type'] = $data[$k]['type'];
@@ -407,8 +403,7 @@ class Checklist_model extends CI_Model {
         //         }                       
         //     }
         //     $help = $this->upload_helpimage($helpbatch);
-        // }
-        
+        // }        
         
         $batch = array();
         foreach($items['id'] as $k => $id){
@@ -490,7 +485,6 @@ class Checklist_model extends CI_Model {
             "item_name" => $name,
             "item_position" => $position
         ]);
-
     }   
 
     public function delete_checklist($checklist_id){
@@ -508,8 +502,7 @@ class Checklist_model extends CI_Model {
             $this->db->update("checklist_items",[
                 "deleted" => time()
             ]);
-        }
-        
+        }        
 
         $this->db->trans_complete();
 
@@ -631,7 +624,6 @@ class Checklist_model extends CI_Model {
     }
 
      public function upload_item_image($item_id){
-        //print_r_die($_FILES);
 
         $file = $_FILES['file'];
         
@@ -668,9 +660,6 @@ class Checklist_model extends CI_Model {
     }
 
     public function get_checklist_dropdown(){
-       // $store_id = $this->data['session_data']->store_id;
-
-
         $this->db->where("deleted IS NULL");
         $this->db->where("status !=", 0);
 

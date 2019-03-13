@@ -114,7 +114,7 @@ if( ! function_exists('remind_in')){
     }
 }
 
-if ( ! function_exists('report_type'))
+if ( ! function_exists('report_status'))
 {
     function report_status($type , $raw = false)
     {

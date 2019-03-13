@@ -52,14 +52,14 @@
                 <i class="fa fa-times icon"></i>
             </button>
             <li class="dropdown danger">
-                <a href="#" class="dropdown-toggle notify-click" data-toggle="dropdown" role="button" aria-expanded="false" ><i class="fa fa-comment"></i> <?php echo $notification_list->unread_count; ?></a>
+                <a href="#" class="dropdown-toggle notify-click" data-toggle="dropdown" role="button" aria-expanded="false" ><i class="fa fa-comment"></i> <?php echo (isset($notification_list->unread_count)) ? $notification_list->unread_count: 0; ?></a>
                 <ul class="dropdown-menu danger animated fadeInDown" style="width: 450px;">
                     <li class="title">
                         Notifications
                     </li>
                     <li>
                         <ul class="list-group notifications">
-                            <?php if($notification_list->notifications) : ?>
+                            <?php if(!empty($notification_list->notifications)) : ?>
                                 <?php foreach($notification_list->notifications as $row) : ?>
                                     <a href="javascript:void(0);" data-href="<?php echo $row->url; ?>" data-id="<?php echo $row->id; ?>" class="read-notif">
                                         <li class="list-group-item  <?php echo ($row->isread == '1') ? '' : 'unread'; ?>">

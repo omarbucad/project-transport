@@ -229,14 +229,15 @@ class Setup extends MY_Controller {
 		$user_id = $this->data['session_data']->user_id;
 
 		$this->form_validation->set_rules('display_name'	, 'Display Name'	, 'trim|required');
-		$this->form_validation->set_rules('first_name'		, 'First Name'		, 'trim|required');
-		$this->form_validation->set_rules('last_name'		, 'Last Name'		, 'trim|required');
+		$this->form_validation->set_rules('firstname'		, 'First Name'		, 'trim|required');
+		$this->form_validation->set_rules('lastname'		, 'Last Name'		, 'trim|required');
 		$this->form_validation->set_rules('phone'			, 'Phone Number'	, 'trim|required');
 
 		$this->form_validation->set_rules('physical[street1]'	, 'Street 1'	, 'trim|required');
 		$this->form_validation->set_rules('physical[city]'		, 'City'	, 'trim|required');
 		$this->form_validation->set_rules('physical[state]'		, 'State'	, 'trim|required');
 		$this->form_validation->set_rules('physical[country]'	, 'Country'	, 'trim|required');
+		$this->form_validation->set_rules('physical[countryCode]'	, 'Country'	, 'trim|required');
 
 		if($this->input->post("password") != ""){
 			$this->form_validation->set_rules('password'		    , 'Password'		  , 'trim|required|min_length[5]');
@@ -295,7 +296,7 @@ class Setup extends MY_Controller {
 	}
 
 	public function get_client_token(){
-		echo json_encode($this->braintree_lib->create_client_token());
+		echo json_encode(["token" => $this->braintree_lib->create_client_token(), "status" => "true", "message" => "OK"]);
 	}
 
 	public function pay(){

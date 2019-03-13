@@ -32,7 +32,7 @@ class Report extends CI_Controller {
 	        $end = strtotime(trim($today.' 23:59'));
 	        $this->db->trans_start();
 
-			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_name, s.logo_image_path");
+			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  r.isFullTank, r.currentMileage, r.currentMileageImage, r.fuelFilled, r.fuelFilledImage, c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_name, s.logo_image_path");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
 			$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 			$this->db->select("c.checklist_name");
@@ -201,7 +201,7 @@ class Report extends CI_Controller {
 	  //       $start = strtotime(trim($today.' 00:00'));
 	  //       $end   = strtotime(trim($today.' 23:59'));
 
-			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_path, s.logo_image_name");
+			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,   r.isFullTank, r.currentMileage, r.currentMileageImage, r.fuelFilled, r.fuelFilledImage, c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_path, s.logo_image_name");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
 			$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 			$this->db->select("c.checklist_name");
@@ -414,7 +414,7 @@ class Report extends CI_Controller {
 
 			$this->db->trans_start();
 
-			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name,s.logo_image_name, s.logo_image_path");
+			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,   r.isFullTank, r.currentMileage, r.currentMileageImage, r.fuelFilled, r.fuelFilledImage, c.vehicle_type_id ,vt.type, s.store_name,s.logo_image_name, s.logo_image_path");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
 			$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 			$this->db->select("c.checklist_name");
@@ -573,7 +573,7 @@ class Report extends CI_Controller {
 		if($allowed){
 			$data = $this->post;
 			if($data){
-				$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name,s.logo_image_name, s.logo_image_path");
+				$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file, r.isFullTank, r.currentMileage, r.currentMileageImage, r.fuelFilled, r.fuelFilledImage, c.vehicle_type_id ,vt.type, s.store_name,s.logo_image_name, s.logo_image_path");
 				$this->db->select("u.display_name , u2.display_name as updated_by");
 				$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 				$this->db->select("c.checklist_name");
@@ -950,7 +950,7 @@ class Report extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 
-			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,  c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_path, s.logo_image_name");
+			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.start_mileage , r.end_mileage , r.report_notes  , r.created, r.pdf_path, r.pdf_file,   r.isFullTank, r.currentMileage, r.currentMileageImage, r.fuelFilled, r.fuelFilledImage, c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_path, s.logo_image_name");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
 			$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 			$this->db->select("c.checklist_name");

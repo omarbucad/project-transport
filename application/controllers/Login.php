@@ -169,7 +169,7 @@ class Login extends MY_Controller {
 							$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
 							$this->email->to($email);
 							$this->email->set_mailtype("html");
-							$this->email->subject('Password Updated');
+							$this->email->subject('Password updated!');
 							$this->email->message($this->load->view('email/password_updated', $data, true));
 
 							$this->email->send();

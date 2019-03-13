@@ -313,11 +313,19 @@ class Vehicle extends MY_Controller {
 			}
 		}
 
-		$this->data['page_name'] 		= "Tire Management";
+		$this->data['page_name'] 		= "Tyre Management";
 		$this->data['result']    		=  $this->vehicle->get_tire_management($vehicle_id);
-		$this->data['main_page'] 		= "backend/page/vehicle/tire_management";
-		$this->data['plan_type']		= $this->data['session_data']->title;
+		$this->data['main_page'] 		= "backend/page/vehicle/truck/tire_management_view";
 		$this->data['types'] = $this->vehicle->vehicle_type_list();
+
+		$this->load->view('backend/master' , $this->data);
+	}
+
+	public function tire_reports(){
+		$this->data['page_name'] 		= "Tyre Management Report";
+		$this->data['result']    		=  $this->vehicle->tire_management_list();
+		$this->data['main_page'] 		= "backend/page/vehicle/truck/tire_management_list";
+		$this->data['types']			= $this->vehicle->vehicle_type_list();
 
 		$this->load->view('backend/master' , $this->data);
 	}

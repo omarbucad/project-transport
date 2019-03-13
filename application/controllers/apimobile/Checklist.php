@@ -445,7 +445,10 @@ class Checklist extends CI_Controller {
 								"report_notes"					=> (isset($value->report_notes)) ? $value->report_notes : NULL ,
 								"created"						=> strtotime(str_replace("/"," ",$value->created)),
 								"remind_in"						=> $remind_in,
-								"remind_done"					=> false
+								"remind_done"					=> false,
+								"isFullTank"					=> $value->isFullTank,
+								"currentMileage" 				=> $value->currentMileage,
+								"fuelFilled"					=> $value->fuelFilled
 							]);
 
 							$report_id = $this->db->insert_id();
@@ -456,9 +459,20 @@ class Checklist extends CI_Controller {
 							if(isset($value->end_mileage)){
 								$signature_path = $this->offline_save_signature($report_id, $value->signature);
 							}
-
-							//save checklist items
-							//$checklist = json_decode($value->checklist);
+							if(isset($value->fuelFilledImage)){
+								$fuelFilledImage = $this->offline_fuelFilledImage($report_id, $value->fuelFilledImage);
+								$this->db->where("report_id",$report_id);
+								$this->db->update("report" , [
+									"fuelFilledImage" => $fuelFilledImage
+								]);
+							}
+							if(isset($value->currentMileageImage)){
+								$currentMileageImage = $this->offline_currentMileage($report_id, $value->currentMileageImage);
+								$this->db->where("report_id",$report_id);
+								$this->db->update("report" , [
+									"currentMileageImage" => $currentMileageImage
+								]);
+							}
 						
 							foreach($value->checklist as $item){
 
@@ -530,8 +544,7 @@ class Checklist extends CI_Controller {
 										$defect++;
 									}
 								}								
-							}
-							
+							}							
 							if($defect != 0){
 								if($defect > $fixed){
 									$finalstat = 1;
@@ -556,21 +569,10 @@ class Checklist extends CI_Controller {
 							]);
 							$status_id = $this->db->insert_id();
 
-							// $this->db->where("report_id" , $report_id)->update("report" , [
-							// 	"status_id"			=> $status_id
-							// ]);
-
 							$this->db->where("report_id" , $report_id)->update("report" , [
 								"report_number"		=> $report_number,
 								"status_id"			=> $status_id ,
 							]);
-							
-
-							// $this->db->where("vehicle_registration_number",$value->vehicle_registration_number);
-							// $this->db->update("vehicle",[
-							// 	"last_checked" => $value->last_checked,
-							// 	"status" => 2
-							// ]);
 
 							$this->db->insert("vehicles_used",[
 								"user_id" => $value->user_id,
@@ -643,27 +645,6 @@ class Checklist extends CI_Controller {
 		}
 	}
 
-	
-	// private function finalStatus(){
-	// 	$data = (object)$this->input->post();
-	// 	$checklist = json_decode($data->checklist);
-	// 	$_isDefect = false;
-
-	// 	foreach($checklist as $row){
-	// 		if($row->checkbox == 1){
-	// 			$_isDefect = true;
-	// 		}
-	// 		if($row->update_check == 1){
-	// 			$_isDefect = true;
-	// 		}
-	// 		if($row->final_update_check == 1){
-	// 			$_isDefect = true;
-	// 		}
-	// 	}
-
-	// 	return $_isDefect;
-	// }
-
 	private function save_update_image($report_id , $report_checklist_id , $images){
 
 		$allowed = validate_app_token($this->post->token);
@@ -685,7 +666,6 @@ class Checklist extends CI_Controller {
 		            mkdir($folder.'/thumbnail', 0777, true);
 		            create_index_html($folder);
 		        }
-
 
 		        $path = $folder.'/'.$name;
 
@@ -720,8 +700,7 @@ class Checklist extends CI_Controller {
 		        $year = date("Y");
 		        $month = date("m");
 		        
-		        $folder = "./public/upload/report/finalupdate/".$year."/".$month;
-		        
+		        $folder = "./public/upload/report/finalupdate/".$year."/".$month;		        
 		        $date = time();
 
 		        if (!file_exists($folder)) {
@@ -731,9 +710,7 @@ class Checklist extends CI_Controller {
 		            create_index_html($folder);
 		        }
 
-
 		        $path = $folder.'/'.$name;
-
 			    $data = base64_decode($img);
 
 			    //make sure you are the owner and have the rights to write content
@@ -751,9 +728,7 @@ class Checklist extends CI_Controller {
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "save_image"]);
 		}	
-	}
-
-	
+	}	
 
 	private function isDefect(){
 		$data = (object)$this->input->post();
@@ -853,6 +828,74 @@ class Checklist extends CI_Controller {
 	        return $year."/".$month.'/'.$name;
 	    }else{
 	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "save_signature"]);
+	    }
+	}
+
+	private function offline_currentMileage($report_number, $base64){
+
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+
+			$image = $base64;
+			$name = $report_number.'_'.time().'.PNG';
+	        $year = date("Y");
+	        $month = date("m");
+	        
+	        $folder = "./public/upload/currentMileage/".$year."/".$month;
+	        
+	        $date = time();
+
+	        if (!file_exists($folder)) {
+	            mkdir($folder, 0777, true);
+	            create_index_html($folder);
+	        }
+
+	        $path = $folder.'/'.$name;
+
+	        $image;
+		    $data = base64_decode($image);
+
+
+		    //make sure you are the owner and have the rights to write content
+		    file_put_contents($path, $data);
+
+	        return $year."/".$month.'/'.$name;
+	    }else{
+	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "offline_currentMileage"]);
+	    }
+	}
+
+	private function offline_fuelFilledImage($report_number, $base64){
+
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+
+			$image = $base64;
+			$name = $report_number.'_'.time().'.PNG';
+	        $year = date("Y");
+	        $month = date("m");
+	        
+	        $folder = "./public/upload/fuelFilled/".$year."/".$month;
+	        
+	        $date = time();
+
+	        if (!file_exists($folder)) {
+	            mkdir($folder, 0777, true);
+	            create_index_html($folder);
+	        }
+
+	        $path = $folder.'/'.$name;
+
+	        $image;
+		    $data = base64_decode($image);
+
+
+		    //make sure you are the owner and have the rights to write content
+		    file_put_contents($path, $data);
+
+	        return $year."/".$month.'/'.$name;
+	    }else{
+	    	echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "offline_fuelFilledImage"]);
 	    }
 	}
 

@@ -9,7 +9,6 @@ class Dashboard extends MY_Controller {
        $this->load->model('accounts_model', 'accounts');
        $this->load->model('report_model', 'report');
        $this->data['notification_list'] = $this->notification->notify_list();
-
     }
 
 	public function index(){

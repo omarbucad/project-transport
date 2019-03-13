@@ -79,25 +79,6 @@ class Vehicle extends CI_Controller {
 	    }
 	}
 
-	// public function delete(){
-	// 	$data = $this->post;
-		
-	// 	$this->db->trans_start();
-	// 	$this->db->where("store_id",$data->store_id);
-	// 	$this->db->where("vehicle_id", $data->vehicle_id);
-	// 	$this->db->update("vehicle",[
-	// 		"deleted" => time()
-	// 	]);
-
-	// 	$this->db->trans_complete();
-
- //        if ($this->db->trans_status() === FALSE){
- //            echo json_encode(["status" => false , "message" => "Failed", "action" => "delete"]);
- //        }else{
- //            echo json_encode(["status" => true , "message" => "Deleted Successfully", "action" => "delete"]);
- //        }
-	// }
-
 	public function multiple_delete(){
 		
 		$allowed = validate_app_token($this->post->token);
@@ -493,60 +474,61 @@ class Vehicle extends CI_Controller {
 					$data = (object)json_decode($data);
 
 					if($data){
-						$this->db->trans_start();
+						foreach($data as $ind => $val){
+							$this->db->trans_start();
 
-						$tire_report = $this->db->insert("tire_report", [
-							"vehicle_id" => $data->vehicle_id,
-							"status" => $data->status,
-							"created" => $data->created
-						]);
-						if($tire_report){
-							$tire_report_id = $this->db->insert_id();
-							foreach ($data->tire_info_report as $key => $value) {
-								$tire_info = $this->db->insert("tire_info_report",[
-									"vt_id" => $value->vt_id,
-									"tire_report_id" => $tire_report_id,
-									"current_pressure" => $value->current_pressure,
-									"cp_time" => $value->cp_time,
-									"new_pressure" => $value->new_pressure,
-									"np_time" => $value->np_time,
-									"left_treadDepth" => $value->left_treadDepth,
-									"left_td_time" => $value->left_td_time,
-									"right_treadDepth" => $value->right_treadDepth,
-									"right_td_time" => $value->right_td_time,
-									"is_damage" => $value->is_damage,
-									"damage_time" => $value->damage_time,
-									"note" => $value->note,
-									"tire_status" => $value->status
-								]);
-								if($tire_info){
-									$tire_info_report_id = $this->db->insert_id();
-									if(!empty($value->damage_images)){
-										$this->tire_image($tire_info_report_id , $tire_report_id, 1,$value->images);
+							$tire_report = $this->db->insert("tire_report", [
+								"vehicle_id" => $val->vehicle_id,
+								"status" => $val->status,
+								"created" => $val->created
+							]);
+							if($tire_report){
+								$tire_report_id = $this->db->insert_id();
+								foreach ($val->tire_info_report as $key => $value) {
+									$tire_info = $this->db->insert("tire_info_report",[
+										"vt_id" => $value->vt_id,
+										"tire_report_id" => $tire_report_id,
+										"current_pressure" => $value->current_pressure,
+										"cp_time" => $value->cp_time,
+										"new_pressure" => $value->new_pressure,
+										"np_time" => $value->np_time,
+										"left_treadDepth" => $value->left_treadDepth,
+										"left_td_time" => $value->left_td_time,
+										"right_treadDepth" => $value->right_treadDepth,
+										"right_td_time" => $value->right_td_time,
+										"is_damage" => $value->is_damage,
+										"damage_time" => $value->damage_time,
+										"note" => $value->note,
+										"tire_status" => $value->status
+									]);
+									if($tire_info){
+										$tire_info_report_id = $this->db->insert_id();
+										if(!empty($value->damage_images)){
+											$this->tire_image($tire_info_report_id , $tire_report_id, 1,$value->images);
+										}
+
+										if(!empty($value->tread_images)){
+											$this->tire_image($tire_info_report_id , $tire_report_id, 2,$value->images);
+										}
+									}else{
+										echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"]);
+										return false;
 									}
+								}	
 
-									if(!empty($value->tread_images)){
-										$this->tire_image($tire_info_report_id , $tire_report_id, 2,$value->images);
-									}
-								}else{
-									echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"]);
-									return false;
-								}
-							}	
+							}else{
+								echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"]);
+								return false;
+							}
 
-						}else{
-							echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"]);
-							return false;
+							$this->db->trans_complete();
+
+							if($this->db->trans_status() === FALSE){
+								echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "save_tire_management"]);
+							}else{
+								echo json_encode(["status" => true , "message" => "Saved Successfully", "action" => "save_tire_management"]);
+							}
 						}
-
-						$this->db->trans_complete();
-
-						if($this->db->trans_status() === FALSE){
-							echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "save_tire_management"]);
-						}else{
-							echo json_encode(["status" => true , "message" => "Saved Successfully", "action" => "save_tire_management"]);
-						}
-
 					}else{
 						echo json_encode(["status" => false , "message" => "Data is empty","action" => "save_tire_management"]);
 					}
@@ -578,7 +560,6 @@ class Vehicle extends CI_Controller {
 	            create_index_html($folder);
 	        }
 
-
 	        $path = $folder.'/'.$name;
 
 		    $data = base64_decode($img);
@@ -604,20 +585,19 @@ class Vehicle extends CI_Controller {
 			if(!empty($_FILES)){
 				if($_FILES['data']['error'] == 0){
 					$data = file_get_contents($_FILES['data']['tmp_name']);
-
 					$data = (object)json_decode($data);
 
 					if($data){
-						$this->db->trans_start();
-							if(isset($data->axle)){
-								$this->db->where("vehicle_id", $data->vehicle_id)->update("vehicle",[
-									"axle" => $data->axle
+						foreach ($data as $ind => $val) {
+							$this->db->trans_start();
+							if(isset($val->axle)){
+								$this->db->where("vehicle_id", $val->vehicle_id)->update("vehicle",[
+									"axle" => $val->axle
 								]);
 							}
-
-							foreach ($data->tire as $key => $value) {
+							foreach ($val->tire as $key => $value) {
 								$this->db->where("vt_id", $value->vt_id);
-								$this->db->where("vehicle_id",$data->vehicle_id);
+								$this->db->where("vehicle_id",$val->vehicle_id);
 								$this->db->update("vehicle_tires",[
 									"axle_no" => $value->axle_no,
 									"tire_count" => $value->tire_count,
@@ -625,13 +605,13 @@ class Vehicle extends CI_Controller {
 									"deleted" => ($value->deleted == '') ? NULL : convert_timezone(strtotime(str_replace("/"," ",$value->deleted)), true, false)
 								]);
 							}
-
-						$this->db->trans_complete();
-						if ($this->db->trans_status() === FALSE){
-							echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "update_tires"]);
-						}else{
-							echo json_encode(["status" => true , "message" => "Saved Successfully", "action" => "update_tires"]);
-						}
+							$this->db->trans_complete();
+							if ($this->db->trans_status() === FALSE){
+								echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "update_tires"]);
+							}else{
+								echo json_encode(["status" => true , "message" => "Saved Successfully", "action" => "update_tires"]);
+							}
+						}						
 					}else{
 						echo json_encode(["status" => false , "message" => "Data is empty","action" => "update_tires"]);
 					}
@@ -640,8 +620,7 @@ class Vehicle extends CI_Controller {
 				}
 			}else{
 				echo json_encode(["status" => false , "message" => "No file","action" => "update_tires"]);
-			}
-			
+			}			
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "update_tires"]);
 		}
@@ -708,8 +687,7 @@ class Vehicle extends CI_Controller {
 				$data = $this->db->get("vehicle")->result();
 
 				if($data){
-					$this->db->select('vt_id, axle_no, tire_count, position, created');
-					//$this->db->where('deleted IS NULL');
+					$this->db->select('vt_id, axle_no, tire_count, position, created, deleted');
 					$data->tires = $this->db->where("vehicle_id",$data->vehicle_id)->get("vehicle_tires")->result();
 				}else{
 					return false;
@@ -735,11 +713,9 @@ class Vehicle extends CI_Controller {
 		if($allowed){
 			if($data){
 				$this->db->trans_start();
-				$this->db->select("tir.*");
-				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id");
+				$this->db->select("tr.*, v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.axle, v.driver_seat_position");
 				$this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
-				$this->db->where("tr.deleted IS NULL");
-				$this->db->where("store_id",$data->store_id);				
+				$this->db->where("tr.store_id",$data->store_id);				
 				$this->db->where("v.is_active",1);
 				if(isset($data->vehicle_id)){
 					$this->db->where("v.vehicle_id",$data->vehicle_id);
@@ -752,17 +728,23 @@ class Vehicle extends CI_Controller {
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
 				}else{
 					foreach ($data as $key => $value) {
-						$this->db->select('image_name,image_path');
-						$this->db->where('tire_report_id', $value->tire_report_id);
-						$this->db->where("tir_id", $value->tir_id);
-						$damage_images = $this->db->where("type",1)->get('tire_images')->result();
-						$data[$key]->damage_images = $damage_images;
+						$this->db->select("tir.*, ");
+						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
+						$this->db->where("tir.tire_report_id",$value->tire_report_id);
+						$data->tires = $this->db->get("tire_info_report tir")->result();
+						foreach ($data->tires as $k => $v) {
+							$this->db->select('image_name,image_path');
+							$this->db->where('tire_report_id', $value->tire_report_id);
+							$this->db->where("tir_id", $value->tir_id);
+							$damage_images = $this->db->where("type",1)->get('tire_images')->result();
+							$data->tires[$k]->damage_images = $damage_images;
 
-						$this->db->select('image_name,image_path');
-						$this->db->where('tire_report_id', $value->tire_report_id);
-						$this->db->where("tir_id", $value->tir_id);
-						$tread_images = $this->db->where("type",2)->get('tire_images')->result();
-						$data[$key]->tread_images = $tread_images;
+							$this->db->select('image_name,image_path');
+							$this->db->where('tire_report_id', $value->tire_report_id);
+							$this->db->where("tir_id", $value->tir_id);
+							$tread_images = $this->db->where("type",2)->get('tire_images')->result();
+							$data->tires[$k]->tread_images = $tread_images;
+						}
 					}
 					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
 				}
@@ -780,8 +762,7 @@ class Vehicle extends CI_Controller {
 		if($allowed){
 			if($data){
 				$this->db->trans_start();
-
-				$this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id");
+				$this->db->select("tr.*,  v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.axle, v.driver_seat_position");
 				$this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
 				$this->db->where("v.is_active",1);
 				$this->db->where("tr.deleted IS NULL");
@@ -795,17 +776,23 @@ class Vehicle extends CI_Controller {
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
 				}else{
 					foreach ($data as $key => $value) {
-						$this->db->select('image_name,image_path');
-						$this->db->where('tire_report_id', $value->tire_report_id);
-						$this->db->where("tir_id", $value->tir_id);
-						$damage_images = $this->db->where("type",1)->get('tire_images')->result();
-						$data[$key]->damage_images = $damage_images;
+						$this->db->select("tir.*, ");
+						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
+						$this->db->where("tir.tire_report_id",$value->tire_report_id);
+						$data->tires = $this->db->get("tire_info_report tir")->result();
+						foreach ($data->tires as $k => $v) {
+							$this->db->select('image_name,image_path');
+							$this->db->where('tire_report_id', $value->tire_report_id);
+							$this->db->where("tir_id", $value->tir_id);
+							$damage_images = $this->db->where("type",1)->get('tire_images')->result();
+							$data->tires[$k]->damage_images = $damage_images;
 
-						$this->db->select('image_name,image_path');
-						$this->db->where('tire_report_id', $value->tire_report_id);
-						$this->db->where("tir_id", $value->tir_id);
-						$tread_images = $this->db->where("type",2)->get('tire_images')->result();
-						$data[$key]->tread_images = $tread_images;
+							$this->db->select('image_name,image_path');
+							$this->db->where('tire_report_id', $value->tire_report_id);
+							$this->db->where("tir_id", $value->tir_id);
+							$tread_images = $this->db->where("type",2)->get('tire_images')->result();
+							$data->tires[$k]->tread_images = $tread_images;
+						}
 					}
 					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
 				}

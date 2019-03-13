@@ -417,7 +417,65 @@ class Vehicle_model extends CI_Model {
             return false;
         }else{
             return true;
+        }        
+    }
+
+    public function tire_management_list(){
+        $this->db->trans_start();
+
+        $this->db->select("tir.*");
+        $this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id");
+        $this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
+        $this->db->where("tr.store_id",$this->session->userdata("user")->store_id);               
+        $this->db->where("v.is_active",1);
+        // if(isset($data->vehicle_id)){
+        //     $this->db->where("v.vehicle_id",$vehicle_id);
+        // }
+
+        if($this->input->get("registration_number") != ""){
+            $this->db->where("v.vehicle_registration_number", $this->input->get("registration_number"));
         }
-        
+
+        if($this->input->get("type") != ""){
+            $this->db->where("v.vehicle_type_id", $this->input->get("type"));
+        }
+
+        if($this->input->get("status") != ""){
+            $this->db->where("tr.status", $this->input->get("status"));
+        }
+
+        if($this->input->get("created") != ""){
+            $date =  $this->input->get("created");
+
+            $date  = explode("-", $date);
+            $start = strtotime(trim($date[0].' 00:00'));
+            $end   = strtotime(trim($date[1].' 23:59'));
+
+            $this->db->where("tr.created >= " , $start);
+            $this->db->where("tr.created <= " , $end);
+        }
+
+        $this->db->order_by("tr.created","DESC");
+        $data = $this->db->get("tire_report tr")->result();
+
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            foreach ($data as $key => $value) {
+                $this->db->select('image_name,image_path');
+                $this->db->where('tire_report_id', $value->tire_report_id);
+                $this->db->where("tir_id", $value->tir_id);
+                $damage_images = $this->db->where("type",1)->get('tire_images')->result();
+                $data[$key]->damage_images = $damage_images;
+
+                $this->db->select('image_name,image_path');
+                $this->db->where('tire_report_id', $value->tire_report_id);
+                $this->db->where("tir_id", $value->tir_id);
+                $tread_images = $this->db->where("type",2)->get('tire_images')->result();
+                $data[$key]->tread_images = $tread_images;
+            }
+           return $data;
+        }
     }
 }
