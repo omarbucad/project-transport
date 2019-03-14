@@ -70,7 +70,7 @@ class Login extends CI_Controller {
 					}					
 				}
 				$data->expired = $expired;
-				$data->expiring_in = $this->profile->get_userplan($data->user_id);
+				$data->expiring_in = $this->profile->get_userplan($data->store_id);
 				$data->servertime = time();
 				$token = generate_app_token($data->user_id, $device_id, $device_type);
 				$data->vehicle_free_trial = "10";

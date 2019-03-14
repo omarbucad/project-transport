@@ -51,29 +51,25 @@ class Accounts_model extends CI_Model {
         return $result;
     }
 
-    public function user_data($user_id){
-        $result = $this->db->where("u.user_id",$user_id)->get("user u")->row();
-        $result->created = convert_timezone($result->created,true);
+    public function user_data($store_id){
+        // $result = $this->db->where("u.user_id",$user_id)->get("user u")->row();
+        // $result->created = convert_timezone($result->created,true);
+        $result = new stdClass();
 
-        $this->db->select("i.*, up.plan_created, up.plan_expiration, up.billing_type, up.who_updated, u2.display_name as updated_by, s.store_name, sa.* ,p.*");
-
-        $this->db->join("user_plan up","up.user_plan_id = i.user_plan_id");        
-        $this->db->join("user u2","u2.user_id = up.who_updated");        
+        $this->db->select("up.*, s.store_name, sa.* ,p.*");     
         $this->db->join("plan p","p.planId = up.plan_id");
-        $this->db->join("store s","s.store_id = i.store_id");
+        $this->db->join("store s","s.store_id = up.store_id");
         $this->db->join("store_address sa","sa.store_address_id = s.address_id");
-        $this->db->where("i.deleted IS NULL");
-        $this->db->where("i.user_id",$user_id);
+        $this->db->where("up.store_id",$store_id);
 
-        $result->subscription = $this->db->order_by("i.created","DESC")->get("invoice i")->result();
+        $result->subscription = $this->db->order_by("up.plan_created","DESC")->get("user_plan up")->result();
         
 
         foreach($result->subscription as $k => $row){
-            $result->subscription[$k]->created = convert_timezone($row->created,true);
             $result->subscription[$k]->plan_created = convert_timezone($row->plan_created,true);
             $result->subscription[$k]->plan_expiration = convert_timezone($row->plan_expiration,true);
-            $result->subscription[$k]->price = custom_money_format($row->price);
-            $result->subscription[$k]->plan_price = custom_money_format($row->plan_price);
+            // $result->subscription[$k]->price = custom_money_format($row->price);
+            // $result->subscription[$k]->plan_price = custom_money_format($row->plan_price);
 
             $result->subscription[$k]->address = $row->street1;
             $result->subscription[$k]->address .= ($row->street2) ? ", ".$row->street2 : "";

@@ -144,9 +144,9 @@ class Profile_model extends CI_Model {
         }
     }
 
-    public function get_userplan($user_id){
+    public function get_userplan($store_id){
         $this->db->select("up.*,p.*");
-        $this->db->where("u.user_id",$user_id);
+        $this->db->where("up.store_id",$store_id);
         $this->db->where("up.active",1);
         $this->db->join("user u","u.store_id = up.store_id");
         $this->db->join("plan p","p.planId = up.plan_id");
