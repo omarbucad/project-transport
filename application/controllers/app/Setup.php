@@ -322,13 +322,29 @@ class Setup extends MY_Controller {
 		$customer = $this->braintree_lib->web_customer_data($details);
 
 		if(!empty($customer)){
+
 			$result = $this->braintree_lib->create_websubscription_token([
 				"planId" => $_POST['planId'],
-				"paymentMethodToken" => $customer->customer[0]->token
+				"paymentMethodToken" => $customer->customer[0]->token,
+				"addOnId" => $_POST['add_on_id'],
+				"quantity" => $_POST['vehicle_count']
 			]);
 
-			//print_r_die($result);
 			if($result->success){
+				if($_POST['planId'] == 'sandbox_custom_monthly'){
+					$billing = 'MONTHLY';
+				}else{
+					$billing = 'YEARLY';
+				}
+				$data = [
+					"store_id" => $this->session->userdata("user")->store_id,
+					"user_id" => $this->session->userdata("user")->user_id,
+					"planId" => $_POST['planId'],
+					"vehicle_limit" => $_POST['vehicle_count'],
+					"subscription_id" => $result->subscription->id,
+					"billing_type" => $billing
+				];
+				$this->update_subscription($data);
 				$this->session->set_flashdata('status' , 'success');	
 				$this->session->set_flashdata('message' , 'Subscribed Successfully');
 
@@ -342,18 +358,6 @@ class Setup extends MY_Controller {
 
 		}
 
-		// $result = Braintree_Transaction::sale([
-		//   'amount' => $_POST['amount'], 
-		//   'paymentMethodNonce' => $_POST['payment_method_nonce'],
-		//   'customer' => [
-		//     'firstName' => $data->firstname,
-		//     'lastName' => $data->lastname,    
-		//   ], 
-		//   'options' => [
-		//     'submitForSettlement' => true
-		//   ]
-		// ]);
-
 		if ($result->success === true) {
 		    redirect('/app/setup/account/manage', 'refresh');
 		}
@@ -362,6 +366,120 @@ class Setup extends MY_Controller {
 		    die();
 		}
 
+	}
+
+	public function update_subscription($data){
+
+		$this->db->trans_start();
+        
+        $this->db->where("store_id", $data['store_id']);
+        $this->db->where("active", 1);
+        $deactivated = $this->db->update("user_plan",[
+            "active" => 0,
+            "updated" => time(),
+            "who_updated" => NULL
+        ]);
+
+        if($deactivated){
+            if($data['billing_type'] == 'MONTHLY'){
+                $billing = " + 1 month";
+            }else if($data['billing_type'] == 'YEARLY'){
+                $billing = " + 1 year";
+            }else{
+                $billing = "N/A";
+            }
+            $expiration = 0;
+            $created = date("d/M/Y H:i:s A", time());
+
+            $new = $this->db->insert("user_plan",[
+                "store_id" => $data['store_id'],
+                "plan_id" => $data['planId'],
+                "subscription_id" => $data['subscription_id'],
+                "vehicle_limit" => $data['vehicle_limit'],
+                "plan_created" => strtotime(str_replace("/"," ",$created)),
+                "plan_expiration" => ($billing == 'N/A') ? NULL : strtotime(trim(str_replace("/"," ",$created) . $billing)),
+                "billing_type" => $data['billing_type'],
+                "who_updated" => NULL,
+                "active" => 1,
+                "updated" => NULL
+            ]);
+            if($new){
+            	$users_list = $this->db->where("store_id",$data['store_id'])->get("user")->result();
+
+	            foreach ($users_list as $key => $value) {
+	            	// if(($data->planId == 'custom_monthly') || ($data->planId == 'custom_yearly') || ($data->planId == 'premium_monthly') || ($data->planId == 'premium_yearly')){
+	                if(($data['planId'] == 'sandbox_custom_monthly') || ($data['planId'] == 'sandbox_custom_yearly') || ($data['planId'] == 'sandbox_premium_monthly') || ($data['planId'] == 'sandbox_premium_yearly')){
+	                    switch ($value->role) {
+	                        case 'DRIVER':
+	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN PREMIUM"]);
+	                            continue;
+	                        case 'ADMIN FREE':
+	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN PREMIUM"]);
+	                            continue;
+	                    }
+	                // }elseif($data->planId == 'free_trial'){
+	                }elseif($data->planId == 'sandbox_free_trial'){
+	                    switch ($value->role) {
+	                        case 'DRIVER':
+	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN FREE"]);
+	                            continue;
+	                        // case 'DRIVER FREE':
+	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER PREMIUM"]);
+	                        //     continue;
+	                    }
+	                }elseif($data->planId == 'sandbox_basic_plan_trial_3'){
+	                	switch ($value->role) {
+	                        case 'DRIVER':
+	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "ADMIN FREE"]);
+	                            continue;
+	                        // case 'DRIVER FREE':
+	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER PREMIUM"]);
+	                        //     continue;
+	                    }
+	                }else{
+	                    switch ($value->role) {
+	                        case 'ADMIN PREMIUM':
+	                            $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER"]);
+	                            continue;
+	                        // case 'DRIVER PREMIUM':
+	                        //     $this->db->where("user_id",$value->user_id)->update("user",["role" => "DRIVER FREE"]);
+	                        //     continue;
+	                    }
+	                }
+	            }
+            }else{
+            	return false;
+            }            
+        }
+        $this->db->trans_complete();
+
+        $this->db->select("u.user_id , u.username, u.display_name ,u.firstname, u.lastname, u.email_address , u.role , u.store_id , u.image_path , u.image_name, u.phone, u.verified");
+        $this->db->select("s.store_name, s.logo_image_path, s.logo_image_name, a1.*, up.plan_expiration, up.user_plan_id, up.subscription_id, up.vehicle_limit, p.planId, p.title");
+
+        $this->db->join("store s" , "s.store_id = u.store_id");
+        $this->db->join("store_address a1" , "a1.store_address_id = s.address_id");
+        $this->db->join("user_plan up" , "up.store_id = u.store_id");
+        $this->db->join("plan p","p.planId = up.plan_id");
+        $this->db->where("user_id",$data['user_id']);
+        $this->db->where("up.active" , 1);
+        $this->db->where("u.deleted IS NULL");
+        $info = $this->db->get("user u")->row();
+        if($info){
+            if($info->logo_image_name != ''){
+                if($info->logo_image_path == 'public/img/'){
+                    $info->company_logo = $this->config->site_url($info->logo_image_path.$info->logo_image_name);
+                }else{
+                    $info->company_logo = $this->config->site_url("public/upload/company/".$info->logo_image_path.$info->logo_image_name);
+                }                
+            }
+        }
+        $this->session->set_userdata("user" , $info);
+        
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return $info;
+        }
 	}
 	// END OF ACCOUNT SECTION
 

@@ -545,22 +545,24 @@ class Braintree_lib extends Braintree{
     }
 
     function create_websubscription_token($data){
-        $plandata = $this->get_plan_name($data->planId);
+        $plandata = $this->get_plan_name($data['planId']);
 
         $result = Braintree_Subscription::create([
             'paymentMethodToken' => $data['paymentMethodToken'],
             'planId' => $data['planId'],
             'addOns' => [
-                'existingId' => $data->addOnId,
-                'never_expires' => true,
-                'quantity' => $data->quantity
+                'add' => [
+                    [
+                        'inheritedFromId' => $data['addOnId'],
+                        'neverExpires' => true,
+                        'quantity' => $data['quantity']
+                    ]                       
+                ]                    
             ],
             'descriptor' => [
-                'plan' => $plandata['plan'],
-                'description' => $plandata['description']
+                //'name' => "TRACKER*".$plandata['description']
+                'name' => "TRCKRTR*PLAN"
             ]
-            // 'firstBillingDate' => $now,
-            // 'options' => ['startImmediately' => true]
         ]);
 
         return $result;

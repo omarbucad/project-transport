@@ -527,12 +527,12 @@ class Account extends CI_Controller {
 			if($data->store_id){
 				
 				// $offset = (isset($data->offset)) ? $data->offset : 0;
-	   //          $limit = (isset($data->limit)) ? $data->limit : 4;
+	   			// $limit = (isset($data->limit)) ? $data->limit : 4;
 
 				$this->db->where("deleted IS NULL");
 				$this->db->where("store_id",$data->store_id);
 				//$result = $this->db->where_in("role", ["DRIVER PREMIUM","MANAGER"])->limit($limit, $offset)->get("user")->result();
-				$result = $this->db->where_in("role", ["DRIVER PREMIUM","MANAGER"])->get("user")->result();
+				$result = $this->db->where("role", "DRIVER PREMIUM")->get("user")->result();
 
 				//print_r_die($this->db->last_query());
 				if($result){

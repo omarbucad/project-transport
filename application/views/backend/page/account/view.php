@@ -165,7 +165,7 @@
         var modal = $('#payment_modal').modal("show");
         var body = modal.find('.modal-body');
         body.html("");
-        body.html("<form action='<?php echo site_url('app/setup/pay'); ?>' method='POST' class='payment-form text-center'><input type='hidden' name='planId' value=''><input type='hidden' name='vehicle_count' ><div id='dropin-container'></div><button type='submit' class='btn btn-info'>Checkout</button></form>");
+        body.html("<form action='<?php echo site_url('app/setup/pay'); ?>' method='POST' class='payment-form text-center'><input type='hidden' name='planId' value=''><input type='hidden' name='vehicle_count' ><input type='hidden' name='add_on_id'><div id='dropin-container'></div><button type='submit' class='btn btn-info'>Checkout</button></form>");
 
         $.ajax({
             url: "<?php echo site_url("app/setup/get_client_token"); ?>",
@@ -177,7 +177,11 @@
          });
         modal.find("input[name='planId']").val($(this).data("desc"));    
         modal.find("input[name='vehicle_count']").val($('#no_vehicles').val());
-        
+        if($(this).data("desc") == 'sandbox_custom_monthly'){
+            modal.find("input[name='add_on_id']").val('add_on_vehicle_monthly');    
+        }else{
+            modal.find("input[name='add_on_id']").val('add_on_vehicle_yearly');    
+        }        
      });
 
 
@@ -321,8 +325,8 @@
         <div class="container">
             <div class="container-fluid app-content-b feature-1" >
                 <div class="row">            
-                    <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;font-family: 'Roboto',sans-serif !important;">Subscription pricing</h2>
-                    <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto',sans-serif !important;">Upgrade your Plan now!</strong></h1>
+                    <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;font-family: 'Roboto',sans-serif !important;margin-bottom: 60px;">Subscription pricing</h2>
+                    <!-- <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto',sans-serif !important;">Upgrade your Plan now!</strong></h1> -->
                     <div class="col-md-4 col-sm-6" style="padding: 0;">
                         <div class="card card-1">
                           <div class="card-header card-1-header text-center">
@@ -418,7 +422,7 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-xs-12 col-lg-4">
                     <h3>Billing</h3>
                 </div>
@@ -446,19 +450,19 @@
                             </div>
                         </div>
                     </div>
-                    <form action="<?php echo ""; ?>" method="post" name="frmPayPal1">
+                    <form action="<?php //echo ""; ?>" method="post" name="frmPayPal1">
                         <input type="hidden" name="first_name" value="Customer's First Name" />
                         <input type="hidden" name="last_name" value="Customer's Last Name" />
                         <input type="hidden" name="payer_email" value="customer@example.com" />
                         <input type="hidden" name="item_number" value="123456" / >
-                        <?php if(!$this->session->userdata("user")->expired): ?>
+                        <?php// if(!$this->session->userdata("user")->expired): ?>
                             <a href="javascript:void(0);" class="btn btn-success btn-lg">Switch Plan</a>
-                        <?php else: ?>
+                        <?php //else: ?>
                             <a href="javascript:void(0);" class="btn btn-success btn-lg">Buy Now</a>
-                        <?php endif; ?>
+                        <?php //endif; ?>
                     </form>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     	<?php endif; ?>
