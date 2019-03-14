@@ -636,6 +636,7 @@ class Vehicle extends CI_Controller {
 					$data = (object)json_decode($data);
 
 					if($data){
+						print_r_die($data);
 						$this->db->trans_start();
 							if(isset($data->axle)){
 								$this->db->where("vehicle_id", $data->vehicle_id)->update("vehicle",[

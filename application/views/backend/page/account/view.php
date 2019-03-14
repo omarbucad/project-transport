@@ -365,7 +365,7 @@
                             <form action="<?php echo site_url();?>" method="POST" id="premium-form">
                                 <div class="form-group">
                                     <label>Numbers of Vehicle</label>
-                                    <input type="number" name="no_vehicles" class="form-control" id="no_vehicles">
+                                    <input type="number" name="no_vehicles" class="form-control" id="no_vehicles" min="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" value='1'>
                                 </div>
                                 <div class="form-group">
                                     <label>Subscription</label>
@@ -492,11 +492,28 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="defaultModalLabel">Payment</h4>
-                <small><strong style="color: red;">**Note: This will replace your current subscription. Any changes made can't reverted.</strong></small>
+                <small><strong style="color: red;">**Note: This will replace your current subscription. Any changes made can't be reverted.</strong></small>
             </div>
              
             <div class="modal-body">
 
+              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="vehicle_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Vehicles that will remain in your Subscription</h4>
+            </div>             
+            <div class="modal-body">
               
             </div>
             <div class="modal-footer">

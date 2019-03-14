@@ -330,24 +330,27 @@ class Setup extends MY_Controller {
 			]);
 
 			if($result->success){
-				if($_POST['planId'] == 'sandbox_custom_monthly'){
-					$billing = 'MONTHLY';
-				}else{
-					$billing = 'YEARLY';
-				}
-				$data = [
-					"store_id" => $this->session->userdata("user")->store_id,
-					"user_id" => $this->session->userdata("user")->user_id,
-					"planId" => $_POST['planId'],
-					"vehicle_limit" => $_POST['vehicle_count'],
-					"subscription_id" => $result->subscription->id,
-					"billing_type" => $billing
-				];
-				$this->update_subscription($data);
-				$this->session->set_flashdata('status' , 'success');	
-				$this->session->set_flashdata('message' , 'Subscribed Successfully');
+				$cancel = $this->braintree_lib->cancel_subscription($data->subscription_id);
+				if($cancel->success){
+					if($_POST['planId'] == 'sandbox_custom_monthly'){
+						$billing = 'MONTHLY';
+					}else{
+						$billing = 'YEARLY';
+					}
+					$data = [
+						"store_id" => $this->session->userdata("user")->store_id,
+						"user_id" => $this->session->userdata("user")->user_id,
+						"planId" => $_POST['planId'],
+						"vehicle_limit" => $_POST['vehicle_count'],
+						"subscription_id" => $result->subscription->id,
+						"billing_type" => $billing
+					];
+					$this->update_subscription($data);
+					$this->session->set_flashdata('status' , 'success');	
+					$this->session->set_flashdata('message' , 'Subscribed Successfully');
 
-				redirect("app/setup/account/pricing", 'refresh');
+					redirect("app/setup/account/pricing", 'refresh');
+					}
 			}else{
 				$this->session->set_flashdata('status' , 'error');	
 				$this->session->set_flashdata('message' , $result);
@@ -473,8 +476,8 @@ class Setup extends MY_Controller {
             }
         }
 
-        if($info->role == "ADMIN PREMIUM" || $info->role == "MECHANIC"){
-	    	if($this->session->userdata("user")->plan_expiration == ''){
+        if($info->role == "ADMIN PREMIUM"){
+	    	if($this->session->userdata("user")->plan_expiration == 0){
 	    		$expired = 0;
 	    	}else{
 	    		if(( strtotime("now") < $this->session->userdata("user")->plan_expiration) == 1){
