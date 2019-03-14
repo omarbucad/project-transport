@@ -82,8 +82,9 @@
               if(json.status){
                 
                 form.trigger('reset');
-                form.find("select[name='availability']").val(json.data.availability);  
-                form.find("#type").val(json.data.vehicle_type_id);  
+                console.log(json.data);
+                form.find("#edit_avail").attr("value",json.data.availability);  
+                form.find("#edit_type").attr("value",json.data.vehicle_type_id);  
                 form.find("input[name='vehicle_registration_number']").val(json.data.vehicle_registration_number);  
                 
               }
@@ -315,7 +316,7 @@
             </div>
             <div class="form-group">
                 <label for="type">Vehicle Type</label>
-                <select class="form-control" name="type" id="type">
+                <select class="form-control" name="type" id="edit_type">
                     <option value="">- Select Vehicle Type -</option>
                     <?php foreach($types as $key => $val) :?>
                         <option value="<?php echo $val->vehicle_type_id;?>" <?php echo ($this->input->get("type") == "<?php echo $val->vehicle_type_id;?>") ? "selected" : "" ; ?> ><?php echo $val->type;?></option>
@@ -324,7 +325,7 @@
             </div>
             <div class="form-group">
                 <label for="status">Availability</label>
-                <select class="form-control" name="availability">
+                <select class="form-control" name="availability" value="" id="edit_avail">
                     <option value="1">Available</option>
                     <option value="0">Unavailable</option> 
                 </select>

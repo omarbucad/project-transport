@@ -643,6 +643,7 @@ class Vehicle extends CI_Controller {
 									"driver_seat_position" => $data->driver_seat_position
 								]);
 							}
+							print_r_die($data->tire);
 
 							foreach ($data->tire as $key => $value) {
 								$this->db->insert("vehicle_tires",[
