@@ -78,11 +78,11 @@ class Report_model extends CI_Model {
             }else{
                 $result[$r]->company_logo = $this->config->site_url("public/upload/company/".$result[$r]->logo_image_path.$result[$r]->logo_image_name);
             }
-            //  $result[$r]->status = report_status($result[$r]->status);
+            // $result[$r]->status = report_status($result[$r]->status);
             // $result[$r]->created = convert_timezone($result[$r]->created,true);
             
 
-              // Get All Status 
+            // Get All Status 
             $this->db->select("rs.* , u.display_name");
             $this->db->join("user u", "u.user_id = rs.user_id");
             $this->db->where("rs.longitude !=", NULL);

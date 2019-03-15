@@ -4,6 +4,7 @@ class Vehicle_model extends CI_Model {
 
     public function get_vehicle_list(){
         $store_id = $this->data['session_data']->store_id;
+
         //$plan = $this->data['session_data']->title;
 
         if($date = $this->input->get("last_checked")){
@@ -67,7 +68,7 @@ class Vehicle_model extends CI_Model {
                     $result[$key]->type_img = site_url("public/img/vehicles/bus.png");
                     break;
                 case 'Trailer':
-                    $result[$key]->type_img = site_url("public/img/vehicles/trailer.png");
+                    $result[$key]->type_img = site_url("public/img/vehicles/truck2.png");
                     break;
                 case 'Cement Mixer':
                     $result[$key]->type_img = site_url("public/img/vehicles/cement_truck.png");

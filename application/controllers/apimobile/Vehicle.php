@@ -626,7 +626,6 @@ class Vehicle extends CI_Controller {
 		}
 	}
 	public function add_tire_layout(){
-		//$data = $this->post;
 		$allowed = validate_app_token($this->post->token);
 		if($allowed){
 			if(!empty($_FILES)){
@@ -652,10 +651,9 @@ class Vehicle extends CI_Controller {
 									"tire_count" => $value->tire_count,
 									"position" => $value->position,
 									"created" => strtotime(str_replace("/"," ",$value->created)),
-									"deleted" => NULL
+									"deleted" => ($value->deleted == '')? NULL : strtotime(str_replace("/"," ",$value->deleted))
 								]);
 							}
-
 						}
 						$this->db->trans_complete();
 						if ($this->db->trans_status() === FALSE){
@@ -692,11 +690,11 @@ class Vehicle extends CI_Controller {
 
 				if($data){
 					$this->db->select('vt_id, axle_no, tire_count, position, created, deleted');
-					$data->tires = $this->db->where("vehicle_id",$data->vehicle_id)->get("vehicle_tires")->result();
-					foreach ($data->tires as $key => $value) {
-						$data->tires[$key]->created = convert_timezone($value->created, true, false);
+					$data->tire = $this->db->where("vehicle_id",$data->vehicle_id)->get("vehicle_tires")->result();
+					foreach ($data->tire as $key => $value) {
+						$data->tire[$key]->created = convert_timezone($value->created, true, false);
 						if($value->deleted != ''){
-							$data->tires[$key]->deleted = convert_timezone($value->created, true, false);
+							$data->tire[$key]->deleted = convert_timezone($value->created, true, false);
 						}
 					}
 				}else{
@@ -743,19 +741,19 @@ class Vehicle extends CI_Controller {
 						$this->db->select("tir.*, ");
 						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
 						$this->db->where("tir.tire_report_id",$value->tire_report_id);
-						$data->tires = $this->db->get("tire_info_report tir")->result();
-						foreach ($data->tires as $k => $v) {
+						$data->tire = $this->db->get("tire_info_report tir")->result();
+						foreach ($data->tire as $k => $v) {
 							$this->db->select('image_name,image_path');
 							$this->db->where('tire_report_id', $value->tire_report_id);
 							$this->db->where("tir_id", $value->tir_id);
 							$damage_images = $this->db->where("type",1)->get('tire_images')->result();
-							$data->tires[$k]->damage_images = $damage_images;
+							$data->tire[$k]->damage_images = $damage_images;
 
 							$this->db->select('image_name,image_path');
 							$this->db->where('tire_report_id', $value->tire_report_id);
 							$this->db->where("tir_id", $value->tir_id);
 							$tread_images = $this->db->where("type",2)->get('tire_images')->result();
-							$data->tires[$k]->tread_images = $tread_images;
+							$data->tire[$k]->tread_images = $tread_images;
 						}
 					}
 					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
@@ -793,18 +791,18 @@ class Vehicle extends CI_Controller {
 						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
 						$this->db->where("tir.tire_report_id",$value->tire_report_id);
 						$data->tires = $this->db->get("tire_info_report tir")->result();
-						foreach ($data->tires as $k => $v) {
+						foreach ($data->tire as $k => $v) {
 							$this->db->select('image_name,image_path');
 							$this->db->where('tire_report_id', $value->tire_report_id);
 							$this->db->where("tir_id", $value->tir_id);
 							$damage_images = $this->db->where("type",1)->get('tire_images')->result();
-							$data->tires[$k]->damage_images = $damage_images;
+							$data->tire[$k]->damage_images = $damage_images;
 
 							$this->db->select('image_name,image_path');
 							$this->db->where('tire_report_id', $value->tire_report_id);
 							$this->db->where("tir_id", $value->tir_id);
 							$tread_images = $this->db->where("type",2)->get('tire_images')->result();
-							$data->tires[$k]->tread_images = $tread_images;
+							$data->tire[$k]->tread_images = $tread_images;
 						}
 					}
 					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management"]);
