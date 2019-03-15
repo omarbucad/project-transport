@@ -471,7 +471,7 @@ class Vehicle extends CI_Controller {
 				if($_FILES['data']['error'] == 0){
 					$data = file_get_contents($_FILES['data']['tmp_name']);
 
-					$data = (object)json_decode($data);
+					$data = json_decode($data);
 
 					if($data){
 						foreach($data as $ind => $val){
@@ -585,7 +585,7 @@ class Vehicle extends CI_Controller {
 			if(!empty($_FILES)){
 				if($_FILES['data']['error'] == 0){
 					$data = file_get_contents($_FILES['data']['tmp_name']);
-					$data = (object)json_decode($data);
+					$data = json_decode($data);
 
 					if($data){
 						foreach ($data as $ind => $val) {
@@ -633,46 +633,48 @@ class Vehicle extends CI_Controller {
 				if($_FILES['data']['error'] == 0){
 					$data = file_get_contents($_FILES['data']['tmp_name']);
 
-					$data = (object)json_decode($data);
+					$data = json_decode($data);
 
 					if($data){
 						$this->db->trans_start();
-							if(isset($data->axle)){
-								$this->db->where("vehicle_id", $data->vehicle_id)->update("vehicle",[
-									"axle" => $data->axle,
-									"driver_seat_position" => $data->driver_seat_position
+						foreach($data as $k => $v){
+							if(isset($data[$k]->axle)){
+								$this->db->where("vehicle_id", $data[$k]->vehicle_id)->update("vehicle",[
+									"axle" => $data[$k]->axle,
+									"driver_seat_position" => $data[$k]->driver_seat_position
 								]);
 							}
-							print_r_die($data->tire);
 
-							foreach ($data->tire as $key => $value) {
+							foreach ($data[$k]->tire as $key => $value) {
 								$this->db->insert("vehicle_tires",[
-									"vehicle_id" => $data->vehicle_id,
+									"vehicle_id" => $data[$k]->vehicle_id,
 									"axle_no" => $value->axle_no,
 									"tire_count" => $value->tire_count,
 									"position" => $value->position,
-									"created" => ($value->created == '') ? NULL : convert_timezone(strtotime(str_replace("/"," ",$value->created)), true, false)
+									"created" => strtotime(str_replace("/"," ",$value->created)),
+									"deleted" => NULL
 								]);
 							}
 
+						}
 						$this->db->trans_complete();
 						if ($this->db->trans_status() === FALSE){
-							echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "add_tires"]);
+							echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "add_tire_layout"]);
 						}else{
-							echo json_encode(["status" => true , "message" => "Saved Successfully", "action" => "add_tires"]);
+							echo json_encode(["status" => true , "message" => "Saved Successfully", "action" => "add_tire_layout"]);
 						}
 					}else{
-						echo json_encode(["status" => false , "message" => "Data is empty","action" => "add_tires"]);
+						echo json_encode(["status" => false , "message" => "Data is empty","action" => "add_tire_layout"]);
 					}
 				}else{					
-					echo json_encode(["status" => false , "message" => $this->codeToMessage($_FILES['data']['error']),"action" => "add_tires"]);
+					echo json_encode(["status" => false , "message" => $this->codeToMessage($_FILES['data']['error']),"action" => "add_tire_layout"]);
 				}
 			}else{
-				echo json_encode(["status" => false , "message" => "No file","action" => "add_tires"]);
+				echo json_encode(["status" => false , "message" => "No file","action" => "add_tire_layout"]);
 			}
 			
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "add_tires"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "add_tire_layout"]);
 		}
 	}
 
@@ -683,13 +685,20 @@ class Vehicle extends CI_Controller {
 			if($data){
 				$this->db->trans_start();
 
+
 				$this->db->select("vehicle_id, axle, driver_seat_position");
-				$this->db->where("v.vehicle_id", $data->vehicle_id);
-				$data = $this->db->get("vehicle")->result();
+				$this->db->where("vehicle_id", $data->vehicle_id);
+				$data = $this->db->get("vehicle")->row();
 
 				if($data){
 					$this->db->select('vt_id, axle_no, tire_count, position, created, deleted');
 					$data->tires = $this->db->where("vehicle_id",$data->vehicle_id)->get("vehicle_tires")->result();
+					foreach ($data->tires as $key => $value) {
+						$data->tires[$key]->created = convert_timezone($value->created, true, false);
+						if($value->deleted != ''){
+							$data->tires[$key]->deleted = convert_timezone($value->created, true, false);
+						}
+					}
 				}else{
 					return false;
 				}
@@ -729,6 +738,8 @@ class Vehicle extends CI_Controller {
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
 				}else{
 					foreach ($data as $key => $value) {
+						$data[$key]->created = convert_timezone($value->created, true, false);
+						
 						$this->db->select("tir.*, ");
 						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
 						$this->db->where("tir.tire_report_id",$value->tire_report_id);
@@ -774,9 +785,10 @@ class Vehicle extends CI_Controller {
 
 				$this->db->trans_complete();
 				if ($this->db->trans_status() === FALSE){
-					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
+					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management"]);
 				}else{
 					foreach ($data as $key => $value) {
+						$data[$key]->created = convert_timezone($value->created, true, false);
 						$this->db->select("tir.*, ");
 						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
 						$this->db->where("tir.tire_report_id",$value->tire_report_id);
@@ -795,13 +807,13 @@ class Vehicle extends CI_Controller {
 							$data->tires[$k]->tread_images = $tread_images;
 						}
 					}
-					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
+					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management"]);
 				}
 			}else{
-				echo json_encode(["status" => false , "message" => "No passed data","action" => "tire_management_list"]);
+				echo json_encode(["status" => false , "message" => "No passed data","action" => "tire_management"]);
 			}
 		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "tire_management_list"]);
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "tire_management"]);
 		}
 	}
 }
