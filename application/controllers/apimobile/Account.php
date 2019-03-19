@@ -406,8 +406,8 @@ class Account extends CI_Controller {
 
 				$this->db->where("store_id",$data->store_id);
 				$this->db->update("store",[
-					"logo_image_path" => $img['logo_image_path'],
-					"logo_image_name" => $img['logo_image_name']
+					"logo_image_path" => $logo['logo_image_path'],
+					"logo_image_name" => $logo['logo_image_name']
 				]);
 			}
 			

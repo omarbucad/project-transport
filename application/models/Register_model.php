@@ -70,7 +70,7 @@ class Register_model extends CI_Model {
 
     public function signin($user){
         $this->db->select("u.user_id , u.username, u.display_name ,u.firstname, u.lastname, u.email_address , u.role , u.store_id , u.image_path , u.image_name, u.phone, u.verified");
-        $this->db->select("s.store_name, s.logo_image_path, s.logo_image_name, a1.*, up.plan_expiration, up.user_plan_id, up.subscription_id, up.vehicle_limit, p.planId, p.title");
+        $this->db->select("s.store_name, s.logo_image_path, s.logo_image_name, a1.*, up.plan_expiration, up.user_plan_id, up.subscription_id, up.vehicle_limit, up.billing_type, p.planId, p.title");
         // //$this->db->select("a1.country");
 
         $this->db->join("store s" , "s.store_id = u.store_id");

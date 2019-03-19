@@ -31,7 +31,6 @@ class Report extends MY_Controller {
 		}else{
 			$this->data['checklist_list'] = $this->checklist->get_checklist_dropdown();
 			$this->data['result'] = $this->reports->get_reports_list();
-			print_r_die($this->data['result']);
 			$this->load->view('backend/master' , $this->data);
 		}
 	}
