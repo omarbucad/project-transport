@@ -109,8 +109,23 @@ class Transaction extends CI_Controller {
 					]);
 
 					$this->db->trans_complete();
+					// if($this->db->trans_complete() === FALSE){
 
-		            echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_token"]);
+					// }else{
+
+
+					// 	$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+					// 	$this->email->to($data->email);
+					// 	$this->email->set_mailtype("html");
+					// 	$this->email->subject('Email verification successful');
+					// 	$this->email->message($this->load->view('email/subscription_success', $data , true));
+
+					// 	if($this->email->send()){
+							echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_token"]);
+						// }else{
+						// 	echo json_encode(["status" => false , "message" => "Subscription created. Email notification failed to send.", "action" => "create_subscription_token"]);
+			 		// 	}				            
+					// }
 		        }
 			}else{
 				echo json_encode(["status" => false , "error" => $result, "message" => "Something went wrong", "action" => "create_subscription_token"]);
@@ -152,6 +167,21 @@ class Transaction extends CI_Controller {
 				if($result->role == ''){
 		            echo json_encode(["status" => false , "message" => "Subscription updated, Failed to update database","action" => "update_plan_subscription"]);
 				}else{
+
+					if($data->isUpgrade){
+						if($vehicles){
+				        	$this->db->trans_start();
+				        	$this->db->where("store_id",$data->store_id);
+				        	$this->db->where_not_in("vehicle_id",$vehicles);
+				        	$this->db->update("vehicle",[
+				        		"is_active" => 0
+				        	]);
+				        	$this->db->trans_complete();
+				        	if ($this->db->trans_status() === FALSE){
+				        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
+				        	}			        	
+				        }
+					}
 					// $data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
 					// $data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
 
@@ -159,7 +189,7 @@ class Transaction extends CI_Controller {
 					// $this->email->to($email);
 					// $this->email->set_mailtype("html");
 					// $this->email->subject('Subscription Update');
-					// $this->email->message($this->load->view('email/email_subscription_update', $data , true));
+					// $this->email->message($this->load->view('email/subscription_update', $data , true));
 
 					// if($this->email->send()){
 						$this->db->trans_start();
@@ -224,7 +254,9 @@ class Transaction extends CI_Controller {
 		                "billing_type" => "N/A",
 		                "who_updated" => NULL,
 		                "active" => 1,
-		                "updated" => NULL
+		                "updated" => NULL,
+		                "payment_type" => NULL,
+		                "payment_name" => NULL
 		            ]);
 		            if($new){
 				        $this->db->where("user_id",$this->post->user_id);
@@ -232,18 +264,21 @@ class Transaction extends CI_Controller {
 				        	"role" => "DRIVER"
 				        ]);
 
-				        if($vehicles){
-				        	$this->db->trans_start();
-				        	$this->db->where("store_id",$data->store_id);
-				        	$this->db->where_not_in("vehicle_id",$vehicles);
-				        	$this->db->update("vehicle",[
-				        		"is_active" => 0
-				        	]);
-				        	$this->db->trans_complete();
-				        	if ($this->db->trans_status() === FALSE){
-				        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
-				        	}			        	
-				        }
+				        if($data->isUpgrade){
+							if($vehicles){
+					        	$this->db->trans_start();
+					        	$this->db->where("store_id",$data->store_id);
+					        	$this->db->where_not_in("vehicle_id",$vehicles);
+					        	$this->db->update("vehicle",[
+					        		"is_active" => 0
+					        	]);
+					        	$this->db->trans_complete();
+					        	if ($this->db->trans_status() === FALSE){
+					        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
+					        	}			        	
+					        }
+						}
+
 		            }else{
 		            	return false;
 		            }            
@@ -266,7 +301,7 @@ class Transaction extends CI_Controller {
 					// $this->email->to($email);
 					// $this->email->set_mailtype("html");
 					// $this->email->subject('Subscription Update');
-					// $this->email->message($this->load->view('email/email_subscription_update', $data , true));
+					// $this->email->message($this->load->view('email/cancel_subscription', $data , true));
 
 					// if($this->email->send()){
 						 echo json_encode(["status" => true , "data" => $result, "action" => "cancel_subscription"]);
@@ -354,7 +389,7 @@ class Transaction extends CI_Controller {
 				// $this->email->to($email);
 				// $this->email->set_mailtype("html");
 				// $this->email->subject('Your payment detail has been successfully updated');
-				// $this->email->message($this->load->view('email/email_payment_method_update', $data , true));
+				// $this->email->message($this->load->view('email/payment_method_update', $data , true));
 
 				// if($this->email->send()){
 					echo json_encode(["status" => true , "data" => $result, "action" => "update_payment_method"]);
@@ -470,8 +505,11 @@ class Transaction extends CI_Controller {
                 "billing_type" => $data->billing_type,
                 "who_updated" => NULL,
                 "active" => 1,
-                "updated" => NULL
+                "updated" => NULL,
+                "payment_name" => $data->payment_name,
+                "payment_type" => $data->payment_type
             ]);
+
             if($new){
             	$users_list = $this->db->where("store_id",$data->store_id)->get("user")->result();
 
