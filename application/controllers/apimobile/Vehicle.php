@@ -602,14 +602,15 @@ class Vehicle extends CI_Controller {
 									"axle_no" => $value->axle_no,
 									"tire_count" => $value->tire_count,
 									"position" => $value->position,
-									"deleted" => ($value->deleted == '') ? NULL : convert_timezone(strtotime(str_replace("/"," ",$value->deleted)), true, false)
+									"created" => $value->created,
+									"deleted" => $value->deleted
 								]);
 							}
 							$this->db->trans_complete();
 							if ($this->db->trans_status() === FALSE){
 								echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "update_tires"]);
 							}else{
-								echo json_encode(["status" => true , "message" => "Saved Successfully", "action" => "update_tires"]);
+								echo json_encode(["status" => true , "message" => "Updated Successfully", "action" => "update_tires"]);
 							}
 						}						
 					}else{
@@ -650,8 +651,8 @@ class Vehicle extends CI_Controller {
 									"axle_no" => $value->axle_no,
 									"tire_count" => $value->tire_count,
 									"position" => $value->position,
-									"created" => strtotime(str_replace("/"," ",$value->created)),
-									"deleted" => ($value->deleted == '')? NULL : strtotime(str_replace("/"," ",$value->deleted))
+									"created" => $value->created,
+									"deleted" => $value->deleted
 								]);
 							}
 						}
@@ -691,12 +692,6 @@ class Vehicle extends CI_Controller {
 				if($data){
 					$this->db->select('vt_id, axle_no, tire_count, position, created, deleted');
 					$data->tire = $this->db->where("vehicle_id",$data->vehicle_id)->get("vehicle_tires")->result();
-					foreach ($data->tire as $key => $value) {
-						$data->tire[$key]->created = convert_timezone($value->created, true, false);
-						if($value->deleted != ''){
-							$data->tire[$key]->deleted = convert_timezone($value->created, true, false);
-						}
-					}
 				}else{
 					return false;
 				}
@@ -736,8 +731,6 @@ class Vehicle extends CI_Controller {
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
 				}else{
 					foreach ($data as $key => $value) {
-						$data[$key]->created = convert_timezone($value->created, true, false);
-						
 						$this->db->select("tir.*, ");
 						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
 						$this->db->where("tir.tire_report_id",$value->tire_report_id);
@@ -786,7 +779,6 @@ class Vehicle extends CI_Controller {
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management"]);
 				}else{
 					foreach ($data as $key => $value) {
-						$data[$key]->created = convert_timezone($value->created, true, false);
 						$this->db->select("tir.*, ");
 						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
 						$this->db->where("tir.tire_report_id",$value->tire_report_id);

@@ -436,13 +436,20 @@ class Braintree_lib extends Braintree{
                 'planId' => $data->planId,
                 //'merchantAccountId' => $data->merchantAccountId,
                 'addOns' => [
-                    'add' => [
+                    'update' => [
                         [
-                            'inheritedFromId' => $data->addOnId,
+                            'existingId' => $data->addOnId,
                             'neverExpires' => true,
                             'quantity' => $data->quantity
                         ]                       
-                    ]                    
+                    ]      
+                    // 'add' => [
+                    //     [
+                    //         'inheritedFromId' => $data->addOnId,
+                    //         'neverExpires' => true,
+                    //         'quantity' => $data->quantity
+                    //     ]                       
+                    // ]                    
                 ],
                 'descriptor' => [
                      'name' => "TRCKRTR*PLAN"

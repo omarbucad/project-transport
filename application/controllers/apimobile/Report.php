@@ -32,7 +32,7 @@ class Report extends CI_Controller {
 	        $end = strtotime(trim($today.' 23:59'));
 	        $this->db->trans_start();
 
-			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes, r.created_by, r.created, r.pdf_path, r.pdf_file,  r.isFullTank, r.currentMileage, r.currentMileageImage, r.fuelFilled, r.fuelFilledImage, c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_name, s.logo_image_path");
+			$this->db->select("r.report_id , r.report_number , r.vehicle_registration_number , r.trailer_number, r.start_mileage , r.end_mileage , r.report_notes, r.report_by, r.created, r.pdf_path, r.pdf_file,  r.isFullTank, r.currentMileage, r.currentMileageImage, r.fuelFilled, r.fuelFilledImage, c.vehicle_type_id ,vt.type, s.store_name, s.logo_image_name, s.logo_image_path");
 			$this->db->select("u.display_name , u2.display_name as updated_by");
 			$this->db->select("rs.status , rs.notes as status_notes , rs.signature");
 			$this->db->select("c.checklist_name");
@@ -76,8 +76,6 @@ class Report extends CI_Controller {
 					
 					$result[$key]->created   =  convert_timezone($result[$key]->created,true,false);
 
-					//$result[$key]->created = convert_timezone($row->created,true, true);
-					//$result[$key]->convert_timezone($r->created , true);
 					$result[$key]->status_raw = report_type($row->status , true);
 					$result[$key]->status = report_type($row->status);
 					$this->db->trans_start();

@@ -103,6 +103,7 @@ class Login extends MY_Controller {
 				]);
 
 				$data['link'] = $link;
+				$data['customer_email'] = $email;
 
 				$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
 				$this->email->to($email);
