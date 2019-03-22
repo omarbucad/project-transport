@@ -75,7 +75,9 @@ class Account extends CI_Controller {
 				"who_updated" => $userid,
 				// "ip_address" => $data->ip_address,
 				"active" => 1,
-				"updated" => NULL
+				"updated" => NULL,
+				"payment_type" => NULL,
+				"payment_name" => NULL
 			]);
 
 			if(isset($data->image)){
@@ -115,24 +117,24 @@ class Account extends CI_Controller {
 	        if ($this->db->trans_status() === FALSE){
 	            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
 	        }else{
-	        	// $code = $this->generate_email_code($userid);
-	        	// switch ($code) {
-	        	// 	case 'sent':
-	        	// 		echo json_encode(["status" => true , "message" => "Successfully registered", "action" => "register"]);
-	        	// 		break;
-	        	// 	case 'failed':
-	        	// 		echo json_encode(["status" => false , "message" => "Successfully registered. Failed to send verification email.", "action" => "register"]);
-	        	// 		break;
-	        	// 	case 'not exist':
-	        	// 		echo json_encode(["status" => false , "message" => "User does not exist.", "action" => "register"]);
-	        	// 		break;
-	        	// 	case 'generate failed':
-	        	// 		echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
-	        	// 		break;
-	        	// 	case 'no data':
-	        	// 		echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
-	        	// 		break;
-	        	// }
+	        	$code = $this->generate_email_code($userid);
+	        	switch ($code) {
+	        		case 'sent':
+	        			echo json_encode(["status" => true , "message" => "Successfully registered", "action" => "register"]);
+	        			break;
+	        		case 'failed':
+	        			echo json_encode(["status" => false , "message" => "Successfully registered. Failed to send verification email.", "action" => "register"]);
+	        			break;
+	        		case 'not exist':
+	        			echo json_encode(["status" => false , "message" => "User does not exist.", "action" => "register"]);
+	        			break;
+	        		case 'generate failed':
+	        			echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
+	        			break;
+	        		case 'no data':
+	        			echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
+	        			break;
+	        	}
 	        	echo json_encode(["status" => true , "message" => "Successfully registered", "data" => $userid,"action" => "register"]);
 	           
 	        }
@@ -150,25 +152,25 @@ class Account extends CI_Controller {
 
 				if(count($info) > 0){
 					//$code = $this->hash->encrypt($email . "&time=".$time);
-					$data['code'] = $generated;
+					// $data['code'] = $generated;
 					// $data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
 					// $data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
-					$data['email'] = $info->email_address;
+					// $data['email'] = $info->email_address;
 
-					$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
-					$this->email->to($info->email_address);
-					$this->email->set_mailtype("html");
-					$this->email->subject('Your verification code');
-					$this->email->message($this->load->view('email/email_verification', $data , true));
+					// $this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+					// $this->email->to($info->email_address);
+					// $this->email->set_mailtype("html");
+					// $this->email->subject('Your verification code');
+					// $this->email->message($this->load->view('email/email_verification', $data , true));
 					
 
-					if($this->email->send()){
+					// if($this->email->send()){
 						//return "sent";
 						echo json_encode(["status" => true , "message" => "Email verification code sent successfully", "action" => "generate_email_code"]);
-					}else{
-						//return "failed";
-						echo json_encode(["status" => false , "message" => "Sending email failed", "action" => "generate_email_code"]);
-					}				
+					// }else{
+					// 	//return "failed";
+					// 	echo json_encode(["status" => false , "message" => "Sending email failed", "action" => "generate_email_code"]);
+					// }				
 				}else{
 					// return "not exist";
 					echo json_encode(["status" => false , "message" => "User not found", "action" => "generate_email_code"]);
@@ -188,7 +190,7 @@ class Account extends CI_Controller {
 
 		if($data){
 
-			//$verified = validate_email_code($data);
+			// $verified = validate_email_code($data);
 			$data->email = $this->db->select("email_address")->where("user_id", $data->user_id)->get("user")->row()->email_address;
 			// switch ($verified) {
 			// 	case 'expired':
@@ -207,23 +209,23 @@ class Account extends CI_Controller {
 						// $this->email->to($data->email);
 						// $this->email->set_mailtype("html");
 						// $this->email->subject('Email verification successful');
-						// $this->email->message($this->load->view('email/email_verification', $data , true));
+						// $this->email->message($this->load->view('email/verified_successfully', $data , true));
 
 						// if($this->email->send()){
 							echo json_encode(["status" => true , "message" => "Email has been verified", "action" => "verify_email"]);
 						// }else{
-						// 	echo json_encode(["status" => true , "message" => "Verified Successful. Emmail notification failed to send.", "action" => "verify_email"]);
+						// 	echo json_encode(["status" => true , "message" => "Verified Successful. Email notification failed to send.", "action" => "verify_email"]);
 			 		// 	}													
 						
 					}else{
 						echo json_encode(["status" => false , "message" => "Something went wrong. Please try again", "action" => "verify_email"]);
 					}		
 					
-			// 		break;
+					// break;
 
-			// 	case 'invalid':
-			// 		echo json_encode(["status" => false , "message" => "Invalid Code", "action" => "verify_email"]);
-			// 		break;
+				// case 'invalid':
+				// 	echo json_encode(["status" => false , "message" => "Invalid Code", "action" => "verify_email"]);
+				// 	break;
 			// }
 
 		}else{
