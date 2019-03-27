@@ -496,9 +496,10 @@ class Vehicle extends CI_Controller {
 										"left_td_time" => $value->left_td_time,
 										"right_treadDepth" => $value->right_treadDepth,
 										"right_td_time" => $value->right_td_time,
+										"tread_note" => $val->tread_note,
 										"is_damage" => $value->is_damage,
 										"damage_time" => $value->damage_time,
-										"note" => $value->note,
+										"damage_note" => $value->damage_note,
 										"tire_status" => $value->status
 									]);
 									if($tire_info){
