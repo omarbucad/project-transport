@@ -458,7 +458,7 @@ class Braintree_lib extends Braintree{
                 ]
             ]);
             if($result->success){
-                return true;
+                return $result;
             }else{
                 return false;
             }

@@ -121,6 +121,14 @@ class Transaction extends CI_Controller {
 					// 	$this->email->message($this->load->view('email/subscription_success', $data , true));
 
 					// 	if($this->email->send()){
+							// $this->db->trans_start();
+							// 	$this->db->where("kind","subscription_went_active");
+							// 	$this->db->where("subscription_id",$result->subscription_id);
+							// 	$this->db->where("email_sent",0);
+							// 	$this->dn->update("webhooks",[
+							// 		"email_sent" => 1
+							// 	]);
+							// $this->db->trans_complete();
 							echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_token"]);
 						// }else{
 						// 	echo json_encode(["status" => false , "message" => "Subscription created. Email notification failed to send.", "action" => "create_subscription_token"]);
@@ -136,43 +144,43 @@ class Transaction extends CI_Controller {
 		}
 	}
 
-	public function create_subscription_nonce(){
-		$allowed = validate_app_token($this->post->token);
+	// public function create_subscription_nonce(){
+	// 	$allowed = validate_app_token($this->post->token);
 
-		if($allowed){
+	// 	if($allowed){
 
-			$result = $this->braintree_lib->create_subscription_nonce($this->post);
-			if($result){
-				echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_nonce"]);
-			}else{
-				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription_nonce"]);
-			}
+	// 		$result = $this->braintree_lib->create_subscription_nonce($this->post);
+	// 		if($result){
+	// 			echo json_encode(["status" => true , "data" => $result, "action" => "create_subscription_nonce"]);
+	// 		}else{
+	// 			echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "create_subscription_nonce"]);
+	// 		}
 			
-		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription_nonce"]);
-		}
-	}
+	// 	}else{
+	// 		echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription_nonce"]);
+	// 	}
+	// }
 
 	public function update_plan_subscription(){
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
+			$data = $this->post;
 
 			$result = $this->braintree_lib->update_subscription($this->post);
 			if($result){
-				
-				$role = $this->update_subscription($result->subscription->id);
+				$info = $this->update_subscription($result->subscription->id);
 				$result->role = $info->role;
 				$result->title = $info->title;
 				if($result->role == ''){
 		            echo json_encode(["status" => false , "message" => "Subscription updated, Failed to update database","action" => "update_plan_subscription"]);
 				}else{
 
-					if($data->isUpgrade){
-						if($vehicles){
+					if(!$data->isUpgrade){
+						if($data->vehicles){
 				        	$this->db->trans_start();
 				        	$this->db->where("store_id",$data->store_id);
-				        	$this->db->where_not_in("vehicle_id",$vehicles);
+				        	$this->db->where_not_in("vehicle_id",$data->vehicles);
 				        	$this->db->update("vehicle",[
 				        		"is_active" => 0
 				        	]);
@@ -201,11 +209,20 @@ class Transaction extends CI_Controller {
 							"type" => 2,
 							"isread" => 0,
 							"ref_id" => $result->subscription->id,
-							"user_id" => $this->post->user_id,
+							"user_id" => $data->user_id,
 							"created" => time()
 						]);
 
 						$this->db->trans_complete();
+
+						//	$this->db->trans_start();
+						// 	$this->db->where("kind","subscription_charged_successfully");
+						// 	$this->db->where("subscription_id",$result->subscription_id);
+						// 	$this->db->where("email_sent",0);
+						// 	$this->dn->update("webhooks",[
+						// 		"email_sent" => 1
+						// 	]);
+						// $this->db->trans_complete();
 						echo json_encode(["status" => true , "data" => $result, "action" => "update_plan_subscription"]);
 					// }else{
 					// 	echo json_encode(["status" => true , "message" => "Failed to send email", "data" => $result, "action" => "update_plan_subscription"]);
@@ -304,7 +321,29 @@ class Transaction extends CI_Controller {
 					// $this->email->message($this->load->view('email/cancel_subscription', $data , true));
 
 					// if($this->email->send()){
-						 echo json_encode(["status" => true , "data" => $result, "action" => "cancel_subscription"]);
+		        		$this->db->trans_start();
+
+						$plan = $this->db->select("title")->where("planId",$this->post->planId)->get("plan")->row()->title;
+						$this->db->insert("notification", [
+						"description" => "Subscription: ".$plan." - Cancelled",
+							"type" => 2,
+							"isread" => 0,
+							"ref_id" => $result->subscription->id,
+							"user_id" => $this->post->user_id,
+							"created" => time()
+						]);
+
+						$this->db->trans_complete();
+
+		        		//	$this->db->trans_start();
+						// 	$this->db->where("kind","subscription_canceled");
+						// 	$this->db->where("subscription_id",$result->subscription_id);
+						// 	$this->db->where("email_sent",0);
+						// 	$this->dn->update("webhooks",[
+						// 		"email_sent" => 1
+						// 	]);
+						// $this->db->trans_complete();
+						echo json_encode(["status" => true , "data" => $result, "action" => "cancel_subscription"]);
 					// }else{
 					// 	echo json_encode(["status" => true , "message" => "Failed to send email", "data" => $result, "action" => "cancel_subscription"]);
 					// }		           
@@ -404,52 +443,52 @@ class Transaction extends CI_Controller {
 		}
 	}
 
-	public function update_addOn_subscription(){
-		$allowed = validate_app_token($this->post->token);
-		$data = $this->post;
-		$vehicles = json_decode($data->vehicles);
+	// public function update_addOn_subscription(){
+	// 	$allowed = validate_app_token($this->post->token);
+	// 	$data = $this->post;
+	// 	$vehicles = json_decode($data->vehicles);
 
-		if($allowed){
+	// 	if($allowed){
 
-			$result = $this->braintree_lib->update_addOn_subscription($this->post);
-			if($result){
-				$this->db->trans_start();
-				$this->db->where("store_id",$this->post->store_id);
-				$this->db->where("active",1);
+	// 		$result = $this->braintree_lib->update_addOn_subscription($this->post);
+	// 		if($result){
+	// 			$this->db->trans_start();
+	// 			$this->db->where("store_id",$this->post->store_id);
+	// 			$this->db->where("active",1);
 
-				$updated = $this->db->update("user_plan",[	               
-	                "vehicle_limit" => $this->post->quantity
-	            ]);
+	// 			$updated = $this->db->update("user_plan",[	               
+	//                 "vehicle_limit" => $this->post->quantity
+	//             ]);
 	            
-				if($data->isUpgrade){
-					if($vehicles){
-			        	$this->db->trans_start();
-			        	$this->db->where("store_id",$data->store_id);
-			        	$this->db->where_not_in("vehicle_id",$vehicles);
-			        	$this->db->update("vehicle",[
-			        		"is_active" => 0
-			        	]);
-			        	$this->db->trans_complete();
-			        	if ($this->db->trans_status() === FALSE){
-			        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
-			        	}			        	
-			        }
-				}
+	// 			if($data->isUpgrade){
+	// 				if($vehicles){
+	// 		        	$this->db->trans_start();
+	// 		        	$this->db->where("store_id",$data->store_id);
+	// 		        	$this->db->where_not_in("vehicle_id",$vehicles);
+	// 		        	$this->db->update("vehicle",[
+	// 		        		"is_active" => 0
+	// 		        	]);
+	// 		        	$this->db->trans_complete();
+	// 		        	if ($this->db->trans_status() === FALSE){
+	// 		        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
+	// 		        	}			        	
+	// 		        }
+	// 			}
 	            
-		        $this->db->trans_complete();
+	// 	        $this->db->trans_complete();
 
-		        if($updated){
-		        	echo json_encode(["status" => true , "message" => "Successfully updated", "action" => "update_addOn_subscription"]);
-		        }else{
-		        	echo json_encode(["status" => false , "message" => "Updated. Failed to update database", "action" => "update_addOn_subscription"]);
-		        }
-			}else{
-				echo json_encode(["status" => false , "data" => $result, "action" => "update_addOn_subscription"]);
-			}
-		}else{
-			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "update_addOn_subscription"]);
-		}
-	}
+	// 	        if($updated){
+	// 	        	echo json_encode(["status" => true , "message" => "Successfully updated", "action" => "update_addOn_subscription"]);
+	// 	        }else{
+	// 	        	echo json_encode(["status" => false , "message" => "Updated. Failed to update database", "action" => "update_addOn_subscription"]);
+	// 	        }
+	// 		}else{
+	// 			echo json_encode(["status" => false , "data" => $result, "action" => "update_addOn_subscription"]);
+	// 		}
+	// 	}else{
+	// 		echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "update_addOn_subscription"]);
+	// 	}
+	// }
 
 	public function retry_charge(){
 		$data = $this->post;

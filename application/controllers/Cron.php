@@ -22,50 +22,81 @@ class Cron extends CI_Controller {
 		//$this->post = (object)$this->input->post();
 	}
 
-	public function subscription(){
-		if (
-		    isset($_POST["bt_signature"]) &&
-		    isset($_POST["bt_payload"])
-		) {
-			//print_r_die($_POST);
-			$signature = $_POST["bt_signature"];
-			$payload = $_POST["bt_payload"];
-		    $webhookNotification = Braintree_WebhookNotification::parse(
-		        $_POST["bt_signature"], $_POST["bt_payload"]
-		    );
+	public function trial_ended_email(){
+		$this->db->trans_start();
+			$this->db->select("webhook_id, subscription_id, kind");
+			$this->db->where("kind","subscription_trial_ended");
+			$webhooks = $this->db->where("email_sent",0)->get("webhooks")->result();
+		$this->db->trans_complete();		
 
-		    $data = [
-				"subscription_id" => $webhookNotification->subscription->id,
-				"kind" => $webhookNotification->kind,
-				"received" => time(),
-				"bt_created" => strtotime($webhookNotification->timestamp->format('Y-m-d H:i:s'))
-			];
+		foreach($webhooks as $key => $value){
+			$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+			$this->email->to($data->email);
+			$this->email->set_mailtype("html");
+			$this->email->subject('Subscription trial ends');
+			$this->email->message($this->load->view('email/trial_ended', $data , true));
 
-			$insert = $this->save_webhook($data);
+			if($this->email->send()){
+				$this->db->trans_start();
+					$this->db->where("webhook_id", $value->webhook_id);
+					$this->db->where("email_sent",0)->update("webhooks",[
+						"email_sent" => 1
+					]);
+				$this->db->trans_complete();
+			}			            
+		}
+	}
 
-			$message =
-		        "[Webhook Received " 
-		        . $webhookNotification->timestamp->format('Y-m-d H:i:s') . "] "
-		        . "Kind: " . $webhookNotification->kind . " | "
-		        . "Subscription: " . $webhookNotification->subscription->id . "\n";
-			
-		    $filename = $webhookNotification->timestamp->format('Y-m-d').".log";
-			file_put_contents("./application/webhook_logs/".$filename, $message, FILE_APPEND);
+	public function subscription_charged_failed(){
+		$this->db->trans_start();
+			$this->db->select("webhook_id, subscription_id, kind");
+			$this->db->where("kind","subscription_charged_unsuccessfully");
+			$webhooks = $this->db->where("email_sent",0)->get("webhooks")->result();
+		$this->db->trans_complete();		
 
-			// if($insert){
-			// 	file_put_contents("/tmp/webhook.log", $message, FILE_APPEND);
+		foreach($webhooks as $key => $value){
+			$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+			$this->email->to($data->email);
+			$this->email->set_mailtype("html");
+			$this->email->subject('Subscription payment failed');
+			$this->email->message($this->load->view('email/payment_declined', $data , true));
 
-			//header("HTTP/1.1 200 OK");
-			// }
+			if($this->email->send()){
+				$this->db->trans_start();
+					$this->db->where("webhook_id", $value->webhook_id);
+					$this->db->where("email_sent",0)->update("webhooks",[
+						"email_sent" => 1
+					]);
+				$this->db->trans_complete();
+			}			            
+		}
+	}
 
-		    // Example values for webhook notification properties
-		    /*$message = $webhookNotification->kind; // "subscription_went_past_due"
-		    $message = $webhookNotification->timestamp->format('D M j G:i:s T Y'); // "Sun Jan 1 00:00:00 UTC 2012"*/
+	public function subscription_expired(){
+		$this->db->trans_start();
+			$this->db->select("webhook_id, subscription_id, kind");
+			$this->db->where("kind","subscription_charged_unsuccessfully");
+			$webhooks = $this->db->where("email_sent",0)->get("webhooks")->result();
 
-		    /*file_put_contents("/tmp/webhook.log", $message, FILE_APPEND);
+			$this->db->where("active",1);
+			$this->db->select("store_id")->where("subscription_id",$webhooks->subscription_id)->;
+		$this->db->trans_complete();		
 
-		    header("HTTP/1.1 200 OK");*/
+		foreach($webhooks as $key => $value){
+			$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+			$this->email->to($data->email);
+			$this->email->set_mailtype("html");
+			$this->email->subject('Subscription payment failed');
+			$this->email->message($this->load->view('email/subscription_expired', $data , true));
 
+			if($this->email->send()){
+				$this->db->trans_start();
+					$this->db->where("webhook_id", $value->webhook_id);
+					$this->db->where("email_sent",0)->update("webhooks",[
+						"email_sent" => 1
+					]);
+				$this->db->trans_complete();
+			}			            
 		}
 	}
 

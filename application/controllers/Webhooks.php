@@ -73,7 +73,8 @@ class Webhooks extends CI_Controller {
 			"subscription_id" => $data['subscription_id'],
 			"kind" => $data['kind'],
 			"received" => $data['received'],
-			"bt_created" => $data['bt_created']
+			"bt_created" => $data['bt_created'],
+			"email_Sent" => 0
 		]);
 		if($insert){
 			$this->process_webhook($data['kind'],$data);
