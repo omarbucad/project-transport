@@ -322,6 +322,16 @@ class Account extends CI_Controller {
 			        if ($this->db->trans_status() === FALSE){
 			            echo json_encode(["status" => false , "message" => "Failed", "action" => "add"]);
 			        }else{
+			        	$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+						$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+
+						$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
+						$this->email->to($data->email);
+						$this->email->set_mailtype("html");
+						$this->email->subject('Driver registration successful');
+						$this->email->message($this->load->view('email/driver_registration', $data , true));
+
+						$this->email->send();
 			            echo json_encode(["status" => true , "message" => "Added Successfully", "action" => "add"]);
 			        }
 			    }

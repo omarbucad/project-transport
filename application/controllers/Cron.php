@@ -79,7 +79,7 @@ class Cron extends CI_Controller {
 			$webhooks = $this->db->where("email_sent",0)->get("webhooks")->result();
 
 			$this->db->where("active",1);
-			$this->db->select("store_id")->where("subscription_id",$webhooks->subscription_id)->;
+			$this->db->select("store_id, billing_type")->where("subscription_id",$webhooks->subscription_id)->;
 		$this->db->trans_complete();		
 
 		foreach($webhooks as $key => $value){

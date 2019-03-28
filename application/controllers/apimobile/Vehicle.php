@@ -108,6 +108,25 @@ class Vehicle extends CI_Controller {
 		}
 	}
 
+	public function active_vehicles_count(){
+		
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			$data = $this->post;
+			if($data){
+				$this->db->where("store_id", $data->store_id);
+				$this->db->where("is_active", 1);
+				$count = $this->db->where("deleted IS NULL")->get("vehicle")->num_rows();
+
+				 echo json_encode(["status" => true , "data" => $count, "action" => "active_vehicles_count"]);
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "active_vehicles_count"]);
+			}			
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "active_vehicles_count"]);
+		}		
+	}
+
 	public function vehicle_status(){
 		$data = $this->post;
 		$allowed = validate_app_token($this->post->token);

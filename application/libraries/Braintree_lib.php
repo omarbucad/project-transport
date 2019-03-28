@@ -458,7 +458,11 @@ class Braintree_lib extends Braintree{
                 ]
             ]);
             if($result->success){
-                return $result;
+                $data = new stdClass;
+                $data->success = $result->success;
+                $data->data = $result->subscription;
+
+                return $data;
             }else{
                 return false;
             }

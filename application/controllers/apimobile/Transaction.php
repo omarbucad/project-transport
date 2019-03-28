@@ -160,7 +160,6 @@ class Transaction extends CI_Controller {
 	// 		echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription_nonce"]);
 	// 	}
 	// }
-
 	public function update_plan_subscription(){
 		$allowed = validate_app_token($this->post->token);
 
@@ -169,7 +168,7 @@ class Transaction extends CI_Controller {
 
 			$result = $this->braintree_lib->update_subscription($this->post);
 			if($result){
-				$info = $this->update_subscription($result->subscription->id);
+				$info = $this->update_subscription($result->data->id);
 				$result->role = $info->role;
 				$result->title = $info->title;
 				if($result->role == ''){
@@ -177,7 +176,7 @@ class Transaction extends CI_Controller {
 				}else{
 
 					if(!$data->isUpgrade){
-						if($data->vehicles){
+						if(isset($data->vehicles)){
 				        	$this->db->trans_start();
 				        	$this->db->where("store_id",$data->store_id);
 				        	$this->db->where_not_in("vehicle_id",$data->vehicles);
@@ -186,7 +185,7 @@ class Transaction extends CI_Controller {
 				        	]);
 				        	$this->db->trans_complete();
 				        	if ($this->db->trans_status() === FALSE){
-				        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
+				        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "update_plan_subscription"]);
 				        	}			        	
 				        }
 					}
@@ -208,7 +207,7 @@ class Transaction extends CI_Controller {
 						"description" => "Subscription: ".$plan." - Updated",
 							"type" => 2,
 							"isread" => 0,
-							"ref_id" => $result->subscription->id,
+							"ref_id" => $result->data->id,
 							"user_id" => $data->user_id,
 							"created" => time()
 						]);
@@ -223,7 +222,7 @@ class Transaction extends CI_Controller {
 						// 		"email_sent" => 1
 						// 	]);
 						// $this->db->trans_complete();
-						echo json_encode(["status" => true , "data" => $result, "action" => "update_plan_subscription"]);
+						echo json_encode(["status" => true , "data" => $result, "isUpgrade" => $data->isUpgrade, "action" => "update_plan_subscription"]);
 					// }else{
 					// 	echo json_encode(["status" => true , "message" => "Failed to send email", "data" => $result, "action" => "update_plan_subscription"]);
 					// }		            
@@ -240,7 +239,7 @@ class Transaction extends CI_Controller {
 	public function cancel_subscription(){
 		$allowed = validate_app_token($this->post->token);
 		$data = $this->post;
-		$vehicles = json_decode($data->vehicles);
+
 		if($allowed){
 
 			$result = $this->braintree_lib->cancel_subscription($this->post);
@@ -281,20 +280,20 @@ class Transaction extends CI_Controller {
 				        	"role" => "DRIVER"
 				        ]);
 
-				        if($data->isUpgrade){
-							if($vehicles){
-					        	$this->db->trans_start();
-					        	$this->db->where("store_id",$data->store_id);
-					        	$this->db->where_not_in("vehicle_id",$vehicles);
-					        	$this->db->update("vehicle",[
-					        		"is_active" => 0
-					        	]);
-					        	$this->db->trans_complete();
-					        	if ($this->db->trans_status() === FALSE){
-					        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
-					        	}			        	
-					        }
-						}
+						if(isset($data->vehicles)){
+
+							$vehicles = json_decode($data->vehicles);
+				        	$this->db->trans_start();
+				        	$this->db->where("store_id",$data->store_id);
+				        	$this->db->where_not_in("vehicle_id",$vehicles);
+				        	$this->db->update("vehicle",[
+				        		"is_active" => 0
+				        	]);
+				        	$this->db->trans_complete();
+				        	if ($this->db->trans_status() === FALSE){
+				        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "cancel_subscription"]);
+				        	}			        	
+				        }
 
 		            }else{
 		            	return false;
