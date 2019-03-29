@@ -117,24 +117,24 @@ class Account extends CI_Controller {
 	        if ($this->db->trans_status() === FALSE){
 	            echo json_encode(["status" => false , "message" => "Failed", "action" => "register"]);
 	        }else{
-	        	$code = $this->generate_email_code($userid);
-	        	switch ($code) {
-	        		case 'sent':
-	        			echo json_encode(["status" => true , "message" => "Successfully registered", "action" => "register"]);
-	        			break;
-	        		case 'failed':
-	        			echo json_encode(["status" => false , "message" => "Successfully registered. Failed to send verification email.", "action" => "register"]);
-	        			break;
-	        		case 'not exist':
-	        			echo json_encode(["status" => false , "message" => "User does not exist.", "action" => "register"]);
-	        			break;
-	        		case 'generate failed':
-	        			echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
-	        			break;
-	        		case 'no data':
-	        			echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
-	        			break;
-	        	}
+	        	// $code = $this->generate_email_code($userid);
+	        	// switch ($code) {
+	        	// 	case 'sent':
+	        	// 		echo json_encode(["status" => true , "message" => "Successfully registered", "action" => "register"]);
+	        	// 		break;
+	        	// 	case 'failed':
+	        	// 		echo json_encode(["status" => false , "message" => "Successfully registered. Failed to send verification email.", "action" => "register"]);
+	        	// 		break;
+	        	// 	case 'not exist':
+	        	// 		echo json_encode(["status" => false , "message" => "User does not exist.", "action" => "register"]);
+	        	// 		break;
+	        	// 	case 'generate failed':
+	        	// 		echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
+	        	// 		break;
+	        	// 	case 'no data':
+	        	// 		echo json_encode(["status" => false , "message" => "Successfully registered. Failed to generate verification code", "action" => "register"]);
+	        	// 		break;
+	        	// }
 	        	echo json_encode(["status" => true , "message" => "Successfully registered", "data" => $userid,"action" => "register"]);
 	           
 	        }
@@ -322,14 +322,14 @@ class Account extends CI_Controller {
 			        if ($this->db->trans_status() === FALSE){
 			            echo json_encode(["status" => false , "message" => "Failed", "action" => "add"]);
 			        }else{
-			        	$data['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
-						$data['background'] = $this->config->site_url("public/img/reset-pass.jpg");
+			        	$email['app_icon'] = $this->config->site_url("public/img/vehicle-checklist.png");
+						$email['background'] = $this->config->site_url("public/img/reset-pass.jpg");
 
 						$this->email->from('no-reply@trackerteer.com', 'Trackerteer | Vehicle Checklist');
 						$this->email->to($data->email);
 						$this->email->set_mailtype("html");
 						$this->email->subject('Driver registration successful');
-						$this->email->message($this->load->view('email/driver_registration', $data , true));
+						$this->email->message($this->load->view('email/driver_registration', $email , true));
 
 						$this->email->send();
 			            echo json_encode(["status" => true , "message" => "Added Successfully", "action" => "add"]);

@@ -298,19 +298,8 @@ class Vehicle extends CI_Controller {
 						if ($this->db->trans_status() === FALSE){
 							echo json_encode(["status" => false , "message" => "Failed to retrieve least used.", "action" => "plan_sorted_vehicles"]);
 						}else{
-							$this->db->trans_start();
-							$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
-							$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
-							$this->db->where("v.store_id", $data->store_id);
-							$this->db->where("v.is_active",0);
-							$list['removed'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
-							$this->db->trans_complete();
-
-							if ($this->db->trans_status() === FALSE){
-							echo json_encode(["status" => false , "message" => "Failed to retrieve removed.", "action" => "plan_sorted_vehicles"]);
-							}else{
+							
 								echo json_encode(["status" => true , "data" => $list, "action" => "plan_sorted_vehicles"]);
-							}
 						}
 					}else{
 						$recent_vehicles = array();
@@ -352,6 +341,33 @@ class Vehicle extends CI_Controller {
 		}else{
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "plan_sorted_vehicles"]);
 		}
+	}
+
+	public function archived_vehicles(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+					$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+					$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+					$this->db->where("v.store_id", $data->store_id);
+					$this->db->where("v.is_active",0);
+					$list = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
+				$this->db->trans_complete();
+
+				if ($this->db->trans_status() === FALSE){
+					echo json_encode(["status" => false , "message" => "Failed to retrieve archived vehicles.", "action" => "archived_vehicles"]);
+				}else{
+					echo json_encode(["status" => true , "data" => $list, "action" => "archived_vehicles"]);
+				}
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "archived_vehicles"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "archived_vehicles"]);
+		}
+		
 	}
 
 	// public function get_recently_used(){
@@ -613,7 +629,7 @@ class Vehicle extends CI_Controller {
 							if(isset($val->axle)){
 								$this->db->where("vehicle_id", $val->vehicle_id)->update("vehicle",[
 									"axle" => $val->axle
-								]);
+								]); 
 							}
 							foreach ($val->tire as $key => $value) {
 								$this->db->where("vt_id", $value->vt_id);

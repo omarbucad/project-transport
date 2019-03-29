@@ -174,15 +174,18 @@ class Transaction extends CI_Controller {
 				if($result->role == ''){
 		            echo json_encode(["status" => false , "message" => "Subscription updated, Failed to update database","action" => "update_plan_subscription"]);
 				}else{
-
-					if(!$data->isUpgrade){
+					if($data->isUpgrade == 0){
 						if(isset($data->vehicles)){
+
+							$vehicles = json_decode($data->vehicles);
 				        	$this->db->trans_start();
+
 				        	$this->db->where("store_id",$data->store_id);
-				        	$this->db->where_not_in("vehicle_id",$data->vehicles);
+				        	$this->db->where_not_in("vehicle_id",$vehicles);
 				        	$this->db->update("vehicle",[
 				        		"is_active" => 0
 				        	]);
+
 				        	$this->db->trans_complete();
 				        	if ($this->db->trans_status() === FALSE){
 				        		echo json_encode(["status" => false , "message" => "Failed to update vehicles", "action" => "update_plan_subscription"]);

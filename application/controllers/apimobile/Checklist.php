@@ -130,7 +130,6 @@ class Checklist extends CI_Controller {
 			
 			$this->db->select("v.vehicle_id , v.vehicle_registration_number, v.vehicle_type_id, v.status, v.availability,v.last_checked, v.driver_seat_position, vt.type");
 			$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
-			$this->db->where("vt.deleted IS NULL");
 			//$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->limit($limit, $offset)->get("vehicle v")->result();
 			$this->db->where("v.is_active",1);
 			$data = $this->db->where("store_id" , $store_id)->where("v.deleted IS NULL")->order_by("v.vehicle_registration_number" , "ASC")->get("vehicle v")->result();
@@ -403,7 +402,6 @@ class Checklist extends CI_Controller {
 
 	public function offline_save_checklist(){
 
-		// print_r_die($this->post);
 
 		$allowed = validate_app_token($this->input->post("token"));
 		if($allowed){
