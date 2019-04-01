@@ -509,7 +509,6 @@ class Transaction extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "retry_charge"]);
 		}
 	}
-
 	
 	public function update_subscription($subscription_id){
 

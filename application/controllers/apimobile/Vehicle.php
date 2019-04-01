@@ -370,6 +370,48 @@ class Vehicle extends CI_Controller {
 		
 	}
 
+	public function activate_archived_vehicles(){
+		$data = $this->post;
+		$allowed = validate_app_token($this->post->token);
+		if($allowed){
+			if($data){
+				$this->db->trans_start();
+					$this->db->where("is_active",1);
+					$total_vehicles = $this->db->where("store_id",$data->store_id)->get("vehicle")->num_rows();
+
+					$this->db->where("active",1);
+					$limit = $this->db->select("vehicle_limit")->where("store_id",$data->store_id)->get("user_plan")->row()->vehicle_limit;
+				$this->db->trans_complete();
+
+					if(isset($data->vehicles)){
+						$vehicles = json_decode($data->vehicles);
+						if($limit > ($total_vehicles + count($vehicles))){
+							$this->db->trans_start();
+				        	$this->db->where("store_id",$data->store_id);
+				        	$this->db->where_in("vehicle_id",$vehicles);
+				        	$this->db->update("vehicle",[
+				        		"is_active" => 1
+				        	]);
+				        	$this->db->trans_complete();
+				        	if ($this->db->trans_status() === FALSE){
+				        		echo json_encode(["status" => false , "message" => "Failed to activate vehicles", "action" => "activate_archived_vehicles"]);
+				        	}else{
+				        		echo json_encode(["status" => true, "message" => "Activated successfully", "action" => "activate_archived_vehicles"]);
+				        	}	
+						}else{
+							echo json_encode(["status" => false, "message" => "Exceeded vehicle limit", "action" => "activate_archived_vehicles"]);
+						}
+			        }else{
+			        	echo json_encode(["status" => false, "message" => "No passed data", "action" => "activate_archived_vehicles"]);
+			        }
+			}else{
+				echo json_encode(["status" => false , "message" => "No passed data", "action" => "archived_vehicles"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "archived_vehicles"]);
+		}
+	}
+
 	// public function get_recently_used(){
 	// 	$data = $this->post;
 	// 	$allowed = validate_app_token($this->post->token);
