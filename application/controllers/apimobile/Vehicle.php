@@ -291,6 +291,7 @@ class Vehicle extends CI_Controller {
 						$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
 						$this->db->where("v.store_id", $data->store_id);
 						$this->db->where("v.is_active",1);
+						$this->db->where("v.deleted IS NULL");
 						$list['least'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
 
 						$this->db->trans_complete();
@@ -310,6 +311,8 @@ class Vehicle extends CI_Controller {
 
 						$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
 						$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+						$this->db->where("v.deleted IS NULL");
+						$this->db->where("v.is_active", 1);
 						$this->db->where("v.store_id", $data->store_id);
 						$this->db->where_not_in("v.vehicle_registration_number",$recent_vehicles);
 						$list['least'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();		
@@ -319,19 +322,19 @@ class Vehicle extends CI_Controller {
 						if ($this->db->trans_status() === FALSE){
 							echo json_encode(["status" => false , "message" => "Failed to retrieve least used.", "action" => "plan_sorted_vehicles"]);
 						}else{
-							$this->db->trans_start();
-							$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
-							$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
-							$this->db->where("v.store_id", $data->store_id);
-							$this->db->where("v.is_active",0);
-							$list['removed'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
-							$this->db->trans_complete();
+							// $this->db->trans_start();
+							// $this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
+							// $this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
+							// $this->db->where("v.store_id", $data->store_id);
+							// $this->db->where("v.is_active",0);
+							// $list['removed'] = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
+							// $this->db->trans_complete();
 
-							if ($this->db->trans_status() === FALSE){
-								echo json_encode(["status" => false , "message" => "Failed to retrieve removed.", "action" => "plan_sorted_vehicles"]);
-							}else{
+							// if ($this->db->trans_status() === FALSE){
+							// 	echo json_encode(["status" => false , "message" => "Failed to retrieve removed.", "action" => "plan_sorted_vehicles"]);
+							// }else{
 								echo json_encode(["status" => true , "data" => $list, "action" => "plan_sorted_vehicles"]);
-							}
+							//}
 						}
 					}
 				}
@@ -352,6 +355,7 @@ class Vehicle extends CI_Controller {
 					$this->db->select("v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.status, vt.type");
 					$this->db->join("vehicle_type vt","vt.vehicle_type_id = v.vehicle_type_id");
 					$this->db->where("v.store_id", $data->store_id);
+					$this->db->where("v.deleted IS NULL");
 					$this->db->where("v.is_active",0);
 					$list = $this->db->order_by("v.created", "DESC")->get("vehicle v")->result();
 				$this->db->trans_complete();
@@ -380,12 +384,12 @@ class Vehicle extends CI_Controller {
 					$total_vehicles = $this->db->where("store_id",$data->store_id)->get("vehicle")->num_rows();
 
 					$this->db->where("active",1);
-					$limit = $this->db->select("vehicle_limit")->where("store_id",$data->store_id)->get("user_plan")->row()->vehicle_limit;
+					$limit = $this->db->select("vehicle_limit")->where("store_id",$data->store_id)->get("user_plan")->row();
 				$this->db->trans_complete();
 
 					if(isset($data->vehicles)){
 						$vehicles = json_decode($data->vehicles);
-						if($limit > ($total_vehicles + count($vehicles))){
+						if($limit->vehicle_limit > ($total_vehicles + count($vehicles))){
 							$this->db->trans_start();
 				        	$this->db->where("store_id",$data->store_id);
 				        	$this->db->where_in("vehicle_id",$vehicles);
