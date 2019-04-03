@@ -398,6 +398,8 @@ class Vehicle extends CI_Controller {
 		if($allowed){
 			if($data){
 				$this->db->trans_start();
+					
+					$this->db->where("deleted IS NULL");
 					$this->db->where("is_active",1);
 					$total_vehicles = $this->db->where("store_id",$data->store_id)->get("vehicle")->num_rows();
 
