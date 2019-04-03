@@ -41,7 +41,8 @@ class Account extends CI_Controller {
 			$this->db->insert("store",[
 				"store_name" => "Vehicle Checklist",
 				"address_id" => $address_id,
-				"created" => time()
+				"created" => time(),
+				"tiral_used" => 0
 			]);
 
 			$store_id = $this->db->insert_id();

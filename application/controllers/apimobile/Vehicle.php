@@ -32,6 +32,8 @@ class Vehicle extends CI_Controller {
                 "availability"                  => 1,
                 "last_checked"                  => NULL,
 				"vehicle_type_id" => $data->vehicle_type_id,
+				"vehicle_model" => ($data->vehicle_model == '') ? NULL : $data->vehicle_model,
+				"year_model" => ($data->year_model == '') ? NULL : $data->year_model,
 				"created" => time(),
 				"store_id" => $data->store_id,
 				"is_active" => 1,
@@ -66,6 +68,22 @@ class Vehicle extends CI_Controller {
 				"vehicle_type_id" => $data->vehicle_type_id,
 				"deleted" => NULL
 			]);
+
+			if(isset($data->vehicle_model)){
+				$this->db->where("store_id",$data->store_id);
+				$this->db->where("vehicle_id", $data->vehicle_id);
+				$this->db->update("vehicle",[
+					"vehicle_model" => ($data->vehicle_model == '') ? NULL : $data->vehicle_model					
+				]);
+			}
+
+			if(isset($data->year_model)){
+				$this->db->where("store_id",$data->store_id);
+				$this->db->where("vehicle_id", $data->vehicle_id);
+				$this->db->update("vehicle",[
+					"year_model" => ($data->year_model == '') ? NULL : $data->year_model		
+				]);
+			}
 
 			$this->db->trans_complete();
 
@@ -389,7 +407,7 @@ class Vehicle extends CI_Controller {
 
 					if(isset($data->vehicles)){
 						$vehicles = json_decode($data->vehicles);
-						if($limit->vehicle_limit > ($total_vehicles + count($vehicles))){
+						if($limit->vehicle_limit >= ($total_vehicles + count($vehicles))){
 							$this->db->trans_start();
 				        	$this->db->where("store_id",$data->store_id);
 				        	$this->db->where_in("vehicle_id",$vehicles);
