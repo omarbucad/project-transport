@@ -581,7 +581,8 @@ class Vehicle extends CI_Controller {
 							$tire_report = $this->db->insert("tire_report", [
 								"vehicle_id" => $val->vehicle_id,
 								"status" => $val->status,
-								"created" => $val->created
+								"created" => $val->created,
+								"store_id" => $val->store_id
 							]);
 							if($tire_report){
 								$tire_report_id = $this->db->insert_id();
@@ -597,20 +598,21 @@ class Vehicle extends CI_Controller {
 										"left_td_time" => $value->left_td_time,
 										"right_treadDepth" => $value->right_treadDepth,
 										"right_td_time" => $value->right_td_time,
-										"tread_note" => $val->tread_note,
+										"tread_note" => $value->tread_note,
 										"is_damage" => $value->is_damage,
 										"damage_time" => $value->damage_time,
 										"damage_note" => $value->damage_note,
-										"tire_status" => $value->status
+										"tire_status" => $value->tire_status
 									]);
-									if($tire_info){
-										$tire_info_report_id = $this->db->insert_id();
+									$tire_info_report_id = $this->db->insert_id();
+
+									if($tire_info){										
 										if(!empty($value->damage_images)){
-											$this->tire_image($tire_info_report_id , $tire_report_id, 1,$value->images);
+											$this->tire_image($tire_info_report_id , $tire_report_id, 1,$value->damage_images);
 										}
 
 										if(!empty($value->tread_images)){
-											$this->tire_image($tire_info_report_id , $tire_report_id, 2,$value->images);
+											$this->tire_image($tire_info_report_id , $tire_report_id, 2,$value->tread_images);
 										}
 									}else{
 										echo json_encode(["status" => false , "message" => "Saving failed", "action" => "save_tire_management"]);
@@ -670,7 +672,7 @@ class Vehicle extends CI_Controller {
 		    file_put_contents($path, $data);
 		    
 		    $this->db->insert('tire_images', [
-		    	"tir_id" 			=> $tire_report_id,
+		    	"tir_id" 			=> $tire_info_report_id,
 		    	"tire_report_id"	=> $tire_report_id ,
 		    	"type"				=> $type ,
 		    	"image_path"		=> $year."/".$month.'/' ,
@@ -814,7 +816,8 @@ class Vehicle extends CI_Controller {
 
 	public function tire_management_list(){
 		$data = $this->post;
-		$allowed = validate_app_token($this->post->token);
+		$allowed = validate_app_token($this->post->token);		
+		$result = new stdClass;
 		if($allowed){
 			if($data){
 				$this->db->trans_start();
@@ -826,32 +829,42 @@ class Vehicle extends CI_Controller {
 					$this->db->where("v.vehicle_id",$data->vehicle_id);
 				}
 				$this->db->order_by("tr.created","DESC");
-				$data = $this->db->get("tire_report tr")->result();
+				$result = $this->db->get("tire_report tr")->result();
 
 				$this->db->trans_complete();
 				if ($this->db->trans_status() === FALSE){
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management_list"]);
 				}else{
-					foreach ($data as $key => $value) {
-						$this->db->select("tir.*, ");
-						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
-						$this->db->where("tir.tire_report_id",$value->tire_report_id);
-						$data->tire = $this->db->get("tire_info_report tir")->result();
-						foreach ($data->tire as $k => $v) {
-							$this->db->select('image_name,image_path');
-							$this->db->where('tire_report_id', $value->tire_report_id);
-							$this->db->where("tir_id", $value->tir_id);
-							$damage_images = $this->db->where("type",1)->get('tire_images')->result();
-							$data->tire[$k]->damage_images = $damage_images;
+					if($result){
+						foreach ($result as $key => $value) {
+							$this->db->select("tir.*");
+							$this->db->join("vehicle_tires vt","vt.vt_id = tir.vt_id");
+							$this->db->where("tir.tire_report_id",$value->tire_report_id);
+							$result->tire = $this->db->get("tire_info_report tir")->result();
+							foreach ($result->tire as $k => $v) {
+								$this->db->select('image_name,image_path');
+								$this->db->where('tire_report_id', $value->tire_report_id);
+								$this->db->where("tir_id", $result->tire[$k]->tir_id);
+								$damage_images = $this->db->where("type",1)->get('tire_images')->result();
+								foreach ($damage_images as $d => $damage) {
+									$result->tire[$k]->damage_images[$d] = $this->config->site_url("public/upload/tire/".$damage->image_path.$damage->image_name);
+								}
 
-							$this->db->select('image_name,image_path');
-							$this->db->where('tire_report_id', $value->tire_report_id);
-							$this->db->where("tir_id", $value->tir_id);
-							$tread_images = $this->db->where("type",2)->get('tire_images')->result();
-							$data->tire[$k]->tread_images = $tread_images;
+								$this->db->select('image_name,image_path');
+								$this->db->where('tire_report_id', $value->tire_report_id);
+								$this->db->where("tir_id", $result->tire[$k]->tir_id);
+								$tread_images = $this->db->where("type",2)->get('tire_images')->result();
+								foreach ($tread_images as $t => $tread) {
+									$result->tire[$k]->tread_images[$t] = $this->config->site_url("public/upload/tire/".$tread->image_path.$tread->image_name);
+								}
+								
+							}
 						}
+						echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
+					}else{
+						echo json_encode(["status" => false , "message" => "No data available", "action" => "tire_management_list"]);
 					}
-					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management_list"]);
+					
 				}
 			}else{
 				echo json_encode(["status" => false , "message" => "No passed data","action" => "tire_management_list"]);
@@ -863,43 +876,50 @@ class Vehicle extends CI_Controller {
 
 	public function tire_management(){
 		$data = $this->post;
+
 		$allowed = validate_app_token($this->post->token);
+		$result = new stdClass;
 		if($allowed){
 			if($data){
 				$this->db->trans_start();
 				$this->db->select("tr.*,  v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.axle, v.driver_seat_position");
 				$this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
 				$this->db->where("v.is_active",1);
-				$this->db->where("tr.deleted IS NULL");
 				$this->db->where("tr.store_id",$data->store_id);
 				$this->db->where("tr.vehicle_id",$data->vehicle_id);
 				$this->db->limit(1)->order_by("tr.created","DESC");
-				$data = $this->db->get("tire_report tr")->row();
+				$result = $this->db->get("tire_report tr")->row();
 
 				$this->db->trans_complete();
 				if ($this->db->trans_status() === FALSE){
 					echo json_encode(["status" => false , "message" => "Something went wrong.", "action" => "tire_management"]);
 				}else{
-					foreach ($data as $key => $value) {
-						$this->db->select("tir.*, ");
-						$this->db->join("vehicle_tire vt","vt.vt_id = tir.vt_id");
-						$this->db->where("tir.tire_report_id",$value->tire_report_id);
-						$data->tires = $this->db->get("tire_info_report tir")->result();
-						foreach ($data->tire as $k => $v) {
+					if($result){
+						$this->db->select("tir.*");
+						$this->db->join("vehicle_tires vt","vt.vt_id = tir.vt_id");
+						$this->db->where("tir.tire_report_id",$result->tire_report_id);
+						$result->tire = $this->db->get("tire_info_report tir")->result();
+						foreach ($result->tire as $k => $v) {
 							$this->db->select('image_name,image_path');
-							$this->db->where('tire_report_id', $value->tire_report_id);
-							$this->db->where("tir_id", $value->tir_id);
+							$this->db->where('tire_report_id', $result->tire_report_id);
+							$this->db->where("tir_id", $result->tire[$k]->tir_id);
 							$damage_images = $this->db->where("type",1)->get('tire_images')->result();
-							$data->tire[$k]->damage_images = $damage_images;
+							foreach ($damage_images as $d => $damage) {
+								$result->tire[$k]->damage_images[$d] = $this->config->site_url("public/upload/tire/".$damage->image_path.$damage->image_name);
+							}
 
 							$this->db->select('image_name,image_path');
-							$this->db->where('tire_report_id', $value->tire_report_id);
-							$this->db->where("tir_id", $value->tir_id);
+							$this->db->where('tire_report_id', $result->tire_report_id);
+							$this->db->where("tir_id", $result->tire[$k]->tir_id);
 							$tread_images = $this->db->where("type",2)->get('tire_images')->result();
-							$data->tire[$k]->tread_images = $tread_images;
+							foreach ($tread_images as $t => $tread) {
+								$result->tire[$k]->tread_images[$t] = $this->config->site_url("public/upload/tire/".$tread->image_path.$tread->image_name);
+							}
 						}
-					}
-					echo json_encode(["status" => true , "data" => $data, "action" => "tire_management"]);
+						echo json_encode(["status" => true , "data" => $result, "action" => "tire_management"]);
+					}else{
+						echo json_encode(["status" => false, "message" => "No data Available", "action" => "tire_management"]);
+					}					
 				}
 			}else{
 				echo json_encode(["status" => false , "message" => "No passed data","action" => "tire_management"]);

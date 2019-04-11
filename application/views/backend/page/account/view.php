@@ -221,12 +221,12 @@
         <div class="container">
         	<h1>Plan Subscription</h1>
         	<div class="account_container_btn">
-        		<a href="<?php echo site_url("app/setup/account/manage"); ?>" class="<?php echo ($setup_page == "manage") ? "active" : "" ;?>" >Manage My Account</a>
-        		<a href="<?php echo site_url("app/setup/account/pricing"); ?>" class="<?php echo ($setup_page == "pricing") ? "active" : "" ;?>">View Pricing Plans</a>
+        		<a href="<?php echo site_url("app/setup/subscription/view"); ?>" class="<?php echo ($setup_page == "manage") ? "active" : "" ;?>" >My Subscription</a>
+        		<a href="<?php echo site_url("app/setup/subscription/pricing"); ?>" class="<?php echo ($setup_page == "pricing") ? "active" : "" ;?>">View Pricing Plans</a>
         	</div>
         </div>
         
-        <?php if($setup_page == "manage") : ?>
+        <?php if($setup_page == "view") : ?>
         <div class="grey-bg margin-bottom">
         	<div class="container ">
         		<span>Manage your account plan, and payment details.</span>
@@ -270,13 +270,13 @@
         		<div class="col-xs-12">
                     <div class="trial-time">
                         <?php if($result->title == 'Trial') : ?>
-                            <?php if(!($result->trial_left < 0)) : ?>
+                            <?php if($result->plan_expiration > time()) : ?>
                                 <span>Trial Expiration: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?></h4></span>
                             <?php else : ?>
                                 <span><h4 class='help-block text-danger'>Trial Already Expired</h4></span>
                             <?php endif;?>
                         <?php else: ?>
-                            <?php if(!($result->trial_left < 0)) : ?>
+                            <?php if($result->plan_expiration > time()) : ?>
                                 <span>Plan Expires in: <h4 class='help-block text-danger'><?php echo $result->trial_left; ?></h4></span>
                             <?php else : ?>
                                 <span><h4 class='help-block text-danger'>Plan Already Expired</h4></span>
@@ -319,14 +319,13 @@
     	<?php else : ?>
         <div class="grey-bg margin-bottom">
             <div class="container ">
-                <span>Select a plan to get the best out of Vehicle Checklist App.</span>
+                <span></span>
             </div>
         </div>
         <div class="container">
             <div class="container-fluid app-content-b feature-1" >
                 <div class="row">            
-                    <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;font-family: 'Roboto',sans-serif !important;margin-bottom: 60px;">Subscription pricing</h2>
-                    <!-- <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto',sans-serif !important;">Upgrade your Plan now!</strong></h1> -->
+                   <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto' !important;">Subscription pricing</strong></h1>
                     <div class="col-md-4 col-sm-6" style="padding: 0;">
                         <div class="card card-1">
                           <div class="card-header card-1-header text-center">
@@ -340,9 +339,7 @@
                             <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
 
                             <h3 class="card-title">Free</h3>
-                            <div class="form-group text-center">
-                                <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_free_trial">Proceed</a>
-                            </div>
+                            <hr>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">1 Driver</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">7 Reports Visible</p>
@@ -356,30 +353,15 @@
                           <div class="card-header card-2-header text-center">
                               <h2><strong>Premium Plan</strong></h2>
                               <p>For fleets up to 250 vehicles.</p>
-                              <p style="margin-bottom: 10px;">Choose number of vehicles.</p>
+                              <p style="margin-bottom: 10px;">Price depends on number of vehicles.</p>
                           </div>
-
                           <div class="card-body card-2-body">                      
                             <div class="card-2-arrow-selected"></div>
-
-                            <form action="<?php echo site_url();?>" method="POST" id="premium-form">
-                                <div class="form-group">
-                                    <label>Numbers of Vehicle</label>
-                                    <input type="number" name="no_vehicles" class="form-control" id="no_vehicles" min="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" value='1'>
-                                </div>
-                                <div class="form-group">
-                                    <label>Subscription</label>
-                                    <select class="form-control" name="subscription" id="custom_plan">
-                                        <option value="Yearly">Yearly</option>
-                                        <option value="Monthly">Monthly</option>
-                                    </select>
-                                </div>
-
-                                <h3 class="card-title">$220</h3>
+                                <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 15px;">10% discount if Yearly</h3>
+                                <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 25px; padding-bottom:15px;">Monthly / Yearly</h3>
+                                <h3 class="card-title" style="padding-top: 17px;">$2 / vehicle</h3>
+                                <hr>
                                 <p style="text-align: center!important;color: #989898;"><span style="text-decoration-line: line-through;">$320</span> 25% in a year </p>
-                                <div class="form-group text-center">
-                                    <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="">Proceed</a>
-                                </div>
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers</p>
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>
@@ -387,7 +369,6 @@
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Multiple Download Report</p>
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Search and Filter Functions</p>
                                 <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;padding: 0 20px 0 20px;font-weight: bold;">Add Company Profile and Company name on Report</p>
-                            </form>
                           </div>
                         </div>
                     </div>
@@ -404,10 +385,7 @@
                             <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
 
                             <h3 class="card-title">POA</h3>
-
-                            <div class="form-group text-center">
-                                <a href="javascript:void(0);" class="btn btn-info btn-proceed" data-desc="sandbox_basic_plan_trial_3">Proceed</a>
-                            </div>
+                            <hr>
 
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers 250+</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>

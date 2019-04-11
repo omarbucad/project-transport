@@ -152,9 +152,8 @@ class Profile_model extends CI_Model {
         $this->db->join("plan p","p.planId = up.plan_id");
         $result = $this->db->get("user_plan up")->row();
         if($result->plan_expiration != 0){
-            $today = date("d/M/Y 00:00:00");
-            $expiry = convert_timezone($result->plan_expiration, true);
-            $timeleft = strtotime($expiry) - strtotime(str_replace("/"," ",$today));
+            
+            $timeleft = $result->plan_expiration - time();
             
             $days = floor($timeleft / 86400);
             $timeleft %= 86400;

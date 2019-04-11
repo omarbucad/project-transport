@@ -241,9 +241,8 @@
     </div>
     <div class="container-fluid app-content-b feature-1" >
         <div class="container">
-            <div class="row">            
-                <h2 style="color: #8e97ab; font-weight: 300;font-size: 35px;text-align: center;font-family: 'Roboto' !important;">Subscription pricing</h2>
-                <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto' !important;">Upgrade your Plan now!</strong></h1>
+            <div class="row">
+                <h1 style="color: #2196f3; font-weight: 500;font-size: 50px;margin-bottom: 60px;text-align: center;"><strong style="font-family: 'Roboto' !important;">Subscription pricing</strong></h1>
                 <div class="col-md-4 col-sm-6" style="padding: 0;">
                     <div class="card card-1">
                       <div class="card-header card-1-header text-center">
@@ -257,9 +256,7 @@
                         <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
 
                         <h3 class="card-title">Free</h3>
-                        <div class="form-group text-center">
-                            <a href="#" class="btn btn-info">Proceed</a>
-                        </div>
+                        <hr>
                         <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">1 Driver</p>
                         <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
                         <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">7 Reports Visible</p>
@@ -273,32 +270,16 @@
                       <div class="card-header card-2-header text-center">
                           <h2><strong>Premium Plan</strong></h2>
                           <p>For fleets up to 250 vehicles.</p>
-                          <p style="margin-bottom: 10px;">Choose number of vehicles.</p>
+                          <p style="margin-bottom: 10px;">Price depends on number of vehicles</p>
                       </div>
 
                       <div class="card-body card-2-body">                      
                         <div class="card-2-arrow-selected"></div>
+                            <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 10px;">10% discount if Yearly</h3>
+                            <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 30px; padding-bottom:15px;">Monthly / Yearly</h3>
 
-                        <form action="<?php echo site_url();?>" method="POST" id="premium-form">
-                            <div class="form-group">
-                                <label>Numbers of Vehicle</label>
-                                <select class="form-control" name="no_vehicles" >
-                                    <option value="50">50 vehicles</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Subscription</label>
-                                <select class="form-control" name="subscription">
-                                    <option value="Yearly">Yearly</option>
-                                    <option value="Monthly">Monthly</option>
-                                </select>
-                            </div>
-
-                            <h3 class="card-title">$220</h3>
-                            <p style="text-align: center!important;color: #989898;"><span style="text-decoration-line: line-through;">$320</span> 25% in a year </p>
-                            <div class="form-group text-center">
-                                <a href="#" class="btn btn-info">Proceed</a>
-                            </div>
+                            <h3 class="card-title" style="padding-top: 10px; padding-bottom: 6px;">$2 / vehicle</h3>
+                            <hr>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">5 Vehicles</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>
@@ -306,7 +287,6 @@
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Multiple Download Report</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Search and Filter Functions</p>
                             <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;padding: 0 20px 0 20px;font-weight: bold;">Add Company Profile and Company name on Report</p>
-                        </form>
                       </div>
                     </div>
                 </div>
@@ -319,15 +299,11 @@
                       </div>
                       <div class="card-body card-3-body text-center">
                         <div class="card-1-arrow-selected"></div>
-                        <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 0;">250+ vehicles</h3>
-                        <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 20px; padding-bottom:15px;">Monthly</h3>
+                        <h3 style="color:#2196f3; text-align: center; font-size: 18px;padding-top: 3px;">250+ vehicles</h3>
+                        <h3 style="color:#2196f3; text-align: center; font-weight: 300; font-size: 18px;padding-top: 23px; padding-bottom:15px;">Monthly</h3>
 
-                        <h3 class="card-title">POA</h3>
-
-                        <div class="form-group text-center">
-                            <a href="#" class="btn btn-info">Proceed</a>
-                        </div>
-
+                        <h3 class="card-title" style="margin-bottom: 27px;">POA</h3>
+                        <hr>
                         <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Drivers 250+</p>
                         <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Unlimited Reports</p>
                         <p class="text-center" style="margin: 30px 0 30px 0; color: #656565;font-weight: bold;">Mobile App Access</p>

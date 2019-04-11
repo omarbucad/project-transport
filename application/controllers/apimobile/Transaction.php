@@ -83,8 +83,9 @@ class Transaction extends CI_Controller {
 		$allowed = validate_app_token($this->post->token);
 
 		if($allowed){
-
+			
 			$result = $this->braintree_lib->create_subscription_token($this->post);
+
 			if(empty($result->error)){
 
 				$info = $this->update_subscription($result->subscription->id);

@@ -271,14 +271,14 @@ class Setup extends MY_Controller {
 
 
 	// ACCOUNT SECTION
-	public function account($type){
+	public function subscription($type){
 		if($this->session->userdata('user')->role != "ADMIN PREMIUM"){
 			redirect("app/dashboard");					
 		}
 		$store_id = $this->data['session_data']->store_id;
 
-		$this->data['website_title'] = "Setup - Plan | ".$this->data['application_name'];
-		$this->data['page_name'] = "Plan";
+		$this->data['website_title'] = "Subscription | ".$this->data['application_name'];
+		$this->data['page_name'] = "Subscription";
 		$this->data['main_page'] = "backend/page/account/view";
 		$this->data['result'] = $this->profile->get_userplan($store_id);
 		$this->data['user_data'] = $this->account->user_data($store_id);
@@ -288,7 +288,7 @@ class Setup extends MY_Controller {
 		$this->data['plan_ids'] = $this->braintree_lib->getAllPlan();
 
 		if($type == ""){
-			redirect('/app/setup/account/manage', 'refresh');
+			redirect('/app/setup/account/view', 'refresh');
 		}
 		$this->load->view('backend/master' , $this->data);
 	}
