@@ -199,12 +199,12 @@ class Braintree_lib extends Braintree{
                     return $result;
 
                 } else {
-                    $error = "";
+                   // $error = "";
                     foreach($result->errors->deepAll() AS $error) {
-                        $error .= $error->code . ": " . $error->message . "\n";
-                        //echo($error->code . ": " . $error->message . "\n");
+                       // $error .= $error->code . ": " . $error->message . "\n";
+                        echo($error->code . ": " . $error->message . "\n");
                     }
-                    return $error;
+                    //return $error;
                 }
             }           
         }
@@ -213,7 +213,7 @@ class Braintree_lib extends Braintree{
     function create_payment_method($data){
         $result = Braintree_PaymentMethod::create([
             'customerId' => $data->username,
-            'paymentMethodToken' => $data->paymentMethodToken,
+            'paymentMethodNonce' => $data->paymentMethodNonce,
             'options' => [
               'makeDefault' => true
             ]
@@ -222,54 +222,54 @@ class Braintree_lib extends Braintree{
             return $result;
 
         } else {
-            $error = "";
+            //$error = "";
             foreach($result->errors->deepAll() AS $error) {
-                $error .= $error->code . ": " . $error->message . "\n";
-                //echo($error->code . ": " . $error->message . "\n");
+                //$error .= $error->code . ": " . $error->message . "\n";
+                echo($error->code . ": " . $error->message . "\n");
             }
-            return $error;
+            //return $error;
         }
     }
 
-   /* function update_payment_method($data){
-        if($data->isPayPalAccount){
-            $result = Braintree_PayPalAccount::update($data->paymentMethodToken, [
-                'token' => $data->newToken
-            ]);
-            //print_r_die($result);
+    // function update_payment_method($data){
+    //     if($data->isPayPalAccount){
+    //         $result = Braintree_PayPalAccount::update($data->paymentMethodToken, [
+    //             'token' => $data->newToken
+    //         ]);
+    //         //print_r_die($result);
 
-            if ($result->success) {
-                return $result;
+    //         if ($result->success) {
+    //             return $result;
 
-            } else {
-                $error = "";
-                foreach($result->errors->deepAll() AS $error) {
-                    $error .= $error->code . ": " . $error->message . "\n";
-                    //echo($error->code . ": " . $error->message . "\n");
-                }
-                return $error;
-            }
-        }else{
-            $result = Braintree_PaymentMethod::update($data->paymentMethodToken,[
-                'paymentMethodNonce' => $data->paymentMethodNonce,
-                'options' => [
-                  'makeDefault' => true
-                ]
-            ]);
+    //         } else {
+    //             $error = "";
+    //             foreach($result->errors->deepAll() AS $error) {
+    //                 $error .= $error->code . ": " . $error->message . "\n";
+    //                 //echo($error->code . ": " . $error->message . "\n");
+    //             }
+    //             return $error;
+    //         }
+    //     }else{
+    //         $result = Braintree_PaymentMethod::update($data->paymentMethodToken,[
+    //             'paymentMethodNonce' => $data->paymentMethodNonce,
+    //             'options' => [
+    //               'makeDefault' => true
+    //             ]
+    //         ]);
 
-            if ($result->success) {
-                return $result;
+    //         if ($result->success) {
+    //             return $result;
 
-            } else {
-                $error = "";
-                foreach($result->errors->deepAll() AS $error) {
-                    $error .= $error->code . ": " . $error->message . "\n";
-                    //echo($error->code . ": " . $error->message . "\n");
-                }
-                return $error;
-            }
-        }
-    } */
+    //         } else {
+    //             $error = "";
+    //             foreach($result->errors->deepAll() AS $error) {
+    //                 $error .= $error->code . ": " . $error->message . "\n";
+    //                 //echo($error->code . ": " . $error->message . "\n");
+    //             }
+    //             return $error;
+    //         }
+    //     }
+    // } 
 
     function update_payment_method($data){
         $result = Braintree_PaymentMethod::update($data->paymentMethodToken,[
@@ -283,12 +283,10 @@ class Braintree_lib extends Braintree{
                 return $result;
 
             } else {
-                $error = "";
                 foreach($result->errors->deepAll() AS $error) {
-                    $error .= $error->code . ": " . $error->message . "\n";
-                    //echo($error->code . ": " . $error->message . "\n");
+                    //$error .= $error->code . ": " . $error->message . "\n";
+                    echo($error->code . ": " . $error->message . "\n");
                 }
-                return $error;
             }
         
     }
@@ -408,12 +406,12 @@ class Braintree_lib extends Braintree{
         if($result){
             return $result;
         }else{
-            $error = "";
+            //$error = "";
             foreach($result->errors->deepAll() AS $error) {
-                $error .= $error->code . ": " . $error->message . "\n";
-                //echo($error->code . ": " . $error->message . "\n");
+               // $error .= $error->code . ": " . $error->message . "\n";
+                echo($error->code . ": " . $error->message . "\n");
             }
-            return $error;
+           // return $error;
         }
     }
 
@@ -427,56 +425,54 @@ class Braintree_lib extends Braintree{
         }
     }
 
-
-    function update_subscription($data){
-        if($data->addOnId != ''){
+    function update_token_subscription($data){
             $result = Braintree_Subscription::update($data->subscription_id, [
-                //'id' => $data->id,
-                //'paymentMethodToken' => $data->newPaymentMethodToken,
-                'planId' => $data->planId,
-                //'merchantAccountId' => $data->merchantAccountId,
-                'addOns' => [
-                    'update' => [
-                        [
-                            'existingId' => $data->addOnId,
-                            'neverExpires' => true,
-                            'quantity' => $data->quantity
-                        ]                       
-                    ]      
-                    // 'add' => [
-                    //     [
-                    //         'inheritedFromId' => $data->addOnId,
-                    //         'neverExpires' => true,
-                    //         'quantity' => $data->quantity
-                    //     ]                       
-                    // ]                    
-                ],
-                'descriptor' => [
-                     'name' => "TRCKRTR*PLAN"
-                    // 'plan' => "Vehicle Checklist - ".$plandata['plan'],
-                    // 'description' => $plandata['description']
-                ]
-            ]);
-            if($result->success){
-                $data = new stdClass;
-                $data->success = $result->success;
-                $data->data = $result->subscription;
-
-                return $data;
-            }else{
-                return false;
-            }
-        }else{
-            $result = Braintree_Subscription::update($data->subscription_id, [
-                //'id' => $data->id,
-                'paymentMethodToken' => $data->newPaymentMethodToken,
-                'planId' => $data->planId,
-                //'merchantAccountId' => $data->merchantAccountId
+                'id' => $data->subscription_id,
+                'paymentMethodToken' => $data->paymentMethodToken,
+                'planId' => $data->planId
             ]);
 
             return $result;
+    }
+
+
+    function update_subscription($data){
+        $result = Braintree_Subscription::update($data->subscription_id, [
+            //'id' => $data->id,
+            //'paymentMethodToken' => $data->newPaymentMethodToken,
+            'planId' => $data->planId,
+            //'merchantAccountId' => $data->merchantAccountId,
+            'addOns' => [
+                'update' => [
+                    [
+                        'existingId' => $data->addOnId,
+                        'neverExpires' => true,
+                        'quantity' => $data->quantity
+                    ]                       
+                ]      
+                // 'add' => [
+                //     [
+                //         'inheritedFromId' => $data->addOnId,
+                //         'neverExpires' => true,
+                //         'quantity' => $data->quantity
+                //     ]                       
+                // ]                    
+            ],
+            'descriptor' => [
+                 'name' => "TRCKRTR*PLAN"
+                // 'plan' => "Vehicle Checklist - ".$plandata['plan'],
+                // 'description' => $plandata['description']
+            ]
+        ]);
+        if($result->success){
+            $data = new stdClass;
+            $data->success = $result->success;
+            $data->data = $result->subscription;
+
+            return $data;
+        }else{
+            return false;
         }
-        
     }
 
     function update_addOn_subscription($data){

@@ -221,7 +221,7 @@
         <div class="container">
         	<h1>Plan Subscription</h1>
         	<div class="account_container_btn">
-        		<a href="<?php echo site_url("app/setup/subscription/view"); ?>" class="<?php echo ($setup_page == "manage") ? "active" : "" ;?>" >My Subscription</a>
+        		<a href="<?php echo site_url("app/setup/subscription/manage"); ?>" class="<?php echo ($setup_page == "manage") ? "active" : "" ;?>" >My Subscription</a>
         		<a href="<?php echo site_url("app/setup/subscription/pricing"); ?>" class="<?php echo ($setup_page == "pricing") ? "active" : "" ;?>">View Pricing Plans</a>
         	</div>
         </div>

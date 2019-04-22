@@ -14,6 +14,7 @@
           $('#_advance_search_value').val("true");
         }
         $('#type').val('<?php echo $this->input->get("type");?>');
+        ('#driver_seat').val('<?php echo $this->input->get("driver_seat");?>');
         $('#availability').val('<?php echo $this->input->get("availability");?>');
         $('#status').val('<?php echo $this->input->get("status");?>');
     });
@@ -206,7 +207,18 @@
                                             <i class="fa fa-calendar"></i>
                                         </span>
                                     </div>
-                                    
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-lg-3 no-margin-bottom">
+                                <div class="form-group">
+                                    <label for="driver_seat">Driver Seat Position</label>
+                                    <select class="form-control" name="driver_seat" id="driver_seat">
+                                        <option value="">- Select Driver Seat Position -</option>
+                                        <option value="0">Left</option>
+                                        <option value="1">Right</option>
+                                        <option value="2">Not set</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -218,10 +230,11 @@
             <table class="customer-table">
                 <thead>
                     <tr>
-                        <th width="30%">Registration Number</th>
+                        <th width="20%">Registration Number</th>
                         <th width="10%">Type</th>
-                        <th width="20%">Availability</th>
-                        <th width="20%">Status</th>
+                        <th width="10%">Availability</th>
+                        <th width="10%">Status</th>
+                        <th width="10%">Driver Seat Position</th>
                         <th width="20%"></th>
                     </tr>
                 </thead>
@@ -234,7 +247,7 @@
                                         <img src="<?php echo $row->type_img;?>" class="img img-responsive thumbnail no-margin-bottom" style="height:50px; width:55px;" alt="Vehicle Type Image">
                                     </div>
                                     <div class="col-xs-6 col-lg-9 no-margin-bottom" style="padding-top: 15px;">
-                                        <span><strong><?php echo $row->vehicle_registration_number; ?></strong><span></span></span>
+                                        <span><strong><?php echo $row->vehicle_registration_number; ?></strong><span class="help-block"><?php echo $row->vehicle_model." - ".$row->year_model;?></span><span class="help-block">Axles: <?php echo ($row->axle == 0)? "Not set" : $row->axle;?></span></span>
                                     </div>
                                 </div>
                             </td>
@@ -247,6 +260,8 @@
                                 <?php endif; ?>
                                 </small>
                             </td>
+                            <td><?php echo $row->axle; ?></td>
+                            <td><?php echo $row->driver_seat_position; ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/get_vehicle_info/").$this->hash->encrypt($row->vehicle_id); ?>" data-id="<?php echo $this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-edit" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>

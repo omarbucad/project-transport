@@ -111,7 +111,7 @@
                                     <?php if($session_data->expired  == false) : ?>
                                         <li><a href="<?php echo site_url("app/setup/profile"); ?>">Profile</a></li>
                                     <?php endif; ?>
-                                    <li><a href="<?php echo site_url("app/setup/subscription/view"); ?>">Subscription</a></li>
+                                    <li><a href="<?php echo site_url("app/setup/subscription/manage"); ?>">Subscription</a></li>
                                     <li><a href="<?php echo site_url("app/setup/notifications"); ?>">Notifications</a></li>
                                 <?php endif;?>
                                 <?php if($session_data->expired == false) : ?>

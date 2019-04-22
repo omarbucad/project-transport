@@ -19,6 +19,10 @@ class Vehicle_model extends CI_Model {
         if($this->input->get("type") != ""){
             $this->db->where("v.vehicle_type_id", $this->input->get("type"));
         }
+
+        if($this->input->get("driver_seat") != ""){
+            $this->db->where("v.driver_seat_position", $this->input->get("driver_seat"));
+        }
         if($this->input->get("availability") != ""){
             $this->db->where("v.availability", $this->input->get("availability"));
         }
@@ -49,6 +53,7 @@ class Vehicle_model extends CI_Model {
 
         foreach($result as $key => $row){
             $result[$key]->status = convert_vehicle_status($row->status);
+            $result[$key]->driver_seat_position = driver_seat($row->driver_seat_position);
             $result[$key]->availability = convert_availability($row->availability);
             if($result[$key]->last_checked != ''){
                 $result[$key]->last_checked = convert_timezone($row->last_checked, true);
@@ -423,15 +428,12 @@ class Vehicle_model extends CI_Model {
 
     public function tire_management_list(){
         $this->db->trans_start();
-
-        $this->db->select("tir.*");
-        $this->db->join("tire_info_report tir","tir.tire_report_id = tr.tire_report_id");
+        $this->db->select("tr.*, v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.axle, v.driver_seat_position, vtype.type");
+        
         $this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
-        $this->db->where("tr.store_id",$this->session->userdata("user")->store_id);               
+        $this->db->join("vehicle_type vtype","vtype.vehicle_type_id = v.vehicle_type_id");
+        $this->db->where("tr.store_id",$this->session->userdata("user")->store_id);                
         $this->db->where("v.is_active",1);
-        // if(isset($data->vehicle_id)){
-        //     $this->db->where("v.vehicle_id",$vehicle_id);
-        // }
 
         if($this->input->get("registration_number") != ""){
             $this->db->where("v.vehicle_registration_number", $this->input->get("registration_number"));
@@ -457,26 +459,130 @@ class Vehicle_model extends CI_Model {
         }
 
         $this->db->order_by("tr.created","DESC");
-        $data = $this->db->get("tire_report tr")->result();
+        $result = $this->db->get("tire_report tr")->result();
 
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE){
             return false;
         }else{
-            foreach ($data as $key => $value) {
-                $this->db->select('image_name,image_path');
-                $this->db->where('tire_report_id', $value->tire_report_id);
-                $this->db->where("tir_id", $value->tir_id);
-                $damage_images = $this->db->where("type",1)->get('tire_images')->result();
-                $data[$key]->damage_images = $damage_images;
+            if($result){
+                foreach ($result as $key => $value) {
+                    $result[$key]->status = tire_report_status($value->status);
 
-                $this->db->select('image_name,image_path');
-                $this->db->where('tire_report_id', $value->tire_report_id);
-                $this->db->where("tir_id", $value->tir_id);
-                $tread_images = $this->db->where("type",2)->get('tire_images')->result();
-                $data[$key]->tread_images = $tread_images;
+                    $this->db->select("tir.*");
+                    $this->db->join("vehicle_tires vt","vt.vt_id = tir.vt_id");
+                    $this->db->where("tir.tire_report_id",$value->tire_report_id);
+                    $result[$key]->tire = $this->db->get("tire_info_report tir")->result();
+                    foreach ($result[$key]->tire as $k => $v) {
+                        $this->db->select('image_name,image_path');
+                        $this->db->where('tire_report_id', $value->tire_report_id);
+                        $this->db->where("tir_id", $result[$key]->tire[$k]->tir_id);
+                        $damage_images = $this->db->where("type",1)->get('tire_images')->result();
+                        foreach ($damage_images as $d => $damage) {
+                            $result[$key]->tire[$k]->damage_images[$d] = $this->config->site_url("public/upload/tire/".$damage->image_path.$damage->image_name);
+                        }
+                        $this->db->select('image_name,image_path');
+                        $this->db->where('tire_report_id', $value->tire_report_id);
+                        $this->db->where("tir_id", $result[$key]->tire[$k]->tir_id);
+                        $tread_images = $this->db->where("type",2)->get('tire_images')->result();
+                        foreach ($tread_images as $t => $tread) {
+                            $result[$key]->tire[$k]->tread_images[$t] = $this->config->site_url("public/upload/tire/".$tread->image_path.$tread->image_name);
+                        }
+                    }
+                    switch ($result[$key]->type) {
+                        case 'Van':
+                            $result[$key]->type_img = site_url("public/img/vehicles/van.png");
+                            break;
+                        case 'Truck':
+                            $result[$key]->type_img = site_url("public/img/vehicles/truck2.png");
+                            break;
+                        case 'Forklift':
+                            $result[$key]->type_img = site_url("public/img/vehicles/forklift.png");
+                            break;
+                        case 'Bus':
+                            $result[$key]->type_img = site_url("public/img/vehicles/bus.png");
+                            break;
+                        case 'Trailer':
+                            $result[$key]->type_img = site_url("public/img/vehicles/truck2.png");
+                            break;
+                        case 'Cement Mixer':
+                            $result[$key]->type_img = site_url("public/img/vehicles/cement_truck.png");
+                            break;
+                    }
+                }
+
+                return $result;
+            }else{
+                return $result;
             }
-           return $data;
+        }
+    }
+
+    public function get_tire_management($tire_report_id){
+        $this->db->trans_start();
+        $this->db->select("tr.*, v.vehicle_id, v.vehicle_registration_number, v.vehicle_type_id, v.axle, v.driver_seat_position, vtype.type");
+        
+        $this->db->join("vehicle v","v.vehicle_id = tr.vehicle_id");
+        $this->db->join("vehicle_type vtype","vtype.vehicle_type_id = v.vehicle_type_id");
+        $this->db->where("tr.store_id",$this->session->userdata("user")->store_id);                
+        $this->db->where("v.is_active",1);
+
+        $this->db->where("tr.tire_report_id",$tire_report_id);
+        $this->db->order_by("tr.created","DESC");
+        $result = $this->db->get("tire_report tr")->result();
+
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            if($result){
+                    $result->status = tire_report_status($value->status);
+
+                    $this->db->select("tir.*");
+                    $this->db->join("vehicle_tires vt","vt.vt_id = tir.vt_id");
+                    $this->db->where("tir.tire_report_id",$value->tire_report_id);
+                    $result->tire = $this->db->get("tire_info_report tir")->result();
+                    foreach ($result->tire as $k => $v) {
+                        $this->db->select('image_name,image_path');
+                        $this->db->where('tire_report_id', $value->tire_report_id);
+                        $this->db->where("tir_id", $result->tire[$k]->tir_id);
+                        $damage_images = $this->db->where("type",1)->get('tire_images')->result();
+                        foreach ($damage_images as $d => $damage) {
+                            $result->tire[$k]->damage_images[$d] = $this->config->site_url("public/upload/tire/".$damage->image_path.$damage->image_name);
+                        }
+                        $this->db->select('image_name,image_path');
+                        $this->db->where('tire_report_id', $value->tire_report_id);
+                        $this->db->where("tir_id", $result->tire[$k]->tir_id);
+                        $tread_images = $this->db->where("type",2)->get('tire_images')->result();
+                        foreach ($tread_images as $t => $tread) {
+                            $result->tire[$k]->tread_images[$t] = $this->config->site_url("public/upload/tire/".$tread->image_path.$tread->image_name);
+                        }
+                    }
+                    switch ($result->type) {
+                        case 'Van':
+                            $result->type_img = site_url("public/img/vehicles/van.png");
+                            break;
+                        case 'Truck':
+                            $result->type_img = site_url("public/img/vehicles/truck2.png");
+                            break;
+                        case 'Forklift':
+                            $result->type_img = site_url("public/img/vehicles/forklift.png");
+                            break;
+                        case 'Bus':
+                            $result->type_img = site_url("public/img/vehicles/bus.png");
+                            break;
+                        case 'Trailer':
+                            $result->type_img = site_url("public/img/vehicles/truck2.png");
+                            break;
+                        case 'Cement Mixer':
+                            $result->type_img = site_url("public/img/vehicles/cement_truck.png");
+                            break;
+                    }
+
+                return $result;
+            }else{
+                return $result;
+            }
         }
     }
 }

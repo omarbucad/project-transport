@@ -57,6 +57,8 @@ class Report extends CI_Controller {
 
 			if($result){
 				foreach($result as $key => $row){
+					$result[$key]->currentMileageImage = ($row->currentMileageImage != '') ? $this->config->site_url("public/upload/currentMileage/".$row->currentMileageImage) : '';
+					$result[$key]->fuelFilledImage = ($row->fuelFilledImage != '') ? $this->config->site_url("public/upload/fuelFilled/".$row->fuelFilledImage) : '';
 
 					if($plan == 'N/A'){
 						if($result[$key]->created <= $end && $result[$key]->created >= $start){
@@ -222,6 +224,8 @@ class Report extends CI_Controller {
 			$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 			if($result){
 				foreach($result as $key => $row){
+					$result[$key]->currentMileageImage = ($row->currentMileageImage != '') ? $this->config->site_url("public/upload/currentMileage/".$row->currentMileageImage) : '';
+					$result[$key]->fuelFilledImage = ($row->fuelFilledImage != '') ? $this->config->site_url("public/upload/fuelFilled/".$row->fuelFilledImage) : '';
 
 					if($result[$key]->logo_image_path == 'public/img/'){
 		                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
@@ -437,6 +441,9 @@ class Report extends CI_Controller {
 
 			if($result){
 				foreach($result as $key => $row){
+					$result[$key]->currentMileageImage = ($row->currentMileageImage != '') ? $this->config->site_url("public/upload/currentMileage/".$row->currentMileageImage) : '';
+					$result[$key]->fuelFilledImage = ($row->fuelFilledImage != '') ? $this->config->site_url("public/upload/fuelFilled/".$row->fuelFilledImage) : '';
+
 					if($result[$key]->logo_image_path == 'public/img/'){
 		                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }else{
@@ -593,7 +600,8 @@ class Report extends CI_Controller {
 
 			
 				if($result){
-
+					$result[$key]->currentMileageImage = ($row->currentMileageImage != '') ? $this->config->site_url("public/upload/currentMileage/".$row->currentMileageImage) : '';
+					$result[$key]->fuelFilledImage = ($row->fuelFilledImage != '') ? $this->config->site_url("public/upload/fuelFilled/".$row->fuelFilledImage) : '';
 					if($result->logo_image_path == 'public/img/'){
 		                $result->company_logo = $this->config->site_url($result->logo_image_path.$result->logo_image_name);
 		            }else{
@@ -971,6 +979,9 @@ class Report extends CI_Controller {
 			$result = $this->db->order_by("rs.created" , "DESC")->get("report r")->result();
 			if($result){
 				foreach($result as $key => $row){
+					$result[$key]->currentMileageImage = ($row->currentMileageImage != '') ? $this->config->site_url("public/upload/currentMileage/".$row->currentMileageImage) : '';
+					$result[$key]->fuelFilledImage = ($row->fuelFilledImage != '') ? $this->config->site_url("public/upload/fuelFilled/".$row->fuelFilledImage) : '';
+					
 					if($result[$key]->logo_image_path == 'public/img/'){
 		                $result[$key]->company_logo = $this->config->site_url($result[$key]->logo_image_path.$result[$key]->logo_image_name);
 		            }else{

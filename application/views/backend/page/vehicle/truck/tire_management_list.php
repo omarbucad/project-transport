@@ -207,7 +207,7 @@
                     <tr>
                         <th width="30%">Registration Number</th>
                         <th width="10%">Type</th>
-                        <th width="20%">Status</th>                        
+                        <th width="20%">Report Status</th>                        
                         <th width="20%">Created</th>
                         <th width="20%"></th>
                     </tr>
@@ -230,8 +230,7 @@
                             <td><span><?php echo $row->created;?></span></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/get_vehicle_info/").$this->hash->encrypt($row->vehicle_id); ?>" data-id="<?php echo $this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-edit" title="Edit Information"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a href="javascript:void(0);" data-href="<?php echo site_url("app/vehicle/delete/").$this->hash->encrypt($row->vehicle_id); ?>" class="btn btn-link btn-delete" title="Remove Vehicle"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    <a href="<?php echo $this->config->site_url('app/vehicle/pdf/').$this->hash->encrypt($row->tire_report_id);?>" class="btn btn-link btn-print" style="padding: 3px 6px;margin:0;" title="View PDF" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>

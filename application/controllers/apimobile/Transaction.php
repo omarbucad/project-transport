@@ -161,6 +161,36 @@ class Transaction extends CI_Controller {
 	// 		echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "create_subscription_nonce"]);
 	// 	}
 	// }
+
+	public function update_token_subscription(){
+		$allowed = validate_app_token($this->post->token);
+
+		if($allowed){
+			$data = $this->post;
+			$result = $this->braintree_lib->update_token_subscription($data);
+			if($result){
+				$this->db->trans_start();
+				$this->db->where("store_id",$data->store_id);
+				$this->db->where("active",1);
+				$new = $this->db->update("user_plan",[
+	                "payment_name" => $data->payment_name,
+	                "payment_type" => $data->payment_type
+	            ]);
+	            $this->db->trans_complete();
+
+	            if($this->db->trans_status() === FALSE){
+	            	echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "update_token_subscription"]);
+	            }else{
+	            	echo json_encode(["status" => true , "data" => $result, "action" => "update_token_subscription"]);
+	            }
+			}else{
+				echo json_encode(["status" => false , "message" => "Something went wrong", "action" => "update_token_subscription"]);
+			}
+		}else{
+			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "update_token_subscription"]);
+		}
+
+	}
 	public function update_plan_subscription(){
 		$allowed = validate_app_token($this->post->token);
 
@@ -398,6 +428,8 @@ class Transaction extends CI_Controller {
 			echo json_encode(["status" => false , "message" => "403: Access Forbidden", "action" => "get_customer_data"]);
 		}
 	}
+
+
 
 	public function create_payment_method(){
 		$allowed = validate_app_token($this->post->token);

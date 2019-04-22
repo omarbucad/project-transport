@@ -2,9 +2,6 @@
     $(document).ready(function(){
         $('#status').val('<?php echo $this->input->get("status");?>');
     });
-    $(document).on("click","#clear",function(){
-        $('input[name="created"]').val("");
-    });
      $(document).on("click", ".input-group-addon",function(){
       $(".daterange").focus();
     });
@@ -72,7 +69,6 @@
                                         </span>
                                     </div>
                                 </div>
-                                <span id="clear"><a class="btn btn-xs btn-default" type="button" style="border-color:#cccccc;margin-top:0;" id="clear">clear</a></span>
                             </div>
                             <div class="col-xs-12 col-lg-3 text-right">
                                 <input type="submit" name="submit" value="Search" class="btn btn-primary btn-vertical-center btn-same-size">

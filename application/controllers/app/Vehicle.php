@@ -329,4 +329,30 @@ class Vehicle extends MY_Controller {
 
 		$this->load->view('backend/master' , $this->data);
 	}
+
+	public function pdf($report_id){
+
+		$report_id = $this->hash->decrypt($report_id);
+		$report = $this->vehicle->get_tire_management($report_id);
+
+		$pdf = $this->pdf->create_tire_report($report , "F");
+
+		$update = $this->db->where("report_id" , $report->report_id)->update("report" , [
+			"pdf_path"			=> $pdf['path'],
+			"pdf_file" 			=> $pdf['filename']
+		]);
+		
+		if($update){
+			$this->session->set_flashdata('status' , 'success');	
+			$this->session->set_flashdata('message' , 'Successfully Generated PDF!');
+
+			redirect("app/vehicle/tire_reports" , 'refresh');
+		}else{
+			$this->session->set_flashdata('status' , 'error');	
+			$this->session->set_flashdata('message' , 'Something went wrong.');
+
+			redirect("app/vehicle/tire_reports" , 'refresh');
+		}
+	
+	}
 }

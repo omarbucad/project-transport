@@ -287,10 +287,12 @@ class Setup extends MY_Controller {
 		$this->data['user_plans'] = $this->db->get("plan")->result();
 		$this->data['plan_ids'] = $this->braintree_lib->getAllPlan();
 
-		if($type == ""){
-			redirect('/app/setup/account/view', 'refresh');
+		if($type == "manage"){
+			$this->load->view('backend/master' , $this->data);
+			redirect('/app/setup/subscription/manage', 'refresh');
 		}
 		$this->load->view('backend/master' , $this->data);
+		
 	}
 
 	public function get_client_token(){

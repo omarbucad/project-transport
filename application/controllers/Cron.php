@@ -26,7 +26,7 @@ class Cron extends CI_Controller {
 		$this->db->trans_start();
 			$this->db->select("webhook_id, subscription_id, kind");
 			$this->db->where("kind","subscription_trial_ended");
-			$webhooks = $this->db->where("email_sent",0)->get("webhooks")->result();
+			$webhooks = $this->db->where("email_sent",0)->order_by('bt_created',"DESC")->get("webhooks")->result();
 		$this->db->trans_complete();		
 
 		foreach($webhooks as $key => $value){
@@ -51,7 +51,7 @@ class Cron extends CI_Controller {
 		$this->db->trans_start();
 			$this->db->select("webhook_id, subscription_id, kind");
 			$this->db->where("kind","subscription_charged_unsuccessfully");
-			$webhooks = $this->db->where("email_sent",0)->get("webhooks")->result();
+			$webhooks = $this->db->where("email_sent",0)->order_by('bt_created',"DESC")->get("webhooks")->result();
 		$this->db->trans_complete();		
 
 		foreach($webhooks as $key => $value){
@@ -76,7 +76,7 @@ class Cron extends CI_Controller {
 		$this->db->trans_start();
 			$this->db->select("webhook_id, subscription_id, kind");
 			$this->db->where("kind","subscription_charged_unsuccessfully");
-			$webhooks = $this->db->where("email_sent",0)->get("webhooks")->result();
+			$webhooks = $this->db->where("email_sent",0)->order_by('bt_created',"DESC")->get("webhooks")->result();
 
 			$this->db->where("active",1);
 			$this->db->select("store_id, billing_type")->where("subscription_id",$webhooks->subscription_id)->;

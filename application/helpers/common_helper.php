@@ -664,5 +664,53 @@ if ( ! function_exists('validate_email_code'))
     }
 }
 
+if( ! function_exists('tire_report_status')){
+    
+    function tire_report_status($status, $raw = false) {
+
+        if($raw){
+            switch ($status) {
+                case 0:
+                    return 'Good';
+                break;
+                case 1:
+                    return 'Defect';
+                break;
+                case 2:
+                    return 'Recheck';
+                break;
+            }
+        }else{
+            switch ($status) {
+                case 0:
+                    return '<span class="label label-success">Good</span>';
+                break;
+                case 1:
+                    return '<span class="label label-danger">Defect</span>';
+                break;
+                case 2:
+                    return '<span class="label label-warning">Recheck</span>';
+                break;
+            }
+        }
+    }
+}
+
+if( ! function_exists('driver_seat')){
+    
+    function driver_seat($status, $raw = false) {
+        switch ($status) {
+            case 0:
+                return '<span class="label label-primary">LEFT</span>';
+            break;
+            case 1:
+                return '<span class="label label-primary">RIGHT</span>';
+            break;
+            case 2:
+                return '<span class="label label-default">NOT SET</span>';
+            break;
+        }
+    }
+}
 
 
